@@ -8,26 +8,55 @@ Good Food was formed from the merger of four food companies. The company offers 
 
 The GoodFood 2.0 project was initiated to update the existing ordering application, which had become outdated and was unable to handle more users. The objective is to create a modern, user-friendly, and modular new version that can handle a high volume of concurrent users, up to several thousand.
 
+## Microservices ports
+
+| Service     | Port  | Language    | Database   | Status | Assignee        |
+| ----------- | ----- | ----------- | ---------- | ------ | --------------- |
+| Gateway     | 50000 | Go          | ❌         | ❌     | @Anatole-Godard |
+| User (auth) | 50001 | Go          | PostgreSQL | ❌     | @Anatole-Godard |
+| Basket      | 50002 | NodeJS (ts) | Redis      | ❌     | @Anatole-Godard |
+| Payment     | 50003 | NodeJS (ts) | PostgreSQL | ❌     | @Anatole-Godard |
+| Product     | 50004 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Restaurant  | 50005 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Promotion   | 50006 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Order       | 50007 | NodeJS (ts) | MongoDB    | ❌     | @floriaaan      |
+| Delivery    | 50008 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
+| Stock       | 50009 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
+| Reporting   | 50010 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
+| (...)       | (...) | (...)       | (...)      | (...)  |
+
 ## File Hierarchy
 
 The file hierarchy for this project is as follows:
 
 ```
 .
-├── .github
-│   └── workflows
+├── .github/
+│   └── workflows/
 │       └── tests.yml
 ├── README.md
-├── (...) # other files like .gitignore, .dockerignore, etc.
-├── apps
-│   ├── mobile
-│   └── web
-└── services
-    ├── gateway
+├── (...) # other files like .gitignore, etc.
+├── apps/
+│   ├── mobile/
+│   └── web/
+├── terraform/
+│   └── env/
+│       └── (...) # environments tfvars files
+└── services/
+    ├── gateway/
+    │       ├── k8s/
+    │       │   └── (...) # k8s files
+    │       └── terraform/
+    │           └── (...) # terraform files
+    ├── user/
+    ├── order/
+    ├── delivery/
+    ├── stock/
+    ├── reporting/
     ├── (...) # other services
-    └── protos
+    └── protos/
+        └── (...) # proto files
 ```
-
 
 ## Installation
 
@@ -40,6 +69,7 @@ TBW : Usage instructions
 ## Contributing
 
 You can contribute to this project by:
+
 - Reporting bugs
 - Suggesting new features
 - Submitting pull requests
@@ -56,4 +86,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - **[Florian LEROUX](https://github.com/floriaaan)**
 - **[Anatole GODARD](https://github.com/Anatole-Godard)**
 - **[Pierre LEBIGRE](https://github.com/PierreLbg)**
-
