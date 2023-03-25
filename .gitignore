@@ -53,3 +53,5 @@ terraform.rc
 .history
 .ionide
 
+
+/**/.DS_Store

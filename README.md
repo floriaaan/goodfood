@@ -20,7 +20,7 @@ The GoodFood 2.0 project was initiated to update the existing ordering applicati
 | Restaurant  | 50005 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
 | Promotion   | 50006 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
 | Order       | 50007 | NodeJS (ts) | MongoDB    | ❌     | @floriaaan      |
-| Delivery    | 50008 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
+| Delivery    | 50008 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
 | Stock       | 50009 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
 | Reporting   | 50010 | C# (dotnet) | PostgreSQL | ❌     | @floriaaan      |
 | (...)       | (...) | (...)       | (...)      | (...)  |
@@ -54,7 +54,7 @@ The file hierarchy for this project is as follows:
     ├── stock/
     ├── reporting/
     ├── (...) # other services
-    └── protos/
+    └── proto/
         └── (...) # proto files
 ```
 
