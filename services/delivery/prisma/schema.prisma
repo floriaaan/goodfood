@@ -4,8 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["linux-musl", "linux-musl-openssl-3.0.x"]
+  provider = "prisma-client-js"
 }
 
 enum Status {
@@ -16,24 +15,21 @@ enum Status {
 }
 
 model Delivery {
-  id  String   @id @default(cuid())
-  eta DateTime
+  id             String   @id @default(cuid())
+  estimated_date DateTime
 
   address String
   status  Status @default(PENDING)
 
-  delivery_person    DeliveryPerson @relation(fields: [delivery_person_id], references: [id])
+  person             DeliveryPerson @relation(fields: [delivery_person_id], references: [id])
   delivery_person_id String
-
-  user_id       String
-  restaurant_id String
 }
 
 model DeliveryPerson {
   id         String  @id @default(cuid())
   first_name String
   last_name  String
-  phone      String  @unique
+  phone      String @unique
   location   Float[]
 
   deliveries Delivery[]

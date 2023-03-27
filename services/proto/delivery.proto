@@ -1,20 +1,18 @@
 syntax = "proto3";
+import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 package delivery;
 
 message Delivery {
   string id = 1;
-  string eta = 2;
+  google.protobuf.Timestamp estimated_date = 2;
 
   string address = 3;
   Status status = 4;
 
-  DeliveryPerson delivery_person = 5;
+  DeliveryPerson person = 5;
   string delivery_person_id = 6;
-
-  string user_id = 7;
-  string restaurant_id = 8;
 }
 
 message DeliveryPerson {
@@ -35,22 +33,22 @@ enum Status {
 }
 
 service DeliveryService {
-  rpc CreateDelivery (DeliveryCreateInput) returns (Delivery) {}
+  rpc CreateDelivery (Delivery) returns (Delivery) {}
   rpc GetDelivery (DeliveryId) returns (Delivery) {}
   rpc UpdateDelivery (Delivery) returns (Delivery) {}
   rpc DeleteDelivery (DeliveryId) returns (google.protobuf.Empty) {}
-  rpc ListDeliveriesByUser (UserId) returns (DeliveryList) {}
-  rpc ListDeliveriesByRestaurant (RestaurantId) returns (DeliveryList) {}
+  rpc ListDeliveriesByUser (UserId) returns (stream Delivery) {}
+  rpc ListDeliveriesByRestaurant (RestaurantId) returns (stream Delivery) {}
 
 }
 
 service DeliveryPersonService {
-    rpc CreateDeliveryPerson (DeliveryPersonCreateInput) returns (DeliveryPerson) {}
+    rpc CreateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
     rpc GetDeliveryPerson (DeliveryPersonId) returns (DeliveryPerson) {}
     rpc UpdateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
     rpc DeleteDeliveryPerson (DeliveryPersonId) returns (google.protobuf.Empty) {}
-    rpc ListDeliveryPersons (google.protobuf.Empty) returns (DeliveryPersonList) {}
-    rpc ListNearDeliveryPersons (Location) returns (DeliveryPersonList) {}
+    rpc ListDeliveryPersons (google.protobuf.Empty) returns (stream DeliveryPerson) {}
+    rpc ListNearDeliveryPersons (Location) returns (stream DeliveryPerson) {}
 }
 
 
@@ -58,13 +56,10 @@ message DeliveryId {
     string id = 1;
 }
 message DeliveryCreateInput {
-    string eta = 1;
+    google.protobuf.Timestamp estimated_date = 1;
     string address = 2;
     Status status = 3;
     string delivery_person_id = 4;
-
-    string user_id = 5;
-    string restaurant_id = 6;
 }
 
 message UserId {
@@ -73,14 +68,6 @@ message UserId {
 
 message RestaurantId {
   string id = 1;
-}
-
-message DeliveryList {
-  repeated Delivery deliveries = 1;
-}
-
-message DeliveryPersonList {
-  repeated DeliveryPersonList delivery_persons = 1;
 }
 
 message DeliveryPersonId {
