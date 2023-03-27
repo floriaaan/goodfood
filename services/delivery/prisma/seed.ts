@@ -27,35 +27,18 @@ const deliveryPerson: Prisma.DeliveryPersonCreateInput[] = [
 const deliveries: Prisma.DeliveryCreateInput[] = [
   {
     address: "15 rue de la paix 75000 Paris",
-    eta: new Date("2023-01-01"),
-    delivery_person: { create: deliveryPerson[0] },
-
-    restaurant_id: "restaurant_id:1",
-    user_id: "user_id:1",
-  },
-  {
-    address: "15 rue de la paix 75000 Paris",
-    eta: new Date("2023-01-01"),
-    delivery_person: { create: deliveryPerson[0] },
-
-    restaurant_id: "restaurant_id:2",
-    user_id: "user_id:1",
+    estimated_date: new Date("2023-01-01"),
+    person: { create: deliveryPerson[0] },
   },
   {
     address: "16 rue de la paix 75000 Paris",
-    eta: new Date("2023-02-01"),
-    delivery_person: { create: deliveryPerson[1] },
-
-    restaurant_id: "restaurant_id:1",
-    user_id: "user_id:2",
+    estimated_date: new Date("2023-02-01"),
+    person: { create: deliveryPerson[1] },
   },
   {
     address: "17 rue de la paix 75000 Paris",
-    eta: new Date("2023-03-01"),
-    delivery_person: { create: deliveryPerson[2] },
-
-    restaurant_id: "restaurant_id:1",
-    user_id: "user_id:3",
+    estimated_date: new Date("2023-03-01"),
+    person: { create: deliveryPerson[2] },
   },
 ];
 
@@ -77,6 +60,5 @@ main()
   .catch(async (e) => {
     console.error(e);
     await prisma.$disconnect();
-    // @ts-ignore
     process.exit(1);
   });
