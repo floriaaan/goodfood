@@ -1,0 +1,36 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  FULFILLED
+  REJECTED
+}
+
+model Delivery {
+  id             String   @id @default(cuid())
+  estimated_date DateTime
+
+  address String
+  status  Status @default(PENDING)
+
+  person             DeliveryPerson @relation(fields: [delivery_person_id], references: [id])
+  delivery_person_id String
+}
+
+model DeliveryPerson {
+  id         String  @id @default(cuid())
+  first_name String
+  last_name  String
+  phone      String @unique
+  location   Float[]
+
+  deliveries Delivery[]
+}
