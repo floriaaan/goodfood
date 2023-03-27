@@ -1,0 +1,86 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package delivery;
+
+message Delivery {
+  string id = 1;
+  google.protobuf.Timestamp estimated_date = 2;
+
+  string address = 3;
+  Status status = 4;
+
+  DeliveryPerson person = 5;
+  string delivery_person_id = 6;
+}
+
+message DeliveryPerson {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone = 4;
+  repeated float location = 5;
+
+  repeated Delivery deliveries = 6;
+}
+
+enum Status {
+  PENDING = 0;
+  IN_PROGRESS = 1;
+  FULFILLED = 2;
+  REJECTED = 3;
+}
+
+service DeliveryService {
+  rpc CreateDelivery (Delivery) returns (Delivery) {}
+  rpc GetDelivery (DeliveryId) returns (Delivery) {}
+  rpc UpdateDelivery (Delivery) returns (Delivery) {}
+  rpc DeleteDelivery (DeliveryId) returns (google.protobuf.Empty) {}
+  rpc ListDeliveriesByUser (UserId) returns (stream Delivery) {}
+  rpc ListDeliveriesByRestaurant (RestaurantId) returns (stream Delivery) {}
+
+}
+
+service DeliveryPersonService {
+    rpc CreateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
+    rpc GetDeliveryPerson (DeliveryPersonId) returns (DeliveryPerson) {}
+    rpc UpdateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
+    rpc DeleteDeliveryPerson (DeliveryPersonId) returns (google.protobuf.Empty) {}
+    rpc ListDeliveryPersons (google.protobuf.Empty) returns (stream DeliveryPerson) {}
+    rpc ListNearDeliveryPersons (Location) returns (stream DeliveryPerson) {}
+}
+
+
+message DeliveryId {
+    string id = 1;
+}
+message DeliveryCreateInput {
+    google.protobuf.Timestamp estimated_date = 1;
+    string address = 2;
+    Status status = 3;
+    string delivery_person_id = 4;
+}
+
+message UserId {
+  string id = 1;
+}
+
+message RestaurantId {
+  string id = 1;
+}
+
+message DeliveryPersonId {
+  string id = 1;
+}
+message DeliveryPersonCreateInput {
+    string first_name = 1;
+    string last_name = 2;
+    string phone = 3;
+    repeated float location = 4;
+}
+
+message Location {
+  float latitude = 1;
+  float longitude = 2;
+}
