@@ -16,7 +16,7 @@ enum Status {
 
 model Delivery {
   id             String   @id @default(cuid())
-  estimated_date DateTime
+  eta DateTime
 
   address String
   status  Status @default(PENDING)

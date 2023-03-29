@@ -1,12 +1,11 @@
 syntax = "proto3";
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 package delivery;
 
 message Delivery {
   string id = 1;
-  google.protobuf.Timestamp estimated_date = 2;
+  string eta = 2;
 
   string address = 3;
   Status status = 4;
@@ -33,7 +32,7 @@ enum Status {
 }
 
 service DeliveryService {
-  rpc CreateDelivery (Delivery) returns (Delivery) {}
+  rpc CreateDelivery (DeliveryCreateInput) returns (Delivery) {}
   rpc GetDelivery (DeliveryId) returns (Delivery) {}
   rpc UpdateDelivery (Delivery) returns (Delivery) {}
   rpc DeleteDelivery (DeliveryId) returns (google.protobuf.Empty) {}
@@ -43,7 +42,7 @@ service DeliveryService {
 }
 
 service DeliveryPersonService {
-    rpc CreateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
+    rpc CreateDeliveryPerson (DeliveryPersonCreateInput) returns (DeliveryPerson) {}
     rpc GetDeliveryPerson (DeliveryPersonId) returns (DeliveryPerson) {}
     rpc UpdateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
     rpc DeleteDeliveryPerson (DeliveryPersonId) returns (google.protobuf.Empty) {}
@@ -56,7 +55,7 @@ message DeliveryId {
     string id = 1;
 }
 message DeliveryCreateInput {
-    google.protobuf.Timestamp estimated_date = 1;
+    string eta = 1;
     string address = 2;
     Status status = 3;
     string delivery_person_id = 4;
