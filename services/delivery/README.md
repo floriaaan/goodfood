@@ -5,7 +5,7 @@
 | **Port:** 50008                                                    |
 | **Developer:** @floriaaan                                          |
 | **Status:** In progress                                            |
-| **Last update:** 2023-03-25                                        |
+| **Last update:** 2023-03-29                                        |
 | **Language:** NodeJS                                               |
 | **Dependencies:** TypeScript, Prisma, gRPC, Postgres               |
 | **Models:** (see [`prisma/schema.prisma`](./prisma/schema.prisma)) |
@@ -41,7 +41,7 @@ You can use the following tools to help you with the setup:
 - You can use nvm to set your Node version using:
   - `nvm use`.
 - You can use docker to run your Postgres database using:
-  - `docker run --name postgres -e POSTGRES_PASSWORD=password -d postgres`.
+  - `docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres`
 
 ## Getting started
 
