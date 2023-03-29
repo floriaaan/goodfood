@@ -27,17 +27,17 @@ const deliveryPerson: Prisma.DeliveryPersonCreateInput[] = [
 const deliveries: Prisma.DeliveryCreateInput[] = [
   {
     address: "15 rue de la paix 75000 Paris",
-    estimated_date: new Date("2023-01-01"),
+    eta: new Date("2023-01-01"),
     person: { create: deliveryPerson[0] },
   },
   {
     address: "16 rue de la paix 75000 Paris",
-    estimated_date: new Date("2023-02-01"),
+    eta: new Date("2023-02-01"),
     person: { create: deliveryPerson[1] },
   },
   {
     address: "17 rue de la paix 75000 Paris",
-    estimated_date: new Date("2023-03-01"),
+    eta: new Date("2023-03-01"),
     person: { create: deliveryPerson[2] },
   },
 ];
