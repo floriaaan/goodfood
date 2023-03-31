@@ -4,7 +4,12 @@
     "start": "ts-node ./src/server.ts",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
     "seed": "ts-node prisma/seed.ts",
-    "client:delivery-create": "ts-node ./src/client/delivery-create.ts"
+    "client:delivery-create": "ts-node ./src/client/delivery/create.ts",
+    "client:delivery-get": "ts-node ./src/client/delivery/get.ts",
+    "client:delivery-update": "ts-node ./src/client/delivery/update.ts",
+    "client:delivery-delete": "ts-node ./src/client/delivery/delete.ts",
+    "client:delivery-listByRestaurant": "ts-node ./src/client/delivery/list-by-restaurant.ts",
+    "client:delivery-listByUser": "ts-node ./src/client/delivery/list-by-user.ts"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.8.13",
