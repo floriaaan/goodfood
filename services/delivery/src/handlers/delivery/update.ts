@@ -1,7 +1,6 @@
 import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
-import { Delivery } from "@delivery/types/delivery";
-import { Data } from "@delivery/types";
+import { Data, Delivery } from "@delivery/types/delivery";
 
 export const UpdateDelivery = async (
   data: Data<Delivery>,
@@ -17,14 +16,14 @@ export const UpdateDelivery = async (
         eta: new Date(eta),
         address,
         status,
-        delivery_person: {
+        person: {
           connect: {
             id: delivery_person_id,
           },
         },
       },
       include: {
-        delivery_person: true,
+        person: true,
       },
     });
     callback(null, delivery);

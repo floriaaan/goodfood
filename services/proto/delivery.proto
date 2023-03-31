@@ -12,6 +12,9 @@ message Delivery {
 
   DeliveryPerson person = 5;
   string delivery_person_id = 6;
+
+  string user_id = 7;
+  string restaurant_id = 8;
 }
 
 message DeliveryPerson {
@@ -59,6 +62,9 @@ message DeliveryCreateInput {
     string address = 2;
     Status status = 3;
     string delivery_person_id = 4;
+
+    string user_id = 5;
+    string restaurant_id = 6;
 }
 
 message UserId {
