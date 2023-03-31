@@ -1,23 +1,15 @@
 import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
-import { Status } from "@prisma/client";
-
-type DeliveryCreateInput = {
-  eta: string;
-  address: string;
-  status: Status;
-  delivery_person_id: string;
-};
+import { Data, DeliveryCreateInput } from "@delivery/types/delivery";
 
 export const CreateDelivery = async (
-  data: any,
+  { request }: Data<DeliveryCreateInput>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at CreateDelivery handler\n", data.request);
+  log.debug("request received at CreateDelivery handler\n", request);
   try {
-    const { request } = data;
-    const { eta, address, status, delivery_person_id } =
-      request as DeliveryCreateInput;
+    const { eta, address, status, delivery_person_id, restaurant_id, user_id } =
+      request;
 
     const delivery = await prisma.delivery.create({
       data: {
@@ -29,6 +21,8 @@ export const CreateDelivery = async (
             id: delivery_person_id,
           },
         },
+        restaurant_id,
+        user_id,
       },
       include: {
         person: true,
