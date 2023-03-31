@@ -9,17 +9,3 @@ export type DeliveryPerson = {
 
   deliveries: Delivery[];
 };
-
-export type DeliveryPersonCreateInput = {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  location: [number, number];
-};
-
-export type LocationInput = {
-  latitude: number;
-  longitude: number;
-};
-
-export type DeliveryPersonId = { id: DeliveryPerson["id"] };

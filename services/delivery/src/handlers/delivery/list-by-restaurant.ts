@@ -1,27 +1,30 @@
 import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
-import { RestaurantId } from "@delivery/types/delivery";
-import { Data } from "@delivery/types";
+import { RestaurantId, Delivery } from "@delivery/types/delivery";
+import { ServerWritableStream } from "@grpc/grpc-js";
 
 export const ListDeliveriesByRestaurant = async (
-  data: Data<RestaurantId>,
-  callback: (err: any, response: any) => void
+  call: ServerWritableStream<Delivery, RestaurantId>
 ) => {
   log.debug(
     "request received at ListDeliveriesByRestaurant handler\n",
-    data.request
+    call.request
   );
   try {
-    const { request } = data;
-    const { id } = request;
+    const { id } = call.request;
 
     const deliveries = await prisma.delivery.findMany({
       where: { restaurant_id: id },
-      include: { delivery_person: true },
+      include: { person: true },
     });
-    callback(null, { deliveries });
+
+    for (const delivery of deliveries) {
+      call.write(delivery);
+    }
+    call.end();
   } catch (error) {
     log.error(error);
-    callback(error, null);
+
+    call.end();
   }
 };

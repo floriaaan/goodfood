@@ -15,7 +15,7 @@ enum Status {
 }
 
 model Delivery {
-  id             String   @id @default(cuid())
+  id  String   @id @default(cuid())
   eta DateTime
 
   address String
@@ -23,13 +23,16 @@ model Delivery {
 
   person             DeliveryPerson @relation(fields: [delivery_person_id], references: [id])
   delivery_person_id String
+
+  user_id       String
+  restaurant_id String
 }
 
 model DeliveryPerson {
   id         String  @id @default(cuid())
   first_name String
   last_name  String
-  phone      String @unique
+  phone      String  @unique
   location   Float[]
 
   deliveries Delivery[]

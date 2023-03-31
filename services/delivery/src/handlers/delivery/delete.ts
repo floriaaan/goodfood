@@ -1,7 +1,6 @@
 import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
-import { DeliveryId } from "@delivery/types/delivery";
-import { Data } from "@delivery/types";
+import { Data, DeliveryId } from "@delivery/types/delivery";
 
 export const DeleteDelivery = async (
   data: Data<DeliveryId>,
