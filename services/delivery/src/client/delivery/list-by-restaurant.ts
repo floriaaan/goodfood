@@ -5,7 +5,6 @@ import { loadPackageDefinition } from "@grpc/grpc-js";
 import { options } from "@delivery/resources/protoloader-options";
 import { insecure } from "@delivery/resources/grpc-credentials";
 import { log } from "@delivery/lib/log";
-import { Delivery } from "@delivery/types/delivery";
 
 const PORT = process.env.PORT || 50008;
 const ADDRESS = `localhost:${PORT}`;
@@ -18,21 +17,11 @@ function main() {
   const client = new delivery.DeliveryService(ADDRESS, insecure);
 
   const data = {
-    id: "restaurant_id:1",
+    id: "restaurant_id:1", // Change this to a valid delivery id
   };
-
-  const call = client.ListDeliveriesByRestaurant(data);
-  const deliveries: Delivery[] = [];
-  call.on("data", (delivery: Delivery) => {
-    log.debug(`Received delivery: ${delivery.id}`);
-    deliveries.push(delivery);
-  });
-  call.on("end", () => {
-    console.log("All deliveries received.");
-    log.debug(deliveries);
-  });
-  call.on("error", (error: Error) => {
-    log.debug("Error:", error.message);
+  client.ListDeliveriesByRestaurant(data, (err: any, response: any) => {
+    if (err) log.debug(err);
+    log.debug(response);
   });
 }
 
