@@ -1,27 +1,23 @@
 import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
-import { Delivery, UserId } from "@delivery/types/delivery";
-import { ServerWritableStream } from "@grpc/grpc-js";
+import { Data, UserId } from "@delivery/types/delivery";
 
 export const ListDeliveriesByUser = async (
-  call: ServerWritableStream<Delivery, UserId>
+  data: Data<UserId>,
+  callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at ListDeliveriesByUser handler\n", call.request);
+  log.debug("request received at ListDeliveriesByUser handler\n", data.request);
   try {
-    const { id } = call.request;
+    const { request } = data;
+    const { id } = request;
 
     const deliveries = await prisma.delivery.findMany({
       where: { user_id: id },
       include: { person: true },
     });
-
-    for (const delivery of deliveries) {
-      call.write(delivery);
-    }
-    call.end();
+    callback(null, { deliveries });
   } catch (error) {
     log.error(error);
-
-    call.end();
+    callback(error, null);
   }
 };
