@@ -39,8 +39,8 @@ service DeliveryService {
   rpc GetDelivery (DeliveryId) returns (Delivery) {}
   rpc UpdateDelivery (Delivery) returns (Delivery) {}
   rpc DeleteDelivery (DeliveryId) returns (google.protobuf.Empty) {}
-  rpc ListDeliveriesByUser (UserId) returns (stream Delivery) {}
-  rpc ListDeliveriesByRestaurant (RestaurantId) returns (stream Delivery) {}
+  rpc ListDeliveriesByUser (UserId) returns (DeliveryList) {}
+  rpc ListDeliveriesByRestaurant (RestaurantId) returns (DeliveryList) {}
 
 }
 
@@ -49,8 +49,8 @@ service DeliveryPersonService {
     rpc GetDeliveryPerson (DeliveryPersonId) returns (DeliveryPerson) {}
     rpc UpdateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
     rpc DeleteDeliveryPerson (DeliveryPersonId) returns (google.protobuf.Empty) {}
-    rpc ListDeliveryPersons (google.protobuf.Empty) returns (stream DeliveryPerson) {}
-    rpc ListNearDeliveryPersons (Location) returns (stream DeliveryPerson) {}
+    rpc ListDeliveryPersons (google.protobuf.Empty) returns (DeliveryPersonList) {}
+    rpc ListNearDeliveryPersons (Location) returns (DeliveryPersonList) {}
 }
 
 
@@ -73,6 +73,14 @@ message UserId {
 
 message RestaurantId {
   string id = 1;
+}
+
+message DeliveryList {
+  repeated Delivery deliveries = 1;
+}
+
+message DeliveryPersonList {
+  repeated DeliveryPersonList persons = 1;
 }
 
 message DeliveryPersonId {
