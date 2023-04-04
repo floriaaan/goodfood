@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: "18.x"
           cache: "pnpm"
+          cache-dependency-path: services/delivery/pnpm-lock.yaml
       - name: Install dependencies
         run: |
           cd ./services/delivery
@@ -39,6 +40,7 @@ jobs:
         with:
           node-version: "18.x"
           cache: "pnpm"
+          cache-dependency-path: services/delivery/pnpm-lock.yaml
       - name: Install dependencies
         run: |
           cd ./services/delivery
