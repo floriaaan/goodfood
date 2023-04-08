@@ -21,7 +21,7 @@ model Delivery {
   address String
   status  Status @default(PENDING)
 
-  person             DeliveryPerson @relation(fields: [delivery_person_id], references: [id])
+  delivery_person    DeliveryPerson @relation(fields: [delivery_person_id], references: [id])
   delivery_person_id String
 
   user_id       String
