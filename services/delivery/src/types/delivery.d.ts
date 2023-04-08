@@ -1,16 +1,6 @@
 import { DeliveryPerson } from "@delivery/types/delivery-person";
 import { Status } from "@prisma/client";
 
-export type Data<T> = {
-  request: T;
-};
-
-export type Stream<T> = {
-  write: (data: any) => void;
-  end: () => void;
-  request: T;
-};
-
 export type DeliveryCreateInput = {
   eta: string;
   address: string;
@@ -23,7 +13,7 @@ export type DeliveryCreateInput = {
 };
 
 export type DeliveryId = {
-  id: string;
+  id: Delivery["id"];
 };
 
 export type Delivery = {
