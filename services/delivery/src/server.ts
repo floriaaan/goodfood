@@ -8,6 +8,7 @@ import { options } from "@delivery/resources/protoloader-options";
 import { serverInsecure } from "@delivery/resources/grpc-credentials";
 
 import deliveryHandlers from "@delivery/handlers/delivery";
+import personHandlers from "@delivery/handlers/person";
 
 const PORT = process.env.PORT || 50008;
 const ADDRESS = `0.0.0.0:${PORT}`;
@@ -18,7 +19,7 @@ const { delivery } = loadPackageDefinition(packageDefinition) as any; // todo: f
 const server = new Server();
 
 server.addService(delivery.DeliveryService.service, deliveryHandlers);
-server.addService(delivery.DeliveryPersonService.service, {});
+server.addService(delivery.DeliveryPersonService.service, personHandlers);
 
 server.bindAsync(ADDRESS, serverInsecure, () => {
   server.start();
