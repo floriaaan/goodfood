@@ -10,7 +10,7 @@ message Delivery {
   string address = 3;
   Status status = 4;
 
-  DeliveryPerson person = 5;
+  DeliveryPerson delivery_person = 5;
   string delivery_person_id = 6;
 
   string user_id = 7;
@@ -80,7 +80,7 @@ message DeliveryList {
 }
 
 message DeliveryPersonList {
-  repeated DeliveryPersonList persons = 1;
+  repeated DeliveryPersonList delivery_persons = 1;
 }
 
 message DeliveryPersonId {

@@ -1,6 +1,7 @@
 import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
-import { Data, DeliveryId } from "@delivery/types/delivery";
+import { DeliveryId } from "@delivery/types/delivery";
+import { Data } from "@delivery/types";
 
 export const GetDelivery = async (
   data: Data<DeliveryId>,
