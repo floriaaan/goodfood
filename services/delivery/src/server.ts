@@ -30,3 +30,6 @@ server.bindAsync(ADDRESS, serverInsecure, () => {
   )}\n`;
   log.debug(message);
 });
+
+
+export default server;
