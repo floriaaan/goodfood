@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-delivery
+  labels:
+    app: goodfood-delivery
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-delivery
+  template:
+    metadata:
+      labels:
+        app: goodfood-delivery
+    spec:
+      containers:
+        - name: goodfood-delivery
+          image: floriaaan/goodfood-delivery:1.0
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-delivery-configmap
+                  key: port
+          ports:
+            - containerPort: 3000
