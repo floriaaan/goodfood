@@ -15,8 +15,7 @@ spec:
     spec:
       containers:
         - name: goodfood-delivery
-          image: floriaaan/goodfood-delivery:1.0.0
-          imagePullPolicy: Always
+          image: floriaaan/goodfood-delivery:1.0
           resources:
             limits:
               memory: "128Mi"
@@ -28,4 +27,4 @@ spec:
                   name: goodfood-delivery-configmap
                   key: port
           ports:
-            - containerPort: 50008
+            - containerPort: 3000
