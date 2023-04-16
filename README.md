@@ -22,7 +22,8 @@ The GoodFood 2.0 project was initiated to update the existing ordering applicati
 | Order       | 50007 | NodeJS (ts) | MongoDB    | ❌     | @floriaaan      |
 | Delivery    | 50008 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
 | Stock       | 50009 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
-| Reporting   | 50010 | C# (dotnet) | PostgreSQL | ❌     | @floriaaan      |
+| Reporting   | 50020 | C# (dotnet) | PostgreSQL | ❌     | @floriaaan      |
+| Log         | 50021 | Go          | PostgreSQL | ❌     | @floriaaan      |
 | (...)       | (...) | (...)       | (...)      | (...)  |
 
 ## File Hierarchy
