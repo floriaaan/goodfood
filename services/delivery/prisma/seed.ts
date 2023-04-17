@@ -28,7 +28,7 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
   {
     address: "15 rue de la paix 75000 Paris",
     eta: new Date("2023-01-01"),
-    person: { create: deliveryPerson[0] },
+    delivery_person: { create: deliveryPerson[0] },
 
     restaurant_id: "restaurant_id:1",
     user_id: "user_id:1",
@@ -36,7 +36,7 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
   {
     address: "15 rue de la paix 75000 Paris",
     eta: new Date("2023-01-01"),
-    person: { create: deliveryPerson[0] },
+    delivery_person: { create: deliveryPerson[0] },
 
     restaurant_id: "restaurant_id:2",
     user_id: "user_id:1",
@@ -44,7 +44,7 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
   {
     address: "16 rue de la paix 75000 Paris",
     eta: new Date("2023-02-01"),
-    person: { create: deliveryPerson[1] },
+    delivery_person: { create: deliveryPerson[1] },
 
     restaurant_id: "restaurant_id:1",
     user_id: "user_id:2",
@@ -52,7 +52,7 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
   {
     address: "17 rue de la paix 75000 Paris",
     eta: new Date("2023-03-01"),
-    person: { create: deliveryPerson[2] },
+    delivery_person: { create: deliveryPerson[2] },
 
     restaurant_id: "restaurant_id:1",
     user_id: "user_id:3",
