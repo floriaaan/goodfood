@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package com.goodfood.log;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = ".";
+
+
+
+message Log {
+   int32 id = 1;
+    string event_message = 2;
+    google.protobuf.Struct metainfo = 4;
+    google.protobuf.Timestamp timestamp = 5;
+}
+
+service LogService {
+    rpc CreateLog(Log) returns (CreateLogResponse) {}
+    rpc GetLog(GetLogRequest) returns (Log) {}
+    rpc ListLog(google.protobuf.Empty) returns (ListLogResponse) {}
+  }
+
+
+  message CreateLogResponse {
+    int32 id = 1;
+  }
+  message GetLogRequest {
+    int32 id = 1;
+  }
+
+  message ListLogResponse {
+    repeated Log logs = 1;
+  }
