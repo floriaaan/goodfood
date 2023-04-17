@@ -14,7 +14,7 @@ export const GetDelivery = async (
 
     const delivery = await prisma.delivery.findFirstOrThrow({
       where: { id },
-      include: { person: true },
+      include: { delivery_person: true },
     });
     callback(null, delivery);
   } catch (error) {
