@@ -14,7 +14,7 @@ export const ListDeliveriesByUser = async (
 
     const deliveries = await prisma.delivery.findMany({
       where: { user_id: id },
-      include: { person: true },
+      include: { delivery_person: true },
     });
     callback(null, { deliveries });
   } catch (error) {
