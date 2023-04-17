@@ -17,14 +17,14 @@ export const UpdateDelivery = async (
         eta: new Date(eta),
         address,
         status,
-        person: {
+        delivery_person: {
           connect: {
             id: delivery_person_id,
           },
         },
       },
       include: {
-        person: true,
+        delivery_person: true,
       },
     });
     callback(null, delivery);
