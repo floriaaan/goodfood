@@ -83,8 +83,8 @@ docker build -t goodfood-delivery:1.0.0 -f ./delivery/Dockerfile .
 
 ### Run
 
-Then run the following command:
+Create the .env base on the .env.example. Then run the following command:
 
 ```
-docker run goodfood-delivery:1.0.0 
+docker run --env-file=.env goodfood-delivery:1.0.0 
 ```
