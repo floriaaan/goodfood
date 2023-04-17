@@ -46,7 +46,6 @@ The file hierarchy for this project is as follows:
     ├── gateway/
     │       ├── k8s/
     │       │   └── (...) # k8s files
-    │       ├── proto/ (symbolic link to /services/proto/)
     │       └── terraform/
     │           └── (...) # terraform files
     ├── user/
