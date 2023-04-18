@@ -11,6 +11,8 @@ import (
 
 	pb "goodfood-log/proto"
 
+	amqp "github.com/rabbitmq/amqp091-go"
+
 	"github.com/joho/godotenv"
 
 	"github.com/golang/protobuf/ptypes/empty"
@@ -25,7 +27,7 @@ import (
 type Log struct {
 	ID           uint      `gorm:"primarykey" json:"id"`
 	EventMessage string    `gorm:"not null" json:"event_message"`
-	Metadata     []uint8   `gorm:"type:jsonb" json:"metadata"`
+	Metadata     []uint8   `gorm:"type:jsonb, default:'{}'" json:"metadata"`
 	Timestamp    time.Time `gorm:"default:current_timestamp" json:"timestamp"`
 }
 
@@ -92,6 +94,34 @@ func (s *service) ListLog(ctx context.Context, _ *empty.Empty) (*pb.ListLogRespo
 	}, nil
 }
 
+func HandleAMQPMessage(d amqp.Delivery, db *gorm.DB) (bool, error) {
+	date := time.Now().Format("2006-01-02 15:04:05")
+	fmt.Printf("\x1b[35m%s\x1b[0m | \x1b[31mAMQP\x1b[0m | \x1b[33m%s\x1b[0m\n", date, d.Body)
+
+	// d.Body is a string (JSON stringified)
+	jsonMap := make(map[string]interface{})
+	err := json.Unmarshal(d.Body, &jsonMap)
+	if err != nil {
+		return false, err
+	}
+	metadata := jsonMap["metadata"].(map[string]interface{})
+	metadataBytes, err := json.Marshal(metadata)
+	if err != nil {
+		return false, err
+	}
+
+	log := &Log{
+		EventMessage: jsonMap["event_message"].(string),
+		Metadata:     metadataBytes,
+	}
+	result := db.Create(log)
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	return true, nil
+}
+
 func ConnectToDB(connectionString string) (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 	db.AutoMigrate(&Log{})
@@ -103,8 +133,14 @@ func ConnectToDB(connectionString string) (*gorm.DB, error) {
 
 func ConsoleLog(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	date := time.Now().Format("2006-01-02 15:04:05")
-	fmt.Printf("\x1b[33m%s\x1b[0m - %s\n", info.FullMethod, date)
+	fmt.Printf("\x1b[35m%s\x1b[0m | \x1b[36mGRPC\x1b[0m | \x1b[33m%s\x1b[0m\n", date, info.FullMethod)
 	return handler(ctx, req)
+}
+
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Panicf("%s: %s", msg, err)
+	}
 }
 
 func main() {
@@ -114,16 +150,49 @@ func main() {
 	}
 	dbURI := os.Getenv("DATABASE_URL")
 	port := os.Getenv("PORT")
+	amqpURI := os.Getenv("AMQP_URL")
 
 	db, err := ConnectToDB(dbURI)
-	if err != nil {
-		log.Fatalf("failed to connect to database: %v", err)
-	}
+	failOnError(err, "failed to connect to database")
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
+	failOnError(err, "failed to listen")
+	defer lis.Close()
+
+	conn, err := amqp.Dial(amqpURI)
+	failOnError(err, "Failed to connect to RabbitMQ")
+	defer conn.Close()
+
+	ch, err := conn.Channel()
+	failOnError(err, "Failed to open a channel")
+	defer ch.Close()
+
+	q, err := ch.QueueDeclare(
+		"log", // name
+		false, // durable
+		false, // delete when unused
+		false, // exclusive
+		false, // no-wait
+		nil,   // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
+
+	msgs, err := ch.Consume(
+		q.Name, // queue
+		"",     // consumer
+		true,   // auto-ack
+		false,  // exclusive
+		false,  // no-local
+		false,  // no-wait
+		nil,    // args
+	)
+	failOnError(err, "Failed to register a consumer")
+
+	go func() {
+		for d := range msgs {
+			HandleAMQPMessage(d, db)
+		}
+	}()
 
 	server := grpc.NewServer(
 		grpc.UnaryInterceptor(
@@ -138,7 +207,7 @@ func main() {
 	pb.RegisterLogServiceServer(server, service)
 
 	fmt.Println("---- \x1b[32mgood\x1b[0m\x1b[33mfood\x1b[0m Log Service ----")
-	fmt.Printf("started on: \x1b[1m0.0.0.0:%s\x1b[0m \x1b[32m✓\x1b[0m\n", port)
+	fmt.Printf("started on: \x1b[1m0.0.0.0:%s\x1b[0m \x1b[32m✓\x1b[0m\n\n", port)
 	if err := server.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
