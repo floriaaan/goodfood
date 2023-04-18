@@ -1,0 +1,95 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package product;
+
+enum ProductType {
+	ENTREES = 0;
+	PLATS = 1;
+	DESSERTS = 2;
+	BOISSONS = 3;
+	SNACKS = 4;
+}
+
+message RestaurantId {
+	string id = 1;
+}
+
+message ProductList {
+	repeated Product products = 1;
+}
+
+message ProductId {
+	string id = 1;
+}
+
+message Product {
+	string id = 1;
+	string name = 2;
+	string image = 3;
+	string comment = 4;
+	int32 price = 5;
+	string preparation = 6;
+	string weight = 7;
+	string kilocalories = 8;
+	int32 nutriscore = 9;
+	int32 restaurant_id = 10;
+	ProductType type = 11;
+	repeated Category categories = 12;
+	repeated Allergen allergens = 13;
+}
+
+message ProductIngredient {
+	string id = 1;
+	string product_id = 1;
+	string ingredient_id = 2;
+	int32 quantity = 3;
+}
+
+
+message CategoryId {
+	string id = 1;
+}
+
+message Category {
+	string id = 1;
+	string libelle = 2;
+	string hexa_color = 3;
+	string icon = 4;
+	repeated Product products = 5;
+}
+
+
+message AllergenId {
+	string id = 1;
+}
+
+message Allergen {
+	string id = 1;
+	string libelle = 2;
+	repeated Product products = 3;
+}
+
+service ProductService {
+	rpc GetProductTypeList() returns (ProductType) {}
+	rpc GetProductList(RestaurantId) returns (ProductList) {}
+
+	rpc CreateProduct(Product) returns (Product) {}
+	rpc ReadProduct(ProductId) returns (Product) {}
+	rpc UpdateProduct(Product) returns (Product) {}
+	rpc DeleteProduct(ProductId) returns (google.protobuf.Empty) {}
+}
+
+service AllergenService {
+	rpc CreateProduct(Allergen) returns (Allergen) {}
+	rpc ReadAllergen(AllergenId) returns (Allergen) {}
+	rpc UpdateAllergen(Allergen) returns (Allergen) {}
+	rpc DeleteAllergen(AllergenId) returns (google.protobuf.Empty) {}
+}
+
+service CategoryService {
+	rpc CreateCategory(Category) returns (Category) {}
+	rpc ReadCategory(CategoryId) returns (Category) {}
+	rpc UpdateCategory(Category) returns (Category) {}
+	rpc DeleteCategory(CategoryId) returns (google.protobuf.Empty) {}
+}
