@@ -56,8 +56,8 @@ resource "azurerm_postgresql_server" "pg-goodfood-reporting" {
   geo_redundant_backup_enabled = false
   auto_grow_enabled            = true
 
-  administrator_reportingin          = data.azurerm_key_vault_secret.reporting-db-reportingin.value
-  administrator_reportingin_password = data.azurerm_key_vault_secret.reporting-db-password.value
+  administrator_login          = data.azurerm_key_vault_secret.reporting-db-login.value
+  administrator_login_password = data.azurerm_key_vault_secret.reporting-db-password.value
   version                      = "11"
 
   ssl_enforcement_enabled          = false
