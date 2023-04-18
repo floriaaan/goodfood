@@ -9,11 +9,10 @@ export const CreateAllergen = async (
 ) => {
 	log.debug("Request received at CreateAllergen handler\n", data.request);
 	try {
-		const { id, libelle, products } = data.request;
+		const { libelle, products } = data.request;
 
 		const allergen = await prisma.allergen.create({
 			data: {
-				id,
 				libelle,
 				products: {
 					connect: products

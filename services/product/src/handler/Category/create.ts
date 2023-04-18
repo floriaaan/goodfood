@@ -9,11 +9,10 @@ export const CreateCategory = async (
 ) => {
 	log.debug("Request received at CreateCategory handler\n", data.request);
 	try {
-		const { id, libelle, hexa_color, icon, products } = data.request;
+		const { libelle, hexa_color, icon, products } = data.request;
 
 		const category = await prisma.category.create({
 			data: {
-				id,
 				libelle,
 				icon,
 				hexa_color,

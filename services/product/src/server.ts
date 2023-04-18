@@ -1,5 +1,3 @@
-import "dotenv/config";
-
 import { loadSync } from "@grpc/proto-loader";
 import { ServerCredentials, loadPackageDefinition, Server } from "@grpc/grpc-js";
 
@@ -21,15 +19,15 @@ const serverInsecure = ServerCredentials.createInsecure();
 
 const PORT = process.env.PORT || 50008;
 const ADDRESS = `0.0.0.0:${PORT}`;
-const PROTO_PATH = __dirname + "/../../proto/product.proto";
+const PROTO_PATH = __dirname + "/../../protos/product.proto";
 
 const packageDefinition = loadSync(PROTO_PATH, options);
-const { delivery } = loadPackageDefinition(packageDefinition) as any; // todo: fix any
+const { product } = loadPackageDefinition(packageDefinition) as any; // todo: fix any
 const server = new Server();
 
-server.addService(delivery.AllergenService.service, AllergenHandler);
-server.addService(delivery.CategoryService.service, CategoryHandler);
-server.addService(delivery.ProductService.service, ProductHandler);
+server.addService(product.AllergenService.service, AllergenHandler);
+server.addService(product.CategoryService.service, CategoryHandler);
+server.addService(product.ProductService.service, ProductHandler);
 
 server.bindAsync(ADDRESS, serverInsecure, () => {
   server.start();
