@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: goodfood-product
+spec:
+  selector:
+    app: goodfood-product
+  ports:
+    - name: "grpc"
+      port: 50008
+      targetPort: 50008
+status:
+  loadBalancer: {}
