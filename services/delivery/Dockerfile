@@ -1,4 +1,4 @@
-FROM node:18-alpine  as builder
+FROM node:18-alpine3.17  as builder
 
 # Set working directory
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN npm run build
 
 
 # Create a new image with the application
-FROM node:18-alpine as runner
+FROM node:18-alpine3.17 as runner
 
 # Set working directory
 WORKDIR /app
@@ -29,7 +29,7 @@ WORKDIR /app
 COPY --from=builder /app/dist .
 COPY --from=builder /app/prisma/ .
 COPY --from=builder /app/proto/ /proto/
-COPY --from=builder /app/node_modules/.prisma/client /.prisma/client/
+COPY --from=builder /app/node_modules/.prisma /.prisma
 
 # Expose the gRPC port
 EXPOSE 50008
