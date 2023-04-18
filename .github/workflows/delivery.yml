@@ -66,4 +66,4 @@ jobs:
         with:
           context: ./services/delivery
           push: true
-          tags: floriaaan/goodfood-delivery:latest
+          tags: goodfood-delivery:latest
