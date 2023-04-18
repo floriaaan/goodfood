@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package com.goodfood.log;
 
+import "google/protobuf/empty.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/empty.proto";
 
 option go_package = ".";
 
@@ -12,17 +12,22 @@ option go_package = ".";
 
 message Log {
    int32 id = 1;
-    string event_message = 2;
-    google.protobuf.Struct metainfo = 4;
-    google.protobuf.Timestamp timestamp = 5;
+    string event_message = 2; // string
+    google.protobuf.Struct metadata = 3; // json
+    google.protobuf.Timestamp timestamp = 4; // timestamp
 }
 
 service LogService {
-    rpc CreateLog(Log) returns (CreateLogResponse) {}
+    rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {}
     rpc GetLog(GetLogRequest) returns (Log) {}
     rpc ListLog(google.protobuf.Empty) returns (ListLogResponse) {}
   }
 
+
+  message CreateLogRequest {
+    string event_message = 1;
+    google.protobuf.Struct metadata = 2;
+  }
 
   message CreateLogResponse {
     int32 id = 1;

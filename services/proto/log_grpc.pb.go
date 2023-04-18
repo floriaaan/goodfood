@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LogServiceClient interface {
-	CreateLog(ctx context.Context, in *Log, opts ...grpc.CallOption) (*CreateLogResponse, error)
+	CreateLog(ctx context.Context, in *CreateLogRequest, opts ...grpc.CallOption) (*CreateLogResponse, error)
 	GetLog(ctx context.Context, in *GetLogRequest, opts ...grpc.CallOption) (*Log, error)
 	ListLog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListLogResponse, error)
 }
@@ -36,7 +36,7 @@ func NewLogServiceClient(cc grpc.ClientConnInterface) LogServiceClient {
 	return &logServiceClient{cc}
 }
 
-func (c *logServiceClient) CreateLog(ctx context.Context, in *Log, opts ...grpc.CallOption) (*CreateLogResponse, error) {
+func (c *logServiceClient) CreateLog(ctx context.Context, in *CreateLogRequest, opts ...grpc.CallOption) (*CreateLogResponse, error) {
 	out := new(CreateLogResponse)
 	err := c.cc.Invoke(ctx, "/com.goodfood.log.LogService/CreateLog", in, out, opts...)
 	if err != nil {
@@ -67,7 +67,7 @@ func (c *logServiceClient) ListLog(ctx context.Context, in *emptypb.Empty, opts 
 // All implementations must embed UnimplementedLogServiceServer
 // for forward compatibility
 type LogServiceServer interface {
-	CreateLog(context.Context, *Log) (*CreateLogResponse, error)
+	CreateLog(context.Context, *CreateLogRequest) (*CreateLogResponse, error)
 	GetLog(context.Context, *GetLogRequest) (*Log, error)
 	ListLog(context.Context, *emptypb.Empty) (*ListLogResponse, error)
 	mustEmbedUnimplementedLogServiceServer()
@@ -77,7 +77,7 @@ type LogServiceServer interface {
 type UnimplementedLogServiceServer struct {
 }
 
-func (UnimplementedLogServiceServer) CreateLog(context.Context, *Log) (*CreateLogResponse, error) {
+func (UnimplementedLogServiceServer) CreateLog(context.Context, *CreateLogRequest) (*CreateLogResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLog not implemented")
 }
 func (UnimplementedLogServiceServer) GetLog(context.Context, *GetLogRequest) (*Log, error) {
@@ -100,7 +100,7 @@ func RegisterLogServiceServer(s grpc.ServiceRegistrar, srv LogServiceServer) {
 }
 
 func _LogService_CreateLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Log)
+	in := new(CreateLogRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func _LogService_CreateLog_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/com.goodfood.log.LogService/CreateLog",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LogServiceServer).CreateLog(ctx, req.(*Log))
+		return srv.(LogServiceServer).CreateLog(ctx, req.(*CreateLogRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
