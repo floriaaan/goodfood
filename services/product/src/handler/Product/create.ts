@@ -10,11 +10,10 @@ export const CreateProduct = async (
 ) => {
 	log.debug("Request received at CreateProduct handler\n", data.request);
 	try {
-		const { id, name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = data.request;
+		const { name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = data.request;
 
 		const product = await prisma.product.create({
 			data: {
-				id,
 				name,
 				image, 
 				comment, 

@@ -11,6 +11,10 @@ enum ProductType {
 	SNACKS = 4;
 }
 
+message ProductTypeList{
+	repeated ProductType productType = 1;
+}
+
 message RestaurantId {
 	string id = 1;
 }
@@ -41,9 +45,9 @@ message Product {
 
 message ProductIngredient {
 	string id = 1;
-	string product_id = 1;
-	string ingredient_id = 2;
-	int32 quantity = 3;
+	string product_id = 2;
+	string ingredient_id = 3;
+	int32 quantity = 4;
 }
 
 
@@ -71,7 +75,7 @@ message Allergen {
 }
 
 service ProductService {
-	rpc GetProductTypeList() returns (ProductType) {}
+	rpc GetProductTypeList(google.protobuf.Empty) returns (ProductTypeList) {}
 	rpc GetProductList(RestaurantId) returns (ProductList) {}
 
 	rpc CreateProduct(Product) returns (Product) {}
@@ -81,7 +85,7 @@ service ProductService {
 }
 
 service AllergenService {
-	rpc CreateProduct(Allergen) returns (Allergen) {}
+	rpc CreateAllergen(Allergen) returns (Allergen) {}
 	rpc ReadAllergen(AllergenId) returns (Allergen) {}
 	rpc UpdateAllergen(Allergen) returns (Allergen) {}
 	rpc DeleteAllergen(AllergenId) returns (google.protobuf.Empty) {}

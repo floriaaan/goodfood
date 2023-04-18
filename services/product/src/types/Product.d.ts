@@ -1,7 +1,7 @@
 import { Category } from "@prisma/client";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 
-export enum Product_type {
+export enum ProductType {
 	ENTREES = 0,
 	PLATS = 1,
 	DESSERTS = 2,
