@@ -7,8 +7,8 @@ data "azurerm_key_vault" "kv-goodfood-reporting" {
   name = "kv-${var.project_name}"
 }
 
-data "azurerm_key_vault_secret" "reporting-db-reportingin" {
-  name         = "reporting-db-reportingin"
+data "azurerm_key_vault_secret" "reporting-db-login" {
+  name         = "reporting-db-login"
   key_vault_id = data.azurerm_key_vault.kv-goodfood-reporting.id
 }
 data "azurerm_key_vault_secret" "reporting-db-password" {
