@@ -146,7 +146,7 @@ func failOnError(err error, msg string) {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("failed to load env file: %v", err)
+		fmt.Printf("failed to load env file: %v\nusing arguments as env. vars", err)
 	}
 	dbURI := os.Getenv("DATABASE_URL")
 	port := os.Getenv("PORT")
