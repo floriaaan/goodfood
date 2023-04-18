@@ -34,6 +34,8 @@ You can use the following tools to help you with the setup:
 
 ## Getting started
 
+
+
 ### 1. Clone the repository and install dependencies
 
 1. Clone the `goodfood` repository to your local machine.
@@ -47,6 +49,9 @@ You can use the following tools to help you with the setup:
 You can now access the microservice at `http://localhost:50021`.
 
 NB: If you want to run the microservice in development mode, you can run `go run .` instead.
+
+If protos are updated, you will need to regenerate the gRPC code using the following command:
+`protoc -I . log.proto  --go-grpc_out=. --go_out=.`
 
 ### 2. Build and run the service using Docker
 
