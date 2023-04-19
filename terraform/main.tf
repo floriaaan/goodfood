@@ -12,6 +12,33 @@ provider "azurerm" {
   features {}
 }
 
+resource "azurerm_key_vault" "kv-goodfood" {
+  name                       = "kv-goodfood-delivery"
+  location                   = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
+  tenant_id                  = data.azurerm_client_config.current.tenant_id
+  sku_name                   = "standard"
+  soft_delete_retention_days = 7
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    key_permissions = [
+      "Create",
+      "Get",
+    ]
+
+    secret_permissions = [
+      "Set",
+      "Get",
+      "Delete",
+      "Purge",
+      "Recover"
+    ]
+  }
+}
+
 resource "azurerm_service_plan" "sp-goodfood" {
   name                = "sp-${var.project_name}${var.environnment_suffix}"
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
@@ -43,13 +70,27 @@ resource "azurerm_kubernetes_cluster" "aks-goodfood" {
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
   dns_prefix          = "aks-${var.project_name}${var.environnment_suffix}"
 
+
   default_node_pool {
-    name       = "default"
-    node_count = 1
+    name       = "agentpool"
     vm_size    = "Standard_D2_v2"
+    node_count = var.agent_count
+  }
+  linux_profile {
+    admin_username = "ubuntu"
+
+    ssh_key {
+      key_data = file(var.ssh_public_key)
+    }
   }
 
-  identity {
-    type = "SystemAssigned"
+  network_profile {
+    network_plugin    = "kubenet"
+    load_balancer_sku = "standard"
+  }
+
+  service_principal {
+    client_id     = var.aks_service_principal_app_id
+    client_secret = var.aks_service_principal_client_secret
   }
 }
