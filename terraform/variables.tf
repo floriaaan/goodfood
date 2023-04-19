@@ -14,3 +14,18 @@ variable "project_name" {
   description = "The name of the project"
   default     = "goodfood"
 }
+
+variable "agent_count" {
+  default = 3
+}
+
+variable "aks_service_principal_app_id" {
+  default = ""
+}
+
+variable "aks_service_principal_client_secret" {
+  default = ""
+}
+variable "ssh_public_key" {
+  default = "~/.ssh/id_rsa.pub"
+}
