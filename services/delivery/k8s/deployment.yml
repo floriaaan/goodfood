@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: goodfood-delivery
-          image: 4natole/goodfood-delivery:1.0.0
+          image: floriaaan/goodfood-delivery:1.0.0
           imagePullPolicy: Always
           resources:
             limits:
