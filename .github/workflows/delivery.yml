@@ -2,9 +2,9 @@ name: Delivery Microservice CI/CD
 
 on:
   push:
-    branches: [delivery]
+    branches: [ delivery ]
   pull_request:
-    branches: [dev, main]
+    branches: [ dev, main ]
 
 jobs:
   build:
@@ -52,7 +52,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [build, test]
+    needs: [ build, test ]
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -68,3 +68,37 @@ jobs:
           file: ./services/delivery/Dockerfile
           push: true
           tags: floriaaan/goodfood-delivery:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build, test, publish ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Install kubectl
+        run: |
+          sudo snap install kubectl --classic
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.5
+      - name: Terraform init
+        run: |
+          cd ./terraform
+          terraform init
+      - name: Terraform apply
+        run: |
+          cd ./terraform
+          terraform apply -auto-approve
+      - name: Configure kubectl
+        run: |
+          az aks get-credentials --resource-group rg-goodfood-dev --name aks-goodfood-dev
+      - name: apply k8s manifests
+        run: |
+          cd ../services/delivery
+          kubectl create namespace goodfood
+          kubectlcrete kubectl apply -f ./k8s
