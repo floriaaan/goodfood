@@ -1,4 +1,4 @@
 resource_group_name  = "rg-goodfood-dev"
-storage_account_name = "sa-goodfood-states"
+storage_account_name = "pafgoodfood"
 container_name       = "tfstate"
 key                  = "main-dev.tfstate"
