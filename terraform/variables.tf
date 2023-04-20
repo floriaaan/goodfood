@@ -29,3 +29,9 @@ variable "aks_service_principal_client_secret" {
 variable "ssh_public_key" {
   default = "~/.ssh/id_rsa.pub"
 }
+variable "db_password" {
+  type = string
+}
+variable "db_username" {
+  type = string
+}
