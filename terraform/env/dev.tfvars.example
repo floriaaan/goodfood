@@ -1,1 +1,3 @@
 environnment_suffix = "-dev"
+db_password = "password"
+db_username = "user"
