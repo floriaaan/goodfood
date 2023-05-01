@@ -2,6 +2,8 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
+option csharp_namespace = "reporting";
+
 package com.goodfood.reporting;
 
 message Metric {
@@ -15,11 +17,17 @@ message Metric {
 
 service ReportingService {
   rpc GetMetric (GetMetricRequest) returns (Metric) {}
-  rpc PushMetric (Metric) returns (PushMetricResponse) {}
+  rpc PushMetric (PushMetricRequest) returns (PushMetricResponse) {}
 }
 
 message GetMetricRequest {
   string key = 1;
+}
+
+message PushMetricRequest {
+  string restaurant_id = 1;
+  string code = 2;
+  string value = 3;
 }
 
 message PushMetricResponse {
