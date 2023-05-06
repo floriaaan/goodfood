@@ -8,6 +8,8 @@ RUN dotnet restore
 
 # Copy the rest of the application files and build
 COPY ./reporting .
+COPY ./proto ./Protos
+
 RUN dotnet build -c Release -o out
 
 # Install EF tools and add to path
