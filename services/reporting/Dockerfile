@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100-preview5-focal AS build
+FROM mcr.microsoft.com/dotnet/nightly/sdk:latest AS build
 
 WORKDIR /app
 
 # Copy and restore dependencies
-COPY YourAppName.csproj .
+COPY reporting.csproj .
 RUN dotnet restore
 
 # Copy the rest of the application files and build
@@ -14,8 +14,8 @@ RUN dotnet build -c Release -o out
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
-# Add EF migrations
-RUN dotnet ef migrations add InitialMigration
+# # Add EF migrations
+# RUN dotnet ef migrations add InitialMigration
 
 # Expose port and specify startup command
 EXPOSE 50020
