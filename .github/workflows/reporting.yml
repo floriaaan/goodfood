@@ -44,7 +44,7 @@ jobs:
       - name: Test with the dotnet CLI
         run: |
           cd ./services/reporting
-          dotnet test
+          dotnet test Tests/
 
   publish:
     runs-on: ubuntu-latest
