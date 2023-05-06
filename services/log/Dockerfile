@@ -1,4 +1,4 @@
-FROM arm64v8/golang:1.20-alpine as builder
+FROM golang:1.20-alpine as builder
 
 # Set destination for COPY
 WORKDIR /app

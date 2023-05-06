@@ -60,3 +60,8 @@ terraform.rc
 /**/dist
 /**/build
 /**/.env
+
+# dotnet build files
+/**/obj
+/**/bin
+/**/.vs
