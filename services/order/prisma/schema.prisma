@@ -1,0 +1,49 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  FULFILLED
+  REJECTED
+}
+
+model UserMinimum {
+  id String @id @default(cuid()) @map("_id")
+
+  first_name String
+  last_name  String
+  email      String
+  phone      String
+
+  orders Order[]
+}
+
+model Basket {
+  id    String @id @default(cuid()) @map("_id")
+  json  String
+  total Float
+
+  Order Order?
+}
+
+model Order {
+  id String @id @default(cuid()) @map("_id")
+
+  payment_id  String
+  delivery_id String
+  status      Status @default(PENDING)
+
+  user    UserMinimum @relation(fields: [user_id], references: [id])
+  user_id String
+
+  basket_snapshot    Basket @relation(fields: [basket_snapshot_id], references: [id])
+  basket_snapshot_id String @unique
+}
