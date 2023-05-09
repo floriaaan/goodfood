@@ -25,9 +25,7 @@
     - `ChangeRole`: Changes the role of the given user ID.
 
 - MainAddress person model:
-    - `CreateMainAddress`: Creates a new MainAddress for the given user ID.
     - `GetMainAddress`: Retrieves a MainAddress by its ID.
-    - `UpdateMainAddress`: Updates an existing main address by its ID.
     - `DeleteMainAddress`: Deletes a main address by its ID.
 
 ## Requirements
