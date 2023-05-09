@@ -17,11 +17,31 @@ message Metric {
 
 service ReportingService {
   rpc GetMetric (GetMetricRequest) returns (Metric) {}
+  rpc GetMetricsByRestaurant(GetMetricsByRestaurantRequest) returns (GetMetricsByRestaurantResponse) {}
+  rpc GetMetricsByRestaurantAndDate (GetMetricsByRestaurantAndDateRequest) returns (GetMetricsByRestaurantAndDateResponse) {}
+
   rpc PushMetric (PushMetricRequest) returns (PushMetricResponse) {}
 }
 
 message GetMetricRequest {
   string key = 1;
+}
+
+message GetMetricsByRestaurantRequest {
+  string restaurant_id = 1;
+}
+
+message GetMetricsByRestaurantResponse {
+  repeated Metric metrics = 1;
+}
+
+message GetMetricsByRestaurantAndDateRequest {
+  string restaurant_id = 1;
+  string date = 2;
+}
+
+message GetMetricsByRestaurantAndDateResponse {
+  repeated Metric metrics = 1;
 }
 
 message PushMetricRequest {

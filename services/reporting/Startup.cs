@@ -1,4 +1,4 @@
-using reporting.Services;
+using reporting.Services.GRPC;
 using reporting.Libraries.RabbitMQ;
 using System.Net;
 

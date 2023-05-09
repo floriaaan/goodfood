@@ -1,7 +1,6 @@
 using Grpc.Core;
-using reporting;
 
-namespace reporting.Services;
+namespace reporting.Services.GRPC;
 
 public class GreeterService : Greeter.GreeterBase
 {
