@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package com.goodfood.ordering;
+
+enum Status {
+    PENDING = 0;
+    IN_PROGRESS = 1;
+    FULFILLED = 2;
+    REJECTED = 3;
+  }
+
+  message UserMinimum {
+    string id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    string phone = 5;
+  }
+  
+  message Basket {
+  
+      // TODO: to be implemented
+  }
+  
+
+message Order {
+  // Unique identifier for the message
+  string id = 1;
+
+  
+  string payment_id = 3;
+  string delivery_id = 4;
+  
+  UserMinimum user = 2;
+  Basket basket_snapshot = 5;
+  Status status = 6;
+}
+
+
