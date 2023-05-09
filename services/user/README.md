@@ -46,10 +46,13 @@ You can use the following tools to help you with the setup:
 
 1. Clone the `goodfood` repository to your local machine.
 2. Navigate to the service directory (`services/user`) in your terminal.
-3. Run `go get` to install the necessary dependencies.
+3. Run `go mod download` to install the necessary dependencies.
 4. Create a `.env` file at the root of the project directory and add the environment variables values (
    see `.env.example`).
 5. Run `go run main.go` to start the microservice.
+
+If protos are updated, you will need to regenerate the gRPC code using the following command:
+`protoc -I . user.proto --go-grpc_out=. --go_out=.`
 
 You can now access the microservice at `http://localhost:50001`.
 
