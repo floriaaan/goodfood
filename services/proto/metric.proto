@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package com.goodfood.reporting;
+
+message Metric {
+  string id = 1;
+  string key = 2;
+  string restaurant_id = 3;
+  google.protobuf.Timestamp date = 4;
+  string code = 5;
+  string value = 6;
+}
+
+service ReportingService {
+  rpc GetMetric (GetMetricRequest) returns (Metric) {}
+  rpc PushMetric (Metric) returns (PushMetricResponse) {}
+}
+
+message GetMetricRequest {
+  string key = 1;
+}
+
+message PushMetricResponse {
+  string key = 1;
+}
