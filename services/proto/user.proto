@@ -5,6 +5,8 @@ import "google/protobuf/empty.proto";
 
 package com.goodfood.user;
 
+option go_package = ".";
+
 message Role {
   string id = 1;
   string code = 2;
