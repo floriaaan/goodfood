@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package com.goodfood.ordering;
+package com.goodfood.order;
 
 enum Status {
     PENDING = 0;
@@ -18,7 +18,7 @@ enum Status {
   }
   
   message Basket {
-  
+    string json = 1;
       // TODO: to be implemented
   }
   
@@ -28,12 +28,47 @@ message Order {
   string id = 1;
 
   
-  string payment_id = 3;
-  string delivery_id = 4;
+  string payment_id = 2;
+  string delivery_id = 3;
   
-  UserMinimum user = 2;
+  UserMinimum user = 4;
   Basket basket_snapshot = 5;
   Status status = 6;
 }
 
+service OrderService {
+  rpc GetOrder(GetOrderRequest) returns (Order) {}
+  rpc CreateOrder(CreateOrderRequest) returns (Order) {}
+  rpc UpdateOrder(UpdateOrderRequest) returns (Order) {}
+  rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse) {}
+}
+
+message GetOrderRequest {
+  string id = 1;
+}
+
+message CreateOrderRequest {
+  string payment_id = 1;
+  string delivery_id = 2;
+
+  UserMinimum user = 3;
+  Basket basket_snapshot = 4;
+}
+
+message UpdateOrderRequest{
+  string id = 1;
+
+  string payment_id = 2;
+  string delivery_id = 3;
+
+  Status status = 4;
+}
+
+message DeleteOrderRequest {
+  string id = 1;
+}
+
+message DeleteOrderResponse {
+  string id = 1;
+}
 
