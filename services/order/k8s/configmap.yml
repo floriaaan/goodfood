@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: goodfood-order-configmap
+  labels:
+    app: goodfood-order
+data:
+  port: "50007"
