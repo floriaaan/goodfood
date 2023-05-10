@@ -7,7 +7,6 @@ export const CreateDelivery = async (
   { request }: Data<DeliveryCreateInput>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at CreateDelivery handler\n", request);
   try {
     const { eta, address, status, delivery_person_id, restaurant_id, user_id } =
       request;

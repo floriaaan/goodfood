@@ -6,7 +6,6 @@ export const ListDeliveryPersons = async (
   { request }: Data<{}>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at ListDeliveryPersons handler\n", request);
   try {
     const delivery_persons = await prisma.deliveryPerson.findMany();
     callback(null, { delivery_persons });
