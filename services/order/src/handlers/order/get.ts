@@ -2,6 +2,7 @@ import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
 import { GetOrderRequest, Order } from "@order/types/order";
 import { Data } from "@order/types";
+import { toGrpc } from "@order/lib/transformer";
 
 export const GetOrder = async (
   { request }: Data<GetOrderRequest>,
@@ -14,7 +15,7 @@ export const GetOrder = async (
       where: { id },
       include: { basket_snapshot: true, user: true },
     });
-    callback(null, order);
+    callback(null, toGrpc(order));
   } catch (error) {
     log.error(error);
     callback(error, null);
