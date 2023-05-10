@@ -1,4 +1,4 @@
-name: Delivery Microservice CI/CD
+name: Order Microservice CI/CD
 
 on:
   push:
