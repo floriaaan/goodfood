@@ -1,4 +1,4 @@
-import { Status } from "@prisma/client";
+import { Prisma, Status } from "@prisma/client";
 
 export type UserMinimum = {
   id: string;
@@ -9,7 +9,8 @@ export type UserMinimum = {
 };
 
 export type Basket = {
-  json: string; // TODO: to be implemented
+  string: string;
+  json?: string | Prisma.JsonValue | any; 
 };
 
 export type Order = {

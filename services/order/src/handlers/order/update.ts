@@ -2,6 +2,7 @@ import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
 import { UpdateOrderRequest, Order } from "@order/types/order";
 import { Data } from "@order/types";
+import { toGrpc } from "@order/lib/transformer";
 
 export const UpdateOrder = async (
   { request }: Data<UpdateOrderRequest>,
@@ -23,7 +24,7 @@ export const UpdateOrder = async (
       },
       include: { basket_snapshot: true, user: true },
     });
-    callback(null, order);
+    callback(null, toGrpc(order));
   } catch (error) {
     log.error(error);
     callback(error, null);

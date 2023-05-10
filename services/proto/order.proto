@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package com.goodfood.order;
 
+import "google/protobuf/struct.proto";
+
+
 enum Status {
     PENDING = 0;
     IN_PROGRESS = 1;
@@ -18,8 +21,8 @@ enum Status {
   }
   
   message Basket {
-    string json = 1;
-      // TODO: to be implemented
+    string string = 1;
+    optional google.protobuf.Struct json = 2;
   }
   
 
