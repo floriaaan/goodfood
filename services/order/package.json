@@ -11,7 +11,7 @@
     "prisma:generate": "prisma generate",
     "seed": "ts-node prisma/seed.ts",
     "grpc:reflection": "./generate_grpc_reflection.sh",
-    "postinstall": "npm run prisma:generate && npm run grpc:reflection"
+    "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.8.14",
