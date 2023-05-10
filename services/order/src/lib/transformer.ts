@@ -1,12 +1,8 @@
 import { toStruct } from "@order/lib/struct";
-import { Basket, Order, UserMinimum } from "@prisma/client";
+import { ExtendedOrder } from "@order/types/order";
 
-export const toGrpc = (
-  order: Order & {
-    user: UserMinimum;
-    basket_snapshot: Basket;
-  }
-) => {
+export const toGrpc = (order: ExtendedOrder) => {
+  if(!order) return null
   return {
     id: order.id,
     payment_id: order.payment_id,
