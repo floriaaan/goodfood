@@ -41,6 +41,10 @@ message Order {
 
 service OrderService {
   rpc GetOrder(GetOrderRequest) returns (Order) {}
+  rpc GetOrdersByUser(GetOrdersByUserRequest) returns (GetOrdersByUserResponse) {}
+  rpc GetOrderByDelivery(GetOrderByDeliveryRequest) returns (Order) {}
+  rpc GetOrderByPayment(GetOrderByPaymentRequest) returns (Order) {}
+  rpc GetOrdersByStatus(GetOrdersByStatusRequest) returns (GetOrdersByStatusResponse) {}
   rpc CreateOrder(CreateOrderRequest) returns (Order) {}
   rpc UpdateOrder(UpdateOrderRequest) returns (Order) {}
   rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse) {}
@@ -48,6 +52,30 @@ service OrderService {
 
 message GetOrderRequest {
   string id = 1;
+}
+
+message GetOrdersByUserRequest {
+  string id = 1;
+}
+
+message GetOrdersByUserResponse {
+  repeated Order orders = 1;
+}
+
+message GetOrderByDeliveryRequest {
+  string id = 1;
+}
+
+message GetOrderByPaymentRequest {
+  string id = 1;
+}
+
+message GetOrdersByStatusRequest {
+  Status status = 1;
+}
+
+message GetOrdersByStatusResponse {
+  repeated Order orders = 1;
 }
 
 message CreateOrderRequest {
