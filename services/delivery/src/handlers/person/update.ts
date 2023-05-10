@@ -7,7 +7,6 @@ export const UpdateDeliveryPerson = async (
   { request }: Data<DeliveryPerson>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at UpdateDeliveryPerson handler\n", request);
   try {
     const { id, first_name, last_name, location, phone } = request;
 

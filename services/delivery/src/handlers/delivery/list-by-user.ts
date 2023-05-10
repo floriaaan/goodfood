@@ -7,7 +7,6 @@ export const ListDeliveriesByUser = async (
   data: Data<UserId>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at ListDeliveriesByUser handler\n", data.request);
   try {
     const { request } = data;
     const { id } = request;

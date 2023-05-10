@@ -7,7 +7,6 @@ export const GetDelivery = async (
   data: Data<DeliveryId>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at GetDelivery handler\n", data.request);
   try {
     const { request } = data;
     const { id } = request;
