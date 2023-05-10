@@ -27,7 +27,7 @@ import (
 type Log struct {
 	ID           uint      `gorm:"primarykey" json:"id"`
 	EventMessage string    `gorm:"not null" json:"event_message"`
-	Metadata     []uint8   `gorm:"type:jsonb, default:'{}'" json:"metadata"`
+	Metadata     []uint8   `gorm:"type:jsonb" default:"{}" json:"metadata"`
 	Timestamp    time.Time `gorm:"default:current_timestamp" json:"timestamp"`
 }
 
