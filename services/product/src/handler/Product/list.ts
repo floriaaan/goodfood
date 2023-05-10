@@ -1,7 +1,7 @@
-import { RestaurantId } from "../../types/Product";
-import { Data } from "../../types";
-import { prisma } from "../../lib/prisma";
-import { log } from "../../lib/log";
+import { RestaurantId } from "@product/types/Product";
+import { Data } from "@product/types";
+import { log } from "@product/lib/log";
+import prisma from "@product/lib/prisma";
 
 export const ListProduct = async (
 	data: Data<RestaurantId>,
@@ -9,8 +9,7 @@ export const ListProduct = async (
 ) => {
 	log.debug("Request received at ListProduct handler\n", data.request);
 	try {
-		const { request } = data;
-		const { id } = request;
+		const { id } = data.request;
 
 		const products = await prisma.product.findMany({ where : {restaurant_id: id} });
 

@@ -3,6 +3,7 @@ import "google/protobuf/empty.proto";
 
 package product;
 
+//Product type
 enum ProductType {
 	ENTREES = 0;
 	PLATS = 1;
@@ -15,16 +16,18 @@ message ProductTypeList{
 	repeated ProductType productType = 1;
 }
 
+
 message RestaurantId {
+	string id = 1;
+}
+
+//Product
+message ProductId {
 	string id = 1;
 }
 
 message ProductList {
 	repeated Product products = 1;
-}
-
-message ProductId {
-	string id = 1;
 }
 
 message Product {
@@ -51,6 +54,7 @@ message ProductIngredient {
 }
 
 
+//Catégories
 message CategoryId {
 	string id = 1;
 }
@@ -60,10 +64,14 @@ message Category {
 	string libelle = 2;
 	string hexa_color = 3;
 	string icon = 4;
-	repeated Product products = 5;
+}
+
+message CategoryList{
+	repeated Category categories = 1;
 }
 
 
+//Allergen
 message AllergenId {
 	string id = 1;
 }
@@ -71,7 +79,10 @@ message AllergenId {
 message Allergen {
 	string id = 1;
 	string libelle = 2;
-	repeated Product products = 3;
+}
+
+message AllergenList {
+	repeated Allergen allergens = 1;
 }
 
 service ProductService {
@@ -85,6 +96,8 @@ service ProductService {
 }
 
 service AllergenService {
+	rpc GetAllergenList(google.protobuf.Empty) returns (AllergenList) {}
+
 	rpc CreateAllergen(Allergen) returns (Allergen) {}
 	rpc ReadAllergen(AllergenId) returns (Allergen) {}
 	rpc UpdateAllergen(Allergen) returns (Allergen) {}
@@ -92,6 +105,8 @@ service AllergenService {
 }
 
 service CategoryService {
+	rpc GetCategoryList(google.protobuf.Empty) returns (CategoryList) {}
+
 	rpc CreateCategory(Category) returns (Category) {}
 	rpc ReadCategory(CategoryId) returns (Category) {}
 	rpc UpdateCategory(Category) returns (Category) {}

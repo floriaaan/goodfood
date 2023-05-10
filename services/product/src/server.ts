@@ -1,5 +1,5 @@
 import { loadSync } from "@grpc/proto-loader";
-import { ServerCredentials, loadPackageDefinition, Server } from "@grpc/grpc-js";
+import { ServerCredentials, loadPackageDefinition, Server, GrpcObject } from "@grpc/grpc-js";
 
 import { log, utils } from "./lib/log";
 
@@ -17,9 +17,9 @@ const options = {
 
 const serverInsecure = ServerCredentials.createInsecure();
 
-const PORT = process.env.PORT || 50008;
+const PORT = process.env.PORT || 50004;
 const ADDRESS = `0.0.0.0:${PORT}`;
-const PROTO_PATH = __dirname + "/../../protos/product.proto";
+const PROTO_PATH = __dirname + "/../../proto/product.proto";
 
 const packageDefinition = loadSync(PROTO_PATH, options);
 const { product } = loadPackageDefinition(packageDefinition) as any; // todo: fix any

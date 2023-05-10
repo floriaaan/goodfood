@@ -3,7 +3,7 @@ import { ReadProduct } from "./read";
 import { UpdateProduct } from "./update";
 import { DeleteProduct } from "./delete";
 import { ListProduct } from "./list";
-import { ListProductType } from "./listType";
+//import { GetProductTypeList } from "./listType";
 
 export default {
 	CreateProduct,
@@ -11,5 +11,5 @@ export default {
 	UpdateProduct,
 	DeleteProduct,
 	ListProduct,
-	ListProductType,
+	//GetProductTypeList,
 };

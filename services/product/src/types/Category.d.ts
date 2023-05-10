@@ -7,5 +7,8 @@ export interface Category {
 	libelle: string;
 	hexa_color: string;
 	icon: string;
-	products: Product[];
+}
+
+export interface CategoryList{
+	categories: Category[];
 }

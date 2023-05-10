@@ -1,7 +1,8 @@
-import { ProductId } from "../../types/Product";
-import { Data } from "../../types";
-import { prisma } from "../../lib/prisma";
-import { log } from "../../lib/log";
+import { ProductId } from "@product/types/Product";
+import { Data } from "@product/types";
+import { log } from "@product/lib/log";
+import { PrismaClient } from "@prisma/client";
+import prisma from "@product/lib/prisma";
 
 export const DeleteProduct = async (
 	data: Data<ProductId>,
@@ -9,8 +10,7 @@ export const DeleteProduct = async (
 ) => {
 	log.debug("Request received at DeleteProduct handler\n", data.request);
 	try {
-		const { request } = data;
-		const { id } = request;
+		const { id } = data.request;
 
 		await prisma.product.delete({ where : {id} });
 

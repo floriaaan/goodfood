@@ -1,5 +1,6 @@
-import { Category } from "@prisma/client";
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
+import { Allergen } from "@product/types/Allergen";
+import { Category } from "@product/types/Category";
+
 
 export enum ProductType {
 	ENTREES = 0,
@@ -20,13 +21,17 @@ export interface Product {
 	kilocalories: string;
 	nutriscore: number;
 	restaurant_id: string;
-	type: Product_type;
+	type: ProductType;
 	categories: Category[];
 	allergens: Allergen[];
 }
 
 export interface ProductList {
 	products: Product[];
+}
+
+export interface ProductTypeList {
+	productTypes: ProductType[];
 }
 
 export interface ProductId {

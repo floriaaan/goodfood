@@ -7,7 +7,7 @@ spec:
     app: goodfood-product
   ports:
     - name: "grpc"
-      port: 50008
-      targetPort: 50008
+      port: 50004
+      targetPort: 50004
 status:
   loadBalancer: {}

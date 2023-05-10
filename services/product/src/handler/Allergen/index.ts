@@ -1,9 +1,11 @@
-import { CreateAllergen } from "./create";
-import { ReadAllergen } from "./read";
-import { UpdateAllergen } from "./update";
-import { DeleteAllergen } from "./delete";
+import { GetAllergenList } from "@product/handler/Allergen/list";
+import { CreateAllergen } from "@product/handler/Allergen/create";
+import { ReadAllergen } from "@product/handler/Allergen/read";
+import { UpdateAllergen } from "@product/handler/Allergen/update";
+import { DeleteAllergen } from "@product/handler/Allergen/delete";
 
 export default {
+	GetAllergenList,
 	CreateAllergen,
 	ReadAllergen,
 	UpdateAllergen,

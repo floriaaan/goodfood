@@ -5,4 +5,4 @@ metadata:
   labels:
     app: goodfood-product
 data:
-  port: "50008"
+  port: "50004"
