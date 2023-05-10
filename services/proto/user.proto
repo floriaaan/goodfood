@@ -1,9 +1,9 @@
 syntax = "proto3";
 
+package com.goodfood.user;
+
 import "google/protobuf/struct.proto";
 import "google/protobuf/empty.proto";
-
-package com.goodfood.user;
 
 option go_package = ".";
 
@@ -18,7 +18,8 @@ message MainAddress {
   string street = 2;
   string zipCode = 3;
   string country = 4;
-  repeated int32 coordinates = 5;
+  float lat = 5;
+  float lng = 6;
 }
 
 message User {
