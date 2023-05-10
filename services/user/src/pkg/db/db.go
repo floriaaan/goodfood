@@ -1,10 +1,10 @@
 package db
 
 import (
+	"goodfood-user/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
-	"main/pkg/models"
 )
 
 type Handler struct {

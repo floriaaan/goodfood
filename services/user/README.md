@@ -52,7 +52,7 @@ You can use the following tools to help you with the setup:
 5. Run `go run main.go` to start the microservice.
 
 If protos are updated, you will need to regenerate the gRPC code using the following command:
-`protoc -I . user.proto --go-grpc_out=. --go_out=.`
+`protoc -I . user.proto --go-grpc_out=. --go_out=.` in the proto directory.
 
 You can now access the microservice at `http://localhost:50001`.
 

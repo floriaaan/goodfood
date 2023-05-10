@@ -1,4 +1,4 @@
-module main
+module goodfood-user
 
 go 1.19
 

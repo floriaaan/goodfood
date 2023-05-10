@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	"goodfood-user/pkg/config"
+	"goodfood-user/pkg/db"
+	"goodfood-user/pkg/services"
+	"goodfood-user/pkg/utils"
+	pb "goodfood-user/proto"
 	"google.golang.org/grpc"
 	"log"
-	"main/pkg/config"
-	"main/pkg/db"
-	"main/pkg/pb"
-	"main/pkg/services"
-	"main/pkg/utils"
 	"net"
 )
 
@@ -42,7 +42,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterAuthServiceServer(grpcServer, &s)
+	pb.RegisterUserServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)
