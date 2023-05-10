@@ -2,6 +2,8 @@ import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
 import { CreateOrderRequest, Order } from "@order/types/order";
 import { Data } from "@order/types";
+import { parseStruct } from "@order/lib/struct";
+import { toGrpc } from "@order/lib/transformer";
 
 export const CreateOrder = async (
   { request }: Data<CreateOrderRequest>,
@@ -20,14 +22,19 @@ export const CreateOrder = async (
         payment_id,
         user: { connectOrCreate: { where: { id: user.id }, create: user } },
         basket_snapshot: {
-          create: { json: basket_snapshot.json, total },
+          create: {
+            string: basket_snapshot.string,
+            json:
+              parseStruct(basket_snapshot.json) ||
+              JSON.parse(basket_snapshot.string),
+            total,
+          },
         },
       },
       include: { basket_snapshot: true, user: true },
     });
 
-    console.log("order", order)
-    callback(null, order);
+    callback(null, toGrpc(order));
   } catch (error) {
     log.error(error);
     callback(error, null);
