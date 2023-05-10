@@ -57,12 +57,11 @@ terraform.rc
 /**/.DS_Store
 
 /**/node_modules
-/**/dist
-/**/build
 /**/.env
+!/**/.env.example
 
+/**/bin
+/**/obj
+/**/.vs
 
-# reporting service
-/services/reporting/**/bin
-/services/reporting/**/obj
-/services/reporting/**/.vs
+/**/goodfood-log
