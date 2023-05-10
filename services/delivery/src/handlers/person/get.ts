@@ -7,7 +7,6 @@ export const GetDeliveryPerson = async (
   { request }: Data<DeliveryPersonId>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at GetDeliveryPerson handler\n", request);
   try {
     const { id } = request;
     const deliveryPerson = await prisma.deliveryPerson.findUnique({

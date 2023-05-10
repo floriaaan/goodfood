@@ -7,7 +7,6 @@ export const DeleteDeliveryPerson = async (
   { request }: Data<DeliveryPersonId>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at DeleteDeliveryPerson handler\n", request);
   try {
     const { id } = request;
     await prisma.deliveryPerson.delete({ where: { id } });
