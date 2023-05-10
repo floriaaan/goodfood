@@ -7,10 +7,6 @@ export const ListDeliveriesByRestaurant = async (
   data: Data<RestaurantId>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug(
-    "request received at ListDeliveriesByRestaurant handler\n",
-    data.request
-  );
   try {
     const { request } = data;
     const { id } = request;

@@ -7,7 +7,6 @@ export const ListNearDeliveryPersons = async (
   { request }: Data<LocationInput>,
   callback: (err: any, response: any) => void
 ) => {
-  log.debug("request received at ListNearDeliveryPersons handler\n", request);
   try {
     const { latitude, longitude } = request;
     const maxDistance = 10; // in km //TODO: make this a parameter
