@@ -25,9 +25,11 @@ export const msg = (
   requestAt: Date,
   responseAt: Date
 ) =>
-  `${utils.magenta(requestAt.toISOString())} | ${utils.cyan(type)}${
-    path ? ` | ${utils.yellow(path)}` : ""
-  } | ${utils.green(responseAt.getTime() - requestAt.getTime() + "ms")} |`;
+  `${utils.magenta(requestAt.toISOString())} | ${utils[
+    type === "GRPC" ? "cyan" : "red"
+  ](type)}${path ? ` | ${utils.yellow(path)}` : ""} | ${utils.green(
+    responseAt.getTime() - requestAt.getTime() + "ms"
+  )} |`;
 
 export const logGRPC = async (ctx: Context, next: () => Promise<void>) => {
   const requestAt = new Date();
