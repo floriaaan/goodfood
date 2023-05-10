@@ -6,10 +6,9 @@ const DEFAULT_QUEUE = "log";
 
 async function connectQueue(queue = DEFAULT_QUEUE) {
   try {
-    const connection = await amqp.connect("amqp://localhost:5672");
+    const connection = await amqp.connect(process.env.AMQP_URL || "");
     const channel = await connection.createChannel();
-
-    await channel.assertQueue(queue);
+    await channel.assertExchange(queue, "fanout", { durable: true });
     return channel;
   } catch (error) {
     return error as Error;
