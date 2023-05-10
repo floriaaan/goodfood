@@ -10,6 +10,7 @@ export type Struct = {
 };
 
 export const parseStruct = (struct: Struct) => {
+  if (!struct) return null;
   const fields = struct.fields;
 
   if (!fields || Object.keys(fields).length === 0) return null;
@@ -32,12 +33,11 @@ export const toStruct = (
     return {
       ...acc,
       [key]: {
+        kind: `${typeof value}Value`,
         [`${typeof value}Value`]: value,
       },
     };
   }, {});
-
-  console.log(fields);
 
   return { fields };
 };

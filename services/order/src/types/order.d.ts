@@ -10,7 +10,7 @@ export type UserMinimum = {
 
 export type Basket = {
   string: string;
-  json?: string | Prisma.JsonValue | any; 
+  json?: string | Prisma.JsonValue | any;
 };
 
 export type Order = {
@@ -46,4 +46,9 @@ export type DeleteOrderRequest = {
 
 export type DeleteOrderResponse = {
   id: string;
+};
+
+export type ExtendedOrder = Order & {
+  user: UserMinimum;
+  basket_snapshot: Basket;
 };
