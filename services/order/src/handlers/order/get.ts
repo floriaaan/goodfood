@@ -8,7 +8,6 @@ export const GetOrder = async (
   { request }: Data<GetOrderRequest>,
   callback: (err: any, response: Order | null) => void
 ) => {
-  log.debug("request received at GetOrder handler\n", request);
   try {
     const { id } = request;
     const order = await prisma.order.findUniqueOrThrow({

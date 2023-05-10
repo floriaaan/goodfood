@@ -9,7 +9,6 @@ export const CreateOrder = async (
   { request }: Data<CreateOrderRequest>,
   callback: (err: any, response: Order | null) => void
 ) => {
-  log.debug("request received at CreateOrder handler\n", request);
   try {
     const { basket_snapshot, delivery_id, payment_id, user } = request;
 
