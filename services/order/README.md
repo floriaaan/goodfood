@@ -1,30 +1,39 @@
 # Order Microservice
 
-| Informations                                |
-| ------------------------------------------- |
-| **Port:** 50007                             |
-| **Developer:** @floriaaan                   |
-| **Status:** In progress                     |
-| **Last update:** 2023-04-16                 |
-| **Language:** NodeJS                        |
-| **Dependencies:** TypeScript, gRPC, MongoDB |
-| **Models:** ?                               |
+| Informations                                      |
+| ------------------------------------------------- |
+| **Port:** 50007                                   |
+| **Developer:** @floriaaan                         |
+| **Status:** In progress                           |
+| **Last update:** 2023-05-10                       |
+| **Language:** NodeJS                              |
+| **Dependencies:** TypeScript, gRPC, MongoDB, AMQP |
+| **Models:**                                       |
 
 ## gRPC Methods
 
-TBW
+The service provides the following gRPC methods:
+
+- `GetOrder`: Retrieves an order by its ID.
+- `CreateOrder`: Creates a new order.
+- `UpdateOrder`: Updates an existing order.
+- `DeleteOrder`: Deletes an order by its ID.
 
 ## Requirements
 
 To run this microservice, you will need to have the following installed on your system:
 
 - NodeJS (v18.12.0 or higher) (dev. with v18.12.0)
-- MongoDB
+- MongoDB (dev. with mongoDB Atlas)
 
 You can use the following tools to help you with the setup:
 
 - You can use nvm to set your Node version using:
   - `nvm use`.
+- You can use docker to run your MongoDB server using:
+  - `docker run --name mongodb -p 27017:27017 -d mongo:latest`
+- You can use docker to run your RabbitMQ server using:
+  - `docker run --name rabbitmq -p 5672:5672 -p 15672:15672 -d rabbitmq:3-management`
 
 ## Getting started
 
