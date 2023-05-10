@@ -15,6 +15,10 @@
 The service provides the following gRPC methods:
 
 - `GetOrder`: Retrieves an order by its ID.
+- `GetOrdersByUser`: Retrieves a list of orders for a given user.
+- `GetOrderByDelivery`: Retrieves an order by its delivery ID.
+- `GetOrderByPayment`: Retrieves an order by its payment ID.
+- `GetOrdersByStatus`: Retrieves a list of orders by status.
 - `CreateOrder`: Creates a new order.
 - `UpdateOrder`: Updates an existing order.
 - `DeleteOrder`: Deletes an order by its ID.
