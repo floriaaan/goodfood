@@ -13,5 +13,5 @@ spec:
               service:
                 name: goodfood-product
                 port:
-                  number: 50008
+                  number: 50004
             path: /

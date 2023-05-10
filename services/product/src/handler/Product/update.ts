@@ -1,8 +1,8 @@
-import { Product } from "../../types/Product";
-import { Data } from "../../types";
-import { prisma } from "../../lib/prisma";
-import { log } from "../../lib/log";
-import { Product_type } from "@prisma/client";
+import { Product } from "@product/types/Product";
+import { Data } from "@product/types";
+import { prisma } from "@product/lib/prisma";
+import { log } from "@product/lib/log";
+import { PrismaClient, Product_type } from "@prisma/client";
 
 export const UpdateProduct = async (
 	data: Data<Product>,
@@ -10,7 +10,7 @@ export const UpdateProduct = async (
 ) => {
 	log.debug("Request received at UpdateProduct handler\n", data.request);
 	try {
-        const { id, name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = data.request;
+		const { id, name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = data.request;
 
 		const product = await prisma.product.update({ 
             where : { id },

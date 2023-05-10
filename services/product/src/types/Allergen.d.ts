@@ -5,5 +5,8 @@ export interface AllergenId {
 export interface Allergen {
 	id: string;
 	libelle: string;
-	products: Product[];
+}
+
+export interface AllergenList{
+	allergens: Allergen[];
 }

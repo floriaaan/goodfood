@@ -35,7 +35,7 @@ model Category {
 
 model Allergen {
   id      String   @id @default(cuid())
-  libelle String
+  libelle String   @unique
 
   products Product[]
 }

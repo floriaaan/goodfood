@@ -1,7 +1,8 @@
-import { ProductId } from "../../types/Product";
-import { Data } from "../../types";
-import { prisma } from "../../lib/prisma";
-import { log } from "../../lib/log";
+import { ProductId } from "@product/types/Product";
+import { Data } from "@product/types";
+import { prisma } from "@product/lib/prisma";
+import { log } from "@product/lib/log";
+import { PrismaClient } from "@prisma/client";
 
 export const ReadProduct = async (
 	data: Data<ProductId>,
@@ -9,8 +10,7 @@ export const ReadProduct = async (
 ) => {
 	log.debug("Request received at ReadProduct handler\n", data.request);
 	try {
-		const { request } = data;
-		const { id } = request;
+		const { id } = data.request;
 
 		const product = await prisma.product.findFirstOrThrow({ where : {id} });
 
