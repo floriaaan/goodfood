@@ -66,6 +66,3 @@ terraform.rc
 /services/reporting/**/bin
 /services/reporting/**/obj
 /services/reporting/**/.vs
-
-# log service
-/services/log/goodfood-log
