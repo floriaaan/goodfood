@@ -7,7 +7,6 @@ export const DeleteOrder = async (
   { request }: Data<DeleteOrderRequest>,
   callback: (err: any, response: DeleteOrderResponse | null) => void
 ) => {
-  log.debug("request received at DeleteOrder handler\n", request);
   try {
     const { id } = request;
     const order = await prisma.order.delete({
