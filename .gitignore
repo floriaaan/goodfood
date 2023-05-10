@@ -62,7 +62,10 @@ terraform.rc
 /**/.env
 
 
-# Ignore Visual Studio temporary files
+# reporting service
 /services/reporting/**/bin
 /services/reporting/**/obj
 /services/reporting/**/.vs
+
+# log service
+/services/log/goodfood-log
