@@ -8,7 +8,6 @@ export const UpdateOrder = async (
   { request }: Data<UpdateOrderRequest>,
   callback: (err: any, response: Order | null) => void
 ) => {
-  log.debug("request received at UpdateOrder handler\n", request);
   try {
     const { delivery_id, payment_id, id, status } = request;
 
