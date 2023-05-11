@@ -1,7 +1,6 @@
 package services
 
 import (
-	"context"
 	"goodfood-user/pkg/db"
 	"goodfood-user/pkg/mapper"
 	"goodfood-user/pkg/models"
@@ -14,7 +13,7 @@ type Server struct {
 	Jwt utils.JwtWrapper
 }
 
-func (s *Server) Register(ctx context.Context, req *pb.UserCreateInput) (*pb.User, error) {
+func (s *Server) Register(req *pb.UserCreateInput) (*pb.User, error) {
 	var user models.User
 
 	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error == nil {
@@ -29,7 +28,7 @@ func (s *Server) Register(ctx context.Context, req *pb.UserCreateInput) (*pb.Use
 	return mapper.ToProtoUser(&user), nil
 }
 
-func (s *Server) GetUser(ctx context.Context, req *pb.UserCreateInput) (*pb.User, error) {
+func (s *Server) LogIn(req *pb.LogInInput) (*pb.LogInResponse, error) {
 	var user models.User
 
 	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error == nil {
@@ -37,9 +36,33 @@ func (s *Server) GetUser(ctx context.Context, req *pb.UserCreateInput) (*pb.User
 	}
 
 	user.Email = req.Email
-	user.Password = utils.HashPassword(req.Password)
+	if !utils.CheckPasswordHash(req.Password, user.Password) {
+		return nil, nil
+	}
 
-	s.H.DB.Create(&user)
+	token, _ := s.Jwt.GenerateToken(user)
 
-	return mapper.ToProtoUser(&user), nil
+	return &pb.LogInResponse{User: mapper.ToProtoUser(&user), Token: token}, nil
+}
+
+func (s *Server) Validate(req *pb.ValidateInput) (*pb.ValidateResponse, error) {
+	claims, err := s.Jwt.ValidateToken(req.Token)
+
+	if err != nil {
+		return &pb.ValidateResponse{
+			Error: err.Error(),
+		}, nil
+	}
+
+	var user models.User
+
+	if result := s.H.DB.Where(&models.User{Email: claims.Email}).First(&user); result.Error != nil {
+		return &pb.ValidateResponse{
+			Error: "User not found",
+		}, nil
+	}
+
+	return &pb.ValidateResponse{
+		UserId: user.Id,
+	}, nil
 }

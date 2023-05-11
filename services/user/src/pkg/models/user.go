@@ -9,5 +9,4 @@ type User struct {
 	FirstName   string      `json:"first_name" gorm:"type:varchar(100);not null"`
 	MainAddress MainAddress `json:"main_address" gorm:"foreignKey:MainAddressId"`
 	Role        Role        `json:"role" gorm:"foreignKey:RoleId"`
-	Token       []uint8     `json:"token" gorm:"type:jsonb, default:'{}'"`
 }

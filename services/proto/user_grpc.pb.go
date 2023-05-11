@@ -28,8 +28,8 @@ type UserServiceClient interface {
 	UpdateUser(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*User, error)
 	DeleteUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*empty.Empty, error)
 	ListUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*UserList, error)
-	LogIn(ctx context.Context, in *LogInInput, opts ...grpc.CallOption) (*User, error)
-	LogOut(ctx context.Context, in *Token, opts ...grpc.CallOption) (*empty.Empty, error)
+	LogIn(ctx context.Context, in *LogInInput, opts ...grpc.CallOption) (*LogInResponse, error)
+	Validate(ctx context.Context, in *ValidateInput, opts ...grpc.CallOption) (*ValidateResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordInput, opts ...grpc.CallOption) (*User, error)
 	ChangeRole(ctx context.Context, in *ChangeRoleInput, opts ...grpc.CallOption) (*User, error)
 }
@@ -87,8 +87,8 @@ func (c *userServiceClient) ListUser(ctx context.Context, in *UserId, opts ...gr
 	return out, nil
 }
 
-func (c *userServiceClient) LogIn(ctx context.Context, in *LogInInput, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) LogIn(ctx context.Context, in *LogInInput, opts ...grpc.CallOption) (*LogInResponse, error) {
+	out := new(LogInResponse)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/LogIn", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -96,9 +96,9 @@ func (c *userServiceClient) LogIn(ctx context.Context, in *LogInInput, opts ...g
 	return out, nil
 }
 
-func (c *userServiceClient) LogOut(ctx context.Context, in *Token, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/LogOut", in, out, opts...)
+func (c *userServiceClient) Validate(ctx context.Context, in *ValidateInput, opts ...grpc.CallOption) (*ValidateResponse, error) {
+	out := new(ValidateResponse)
+	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/Validate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -132,8 +132,8 @@ type UserServiceServer interface {
 	UpdateUser(context.Context, *UserCreateInput) (*User, error)
 	DeleteUser(context.Context, *UserId) (*empty.Empty, error)
 	ListUser(context.Context, *UserId) (*UserList, error)
-	LogIn(context.Context, *LogInInput) (*User, error)
-	LogOut(context.Context, *Token) (*empty.Empty, error)
+	LogIn(context.Context, *LogInInput) (*LogInResponse, error)
+	Validate(context.Context, *ValidateInput) (*ValidateResponse, error)
 	ChangePassword(context.Context, *ChangePasswordInput) (*User, error)
 	ChangeRole(context.Context, *ChangeRoleInput) (*User, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -158,11 +158,11 @@ func (UnimplementedUserServiceServer) DeleteUser(context.Context, *UserId) (*emp
 func (UnimplementedUserServiceServer) ListUser(context.Context, *UserId) (*UserList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
-func (UnimplementedUserServiceServer) LogIn(context.Context, *LogInInput) (*User, error) {
+func (UnimplementedUserServiceServer) LogIn(context.Context, *LogInInput) (*LogInResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogIn not implemented")
 }
-func (UnimplementedUserServiceServer) LogOut(context.Context, *Token) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
+func (UnimplementedUserServiceServer) Validate(context.Context, *ValidateInput) (*ValidateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
 func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordInput) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
@@ -291,20 +291,20 @@ func _UserService_LogIn_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Token)
+func _UserService_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).LogOut(ctx, in)
+		return srv.(UserServiceServer).Validate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/com.goodfood.user.UserService/LogOut",
+		FullMethod: "/com.goodfood.user.UserService/Validate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).LogOut(ctx, req.(*Token))
+		return srv.(UserServiceServer).Validate(ctx, req.(*ValidateInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -377,8 +377,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_LogIn_Handler,
 		},
 		{
-			MethodName: "LogOut",
-			Handler:    _UserService_LogOut_Handler,
+			MethodName: "Validate",
+			Handler:    _UserService_Validate_Handler,
 		},
 		{
 			MethodName: "ChangePassword",

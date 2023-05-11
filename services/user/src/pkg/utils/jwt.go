@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 	"github.com/golang-jwt/jwt"
-	"main/pkg/models"
+	"goodfood-user/pkg/models"
 	"time"
 )
 
@@ -13,14 +13,24 @@ type JwtWrapper struct {
 	ExpirationHours int64
 }
 
-type jwtClaims struct {
+type JwtClaims struct {
 	jwt.StandardClaims
-	Id    int64
+	Id    string
 	Email string
 }
 
+func (w *JwtWrapper) ParseToken(signedToken string) (token *jwt.Token, err error) {
+	return jwt.ParseWithClaims(
+		signedToken,
+		&JwtClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(w.SecretKey), nil
+		},
+	)
+}
+
 func (w *JwtWrapper) GenerateToken(user models.User) (signedToken string, err error) {
-	claims := &jwtClaims{
+	claims := &JwtClaims{
 		Id:    user.Id,
 		Email: user.Email,
 		StandardClaims: jwt.StandardClaims{
@@ -40,20 +50,14 @@ func (w *JwtWrapper) GenerateToken(user models.User) (signedToken string, err er
 	return signedToken, nil
 }
 
-func (w *JwtWrapper) ValidateToken(signedToken string) (claims *jwtClaims, err error) {
-	token, err := jwt.ParseWithClaims(
-		signedToken,
-		&jwtClaims{},
-		func(token *jwt.Token) (interface{}, error) {
-			return []byte(w.SecretKey), nil
-		},
-	)
+func (w *JwtWrapper) ValidateToken(signedToken string) (claims *JwtClaims, err error) {
+	token, err := w.ParseToken(signedToken)
 
 	if err != nil {
 		return
 	}
 
-	claims, ok := token.Claims.(*jwtClaims)
+	claims, ok := token.Claims.(*JwtClaims)
 
 	if !ok {
 		return nil, errors.New("Couldn't parse claims")
@@ -64,5 +68,4 @@ func (w *JwtWrapper) ValidateToken(signedToken string) (claims *jwtClaims, err e
 	}
 
 	return claims, nil
-
 }
