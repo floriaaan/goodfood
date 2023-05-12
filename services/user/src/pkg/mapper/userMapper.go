@@ -5,6 +5,14 @@ import (
 	pb "goodfood-user/proto"
 )
 
+func ToProtoUsers(user []*models.User) []*pb.User {
+	var users []*pb.User
+	for _, u := range user {
+		users = append(users, ToProtoUser(u))
+	}
+	return users
+}
+
 func ToProtoUser(user *models.User) *pb.User {
 	return &pb.User{
 		Id:          user.Id,
@@ -30,6 +38,37 @@ func ToProtoMainAddress(address models.MainAddress) *pb.MainAddress {
 
 func ToProtoRole(role models.Role) *pb.Role {
 	return &pb.Role{
+		Id:    role.Id,
+		Label: role.Label,
+		Code:  role.Code,
+	}
+}
+
+func ToModelUser(user *pb.User) *models.User {
+	return &models.User{
+		Id:          user.Id,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Email:       user.Email,
+		Phone:       user.Phone,
+		MainAddress: *ToModelMainAddress(user.MainAddress),
+		Role:        *ToModelRole(user.Role),
+	}
+}
+
+func ToModelMainAddress(address *pb.MainAddress) *models.MainAddress {
+	return &models.MainAddress{
+		Id:      address.Id,
+		Street:  address.Street,
+		ZipCode: address.ZipCode,
+		Country: address.Country,
+		Lat:     address.Lat,
+		Lng:     address.Lng,
+	}
+}
+
+func ToModelRole(role *pb.Role) *models.Role {
+	return &models.Role{
 		Id:    role.Id,
 		Label: role.Label,
 		Code:  role.Code,
