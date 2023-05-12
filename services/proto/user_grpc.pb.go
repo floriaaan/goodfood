@@ -25,13 +25,13 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	Register(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*User, error)
 	GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*User, error)
-	UpdateUser(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*User, error)
-	DeleteUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*empty.Empty, error)
-	ListUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*UserList, error)
+	UpdateUser(ctx context.Context, in *UpdateUserInput, opts ...grpc.CallOption) (*UpdateUserOutput, error)
+	DeleteUser(ctx context.Context, in *DeleteInput, opts ...grpc.CallOption) (*DeleteUserOutput, error)
+	ListUser(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*UserList, error)
 	LogIn(ctx context.Context, in *LogInInput, opts ...grpc.CallOption) (*LogInResponse, error)
 	Validate(ctx context.Context, in *ValidateInput, opts ...grpc.CallOption) (*ValidateResponse, error)
-	ChangePassword(ctx context.Context, in *ChangePasswordInput, opts ...grpc.CallOption) (*User, error)
-	ChangeRole(ctx context.Context, in *ChangeRoleInput, opts ...grpc.CallOption) (*User, error)
+	ChangePassword(ctx context.Context, in *ChangePasswordInput, opts ...grpc.CallOption) (*ChangePasswordOutput, error)
+	ChangeRole(ctx context.Context, in *ChangeRoleInput, opts ...grpc.CallOption) (*ChangeRoleOutput, error)
 }
 
 type userServiceClient struct {
@@ -60,8 +60,8 @@ func (c *userServiceClient) GetUser(ctx context.Context, in *UserId, opts ...grp
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateUser(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserInput, opts ...grpc.CallOption) (*UpdateUserOutput, error) {
+	out := new(UpdateUserOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,8 +69,8 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *UserCreateInput,
 	return out, nil
 }
 
-func (c *userServiceClient) DeleteUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
+func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteInput, opts ...grpc.CallOption) (*DeleteUserOutput, error) {
+	out := new(DeleteUserOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *UserId, opts ...
 	return out, nil
 }
 
-func (c *userServiceClient) ListUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*UserList, error) {
+func (c *userServiceClient) ListUser(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*UserList, error) {
 	out := new(UserList)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/ListUser", in, out, opts...)
 	if err != nil {
@@ -105,8 +105,8 @@ func (c *userServiceClient) Validate(ctx context.Context, in *ValidateInput, opt
 	return out, nil
 }
 
-func (c *userServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordInput, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordInput, opts ...grpc.CallOption) (*ChangePasswordOutput, error) {
+	out := new(ChangePasswordOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/ChangePassword", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -114,8 +114,8 @@ func (c *userServiceClient) ChangePassword(ctx context.Context, in *ChangePasswo
 	return out, nil
 }
 
-func (c *userServiceClient) ChangeRole(ctx context.Context, in *ChangeRoleInput, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) ChangeRole(ctx context.Context, in *ChangeRoleInput, opts ...grpc.CallOption) (*ChangeRoleOutput, error) {
+	out := new(ChangeRoleOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/ChangeRole", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -129,13 +129,13 @@ func (c *userServiceClient) ChangeRole(ctx context.Context, in *ChangeRoleInput,
 type UserServiceServer interface {
 	Register(context.Context, *UserCreateInput) (*User, error)
 	GetUser(context.Context, *UserId) (*User, error)
-	UpdateUser(context.Context, *UserCreateInput) (*User, error)
-	DeleteUser(context.Context, *UserId) (*empty.Empty, error)
-	ListUser(context.Context, *UserId) (*UserList, error)
+	UpdateUser(context.Context, *UpdateUserInput) (*UpdateUserOutput, error)
+	DeleteUser(context.Context, *DeleteInput) (*DeleteUserOutput, error)
+	ListUser(context.Context, *empty.Empty) (*UserList, error)
 	LogIn(context.Context, *LogInInput) (*LogInResponse, error)
 	Validate(context.Context, *ValidateInput) (*ValidateResponse, error)
-	ChangePassword(context.Context, *ChangePasswordInput) (*User, error)
-	ChangeRole(context.Context, *ChangeRoleInput) (*User, error)
+	ChangePassword(context.Context, *ChangePasswordInput) (*ChangePasswordOutput, error)
+	ChangeRole(context.Context, *ChangeRoleInput) (*ChangeRoleOutput, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -149,13 +149,13 @@ func (UnimplementedUserServiceServer) Register(context.Context, *UserCreateInput
 func (UnimplementedUserServiceServer) GetUser(context.Context, *UserId) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UserCreateInput) (*User, error) {
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserInput) (*UpdateUserOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedUserServiceServer) DeleteUser(context.Context, *UserId) (*empty.Empty, error) {
+func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteInput) (*DeleteUserOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedUserServiceServer) ListUser(context.Context, *UserId) (*UserList, error) {
+func (UnimplementedUserServiceServer) ListUser(context.Context, *empty.Empty) (*UserList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
 func (UnimplementedUserServiceServer) LogIn(context.Context, *LogInInput) (*LogInResponse, error) {
@@ -164,10 +164,10 @@ func (UnimplementedUserServiceServer) LogIn(context.Context, *LogInInput) (*LogI
 func (UnimplementedUserServiceServer) Validate(context.Context, *ValidateInput) (*ValidateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
-func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordInput) (*User, error) {
+func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordInput) (*ChangePasswordOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
 }
-func (UnimplementedUserServiceServer) ChangeRole(context.Context, *ChangeRoleInput) (*User, error) {
+func (UnimplementedUserServiceServer) ChangeRole(context.Context, *ChangeRoleInput) (*ChangeRoleOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeRole not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
@@ -220,7 +220,7 @@ func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserCreateInput)
+	in := new(UpdateUserInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -232,13 +232,13 @@ func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/com.goodfood.user.UserService/UpdateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UserCreateInput))
+		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UpdateUserInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserId)
+	in := new(DeleteInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -250,13 +250,13 @@ func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/com.goodfood.user.UserService/DeleteUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).DeleteUser(ctx, req.(*UserId))
+		return srv.(UserServiceServer).DeleteUser(ctx, req.(*DeleteInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserId)
+	in := new(empty.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -268,7 +268,7 @@ func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/com.goodfood.user.UserService/ListUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUser(ctx, req.(*UserId))
+		return srv.(UserServiceServer).ListUser(ctx, req.(*empty.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

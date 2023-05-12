@@ -18,6 +18,16 @@ func Init(url string) Handler {
 		log.Fatalln(err)
 	}
 
+	err = db.AutoMigrate(&models.Role{})
+	if err != nil {
+		return Handler{}
+	}
+
+	err = db.AutoMigrate(&models.MainAddress{})
+	if err != nil {
+		return Handler{}
+	}
+
 	err = db.AutoMigrate(&models.User{})
 	if err != nil {
 		return Handler{}

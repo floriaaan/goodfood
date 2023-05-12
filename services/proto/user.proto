@@ -31,16 +31,26 @@ message User {
   Role role = 7;
 }
 
+message UpdateUserInput {
+  User user = 1;
+  string token = 8;
+}
+
+message UpdateUserOutput {
+  User user = 1;
+  string error = 2;
+}
+
 service UserService {
   rpc Register (UserCreateInput) returns (User) {}
   rpc GetUser (UserId) returns (User) {}
-  rpc UpdateUser (UserCreateInput) returns (User) {}
-  rpc DeleteUser (UserId) returns (google.protobuf.Empty) {}
-  rpc ListUser (UserId) returns (UserList) {}
+  rpc UpdateUser (UpdateUserInput) returns (UpdateUserOutput) {}
+  rpc DeleteUser (DeleteInput) returns (DeleteUserOutput) {}
+  rpc ListUser (google.protobuf.Empty) returns (UserList) {}
   rpc LogIn (logInInput) returns (logInResponse) {}
   rpc Validate (validateInput) returns (validateResponse) {}
-  rpc ChangePassword (changePasswordInput) returns (User) {}
-  rpc ChangeRole (changeRoleInput) returns (User) {}
+  rpc ChangePassword (changePasswordInput) returns (changePasswordOutput) {}
+  rpc ChangeRole (changeRoleInput) returns (changeRoleOutput) {}
 }
 
 service MainAddressService {
@@ -52,10 +62,10 @@ message UserCreateInput {
   string first_name = 1;
   string last_name = 2;
   string email = 3;
-  string password = 5;
-  string phone = 6;
-  MainAddressInput mainAddress = 7;
-  RoleInput role = 8;
+  string password = 4;
+  string phone = 5;
+  MainAddressInput mainAddress = 6;
+  RoleInput role = 7;
 }
 
 message MainAddressInput {
@@ -87,6 +97,11 @@ message validateInput {
   string token = 1;
 }
 
+message DeleteInput {
+  string token = 1;
+  string userId = 2;
+}
+
 message validateResponse {
   string error = 1;
   string userId = 2;
@@ -99,13 +114,30 @@ message logInResponse {
 
 
 message changePasswordInput {
-  string oldPassword = 1;
-  string newPassword = 2;
+  string token = 1;
+  string oldPassword = 2;
+  string newPassword = 3;
+}
+
+message changePasswordOutput{
+  User user = 1;
+  string error = 2;
 }
 
 message changeRoleInput {
-  string userId = 1;
-  string roleCode = 2;
+  string token = 1;
+  string userId = 2;
+  string roleCode = 3;
+}
+
+message DeleteUserOutput {
+  User user = 1;
+  string error = 2;
+}
+
+message changeRoleOutput{
+  User user = 1;
+  string error = 2;
 }
 
 message MainAddressId {
