@@ -2,7 +2,7 @@ import { Allergen } from "@product/types/Allergen";
 import { Category } from "@product/types/Category";
 
 
-export enum ProductType {
+export const enum ProductType {
 	ENTREES = 0,
 	PLATS = 1,
 	DESSERTS = 2,
@@ -31,7 +31,7 @@ export interface ProductList {
 }
 
 export interface ProductTypeList {
-	productTypes: ProductType[];
+	productType: string[];
 }
 
 export interface ProductId {

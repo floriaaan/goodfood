@@ -5,12 +5,11 @@ import { ServerErrorResponse } from "@grpc/grpc-js";
 import prisma from "@product/lib/prisma";
 
 export const UpdateAllergen = async (
-	data: Data<Allergen>,
-	callback: (err: any, response: Allergen | null) => void
+	{ request }: Data<Allergen>,
+	callback: (err: ServerErrorResponse | any, response: Allergen | null) => void
 ) => {
-	log.debug("Request received at UpdateAllergen handler\n", data.request);
 	try {
-        const { id, libelle } = data.request;
+        const { id, libelle } = request;
 
 		if (!id && id.trim().length <= 0)
 			throw(Error("L'id de l'allergen doit avoir une valeur") as ServerErrorResponse)
@@ -26,7 +25,7 @@ export const UpdateAllergen = async (
 		}) as Allergen;
 
 		callback(null, allergen);
-	} catch (error) {
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

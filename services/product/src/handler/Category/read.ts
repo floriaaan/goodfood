@@ -5,12 +5,11 @@ import { log } from "@product/lib/log";
 import { ServerErrorResponse } from "@grpc/grpc-js";
 
 export const ReadCategory = async (
-	data: Data<CategoryId>,
-	callback: (err: any, response: Category | null) => void
+	{ request }: Data<CategoryId>,
+	callback: (err: ServerErrorResponse | any, response: Category | null) => void
 ) => {
-	log.debug("Request received at ReadCategory handler\n", data.request);
 	try {
-		const { id } = data.request;
+		const { id } = request;
 
 		if (!id && id.trim().length <= 0)
 			throw(Error("L'id de la catégorie doit avoir une valeur") as ServerErrorResponse)
@@ -18,7 +17,7 @@ export const ReadCategory = async (
 		const category = await prisma.category.findFirstOrThrow({ where : {id} }) as Category;
 
 		callback(null, category);
-	} catch (error) {
+	} catch (error : ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

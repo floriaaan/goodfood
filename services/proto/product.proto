@@ -1,7 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 
-package product;
+package com.goodfood.product;
 
 //Product type
 enum ProductType {
@@ -13,7 +13,7 @@ enum ProductType {
 }
 
 message ProductTypeList{
-	repeated ProductType productType = 1;
+	repeated string productType = 1;
 }
 
 
@@ -44,6 +44,10 @@ message Product {
 	ProductType type = 11;
 	repeated Category categories = 12;
 	repeated Allergen allergens = 13;
+}
+
+message File{
+    bytes image = 1;
 }
 
 message ProductIngredient {
@@ -93,6 +97,8 @@ service ProductService {
 	rpc ReadProduct(ProductId) returns (Product) {}
 	rpc UpdateProduct(Product) returns (Product) {}
 	rpc DeleteProduct(ProductId) returns (google.protobuf.Empty) {}
+
+	rpc UploadImage(stream File) returns (google.protobuf.Empty); 
 }
 
 service AllergenService {

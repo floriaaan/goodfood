@@ -1,21 +1,20 @@
-import { ProductId } from "@product/types/Product";
+import { Product, ProductId } from "@product/types/Product";
 import { Data } from "@product/types";
 import { prisma } from "@product/lib/prisma";
 import { log } from "@product/lib/log";
-import { PrismaClient } from "@prisma/client";
+import { ServerErrorResponse } from "@grpc/grpc-js";
 
 export const ReadProduct = async (
-	data: Data<ProductId>,
-	callback: (err: any, response: any) => void
+	{ request }: Data<ProductId>,
+	callback: (err: ServerErrorResponse | null, response: Product | null) => void
 ) => {
-	log.debug("Request received at ReadProduct handler\n", data.request);
 	try {
-		const { id } = data.request;
+		const { id } = request;
 
-		const product = await prisma.product.findFirstOrThrow({ where : {id} });
+		const product = await prisma.product.findFirstOrThrow({ where : {id} }) as unknown as Product;
 
 		callback(null, product);
-	} catch (error) {
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

@@ -5,12 +5,11 @@ import { ServerErrorResponse } from "@grpc/grpc-js";
 import prisma from "@product/lib/prisma";
 
 export const CreateCategory = async (
-	data: Data<Category>,
-	callback: (err: any, response: Category | null) => void
+	{ request }: Data<Category>,
+	callback: (err: ServerErrorResponse | any, response: Category | null) => void
 ) => {
-	log.debug("Request received at CreateCategory handler\n", data.request);
 	try {
-		const { libelle, hexa_color, icon } = data.request;
+		const { libelle, hexa_color, icon } = request;
 
 		if (!libelle && libelle.trim().length <= 0 &&
 			!icon && icon.trim().length <= 0 &&

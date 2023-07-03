@@ -5,12 +5,11 @@ import { ServerErrorResponse } from "@grpc/grpc-js";
 import prisma from "@product/lib/prisma";
 
 export const DeleteAllergen = async (
-	data: Data<AllergenId>,
+	{ request} : Data<AllergenId>,
 	callback: (err: ServerErrorResponse | null) => void
 ) => {
-	log.debug("Request received at DeleteAllergen handler\n", data.request);
 	try {
-		const { id } = data.request;
+		const { id } = request;
 
 		if((await prisma.allergen.findFirst({where: {id: id}}) as Allergen | null) == null)
 			throw(Error("L'allergen n'existe  pas") as ServerErrorResponse)
