@@ -5,12 +5,11 @@ import { log } from "@product/lib/log";
 import { ServerErrorResponse } from "@grpc/grpc-js";
 
 export const UpdateCategory = async (
-	data: Data<Category>,
-	callback: (err: any, response: Category | null) => void
+	{ request }: Data<Category>,
+	callback: (err: ServerErrorResponse | any, response: Category | null) => void
 ) => {
-	log.debug("Request received at UpdateCategory handler\n", data.request);
 	try {
-		const { id, libelle, hexa_color, icon } = data.request;
+		const { id, libelle, hexa_color, icon } = request;
 
 		if (!libelle && libelle.trim().length <= 0 &&
 			!icon && icon.trim().length <= 0 &&
@@ -38,7 +37,7 @@ export const UpdateCategory = async (
 		}) as Category;
 
 		callback(null, category);
-	} catch (error) {
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

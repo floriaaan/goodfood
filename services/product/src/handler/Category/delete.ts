@@ -6,12 +6,11 @@ import { Allergen } from "@prisma/client";
 import prisma from "@product/lib/prisma";
 
 export const DeleteCategory = async (
-	data: Data<CategoryId>,
-	callback: (err: any) => void
+	{ request }: Data<CategoryId>,
+	callback: (err: ServerErrorResponse | any) => void
 ) => {
-	log.debug("Request received at DeleteCategory handler\n", data.request);
 	try {
-		const { id } = data.request;
+		const { id } = request;
 
 		if((await prisma.allergen.findFirst({where: {id: id}}) as Allergen | null) == null)
 			throw(Error("La catégorie n'existe  pas") as ServerErrorResponse)

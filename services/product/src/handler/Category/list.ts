@@ -1,13 +1,13 @@
+import { ServerErrorResponse } from "@grpc/grpc-js";
 import { log } from "@product/lib/log";
 import prisma from "@product/lib/prisma";
 import { Data } from "@product/types";
 import { Category, CategoryList } from "@product/types/Category";
 
 export const GetCategoryList = async (
-	data: Data<null>,
-	callback: (err: any, response: CategoryList | null) => void
+	{request}: Data<null>,
+	callback: (err: ServerErrorResponse | any, response: CategoryList | null) => void
 ) => {
-	log.debug("Request received at GetCategoryList handler\n");
 	try {
 		const categorys = await prisma.category.findMany() as Category[];		
 				
@@ -21,7 +21,7 @@ export const GetCategoryList = async (
 		});
 
 		callback(null, categoryList);
-	} catch (error) {
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

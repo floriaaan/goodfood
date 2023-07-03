@@ -1,11 +1,17 @@
+import { resolve as resolvePath } from "path";
+
 import { loadSync } from "@grpc/proto-loader";
-import { ServerCredentials, loadPackageDefinition, Server, GrpcObject } from "@grpc/grpc-js";
+import { ServerCredentials, loadPackageDefinition, Server } from "@grpc/grpc-js";
 
 import { log, utils } from "./lib/log";
 
-import AllergenHandler from "./handler/Allergen/index";
-import CategoryHandler from "./handler/Category/index";
-import ProductHandler from "./handler/Product/index";
+import { logGRPC } from "@product/middleware/log";
+
+import { createServerProxy } from "@product/lib/proxy";
+
+import AllergenHandler from "@product/handler/Allergen/index";
+import CategoryHandler from "@product/handler/Category/index";
+import ProductHandler from "@product/handler/Product/index";
 
 const options = {
 	keepCase: true,
@@ -18,16 +24,22 @@ const options = {
 const serverInsecure = ServerCredentials.createInsecure();
 
 const PORT = process.env.PORT || 50004;
-const ADDRESS = `0.0.0.0:${PORT}`;
-const PROTO_PATH = __dirname + "/../../proto/product.proto";
+const ADDRESS = `localhost:${PORT}`;
+const PROTO_PATH = "../proto/product.proto";
 
 const packageDefinition = loadSync(PROTO_PATH, options);
-const { product } = loadPackageDefinition(packageDefinition) as any; // todo: fix any
-const server = new Server();
+const grpc = loadPackageDefinition(packageDefinition) as any; // todo: fix any
+const serviceAllergen = grpc.com.goodfood.product.AllergenService.service;
+const serviceCategory = grpc.com.goodfood.product.CategoryService.service;
+const serviceProduct = grpc.com.goodfood.product.ProductService.service;
 
-server.addService(product.AllergenService.service, AllergenHandler);
-server.addService(product.CategoryService.service, CategoryHandler);
-server.addService(product.ProductService.service, ProductHandler);
+const server = createServerProxy(new Server());
+
+server.addService(serviceAllergen, AllergenHandler);
+server.addService(serviceCategory, CategoryHandler);
+server.addService(serviceProduct, ProductHandler);
+
+server.use(logGRPC);
 
 server.bindAsync(ADDRESS, serverInsecure, () => {
   server.start();

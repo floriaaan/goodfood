@@ -2,12 +2,12 @@ import { log } from "@product/lib/log";
 import { Data } from "@product/types";
 import { Allergen, AllergenList } from "@product/types/Allergen";
 import prisma from "@product/lib/prisma";
+import { ServerErrorResponse } from "@grpc/grpc-js";
 
 export const GetAllergenList = async (
-	data: Data<null>, 
-	callback: (err: any, response: AllergenList | null) => void
+	{ request} : Data<null>, 
+	callback: (err: ServerErrorResponse | null, response: AllergenList | null) => void
 ) => {
-	log.debug("Request received at GetAllergenList handler\n", data.request);
 	try {
 		const allergens = await prisma.allergen.findMany() as Allergen[];
 
@@ -22,7 +22,7 @@ export const GetAllergenList = async (
 
 
 		callback(null, allergenList);
-	} catch (error) {
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

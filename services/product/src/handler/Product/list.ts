@@ -1,20 +1,20 @@
-import { RestaurantId } from "@product/types/Product";
+import { ProductList, RestaurantId } from "@product/types/Product";
 import { Data } from "@product/types";
 import { log } from "@product/lib/log";
 import prisma from "@product/lib/prisma";
+import { ServerErrorResponse } from "@grpc/grpc-js";
 
 export const ListProduct = async (
-	data: Data<RestaurantId>,
-	callback: (err: any, response: any) => void
+	{ request }: Data<RestaurantId>,
+	callback: (err: ServerErrorResponse | any, response: ProductList | null) => void
 ) => {
-	log.debug("Request received at ListProduct handler\n", data.request);
 	try {
-		const { id } = data.request;
+		const { id } = request;
 
-		const products = await prisma.product.findMany({ where : {restaurant_id: id} });
+		const products = await prisma.product.findMany({ where : {restaurant_id: id} }) as unknown as ProductList;
 
-		callback(null, { products });
-	} catch (error) {
+		callback(null, products);
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

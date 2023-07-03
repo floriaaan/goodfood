@@ -5,12 +5,11 @@ import { ServerErrorResponse } from "@grpc/grpc-js";
 import { prisma } from "@product/lib/prisma";
 
 export const CreateAllergen = async (
-	data: Data<Allergen>,
+	{ request }: Data<Allergen>,
 	callback: (err: ServerErrorResponse | null, response: Allergen | null) => void
 ) => {
-	log.debug("Request received at CreateAllergen handler\n", data.request);
 	try {
-		const { libelle } = data.request;
+		const { libelle } = request;
 
 		if (!libelle && libelle.trim().length <= 0)
 			throw(Error("L'allergen doit avoir une valeur") as ServerErrorResponse)

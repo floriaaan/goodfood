@@ -6,6 +6,7 @@
     "lib": ["esnext"],
     "esModuleInterop": true,
     "baseUrl": ".",
+    "noResolve": false, 
     "paths": {
       "@product/*": ["src/*"]
     }

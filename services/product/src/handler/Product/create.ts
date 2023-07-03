@@ -7,14 +7,14 @@ import { Allergen } from "@product/types/Allergen";
 import { Category } from "@product/types/Category";
 import { Product } from "@product/types/Product";
 import prisma from "@product/lib/prisma";
+import { ServerErrorResponse } from "@grpc/grpc-js";
 
 export const CreateProduct = async (
-	data: Data<Product>,
-	callback: (err: any, response: any) => void
+	{ request }: Data<Product>,
+	callback: (err: ServerErrorResponse | null, response: Product | null) => void
 ) => {
-	log.debug("Request received at CreateProduct handler\n", data.request);
 	try {
-		const { name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = data.request;
+		const { name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = request;
 
 		allergens.map(async allergen => {
 			if(allergen.id != "" && allergen.id != null)
@@ -54,10 +54,10 @@ export const CreateProduct = async (
 					connect: allergens
 				}
 			},
-		});
+		}) as unknown as Product;
 
 		callback(null, product);
-	} catch (error) {
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}

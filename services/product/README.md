@@ -12,14 +12,6 @@
 
 ## gRPC Methods
 
-rpc GetProductTypeList(google.protobuf.Empty) returns (ProductTypeList) {}
-	rpc GetProductList(RestaurantId) returns (ProductList) {}
-
-	rpc CreateProduct(Product) returns (Product) {}
-	rpc ReadProduct(ProductId) returns (Product) {}
-	rpc UpdateProduct(Product) returns (Product) {}
-	rpc DeleteProduct(ProductId) returns (google.protobuf.Empty) {}
-
 - Category model:
 
     - `CreateCategory`: Creates a new category in the system.
@@ -40,8 +32,8 @@ rpc GetProductTypeList(google.protobuf.Empty) returns (ProductTypeList) {}
     - `ReadProduct`: Retrieves a product by its ID.
     - `UpdateProduct`: Updates an existing product.
     - `DeleteProduct`: Deletes a product by its ID.
-    - `GetProductList`: Retrieves all product persons.
-    - `GetProductTypeList`: Retrieves all product persons.
+    - `GetProductList`: Retrieves all product.
+    - `GetProductTypeList`: Retrieves all product type.
 
 ## Requirements
 

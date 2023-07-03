@@ -2,15 +2,15 @@ import { Product } from "@product/types/Product";
 import { Data } from "@product/types";
 import { prisma } from "@product/lib/prisma";
 import { log } from "@product/lib/log";
-import { PrismaClient, Product_type } from "@prisma/client";
+import { Product_type } from "@prisma/client";
+import { ServerErrorResponse } from "@grpc/grpc-js";
 
 export const UpdateProduct = async (
-	data: Data<Product>,
-	callback: (err: any, response: any) => void
+	{ request }: Data<Product>,
+	callback: (err: ServerErrorResponse | null, response: any) => void
 ) => {
-	log.debug("Request received at UpdateProduct handler\n", data.request);
 	try {
-		const { id, name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = data.request;
+		const { id, name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = request;
 
 		const product = await prisma.product.update({ 
             where : { id },
@@ -32,10 +32,10 @@ export const UpdateProduct = async (
 					connect: allergens
 				}		
             },
-        });
+        }) as unknown as Product;
 
 		callback(null, product);
-	} catch (error) {
+	} catch (error: ServerErrorResponse | any) {
 		log.error(error);
 		callback(error, null);
 	}
