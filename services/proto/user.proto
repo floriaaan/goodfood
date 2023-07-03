@@ -27,8 +27,10 @@ message User {
   string last_name = 3;
   string email = 4;
   string phone = 5;
-  MainAddress mainAddress = 6;
-  Role role = 7;
+  string MainAddressId = 6;
+  MainAddress mainAddress = 7;
+  string RoleId = 8;
+  Role role = 9;
 }
 
 message UpdateUserInput {
