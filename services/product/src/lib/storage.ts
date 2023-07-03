@@ -1,7 +1,8 @@
 import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
-import { File } from "buffer";
+import { File } from "node:buffer";
 
-const containerName = `uploaded`;
+
+const containerName = 'uploaded';
 const sasToken = process.env.REACT_APP_AZURE_STORAGE_SAS_TOKEN;
 const storageAccountName = process.env.REACT_APP_AZURE_STORAGE_RESOURCE_NAME;
 
@@ -30,5 +31,5 @@ const createBlobInContainer = async (file: File) => {
     const options = { blobHTTPHeaders: { blobContentType: file.type } };
 
     // upload file
-    return await blobClient.uploadData(file, options);
+    return await blobClient.uploadData(((file.arrayBuffer) as unknown as Buffer), options);
 };

@@ -5,7 +5,7 @@ import { log } from "@product/lib/log";
 import { ServerErrorResponse } from "@grpc/grpc-js";
 import { decode } from "base64-arraybuffer";
 import sharp from "sharp";
-import { File } from "buffer";
+import { File } from "node:buffer";
 
 export const UploadImage = async (
 	{ request }:  Data<Image>,
@@ -14,7 +14,6 @@ export const UploadImage = async (
 	log.debug("Request received at UploadImage handler\n", request);
 	try {
 		const image = request.data as string;
-		log.debug(image);
 		if (!image) 
 			throw(Error("No image provided") as ServerErrorResponse);
 		
@@ -24,6 +23,7 @@ export const UploadImage = async (
 		if (!contentType || !base64FileData) 
 			throw(Error("Image data not valid") as ServerErrorResponse);
 		
+		log.debug(contentType);
 
 		// Resize image and compress
 		const buffer = decode(base64FileData);
@@ -40,8 +40,8 @@ export const UploadImage = async (
 			.toBuffer();
 
 		// Upload image
-		const fileName = `test`;
-		const ext = "webp"; //contentType.split("/")[1];
+		const fileName = request.name;
+		const ext = contentType.split("/")[1];
 		const path = `${fileName}.${ext}`;
 
 		const file = {
@@ -49,6 +49,7 @@ export const UploadImage = async (
 			type: ext,
 			arrayBuffer: resizedBuffer,
 		} as unknown as File;
+		log.debug(file);
 		const url = { path : await uploadFileToBlob(file) } as Url;
 
 

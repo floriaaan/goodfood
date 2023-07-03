@@ -80,3 +80,8 @@ ressource "azurerm_storage_account" "stac-goodfood-product" {
 	account_tier             = "Standard"
 	account_replication_type = "GRS"
 }
+
+
+output "sas_url_query_string" {
+  value = data.azurerm_storage_account_sas.example.sas
+}

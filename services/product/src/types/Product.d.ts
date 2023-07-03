@@ -50,6 +50,7 @@ export interface RestaurantId{
 }
 
 export interface Image{
+	name: string;
 	data: string;
 }
 
