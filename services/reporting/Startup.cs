@@ -1,11 +1,10 @@
 using reporting.Services.GRPC;
-using reporting.Libraries.RabbitMQ;
 using System.Net;
 
 public class Startup
 {
 
-    private RabbitMQClient _logClient = new RabbitMQClient("log");
+    
 
     public void ConfigureServices(IServiceCollection services)
     {
