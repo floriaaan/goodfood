@@ -65,6 +65,17 @@ namespace reporting.Models
         public Metric SaveMetric()
         {
             using ReportingContext db = new ReportingContext();
+            // if already exists, upsert
+            if(db.Metrics.Any(m => m.Key == this.Key))
+            {
+                Metric metric = db.Metrics.First(m => m.Key == this.Key);
+                metric.Value = this.Value;
+
+                db.Metrics.Update(metric);
+                db.SaveChanges();
+                return this;
+            }
+
             db.Metrics.Add(this);
             db.SaveChanges();
             return this;

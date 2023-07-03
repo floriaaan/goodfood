@@ -36,7 +36,16 @@ public class RabbitMQClient
             autoDelete: false,
             arguments: null);
 
-        var body = Encoding.UTF8.GetBytes(message);
+        byte[] body;
+
+        if (_queueName == "log")
+        {
+            body = Encoding.UTF8.GetBytes("{\"event_message\":\"reporting-service\",\"metadata\":" + message + "}");
+        }
+        else
+        {
+            body = Encoding.UTF8.GetBytes(message);
+        }
 
         _channel.BasicPublish(exchange: "",
             routingKey: _queueName,

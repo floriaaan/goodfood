@@ -1,6 +1,7 @@
 using Grpc.Core;
 using MetricModel = reporting.Models.Metric;
 using MetricGrpc = reporting.Metric;
+using ReportingServiceAMQP = reporting.Services.RabbitMQ.ReportingService;
 
 
 namespace reporting.Services.GRPC;
@@ -10,11 +11,12 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
 {
     private readonly ILogger<ReportingService> _logger;
     private readonly ReportingContext _db;
+    private readonly ReportingServiceAMQP _amqp;
     public ReportingService(ILogger<ReportingService> logger)
     {
         _logger = logger;
         _db = new ReportingContext();
-
+        _amqp = new ReportingServiceAMQP(logger);
     }
 
     private void LogRequest<T>(T request, ServerCallContext context)
@@ -24,9 +26,8 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
         string RequestBody = request?.ToString() ?? "null";
 
         _logger.LogInformation("\x1b[35m{Date}\x1b[0m | \x1b[36mGRPC\x1b[0m | \x1b[33m{Message}\x1b[0m\n", Date, Method + " with: " + RequestBody);
+        _amqp.LogRequest(request);
     }
-
-
 
     public override Task<MetricGrpc> GetMetric(GetMetricRequest request, ServerCallContext context)
     {
