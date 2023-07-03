@@ -34,3 +34,32 @@ You can use the following tools to help you with the setup:
 
 1. Clone the `goodfood` repository to your local machine.
 2. Navigate to the service directory (`services/reporting`) in your terminal.
+
+### 2. Setup the database
+
+1. Run the following command to create the database:
+   - `dotnet ef database update`
+
+### 3. Run the service
+
+1. Run the following command to start the service:
+   - `dotnet run`
+
+## Testing
+
+### Requests examples
+
+#### Pre-requisites
+
+Install `grpcurl` on your machine.
+
+1. Create a new report
+
+```sh
+grpcurl -d '{ "restaurant_id": "restaurant_id:1", "code": "income_1h", "value": "99.99" }' \
+    localhost:50020 com.goodfood.reporting.ReportingService.PushMetric
+```
+
+```json
+{ "restaurant_id": "restaurant_id:1", "code": "income_1h", "value": "99.99" }
+```
