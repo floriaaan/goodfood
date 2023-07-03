@@ -14,6 +14,7 @@ import (
 
 func main() {
 	c, err := config.LoadConfig()
+	url := "localhost:" + c.Port
 
 	if err != nil {
 		log.Fatalln("Failed at config", err)
@@ -27,13 +28,13 @@ func main() {
 		ExpirationHours: 24 * 365,
 	}
 
-	lis, err := net.Listen("tcp", c.Port)
+	lis, err := net.Listen("tcp", url)
 
 	if err != nil {
 		log.Fatalln("Failed to listing:", err)
 	}
 
-	fmt.Println("Auth Svc on", c.Port)
+	fmt.Println("Auth Svc on", url)
 
 	s := services.Server{
 		H:   h,
