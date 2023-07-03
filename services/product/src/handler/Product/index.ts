@@ -4,6 +4,7 @@ import { UpdateProduct } from "./update";
 import { DeleteProduct } from "./delete";
 import { ListProduct } from "./list";
 import { GetProductTypeList } from "./listType";
+import { UploadImage } from "../Image/upload";
 
 export default {
 	CreateProduct,
@@ -12,4 +13,5 @@ export default {
 	DeleteProduct,
 	ListProduct,
 	GetProductTypeList,
+	UploadImage,
 };
