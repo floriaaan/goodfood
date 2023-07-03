@@ -47,7 +47,8 @@ message Product {
 }
 
 message File{
-	string data = 1;
+	string name = 1;
+	string data = 2;
 }
 
 message Url{
