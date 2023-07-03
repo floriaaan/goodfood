@@ -47,7 +47,11 @@ message Product {
 }
 
 message File{
-    bytes image = 1;
+	string data = 1;
+}
+
+message Url{
+	string path = 1;
 }
 
 message ProductIngredient {
@@ -98,7 +102,7 @@ service ProductService {
 	rpc UpdateProduct(Product) returns (Product) {}
 	rpc DeleteProduct(ProductId) returns (google.protobuf.Empty) {}
 
-	rpc UploadImage(stream File) returns (google.protobuf.Empty); 
+	rpc UploadImage(File) returns (Url); 
 }
 
 service AllergenService {

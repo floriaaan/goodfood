@@ -48,3 +48,12 @@ export interface ProductIngredient {
 export interface RestaurantId{
 	id: string;
 }
+
+export interface Image{
+	data: string;
+}
+
+
+export interface Url{
+	path: string;
+}
