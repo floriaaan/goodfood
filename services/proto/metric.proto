@@ -7,20 +7,51 @@ option csharp_namespace = "reporting";
 package com.goodfood.reporting;
 
 message Metric {
-  string id = 1;
+  int32 id = 1;
   string key = 2;
-  string restaurant_id = 3;
   google.protobuf.Timestamp date = 4;
   string code = 5;
   string value = 6;
+
+  string restaurant_id = 3;
+  Restaurant restaurant = 7;
+}
+
+message Restaurant {
+  string id = 1;
+  string name = 2;
+  string key = 3;
+  optional string address = 4;
+
+  int32 group_id = 5;
+  string group_name = 6;
+
+  RestaurantGroup group = 7;
+}
+
+message RestaurantGroup {
+  int32 id = 1;
+  string name = 2;
 }
 
 service ReportingService {
   rpc GetMetric (GetMetricRequest) returns (Metric) {}
   rpc GetMetricsByRestaurant(GetMetricsByRestaurantRequest) returns (GetMetricsByRestaurantResponse) {}
   rpc GetMetricsByRestaurantAndDate (GetMetricsByRestaurantAndDateRequest) returns (GetMetricsByRestaurantAndDateResponse) {}
+  rpc GetMetricsByRestaurantGroup(GetMetricsByRestaurantGroupRequest) returns (GetMetricsByRestaurantGroupResponse) {}
+  
 
   rpc PushMetric (PushMetricRequest) returns (PushMetricResponse) {}
+
+  rpc GetRestaurant (GetRestaurantRequest) returns (Restaurant) {}
+  rpc CreateRestaurant (CreateRestaurantRequest) returns (Restaurant) {}
+  rpc UpdateRestaurant (UpdateRestaurantRequest) returns (Restaurant) {}
+  rpc DeleteRestaurant (DeleteRestaurantRequest) returns (DeleteRestaurantResponse) {}
+
+  rpc GetRestaurantGroup (GetRestaurantGroupRequest) returns (RestaurantGroup) {}
+  rpc CreateRestaurantGroup (CreateRestaurantGroupRequest) returns (RestaurantGroup) {}
+  rpc UpdateRestaurantGroup (UpdateRestaurantGroupRequest) returns (RestaurantGroup) {}
+  rpc DeleteRestaurantGroup (DeleteRestaurantGroupRequest) returns (DeleteRestaurantGroupResponse) {}
 }
 
 message GetMetricRequest {
@@ -44,6 +75,14 @@ message GetMetricsByRestaurantAndDateResponse {
   repeated Metric metrics = 1;
 }
 
+message GetMetricsByRestaurantGroupRequest {
+  int32 restaurant_group_id = 1;
+}
+
+message GetMetricsByRestaurantGroupResponse {
+  repeated Metric metrics = 1;
+}
+
 message PushMetricRequest {
   string restaurant_id = 1;
   string code = 2;
@@ -52,4 +91,52 @@ message PushMetricRequest {
 
 message PushMetricResponse {
   string key = 1;
+}
+
+message GetRestaurantRequest {
+  string id = 1;
+}
+
+message CreateRestaurantRequest {
+  string name = 1;
+  string key = 2;
+  string address = 3;
+  int32 group_id = 4;
+}
+
+message UpdateRestaurantRequest {
+  string id = 1;
+  string name = 2;
+  string key = 3;
+  string address = 4;
+  int32 group_id = 5;
+}
+
+message DeleteRestaurantRequest {
+  string id = 1;
+}
+
+message DeleteRestaurantResponse {
+  bool success = 1;
+}
+
+message GetRestaurantGroupRequest {
+  int32 id = 1;
+}
+
+message CreateRestaurantGroupRequest {
+  string name = 1;
+}
+
+message UpdateRestaurantGroupRequest {
+  int32 id = 1;
+  string name = 2;
+}
+
+message DeleteRestaurantGroupRequest {
+  int32 id = 1;
+}
+
+message DeleteRestaurantGroupResponse {
+  bool success = 1;
 }

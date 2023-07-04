@@ -53,7 +53,7 @@ You can use the following tools to help you with the setup:
 
 Install `grpcurl` on your machine.
 
-1. Create a new report
+<!-- 1. Create a new report
 
 ```sh
 grpcurl -d '{ "restaurant_id": "restaurant_id:1", "code": "income_1h", "value": "99.99" }' \
@@ -62,4 +62,71 @@ grpcurl -d '{ "restaurant_id": "restaurant_id:1", "code": "income_1h", "value": 
 
 ```json
 { "restaurant_id": "restaurant_id:1", "code": "income_1h", "value": "99.99" }
-```
+``` -->
+
+
+1.  GetMetric:
+
+`grpcurl -d '{"key": "example_key"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetric` 
+
+2.  GetMetricsByRestaurant:
+
+
+`grpcurl -d '{"restaurant_id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurant` 
+
+3.  GetMetricsByRestaurantAndDate:
+
+
+`grpcurl -d '{"restaurant_id": "example_restaurant_id", "date": "example_date"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurantAndDate` 
+
+4.  GetMetricsByRestaurantGroup:
+
+
+`grpcurl -d '{"restaurant_group_id": "example_group_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurantGroup` 
+
+5.  PushMetric:
+
+
+`grpcurl -d '{"restaurant_id": "example_restaurant_id", "code": "example_code", "value": "example_value"}' localhost:50020 com.goodfood.reporting.ReportingService.PushMetric` 
+
+6.  GetRestaurant:
+
+
+`grpcurl -d '{"id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetRestaurant` 
+
+7.  CreateRestaurant:
+
+
+`grpcurl -d '{"name": "example_name", "key": "example_key", "address": "example_address", "group_id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.CreateRestaurant` 
+
+8.  UpdateRestaurant:
+
+
+`grpcurl -d '{"id": "example_restaurant_id", "name": "example_name", "key": "example_key", "address": "example_address", "group_id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.UpdateRestaurant` 
+
+9.  DeleteRestaurant:
+
+
+`grpcurl -d '{"id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.DeleteRestaurant` 
+
+10.  GetRestaurantGroup:
+
+
+`grpcurl -d '{"id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.GetRestaurantGroup` 
+
+11.  CreateRestaurantGroup:
+
+
+`grpcurl -d '{"name": "example_group_name"}' localhost:50020 com.goodfood.reporting.ReportingService.CreateRestaurantGroup` 
+
+12.  UpdateRestaurantGroup:
+
+
+`grpcurl -d '{"id": "1", "name": "example_group_name"}' localhost:50020 com.goodfood.reporting.ReportingService.UpdateRestaurantGroup` 
+
+13.  DeleteRestaurantGroup:
+
+
+`grpcurl -d '{"id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.DeleteRestaurantGroup` 
+
+I've included placeholder values like "example_key" and "example_restaurant_id" in the commands. Replace them with the actual values you want to use when making the requests
