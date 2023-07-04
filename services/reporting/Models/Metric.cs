@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 namespace reporting.Models
 {
 
-    // TODO: upsert on push, instead of throwing exception
     [Index(nameof(Metric.Key), IsUnique = true)]
-    // TODO: add foreign on RestaurantId to Restaurant.Key
     public class Metric
     {
         public int Id { get; set; }
@@ -13,60 +11,79 @@ namespace reporting.Models
         // Key is a combination of RestaurantId, Date and Code (RestaurantId:Date:Code) and isUnique
         public string Key { get; set; } = null!;
         // RestaurantId is a foreign key to Restaurant.Key
-        public string RestaurantId { get; set; } = null!;
         public DateTime Date { get; set; }
         public string Code { get; set; } = null!;
         public string Value { get; set; } = null!;
+        public string RestaurantId { get; set; } = null!;
+        public Restaurant Restaurant { get; set; } = null!;
 
-        public static Metric FromGrpcPushMetric(PushMetricRequest request)
+
+        public static Metric FromGrpcPushMetric(PushMetricRequest Request)
         {
+            Restaurant? restaurant = Restaurant.GetRestaurant(Request.RestaurantId);
+            if (restaurant == null)
+                throw new System.Exception("Restaurant not found");
+
+
             return new Metric
             {
-                Key = request.RestaurantId + ":" + DateTime.Now.Date.ToString("yyyy-MM-dd") + ":" + request.Code,
-                RestaurantId = request.RestaurantId,
+                Key = Request.RestaurantId + ":" + DateTime.Now.Date.ToString("yyyy-MM-dd") + ":" + Request.Code,
+                RestaurantId = Request.RestaurantId,
+                Restaurant = restaurant,
                 Date = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow).ToDateTime(),
-                Code = request.Code,
-                Value = request.Value
+                Code = Request.Code,
+                Value = Request.Value
             };
         }
 
         public reporting.Metric ToGrpcMetric()
         {
+            Restaurant? restaurant = Restaurant.GetRestaurant(this.RestaurantId);
+            if (restaurant == null)
+                throw new System.Exception("Restaurant not found");
+
             return new reporting.Metric
             {
-                Id = this.Id.ToString(),
+                Id = this.Id,
                 Key = this.Key,
                 RestaurantId = this.RestaurantId,
                 Date = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(this.Date.ToUniversalTime()),
                 Code = this.Code,
-                Value = this.Value
+                Value = this.Value,
+                Restaurant = restaurant.ToGrpcRestaurant()
             };
         }
 
         // getters and setters for the database
-        public static Metric? GetMetricByKey(string key)
+        public static Metric? GetMetricByKey(string Key)
         {
             using ReportingContext db = new ReportingContext();
-            return db.Metrics.FirstOrDefault(m => m.Key == key);
+            return db.Metrics.FirstOrDefault(m => m.Key == Key);
         }
 
-        public static List<Metric> GetMetricsByRestaurant(string key)
+        public static List<Metric> GetMetricsByRestaurant(string Key)
         {
             using ReportingContext db = new ReportingContext();
-            return db.Metrics.Where(m => m.RestaurantId == key).ToList();
+            return db.Metrics.Where(m => m.RestaurantId == Key).ToList();
         }
 
-        public static List<Metric> GetMetricsByRestaurantAndDate(string key, string date)
+        public static List<Metric> GetMetricsByRestaurantAndDate(string Key, string Date)
         {
-            List<Metric> metrics = GetMetricsByRestaurant(key);
-            return metrics.Where(m => m.Date.ToString("yyyy-MM-dd") == date).ToList();
+            List<Metric> metrics = GetMetricsByRestaurant(Key);
+            return metrics.Where(m => m.Date.ToString("yyyy-MM-dd") == Date).ToList();
         }
 
-        public Metric SaveMetric()
+        public static List<Metric> GetMetricsByRestaurantGroup(int GroupId)
+        {
+            using ReportingContext db = new ReportingContext();
+            return db.Metrics.Where(m => m.Restaurant.GroupId == GroupId).ToList();
+        }
+
+        public Metric Save()
         {
             using ReportingContext db = new ReportingContext();
             // if already exists, upsert
-            if(db.Metrics.Any(m => m.Key == this.Key))
+            if (db.Metrics.Any(m => m.Key == this.Key))
             {
                 Metric metric = db.Metrics.First(m => m.Key == this.Key);
                 metric.Value = this.Value;
@@ -75,6 +92,10 @@ namespace reporting.Models
                 db.SaveChanges();
                 return this;
             }
+
+            // attach restaurant
+
+            db.Restaurants.Attach(this.Restaurant);
 
             db.Metrics.Add(this);
             db.SaveChanges();

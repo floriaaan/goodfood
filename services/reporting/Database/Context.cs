@@ -4,10 +4,15 @@ using reporting.Models;
 public class ReportingContext : DbContext
 {
     public DbSet<Metric> Metrics { get; set; }
+    public DbSet<Restaurant> Restaurants { get; set; }
+    public DbSet<RestaurantGroup> Groups { get; set; }
 
     public ReportingContext()
     {
         Metrics = Set<Metric>();
+        Restaurants = Set<Restaurant>();
+        Groups = Set<RestaurantGroup>();
+
     }
 
 
