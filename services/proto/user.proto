@@ -57,7 +57,7 @@ service UserService {
 
 service MainAddressService {
   rpc GetMainAddress (MainAddressId) returns (MainAddress) {}
-  rpc UpdateMainAddress (MainAddressUpdateInput) returns (MainAddress) {}
+  rpc UpdateMainAddress (MainAddressUpdateInput) returns (UpdateMainAddressOutput) {}
 }
 
 message UserCreateInput {
@@ -147,6 +147,12 @@ message MainAddressId {
 }
 
 message MainAddressUpdateInput {
-  MainAddressInput mainAddress = 1;
-  string userId = 2;
+  string token = 1;
+  MainAddress mainAddress = 2;
+}
+
+
+message UpdateMainAddressOutput {
+  MainAddress mainAddress = 1;
+  string error = 2;
 }
