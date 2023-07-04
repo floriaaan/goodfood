@@ -27,7 +27,7 @@ public class RabbitMQClient
         }
     }
 
-    public void Publish(string message)
+    public void Publish<T>(string Type, T Request)
     {
         if (_channel == null) return;
         _channel.QueueDeclare(queue: _queueName,
@@ -37,14 +37,15 @@ public class RabbitMQClient
             arguments: null);
 
         byte[] body;
+        string RequestBody = Request?.ToString() ?? "null";
 
         if (_queueName == "log")
         {
-            body = Encoding.UTF8.GetBytes("{\"event_message\":\"reporting-service\",\"metadata\":" + message + "}");
+            body = Encoding.UTF8.GetBytes("{\"event_message\":\""+Type+"\",\"metadata\":{\"request\":" + RequestBody + "}}");
         }
         else
         {
-            body = Encoding.UTF8.GetBytes(message);
+            body = Encoding.UTF8.GetBytes(RequestBody);
         }
 
         _channel.BasicPublish(exchange: "",
