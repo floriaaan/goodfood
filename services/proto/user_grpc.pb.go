@@ -398,7 +398,7 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MainAddressServiceClient interface {
 	GetMainAddress(ctx context.Context, in *MainAddressId, opts ...grpc.CallOption) (*MainAddress, error)
-	UpdateMainAddress(ctx context.Context, in *MainAddressUpdateInput, opts ...grpc.CallOption) (*MainAddress, error)
+	UpdateMainAddress(ctx context.Context, in *MainAddressUpdateInput, opts ...grpc.CallOption) (*UpdateMainAddressOutput, error)
 }
 
 type mainAddressServiceClient struct {
@@ -418,8 +418,8 @@ func (c *mainAddressServiceClient) GetMainAddress(ctx context.Context, in *MainA
 	return out, nil
 }
 
-func (c *mainAddressServiceClient) UpdateMainAddress(ctx context.Context, in *MainAddressUpdateInput, opts ...grpc.CallOption) (*MainAddress, error) {
-	out := new(MainAddress)
+func (c *mainAddressServiceClient) UpdateMainAddress(ctx context.Context, in *MainAddressUpdateInput, opts ...grpc.CallOption) (*UpdateMainAddressOutput, error) {
+	out := new(UpdateMainAddressOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.MainAddressService/UpdateMainAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -432,7 +432,7 @@ func (c *mainAddressServiceClient) UpdateMainAddress(ctx context.Context, in *Ma
 // for forward compatibility
 type MainAddressServiceServer interface {
 	GetMainAddress(context.Context, *MainAddressId) (*MainAddress, error)
-	UpdateMainAddress(context.Context, *MainAddressUpdateInput) (*MainAddress, error)
+	UpdateMainAddress(context.Context, *MainAddressUpdateInput) (*UpdateMainAddressOutput, error)
 	mustEmbedUnimplementedMainAddressServiceServer()
 }
 
@@ -443,7 +443,7 @@ type UnimplementedMainAddressServiceServer struct {
 func (UnimplementedMainAddressServiceServer) GetMainAddress(context.Context, *MainAddressId) (*MainAddress, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMainAddress not implemented")
 }
-func (UnimplementedMainAddressServiceServer) UpdateMainAddress(context.Context, *MainAddressUpdateInput) (*MainAddress, error) {
+func (UnimplementedMainAddressServiceServer) UpdateMainAddress(context.Context, *MainAddressUpdateInput) (*UpdateMainAddressOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMainAddress not implemented")
 }
 func (UnimplementedMainAddressServiceServer) mustEmbedUnimplementedMainAddressServiceServer() {}
