@@ -45,13 +45,24 @@ You can use the following tools to help you with the setup:
 1. Run the following command to start the service:
    - `dotnet run`
 
+## Documentation
+
+### Codes, types
+
+| Code                       | Interval             | Type                  | Service        | Description                       |
+| -------------------------- | -------------------- | --------------------- | -------------- | --------------------------------- |
+| incomes\_<interval>        | 1d \| 1w \| 1m \| 1y | number                | Order, payment | Sum of order total prices         |
+| outcomes\_<interval>       | 1d \| 1w \| 1m \| 1y | number                | Stock          | Sum of restock prices             |
+| top5_selling\_<interval>   | 1w \| 1m             | string[] (product.id) | Order          | Top 5 selling products            |
+| affluence\_<interval>      | 1d                   | number[]              | Order          | Number of orders by hour          |
+| delivery_types\_<interval> | 1d                   | enum[] ()             | Payment        | Number of orders by delivery type |
+| rejection_rate\_<interval> | 1d                   | number                | Notification   | Rate of rejected orders           |
+
 ## Testing
 
 ### Requests examples
 
-#### Pre-requisites
-
-Install `grpcurl` on your machine.
+**Install `grpcurl` on your machine.**
 
 <!-- 1. Create a new report
 
@@ -64,69 +75,30 @@ grpcurl -d '{ "restaurant_id": "restaurant_id:1", "code": "income_1h", "value": 
 { "restaurant_id": "restaurant_id:1", "code": "income_1h", "value": "99.99" }
 ``` -->
 
+- GetMetric: `grpcurl -d '{"key": "example_key"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetric`
 
-1.  GetMetric:
+- GetMetricsByRestaurant: `grpcurl -d '{"restaurant_id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurant`
 
-`grpcurl -d '{"key": "example_key"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetric` 
+- GetMetricsByRestaurantAndDate: `grpcurl -d '{"restaurant_id": "example_restaurant_id", "date": "example_date"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurantAndDate`
 
-2.  GetMetricsByRestaurant:
+- GetMetricsByRestaurantGroup: `grpcurl -d '{"restaurant_group_id": 1}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurantGroup`
 
+- PushMetric: `grpcurl -d '{"restaurant_id": "example_restaurant_id", "code": "example_code", "value": "example_value"}' localhost:50020 com.goodfood.reporting.ReportingService.PushMetric`
 
-`grpcurl -d '{"restaurant_id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurant` 
+- GetRestaurant: `grpcurl -d '{"id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetRestaurant`
 
-3.  GetMetricsByRestaurantAndDate:
+- CreateRestaurant: `grpcurl -d '{"name": "example_name", "key": "example_key", "address": "example_address", "group_id": 1}' localhost:50020 com.goodfood.reporting.ReportingService.CreateRestaurant`
 
+- UpdateRestaurant: `grpcurl -d '{"id": "example_restaurant_id", "name": "example_name", "key": "example_key", "address": "example_address", "group_id": 1}' localhost:50020 com.goodfood.reporting.ReportingService.UpdateRestaurant`
 
-`grpcurl -d '{"restaurant_id": "example_restaurant_id", "date": "example_date"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurantAndDate` 
+- DeleteRestaurant: `grpcurl -d '{"id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.DeleteRestaurant`
 
-4.  GetMetricsByRestaurantGroup:
+- GetRestaurantGroup: `grpcurl -d '{"id": 1}' localhost:50020 com.goodfood.reporting.ReportingService.GetRestaurantGroup`
 
+- CreateRestaurantGroup: `grpcurl -d '{"name": "example_group_name"}' localhost:50020 com.goodfood.reporting.ReportingService.CreateRestaurantGroup`
 
-`grpcurl -d '{"restaurant_group_id": "example_group_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetMetricsByRestaurantGroup` 
+- UpdateRestaurantGroup: `grpcurl -d '{"id": 1, "name": "example_group_name"}' localhost:50020 com.goodfood.reporting.ReportingService.UpdateRestaurantGroup`
 
-5.  PushMetric:
-
-
-`grpcurl -d '{"restaurant_id": "example_restaurant_id", "code": "example_code", "value": "example_value"}' localhost:50020 com.goodfood.reporting.ReportingService.PushMetric` 
-
-6.  GetRestaurant:
-
-
-`grpcurl -d '{"id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.GetRestaurant` 
-
-7.  CreateRestaurant:
-
-
-`grpcurl -d '{"name": "example_name", "key": "example_key", "address": "example_address", "group_id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.CreateRestaurant` 
-
-8.  UpdateRestaurant:
-
-
-`grpcurl -d '{"id": "example_restaurant_id", "name": "example_name", "key": "example_key", "address": "example_address", "group_id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.UpdateRestaurant` 
-
-9.  DeleteRestaurant:
-
-
-`grpcurl -d '{"id": "example_restaurant_id"}' localhost:50020 com.goodfood.reporting.ReportingService.DeleteRestaurant` 
-
-10.  GetRestaurantGroup:
-
-
-`grpcurl -d '{"id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.GetRestaurantGroup` 
-
-11.  CreateRestaurantGroup:
-
-
-`grpcurl -d '{"name": "example_group_name"}' localhost:50020 com.goodfood.reporting.ReportingService.CreateRestaurantGroup` 
-
-12.  UpdateRestaurantGroup:
-
-
-`grpcurl -d '{"id": "1", "name": "example_group_name"}' localhost:50020 com.goodfood.reporting.ReportingService.UpdateRestaurantGroup` 
-
-13.  DeleteRestaurantGroup:
-
-
-`grpcurl -d '{"id": "1"}' localhost:50020 com.goodfood.reporting.ReportingService.DeleteRestaurantGroup` 
+- DeleteRestaurantGroup: `grpcurl -d '{"id": 1}' localhost:50020 com.goodfood.reporting.ReportingService.DeleteRestaurantGroup`
 
 I've included placeholder values like "example_key" and "example_restaurant_id" in the commands. Replace them with the actual values you want to use when making the requests
