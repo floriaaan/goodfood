@@ -79,11 +79,19 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
 
     public override Task<PushMetricResponse> PushMetric(PushMetricRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
 
-        MetricModel metric = MetricModel.FromGrpcPushMetric(request).Save();
+        try
+        {
+            MetricModel metric = MetricModel.FromGrpcPushMetric(request).Save();
 
-        return Task.FromResult(new PushMetricResponse { Key = metric.Key });
+            LogRequest(request, context);
+            return Task.FromResult(new PushMetricResponse { Key = metric.Key });
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     #endregion

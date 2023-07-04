@@ -15,7 +15,7 @@ namespace reporting.Models
 
         public int GroupId { get; set; }
         public string? GroupName { get; set; } = null!;
-        public virtual RestaurantGroup Group { get; set; }
+        public virtual RestaurantGroup Group { get; set; } = null!;
 
         public reporting.Restaurant ToGrpcRestaurant()
         {
