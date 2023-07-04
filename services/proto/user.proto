@@ -57,7 +57,7 @@ service UserService {
 
 service MainAddressService {
   rpc GetMainAddress (MainAddressId) returns (MainAddress) {}
-  rpc DeleteMainAddress (MainAddressId) returns (google.protobuf.Empty) {}
+  rpc UpdateMainAddress (MainAddressUpdateInput) returns (MainAddress) {}
 }
 
 message UserCreateInput {
@@ -144,4 +144,9 @@ message changeRoleOutput{
 
 message MainAddressId {
   string id = 1;
+}
+
+message MainAddressUpdateInput {
+  MainAddressInput mainAddress = 1;
+  string userId = 2;
 }
