@@ -17,13 +17,13 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
 
     }
 
-    public void LogRequest<T>(T request)
+    public void LogRequest<T>(string Method, T Request)
     {
         string Date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        string RequestBody = request?.ToString() ?? "null";
+        string RequestBody = Request?.ToString() ?? "null";
 
         _logger.LogInformation("\x1b[35m{Date}\x1b[0m | \x1b[31mAMQP\x1b[0m | \x1b[33m{Message}\x1b[0m\n", Date, RequestBody);
-        _client.Publish(RequestBody);
+        _client.Publish(Method, Request);
     }
 
 
