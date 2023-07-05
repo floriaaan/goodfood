@@ -15,7 +15,7 @@ type JwtWrapper struct {
 
 type JwtClaims struct {
 	jwt.StandardClaims
-	Id    string
+	Id    uint64
 	Email string
 }
 
