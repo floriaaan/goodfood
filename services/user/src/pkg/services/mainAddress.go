@@ -7,7 +7,7 @@ import (
 	pb "goodfood-user/proto"
 )
 
-func (s *Server) GetMainAddress(ctx context.Context, req *pb.MainAddressId) (*pb.MainAddress, error) {
+func (s *Server) GetMainAddress(_ context.Context, req *pb.MainAddressId) (*pb.MainAddress, error) {
 	var address models.MainAddress
 
 	if result := s.H.DB.Where(&models.User{Id: req.Id}).First(&address); result.Error == nil {
@@ -17,7 +17,7 @@ func (s *Server) GetMainAddress(ctx context.Context, req *pb.MainAddressId) (*pb
 	return mapper.ToProtoMainAddress(*&address), nil
 }
 
-func (s *Server) UpdateMainAddress(ctx context.Context, req *pb.MainAddressUpdateInput) (*pb.UpdateMainAddressOutput, error) {
+func (s *Server) UpdateMainAddress(_ context.Context, req *pb.MainAddressUpdateInput) (*pb.UpdateMainAddressOutput, error) {
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
 		return &pb.UpdateMainAddressOutput{

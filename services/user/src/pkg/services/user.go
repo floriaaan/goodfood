@@ -9,7 +9,7 @@ import (
 	pb "goodfood-user/proto"
 )
 
-func (s *Server) GetUser(ctx context.Context, req *pb.UserId) (*pb.User, error) {
+func (s *Server) GetUser(_ context.Context, req *pb.UserId) (*pb.User, error) {
 	var user models.User
 
 	if result := s.H.DB.Where(&models.User{Id: req.Id}).First(&user); result.Error == nil {
@@ -19,7 +19,7 @@ func (s *Server) GetUser(ctx context.Context, req *pb.UserId) (*pb.User, error) 
 	return mapper.ToProtoUser(&user), nil
 }
 
-func (s *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserInput) (*pb.UpdateUserOutput, error) {
+func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.UpdateUserOutput, error) {
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
 		return &pb.UpdateUserOutput{
@@ -41,7 +41,7 @@ func (s *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserInput) (*pb.U
 	}, nil
 }
 
-func (s *Server) ListUser(ctx context.Context, _ *empty.Empty) (*pb.UserList, error) {
+func (s *Server) ListUser(_ context.Context, _ *empty.Empty) (*pb.UserList, error) {
 	var users []*models.User
 	s.H.DB.Find(&users)
 	return &pb.UserList{
@@ -49,7 +49,7 @@ func (s *Server) ListUser(ctx context.Context, _ *empty.Empty) (*pb.UserList, er
 	}, nil
 }
 
-func (s *Server) ChangePassword(ctx context.Context, req *pb.ChangePasswordInput) (*pb.ChangePasswordOutput, error) {
+func (s *Server) ChangePassword(_ context.Context, req *pb.ChangePasswordInput) (*pb.ChangePasswordOutput, error) {
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
 		return &pb.ChangePasswordOutput{
@@ -73,7 +73,7 @@ func (s *Server) ChangePassword(ctx context.Context, req *pb.ChangePasswordInput
 	}, nil
 }
 
-func (s *Server) DeleteUser(ctx context.Context, req *pb.DeleteInput) (*pb.DeleteUserOutput, error) {
+func (s *Server) DeleteUser(_ context.Context, req *pb.DeleteInput) (*pb.DeleteUserOutput, error) {
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
 		return &pb.DeleteUserOutput{
@@ -103,7 +103,7 @@ func (s *Server) DeleteUser(ctx context.Context, req *pb.DeleteInput) (*pb.Delet
 	}
 }
 
-func (s *Server) ChangeRole(ctx context.Context, req *pb.ChangeRoleInput) (*pb.ChangeRoleOutput, error) {
+func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.ChangeRoleOutput, error) {
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
 		return &pb.ChangeRoleOutput{
