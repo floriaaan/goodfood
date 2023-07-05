@@ -15,7 +15,7 @@ type Server struct {
 	Jwt utils.JwtWrapper
 }
 
-func (s *Server) Register(ctx context.Context, req *pb.UserCreateInput) (*pb.User, error) {
+func (s *Server) Register(_ context.Context, req *pb.UserCreateInput) (*pb.User, error) {
 	var user models.User
 
 	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error == nil {
@@ -30,7 +30,7 @@ func (s *Server) Register(ctx context.Context, req *pb.UserCreateInput) (*pb.Use
 	return mapper.ToProtoUser(&user), nil
 }
 
-func (s *Server) LogIn(ctx context.Context, req *pb.LogInInput) (*pb.LogInResponse, error) {
+func (s *Server) LogIn(_ context.Context, req *pb.LogInInput) (*pb.LogInResponse, error) {
 	var user models.User
 
 	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error == nil {
@@ -47,7 +47,7 @@ func (s *Server) LogIn(ctx context.Context, req *pb.LogInInput) (*pb.LogInRespon
 	return &pb.LogInResponse{User: mapper.ToProtoUser(&user), Token: token}, nil
 }
 
-func (s *Server) Validate(ctx context.Context, req *pb.ValidateInput) (*pb.ValidateResponse, error) {
+func (s *Server) Validate(_ context.Context, req *pb.ValidateInput) (*pb.ValidateResponse, error) {
 	claims, err := s.Jwt.ValidateToken(req.Token)
 
 	if err != nil {

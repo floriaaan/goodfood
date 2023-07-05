@@ -3,8 +3,6 @@ module goodfood-user
 go 1.19
 
 require (
-	github.com/hellokvn/go-grpc-auth-svc v0.0.0-20220329201106-de9b08c8e812
-	go-micro.dev/v4 v4.10.0
 	google.golang.org/grpc v1.53.0
 )
 
