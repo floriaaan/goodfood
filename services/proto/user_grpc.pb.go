@@ -23,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
-	Register(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*User, error)
-	GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*User, error)
-	UpdateUser(ctx context.Context, in *UpdateUserInput, opts ...grpc.CallOption) (*UpdateUserOutput, error)
+	Register(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*UserOutput, error)
+	GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*UserOutput, error)
+	UpdateUser(ctx context.Context, in *UpdateUserInput, opts ...grpc.CallOption) (*UserOutput, error)
 	DeleteUser(ctx context.Context, in *DeleteInput, opts ...grpc.CallOption) (*DeleteUserOutput, error)
 	ListUser(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*UserList, error)
 	LogIn(ctx context.Context, in *LogInInput, opts ...grpc.CallOption) (*LogInResponse, error)
@@ -42,8 +42,8 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
-func (c *userServiceClient) Register(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) Register(ctx context.Context, in *UserCreateInput, opts ...grpc.CallOption) (*UserOutput, error) {
+	out := new(UserOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -51,8 +51,8 @@ func (c *userServiceClient) Register(ctx context.Context, in *UserCreateInput, o
 	return out, nil
 }
 
-func (c *userServiceClient) GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*User, error) {
-	out := new(User)
+func (c *userServiceClient) GetUser(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*UserOutput, error) {
+	out := new(UserOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -60,8 +60,8 @@ func (c *userServiceClient) GetUser(ctx context.Context, in *UserId, opts ...grp
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserInput, opts ...grpc.CallOption) (*UpdateUserOutput, error) {
-	out := new(UpdateUserOutput)
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserInput, opts ...grpc.CallOption) (*UserOutput, error) {
+	out := new(UserOutput)
 	err := c.cc.Invoke(ctx, "/com.goodfood.user.UserService/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -127,9 +127,9 @@ func (c *userServiceClient) ChangeRole(ctx context.Context, in *ChangeRoleInput,
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
-	Register(context.Context, *UserCreateInput) (*User, error)
-	GetUser(context.Context, *UserId) (*User, error)
-	UpdateUser(context.Context, *UpdateUserInput) (*UpdateUserOutput, error)
+	Register(context.Context, *UserCreateInput) (*UserOutput, error)
+	GetUser(context.Context, *UserId) (*UserOutput, error)
+	UpdateUser(context.Context, *UpdateUserInput) (*UserOutput, error)
 	DeleteUser(context.Context, *DeleteInput) (*DeleteUserOutput, error)
 	ListUser(context.Context, *empty.Empty) (*UserList, error)
 	LogIn(context.Context, *LogInInput) (*LogInResponse, error)
@@ -143,13 +143,13 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedUserServiceServer) Register(context.Context, *UserCreateInput) (*User, error) {
+func (UnimplementedUserServiceServer) Register(context.Context, *UserCreateInput) (*UserOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserServiceServer) GetUser(context.Context, *UserId) (*User, error) {
+func (UnimplementedUserServiceServer) GetUser(context.Context, *UserId) (*UserOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserInput) (*UpdateUserOutput, error) {
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserInput) (*UserOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteInput) (*DeleteUserOutput, error) {

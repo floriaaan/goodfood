@@ -2,14 +2,18 @@ package mapper
 
 import (
 	"goodfood-user/pkg/models"
+	"goodfood-user/pkg/utils"
 	pb "goodfood-user/proto"
 )
 
-func ToProtoUsers(user []*models.User) []*pb.User {
+func ToProtoUsers(userList []*models.User) []*pb.User {
 	var users []*pb.User
-	for _, u := range user {
+	for _, u := range userList {
+		utils.GetLogger().Infof("ToProtoUsers", u.Email)
+
 		users = append(users, ToProtoUser(u))
 	}
+
 	return users
 }
 

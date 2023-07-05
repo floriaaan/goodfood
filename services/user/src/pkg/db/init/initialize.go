@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"goodfood-user/pkg/config"
 	"goodfood-user/pkg/db"
 	"goodfood-user/pkg/models"
@@ -9,27 +8,27 @@ import (
 )
 
 func InitDb(handler db.Handler) {
-
-	log := utils.GetLogger()
+	logger := utils.GetLogger()
+	logger.Infof("Initializing database")
 	err := InitRoles(handler)
 	if err != nil {
-		log.Infof("While initialisation of roles :", err)
+		logger.Errorf("While initialisation of roles :", err)
 		return
 	}
 
 	er := InitUsers(handler)
 	if er != nil {
-		log.Infof("While initialisation of users :", er)
+		logger.Errorf("While initialisation of users :", er)
 		return
 	}
 }
 
 func InitRoles(handler db.Handler) error {
-	log := utils.GetLogger()
+	logger := utils.GetLogger()
 	role := handler.DB.Find(&models.Role{})
 
 	if role.Error != nil {
-		log.Infof("While initialisation of roles :", role.Error)
+		logger.Errorf("While initialisation of roles :", role.Error)
 		return role.Error
 	}
 
@@ -57,7 +56,6 @@ func InitRoles(handler db.Handler) error {
 	}
 
 	if result := handler.DB.Create(&roles); result.Error != nil {
-		fmt.Println(result.Error)
 		return result.Error
 	}
 
@@ -65,14 +63,14 @@ func InitRoles(handler db.Handler) error {
 }
 
 func InitUsers(handler db.Handler) error {
-	log := utils.GetLogger()
+	logger := utils.GetLogger()
 
 	c, _ := config.LoadConfig()
 
 	isUser := handler.DB.Find(&models.User{})
 
 	if isUser.Error != nil {
-		log.Infof("While initialisation of isUsers :", isUser.Error)
+		logger.Errorf("While initialisation of isUsers :", isUser.Error)
 		return isUser.Error
 	}
 
@@ -81,7 +79,6 @@ func InitUsers(handler db.Handler) error {
 	}
 	var role models.Role
 	if result := handler.DB.Where(&models.Role{Code: "ADMIN"}).First(&role); result.Error != nil {
-		fmt.Println(result.Error)
 		return result.Error
 	}
 
@@ -95,7 +92,6 @@ func InitUsers(handler db.Handler) error {
 	}
 
 	if result := handler.DB.Create(&user); result.Error != nil {
-		fmt.Println(result.Error)
 		return result.Error
 	}
 	return nil

@@ -10,7 +10,7 @@ import (
 func (s *Server) GetMainAddress(_ context.Context, req *pb.MainAddressId) (*pb.MainAddress, error) {
 	var address models.MainAddress
 
-	if result := s.H.DB.Where(&models.User{Id: req.Id}).First(&address); result.Error == nil {
+	if result := s.H.DB.Where(&models.User{Id: req.Id}).First(&address); result.Error != nil {
 		return nil, result.Error
 	}
 

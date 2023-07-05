@@ -38,15 +38,15 @@ message UpdateUserInput {
   string token = 8;
 }
 
-message UpdateUserOutput {
+message UserOutput {
   User user = 1;
   string error = 2;
 }
 
 service UserService {
-  rpc Register (UserCreateInput) returns (User) {}
-  rpc GetUser (UserId) returns (User) {}
-  rpc UpdateUser (UpdateUserInput) returns (UpdateUserOutput) {}
+  rpc Register (UserCreateInput) returns (UserOutput) {}
+  rpc GetUser (UserId) returns (UserOutput) {}
+  rpc UpdateUser (UpdateUserInput) returns (UserOutput) {}
   rpc DeleteUser (DeleteInput) returns (DeleteUserOutput) {}
   rpc ListUser (google.protobuf.Empty) returns (UserList) {}
   rpc LogIn (logInInput) returns (logInResponse) {}
@@ -86,7 +86,8 @@ message UserId {
 }
 
 message UserList {
-  repeated User users = 1;
+  string error = 1;
+  repeated User users = 2;
 }
 
 message logInInput {

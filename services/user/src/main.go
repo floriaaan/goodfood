@@ -16,10 +16,10 @@ func main() {
 	utils.InitLogger()
 	logger := utils.GetLogger()
 	defer logging.Shutdown()
-	c, err := config.LoadConfig()
-	logger.Fatal("Failed at config", err)
 
-	url := "0.0.0.0:" + c.Port
+	c, err := config.LoadConfig()
+
+	url := "localhost:" + c.Port
 
 	if err != nil {
 		logger.Fatal("Failed at config", err)
@@ -33,7 +33,8 @@ func main() {
 		Issuer:          "go-grpc-auth-svc",
 		ExpirationHours: 24 * 365,
 	}
-	logger.Fatal("Starting server at ", url)
+
+	logger.Infof("Starting server at ", c.Port)
 
 	lis, err := net.Listen("tcp", url)
 
