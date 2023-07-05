@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using LCode = reporting.Libraries.Code;
+using reporting.Libraries;
 
 namespace reporting.Models
 {
@@ -21,8 +21,8 @@ namespace reporting.Models
 
         public static Metric FromGrpcPushMetric(PushMetricRequest Request)
         {
-            if(!LCode.IsValid(Request.Code))
-                throw new System.Exception($"Invalid code provided, received: {Request.Code}, expected: {LCode.ValidCodesString}");
+            if(!CodeVerification.IsValid(Request.Code))
+                throw new System.Exception($"Invalid code provided, received: {Request.Code}, expected: {CodeVerification.ValidCodesString}");
 
             Restaurant? restaurant = Restaurant.GetRestaurant(Request.RestaurantId);
             if (restaurant == null)

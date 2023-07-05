@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/nightly/sdk:latest AS build
 WORKDIR /app
 
 # Copy and restore dependencies
-COPY ./reporting/reporting.csproj .
+COPY ./reporting/Server/reporting.csproj .
 RUN dotnet restore
 
 # Copy the rest of the application files and build
-COPY ./reporting .
+COPY ./reporting/Server .
 COPY ./proto ./Protos
 
 RUN dotnet build -c Release -o out

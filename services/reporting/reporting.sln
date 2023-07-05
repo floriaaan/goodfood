@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 25.0.1704.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reporting", "reporting.csproj", "{C9640D24-9AA0-4147-93C3-5A3CB4147057}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C062ECC9-4B36-43C3-A03C-4D3507930A6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronJobs", "CronJobs\CronJobs.csproj", "{ED310EB9-DE31-4E1E-B9A4-8B65404B3E16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reporting", "Server\reporting.csproj", "{BFEB9B27-7ED0-45FB-9529-2CFDA47773A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{C062ECC9-4B36-43C3-A03C-4D3507930A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C062ECC9-4B36-43C3-A03C-4D3507930A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C062ECC9-4B36-43C3-A03C-4D3507930A6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED310EB9-DE31-4E1E-B9A4-8B65404B3E16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED310EB9-DE31-4E1E-B9A4-8B65404B3E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED310EB9-DE31-4E1E-B9A4-8B65404B3E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED310EB9-DE31-4E1E-B9A4-8B65404B3E16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFEB9B27-7ED0-45FB-9529-2CFDA47773A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFEB9B27-7ED0-45FB-9529-2CFDA47773A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFEB9B27-7ED0-45FB-9529-2CFDA47773A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFEB9B27-7ED0-45FB-9529-2CFDA47773A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

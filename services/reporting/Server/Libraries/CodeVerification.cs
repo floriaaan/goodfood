@@ -1,6 +1,6 @@
 namespace reporting.Libraries;
 
-public class Code
+public class CodeVerification
 {
     public static List<string> ValidCodes = new List<string>(){
         "incomes_1d",
