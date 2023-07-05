@@ -5,6 +5,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"goodfood-user/pkg/mapper"
 	"goodfood-user/pkg/models"
+	"goodfood-user/pkg/utils"
 	pb "goodfood-user/proto"
 )
 
@@ -63,7 +64,7 @@ func (s *Server) ChangePassword(ctx context.Context, req *pb.ChangePasswordInput
 		}, nil
 	}
 
-	user.Password = req.NewPassword
+	user.Password = utils.HashPassword(req.NewPassword)
 
 	s.H.DB.Save(&user)
 

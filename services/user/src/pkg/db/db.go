@@ -2,9 +2,9 @@ package db
 
 import (
 	"goodfood-user/pkg/models"
+	"goodfood-user/pkg/utils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
 type Handler struct {
@@ -12,10 +12,11 @@ type Handler struct {
 }
 
 func Init(url string) Handler {
+	log := utils.GetLogger()
 	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 	}
 
 	err = db.AutoMigrate(&models.Role{})

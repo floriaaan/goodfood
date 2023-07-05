@@ -7,13 +7,13 @@ import "google/protobuf/empty.proto";
 option go_package = ".";
 
 message Role {
-  string id = 1;
+  uint64 id = 1;
   string code = 2;
   string label = 3;
 }
 
 message MainAddress {
-  string id = 1;
+  uint64 id = 1;
   string street = 2;
   string zipCode = 3;
   string country = 4;
@@ -22,14 +22,14 @@ message MainAddress {
 }
 
 message User {
-  string id = 1;
+  uint64 id = 1;
   string first_name = 2;
   string last_name = 3;
   string email = 4;
   string phone = 5;
-  string MainAddressId = 6;
+  uint64 MainAddressId = 6;
   MainAddress mainAddress = 7;
-  string RoleId = 8;
+  uint64 RoleId = 8;
   Role role = 9;
 }
 
@@ -82,7 +82,7 @@ message RoleInput {
 }
 
 message UserId {
-  string id = 1;
+  uint64 id = 1;
 }
 
 message UserList {
@@ -90,7 +90,7 @@ message UserList {
 }
 
 message logInInput {
-  string userId = 1;
+  uint64 userId = 1;
   string email = 2;
   string password = 3;
 }
@@ -101,12 +101,12 @@ message validateInput {
 
 message DeleteInput {
   string token = 1;
-  string userId = 2;
+  uint64 userId = 2;
 }
 
 message validateResponse {
   string error = 1;
-  string userId = 2;
+  uint64 userId = 2;
 }
 
 message logInResponse {
@@ -128,7 +128,7 @@ message changePasswordOutput{
 
 message changeRoleInput {
   string token = 1;
-  string userId = 2;
+  uint64 userId = 2;
   string roleCode = 3;
 }
 
@@ -143,7 +143,7 @@ message changeRoleOutput{
 }
 
 message MainAddressId {
-  string id = 1;
+  uint64 id = 1;
 }
 
 message MainAddressUpdateInput {
