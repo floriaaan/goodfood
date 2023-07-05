@@ -4,6 +4,7 @@ using RestaurantModel = reporting.Models.Restaurant;
 using RestaurantGroupModel = reporting.Models.RestaurantGroup;
 using MetricGrpc = reporting.Metric;
 using ReportingServiceAMQP = reporting.Services.RabbitMQ.ReportingService;
+using System;
 
 
 namespace reporting.Services.GRPC;
@@ -34,47 +35,76 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     #region Metric
     public override Task<MetricGrpc> GetMetric(GetMetricRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
 
-        MetricModel? metric = MetricModel.GetMetricByKey(request.Key);
-        if (metric == null)
-            throw new RpcException(new Status(StatusCode.NotFound, "Metric not found"));
+        try
+        {
+            MetricModel? metric = MetricModel.GetMetricByKey(request.Key);
+            if (metric == null)
+                throw new RpcException(new Status(StatusCode.NotFound, "Metric not found"));
 
-        return Task.FromResult(metric.ToGrpcMetric());
+            LogRequest(request, context);
+            return Task.FromResult(metric.ToGrpcMetric());
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<GetMetricsByRestaurantResponse> GetMetricsByRestaurant(GetMetricsByRestaurantRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
+        try
+        {
 
-        List<MetricModel> metrics = MetricModel.GetMetricsByRestaurant(request.RestaurantId);
-        List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
+            List<MetricModel> metrics = MetricModel.GetMetricsByRestaurant(request.RestaurantId);
+            List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
 
-        // WARNING: this returns an empty object if no metrics are found
-        return Task.FromResult(new GetMetricsByRestaurantResponse { Metrics = { response } });
+            LogRequest(request, context);
+            // WARNING: this returns an empty object if no metrics are found
+            return Task.FromResult(new GetMetricsByRestaurantResponse { Metrics = { response } });
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<GetMetricsByRestaurantAndDateResponse> GetMetricsByRestaurantAndDate(GetMetricsByRestaurantAndDateRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
+        try
+        {
+            List<MetricModel> metrics = MetricModel.GetMetricsByRestaurantAndDate(request.RestaurantId, request.Date);
+            List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
 
-        List<MetricModel> metrics = MetricModel.GetMetricsByRestaurantAndDate(request.RestaurantId, request.Date);
-        List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
-
-        // WARNING: this returns an empty object if no metrics are found
-        return Task.FromResult(new GetMetricsByRestaurantAndDateResponse { Metrics = { response } });
+            LogRequest(request, context);
+            // WARNING: this returns an empty object if no metrics are found
+            return Task.FromResult(new GetMetricsByRestaurantAndDateResponse { Metrics = { response } });
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<GetMetricsByRestaurantGroupResponse> GetMetricsByRestaurantGroup(GetMetricsByRestaurantGroupRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
+        try
+        {
+            List<MetricModel> metrics = MetricModel.GetMetricsByRestaurantGroup(request.RestaurantGroupId);
+            List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
 
-        List<MetricModel> metrics = MetricModel.GetMetricsByRestaurantGroup(request.RestaurantGroupId);
-
-        List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
-
-        // WARNING: this returns an empty object if no metrics are found
-        return Task.FromResult(new GetMetricsByRestaurantGroupResponse { Metrics = { response } });
+            LogRequest(request, context);
+            // WARNING: this returns an empty object if no metrics are found
+            return Task.FromResult(new GetMetricsByRestaurantGroupResponse { Metrics = { response } });
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<PushMetricResponse> PushMetric(PushMetricRequest request, ServerCallContext context)
@@ -99,31 +129,50 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     #region Restaurant
     public override Task<Restaurant> GetRestaurant(GetRestaurantRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
+        try
+        {
+            RestaurantModel? restaurant = RestaurantModel.GetRestaurant(request.Id);
+            if (restaurant == null)
+                throw new RpcException(new Status(StatusCode.NotFound, "Restaurant not found"));
 
-        RestaurantModel? restaurant = RestaurantModel.GetRestaurant(request.Id);
-        if (restaurant == null)
-            throw new RpcException(new Status(StatusCode.NotFound, "Restaurant not found"));
-
-        return Task.FromResult(restaurant.ToGrpcRestaurant());
+            LogRequest(request, context);
+            return Task.FromResult(restaurant.ToGrpcRestaurant());
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<Restaurant> CreateRestaurant(CreateRestaurantRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
-
-        RestaurantModel restaurant = RestaurantModel.FromGrpc(request).Save();
-
-        return Task.FromResult(restaurant.ToGrpcRestaurant());
+        try
+        {
+            RestaurantModel restaurant = RestaurantModel.FromGrpc(request).Save();
+            LogRequest(request, context);
+            return Task.FromResult(restaurant.ToGrpcRestaurant());
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<Restaurant> UpdateRestaurant(UpdateRestaurantRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
-
-        RestaurantModel? restaurant = RestaurantModel.FromUpdateGrpc(request).Update();
-
-        return Task.FromResult(restaurant.ToGrpcRestaurant());
+        try
+        {
+            LogRequest(request, context);
+            RestaurantModel? restaurant = RestaurantModel.FromUpdateGrpc(request).Update();
+            return Task.FromResult(restaurant.ToGrpcRestaurant());
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<DeleteRestaurantResponse> DeleteRestaurant(DeleteRestaurantRequest request, ServerCallContext context)
@@ -147,47 +196,67 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
 
     public override Task<RestaurantGroup> GetRestaurantGroup(GetRestaurantGroupRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
+        try
+        {
 
-        RestaurantGroupModel? restaurantGroup = RestaurantGroupModel.GetRestaurantGroup(request.Id);
-        if (restaurantGroup == null)
-            throw new RpcException(new Status(StatusCode.NotFound, "Restaurant group not found"));
+            RestaurantGroupModel? restaurantGroup = RestaurantGroupModel.GetRestaurantGroup(request.Id);
+            if (restaurantGroup == null)
+                throw new RpcException(new Status(StatusCode.NotFound, "Restaurant group not found"));
 
-        return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
+            LogRequest(request, context);
+            return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<RestaurantGroup> CreateRestaurantGroup(CreateRestaurantGroupRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
-
-        RestaurantGroupModel restaurantGroup = RestaurantGroupModel.FromGrpc(request);
-        restaurantGroup = restaurantGroup.Save();
-
-        return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
+        try
+        {
+            RestaurantGroupModel restaurantGroup = RestaurantGroupModel.FromGrpc(request).Save();
+            LogRequest(request, context);
+            return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<RestaurantGroup> UpdateRestaurantGroup(UpdateRestaurantGroupRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
-
-        RestaurantGroupModel? restaurantGroup = RestaurantGroupModel.FromUpdateGrpc(request).Update();
-
-        return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
+        try
+        {
+            RestaurantGroupModel? restaurantGroup = RestaurantGroupModel.FromUpdateGrpc(request).Update();
+            LogRequest(request, context);
+            return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
+        }
+        catch (Exception e)
+        {
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
+        }
     }
 
     public override Task<DeleteRestaurantGroupResponse> DeleteRestaurantGroup(DeleteRestaurantGroupRequest request, ServerCallContext context)
     {
-        LogRequest(request, context);
+
 
         try
         {
             RestaurantGroupModel.Delete(request.Id);
+            LogRequest(request, context);
             return Task.FromResult(new DeleteRestaurantGroupResponse { Success = true });
         }
-        catch
+        catch (Exception e)
         {
-            return Task.FromResult(new DeleteRestaurantGroupResponse { Success = false });
-
+            LogRequest("\"" + e.Message + "\"", context);
+            throw new RpcException(new Status(StatusCode.Internal, e.Message));
         }
     }
 
