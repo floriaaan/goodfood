@@ -15,10 +15,10 @@ type Server struct {
 	Jwt utils.JwtWrapper
 }
 
-func (s *Server) Register(_ context.Context, req *pb.UserCreateInput) (*pb.User, error) {
+func (s *Server) Register(_ context.Context, req *pb.UserCreateInput) (*pb.UserOutput, error) {
 	var user models.User
 
-	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error == nil {
+	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error != nil {
 		return nil, result.Error
 	}
 
@@ -27,13 +27,15 @@ func (s *Server) Register(_ context.Context, req *pb.UserCreateInput) (*pb.User,
 
 	s.H.DB.Create(&user)
 
-	return mapper.ToProtoUser(&user), nil
+	return &pb.UserOutput{
+		User: mapper.ToProtoUser(&user),
+	}, nil
 }
 
 func (s *Server) LogIn(_ context.Context, req *pb.LogInInput) (*pb.LogInResponse, error) {
 	var user models.User
 
-	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error == nil {
+	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error != nil {
 		return nil, result.Error
 	}
 

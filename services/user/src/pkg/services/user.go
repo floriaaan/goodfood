@@ -9,26 +9,30 @@ import (
 	pb "goodfood-user/proto"
 )
 
-func (s *Server) GetUser(_ context.Context, req *pb.UserId) (*pb.User, error) {
-	var user models.User
+func (s *Server) GetUser(_ context.Context, req *pb.UserId) (*pb.UserOutput, error) {
+	var user *models.User
 
-	if result := s.H.DB.Where(&models.User{Id: req.Id}).First(&user); result.Error == nil {
-		return nil, result.Error
+	if result := s.H.DB.Where("id = ?", req.Id).Preload("Role").Preload("MainAddress").Find(&user); result.Error != nil {
+		return &pb.UserOutput{
+			Error: result.Error.Error(),
+		}, nil
 	}
 
-	return mapper.ToProtoUser(&user), nil
+	return &pb.UserOutput{
+		User: mapper.ToProtoUser(user),
+	}, nil
 }
 
-func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.UpdateUserOutput, error) {
+func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.UserOutput, error) {
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
-		return &pb.UpdateUserOutput{
+		return &pb.UserOutput{
 			Error: "Invalid token",
 		}, nil
 	}
 
 	if result := s.H.DB.Where(&models.User{Id: claims.Id}); result.Error != nil {
-		return &pb.UpdateUserOutput{
+		return &pb.UserOutput{
 			Error: "User not found",
 		}, nil
 	}
@@ -36,14 +40,19 @@ func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.Upd
 
 	s.H.DB.Save(&user)
 
-	return &pb.UpdateUserOutput{
+	return &pb.UserOutput{
 		User: mapper.ToProtoUser(user),
 	}, nil
 }
 
 func (s *Server) ListUser(_ context.Context, _ *empty.Empty) (*pb.UserList, error) {
 	var users []*models.User
-	s.H.DB.Find(&users)
+	if result := s.H.DB.Preload("Role").Preload("MainAddress").Find(&users); result.Error != nil {
+		return &pb.UserList{
+			Error: "Users not found",
+		}, nil
+	}
+
 	return &pb.UserList{
 		Users: mapper.ToProtoUsers(users),
 	}, nil
