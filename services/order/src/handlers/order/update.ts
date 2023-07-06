@@ -11,9 +11,6 @@ export const UpdateOrder = async (
   try {
     const { delivery_id, payment_id, id, status, restaurant_id } = request;
 
-    // todo: calculate total from basket_snapshot
-    const total = 0; // basket_snapshot.reduce;
-
     const order = await prisma.order.update({
       where: { id },
       data: {
