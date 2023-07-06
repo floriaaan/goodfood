@@ -10,22 +10,37 @@ export const CreateOrder = async (
   callback: (err: any, response: Order | null) => void
 ) => {
   try {
-    const { basket_snapshot, delivery_id, payment_id, user, restaurant_id } = request;
+    const {
+      basket_snapshot,
+      delivery_id,
+      delivery_type,
+      payment_id,
+      user,
+      restaurant_id,
+    } = request;
 
-    // todo: calculate total from basket_snapshot
-    const total = 0; // basket_snapshot.reduce;
+    const json = // (parseStruct(basket_snapshot.json) ||
+      JSON.parse(basket_snapshot.string) as {
+        [key: string]: { count: number; price: number };
+      };
 
+    const total = Object.values(json).reduce((acc, cur) => acc + cur.price, 0);
+
+    const user_in_db = await prisma.userMinimum.findFirst({
+      where: { email: user.email },
+    });
     const order = await prisma.order.create({
       data: {
         delivery_id,
+        delivery_type,
         payment_id,
-        user: { connectOrCreate: { where: { id: user.id }, create: user } },
+        user: user_in_db
+          ? { connect: { id: user_in_db.id } }
+          : { create: { ...user, id: undefined } },
         basket_snapshot: {
           create: {
             string: basket_snapshot.string,
-            json:
-              parseStruct(basket_snapshot.json) ||
-              JSON.parse(basket_snapshot.string),
+            json,
             total,
           },
         },
