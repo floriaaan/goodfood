@@ -1,14 +1,14 @@
 # Order Microservice
 
-| Informations                                      |
-| ------------------------------------------------- |
-| **Port:** 50007                                   |
-| **Developer:** @floriaaan                         |
-| **Status:** In progress                           |
-| **Last update:** 2023-05-10                       |
-| **Language:** NodeJS                              |
-| **Dependencies:** TypeScript, gRPC, MongoDB, AMQP |
-| **Models:**                                       |
+| Informations                                       |
+| -------------------------------------------------- |
+| **Port:** 50007                                    |
+| **Developer:** @floriaaan                          |
+| **Status:** In progress                            |
+| **Last update:** 2023-05-10                        |
+| **Language:** NodeJS                               |
+| **Dependencies:** TypeScript, gRPC, Postgres, AMQP |
+| **Models:**                                        |
 
 ## gRPC Methods
 
@@ -28,14 +28,14 @@ The service provides the following gRPC methods:
 To run this microservice, you will need to have the following installed on your system:
 
 - NodeJS (v18.12.0 or higher) (dev. with v18.12.0)
-- MongoDB (dev. with mongoDB Atlas)
+- Postgres (v15.2 or higher) (dev. with docker image `postgres:15.2`)
 
 You can use the following tools to help you with the setup:
 
 - You can use nvm to set your Node version using:
   - `nvm use`.
-- You can use docker to run your MongoDB server using:
-  - `docker run -d -e MONGO_INITDB_ROOT_USERNAME=user -e MONGO_INITDB_ROOT_PASSWORD=pass -p 27017:27017 --name mongodb mongo --replSet rs0`
+- You can use docker to run your Postgres database using:
+  - `docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres`
 - You can use docker to run your RabbitMQ server using:
   - `docker run --name rabbitmq -p 5672:5672 -p 15672:15672 -d rabbitmq:3-management`
 
