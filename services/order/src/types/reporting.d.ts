@@ -18,9 +18,11 @@ export type GetTop5SellingProductsRequest = {
   restaurant_id: string;
 };
 
+export type ProductCount = {
+  id: string;
+  count: number;
+};
+
 export type GetTop5SellingProductsResponse = {
-  products: {
-    id: string;
-    count: number;
-  }[];
+  products_count: ProductCount[];
 };
