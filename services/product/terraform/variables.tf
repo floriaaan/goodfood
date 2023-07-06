@@ -1,12 +1,7 @@
 variable "environnment_suffix" {
   type        = string
   description = "The suffix to append to the environment name"
-}
-
-variable "location" {
-  type        = string
-  description = "The location/region where all resources in this environment should be created"
-  default     = "West Europe"
+  default     = "dev"
 }
 
 variable "project_name" {
