@@ -16,5 +16,5 @@ output "PORT" {
 }
 
 output "AMQP_URL"{
-  value = "AMQP_URL=amqp://guest:guest@localhost"
+  value = "amqp://guest:guest@localhost"
 }
