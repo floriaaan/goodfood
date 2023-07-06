@@ -30,6 +30,16 @@ export const toStruct = (
 ): Struct => {
   if (!obj) return { fields: {} };
   const fields = Object.entries(obj).reduce((acc: any, [key, value]) => {
+    if (typeof value === "object") {
+      return {
+        ...acc,
+        [key]: {
+          kind: "structValue",
+          structValue: toStruct(value),
+        },
+      };
+    }
+
     return {
       ...acc,
       [key]: {
