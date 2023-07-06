@@ -12,7 +12,7 @@ import (
 func (s *Server) GetUser(_ context.Context, req *pb.UserId) (*pb.UserOutput, error) {
 	var user *models.User
 
-	if result := s.H.DB.Where("id = ?", req.Id).Preload("Role").Preload("MainAddress").Find(&user); result.Error != nil {
+	if result := s.H.DB.Where("id = ?", req.Id).Preload("Role").Preload("MainAddress").First(&user); result.Error != nil {
 		return &pb.UserOutput{
 			Error: result.Error.Error(),
 		}, nil
