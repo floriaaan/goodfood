@@ -51,8 +51,11 @@ service OrderService {
   rpc UpdateOrder(UpdateOrderRequest) returns (Order) {}
   rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse) {}
 
-  // reporting-related
+}
+
+service OrderReportingService {
   rpc GetOrdersAffluence(GetOrdersAffluenceRequest) returns (GetOrdersAffluenceResponse) {}
+  rpc GetTop5SellingProducts(GetTop5SellingProductsRequest) returns (GetTop5SellingProductsResponse) {}
 }
 
 message GetOrderRequest {
@@ -126,4 +129,19 @@ message GetOrdersAffluenceResponse {
   // the number of orders for each hour of the day (0-23) (eg: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...])
   repeated int32 orders_per_hour = 5;
   
+}
+
+message GetTop5SellingProductsRequest {
+  optional string date = 1;
+  string interval = 2;
+  string restaurant_id = 3;
+}
+
+message GetTop5SellingProductsResponse {
+  repeated ProductCount products_count = 1;
+}
+
+message ProductCount {
+  string id = 1;
+  int32 count = 2;
 }

@@ -11,6 +11,7 @@ import { addReflection } from "@order/lib/reflection";
 import { createServerProxy } from "@order/lib/proxy";
 import { logGRPC } from "@order/middleware/log";
 import orderHandlers from "@order/handlers/order";
+import reportingHandlers from "@order/handlers/reporting";
 
 const PORT = process.env.PORT || 50007;
 const ADDRESS = `0.0.0.0:${PORT}`;
@@ -22,12 +23,14 @@ const REFLECTION_PATH = resolvePath(
 
 const packageDefinition = loadSync(PROTO_PATH, options);
 const grpc = loadPackageDefinition(packageDefinition) as any;
-const { service } = grpc.com.goodfood.order.OrderService;
+const { service: o_srv } = grpc.com.goodfood.order.OrderService;
+const { service: r_srv } = grpc.com.goodfood.order.OrderReportingService;
 
 // const server = new Server();
 
 const server = createServerProxy(new Server());
-server.addService(service, orderHandlers);
+server.addService(o_srv, orderHandlers);
+server.addService(r_srv, reportingHandlers);
 server.use(logGRPC);
 
 server.bindAsync(ADDRESS, serverInsecure, () => {
