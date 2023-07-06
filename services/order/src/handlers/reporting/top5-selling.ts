@@ -3,6 +3,7 @@ import { log } from "@order/lib/log";
 import {
   GetTop5SellingProductsRequest,
   GetTop5SellingProductsResponse,
+  ProductCount,
 } from "@order/types/reporting";
 import { Data } from "@order/types";
 
@@ -32,10 +33,29 @@ export const GetTop5SellingProducts = async (
 
     const orders = await prisma.order.findMany({
       where: { restaurant_id, created_at: { gte: start, lte: end } },
+      include: { basket_snapshot: true },
     });
 
+    const products_count = orders
+      .reduce((acc, order) => {
+        const { json } = order.basket_snapshot as unknown as {
+          json: { [key: string]: { count: number; price: number } };
+        };
+        Object.entries(json).forEach(([product_id, { count }]) => {
+          const product = acc.find((p) => p.id === product_id);
+          if (product) {
+            product.count += count;
+            acc.filter((p) => p.id !== product_id).push(product);
+          } else acc.push({ id: product_id, count });
+        });
+        return acc;
+      }, [] as ProductCount[])
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+
     callback(null, {
-      products: [],
+      products_count,
     });
   } catch (error) {
     log.error(error);
