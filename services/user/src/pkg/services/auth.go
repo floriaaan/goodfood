@@ -40,13 +40,13 @@ func (s *Server) Register(_ context.Context, req *pb.UserCreateInput) (*pb.UserO
 func (s *Server) LogIn(_ context.Context, req *pb.LogInInput) (*pb.LogInResponse, error) {
 	var user models.User
 
-	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error != nil {
-		return nil, result.Error
+	if result := s.H.DB.Where(&models.User{Email: req.Email}).Preload("Role").Preload("MainAddress").First(&user); result.Error != nil {
+		return &pb.LogInResponse{Error: "Invalid credentials"}, nil
 	}
 
 	user.Email = req.Email
 	if !utils.CheckPasswordHash(req.Password, user.Password) {
-		return nil, nil
+		return &pb.LogInResponse{Error: "Invalid credentials"}, nil
 	}
 
 	token, _ := s.Jwt.GenerateToken(user)
