@@ -27,6 +27,8 @@ const orders: Prisma.OrderCreateInput[] = [
       },
     },
     status: Status.PENDING,
+    restaurant_id: "restaurant_id:1",
+    created_at: new Date("2000-01-01T12:00:00.000Z"),
   },
   {
     id: "order_id:2",
@@ -52,6 +54,8 @@ const orders: Prisma.OrderCreateInput[] = [
       },
     },
     status: Status.FULFILLED,
+    restaurant_id: "restaurant_id:2",
+    created_at: new Date("2000-01-01T12:00:00.000Z"),
   },
   {
     id: "order_id:3",
@@ -77,6 +81,8 @@ const orders: Prisma.OrderCreateInput[] = [
       },
     },
     status: Status.PENDING,
+    restaurant_id: "restaurant_id:1",
+    created_at: new Date("2000-01-01T13:00:00.000Z"),
   },
 ];
 

@@ -9,7 +9,7 @@ export const UpdateOrder = async (
   callback: (err: any, response: Order | null) => void
 ) => {
   try {
-    const { delivery_id, payment_id, id, status } = request;
+    const { delivery_id, payment_id, id, status, restaurant_id } = request;
 
     // todo: calculate total from basket_snapshot
     const total = 0; // basket_snapshot.reduce;
@@ -20,6 +20,7 @@ export const UpdateOrder = async (
         delivery_id,
         payment_id,
         status,
+        restaurant_id,
       },
       include: { basket_snapshot: true, user: true },
     });
