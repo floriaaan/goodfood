@@ -28,3 +28,14 @@ export type ProductCount = {
 export type GetTop5SellingProductsResponse = {
   products_count: ProductCount[];
 };
+
+export type GetDeliveryTypeRepartitionRequest = {
+  date?: string;
+  interval: Interval;
+  restaurant_id: string;
+};
+
+export type GetDeliveryTypeRepartitionResponse = {
+  delivery: number;
+  takeaway: number;
+};
