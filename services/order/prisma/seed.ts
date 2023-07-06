@@ -21,9 +21,23 @@ const orders: Prisma.OrderCreateInput[] = [
     },
     basket_snapshot: {
       create: {
-        json: {},
-        string: JSON.stringify({}),
-        total: 0,
+        json: {
+          "product_id:1": { count: 1, price: 15 },
+          "product_id:2": { count: 2, price: 10 },
+          "product_id:3": { count: 4, price: 15 },
+          "product_id:4": { count: 6, price: 15 },
+          "product_id:5": { count: 1, price: 15 },
+          "product_id:6": { count: 1, price: 15 },
+        },
+        string: JSON.stringify({
+          "product_id:1": { count: 1, price: 15 },
+          "product_id:2": { count: 2, price: 10 },
+          "product_id:3": { count: 4, price: 15 },
+          "product_id:4": { count: 6, price: 15 },
+          "product_id:5": { count: 1, price: 15 },
+          "product_id:6": { count: 1, price: 15 },
+        }),
+        total: 35,
       },
     },
     status: Status.PENDING,
@@ -48,9 +62,15 @@ const orders: Prisma.OrderCreateInput[] = [
     },
     basket_snapshot: {
       create: {
-        json: {},
-        string: JSON.stringify({}),
-        total: 0,
+        json: {
+          "product_id:1": { count: 1, price: 15 },
+          "product_id:3": { count: 4, price: 5 },
+        },
+        string: JSON.stringify({
+          "product_id:1": { count: 1, price: 15 },
+          "product_id:3": { count: 4, price: 5 },
+        }),
+        total: 35,
       },
     },
     status: Status.FULFILLED,
@@ -75,9 +95,17 @@ const orders: Prisma.OrderCreateInput[] = [
     },
     basket_snapshot: {
       create: {
-        json: {},
-        string: JSON.stringify({}),
-        total: 0,
+        json: {
+          "product_id:1": { count: 1, price: 15 },
+          "product_id:2": { count: 6, price: 15 },
+          "product_id:3": { count: 4, price: 15 },
+        },
+        string: JSON.stringify({
+          "product_id:1": { count: 1, price: 15 },
+          "product_id:2": { count: 6, price: 15 },
+          "product_id:3": { count: 4, price: 15 },
+        }),
+        total: 15,
       },
     },
     status: Status.PENDING,
