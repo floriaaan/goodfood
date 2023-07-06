@@ -92,7 +92,6 @@ message UserList {
 }
 
 message logInInput {
-  uint64 userId = 1;
   string email = 2;
   string password = 3;
 }
@@ -114,6 +113,7 @@ message validateResponse {
 message logInResponse {
   User user = 1;
   string token = 2;
+  string error = 3;
 }
 
 
