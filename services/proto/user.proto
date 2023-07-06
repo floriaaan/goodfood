@@ -70,12 +70,13 @@ message UserCreateInput {
   RoleInput role = 7;
 }
 
-message MainAddressInput {
-  string street = 1;
-  string zipCode = 2;
-  string country = 3;
-  repeated int32 coordinates = 4;
-}
+  message MainAddressInput {
+    string street = 1;
+    string zipCode = 2;
+    string country = 3;
+    float lat = 4;
+    float lng = 5;
+  }
 
 message RoleInput {
   string code = 1;

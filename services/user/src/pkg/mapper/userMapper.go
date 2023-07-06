@@ -60,6 +60,26 @@ func ToModelUser(user *pb.User) *models.User {
 	}
 }
 
+func InputToModelUser(user *pb.UserCreateInput) *models.User {
+	return &models.User{
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Email:       user.Email,
+		Phone:       user.Phone,
+		MainAddress: *InputToModelMainAddress(user.MainAddress),
+	}
+}
+
+func InputToModelMainAddress(address *pb.MainAddressInput) *models.MainAddress {
+	return &models.MainAddress{
+		Street:  address.Street,
+		ZipCode: address.ZipCode,
+		Country: address.Country,
+		Lat:     address.Lat,
+		Lng:     address.Lng,
+	}
+}
+
 func ToModelMainAddress(address *pb.MainAddress) *models.MainAddress {
 	return &models.MainAddress{
 		Id:      address.Id,
