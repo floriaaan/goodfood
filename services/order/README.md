@@ -35,7 +35,7 @@ You can use the following tools to help you with the setup:
 - You can use nvm to set your Node version using:
   - `nvm use`.
 - You can use docker to run your MongoDB server using:
-  - `docker run --name mongodb -p 27017:27017 -d mongo:latest`
+  - `docker run -d -e MONGO_INITDB_ROOT_USERNAME=user -e MONGO_INITDB_ROOT_PASSWORD=pass -p 27017:27017 --name mongodb mongo --replSet rs0`
 - You can use docker to run your RabbitMQ server using:
   - `docker run --name rabbitmq -p 5672:5672 -p 15672:15672 -d rabbitmq:3-management`
 
@@ -52,3 +52,19 @@ You can use the following tools to help you with the setup:
 You can now access the microservice at `http://localhost:50007`.
 
 NB: If you want to run the microservice in development mode, you can run `npm run dev` instead.
+
+## Testing
+
+### Requests examples
+
+**Install `grpcurl` on your machine.**
+
+- GetOrder: `grpcurl -d '{"id": "example_order_id"}' localhost:50007 com.goodfood.order.OrderService.GetOrder`
+- GetOrdersByUser: `grpcurl -d '{"id": "example_user_id"}' localhost:50007 com.goodfood.order.OrderService.GetOrdersByUser`
+- GetOrderByDelivery: `grpcurl -d '{"id": "example_delivery_id"}' localhost:50007 com.goodfood.order.OrderService.GetOrderByDelivery`
+- GetOrderByPayment: `grpcurl -d '{"id": "example_payment_id"}' localhost:50007 com.goodfood.order.OrderService.GetOrderByPayment`
+- GetOrdersByStatus: `grpcurl -d '{"status": "PENDING"}' localhost:50007 com.goodfood.order.OrderService.GetOrdersByStatus`
+- CreateOrder: `grpcurl -d '{"payment_id": "example_payment_id", "delivery_id": "example_delivery_id", "user": {"id": "example_user_id", "first_name": "example_first_name", "last_name": "example_last_name", "email": "example_email", "phone": "example_phone"}, "basket_snapshot": {"string": "example_string"}, "restaurant_id": "example_restaurant_id"}' localhost:50007 com.goodfood.order.OrderService.CreateOrder`
+- UpdateOrder: `grpcurl -d '{"id": "example_order_id", "payment_id": "example_payment_id", "delivery_id": "example_delivery_id", "status": "IN_PROGRESS", "restaurant_id": "example_restaurant_id"}' localhost:50007 com.goodfood.order.OrderService.UpdateOrder`
+- DeleteOrder: `grpcurl -d '{"id": "example_order_id"}' localhost:50007 com.goodfood.order.OrderService.DeleteOrder`
+- GetOrdersAffluence: `grpcurl -d '{"date": "example_date", "restaurant_id": "example_restaurant_id"}' localhost:50007 com.goodfood.order.OrderService.GetOrdersAffluence`

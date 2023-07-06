@@ -10,7 +10,7 @@ export const CreateOrder = async (
   callback: (err: any, response: Order | null) => void
 ) => {
   try {
-    const { basket_snapshot, delivery_id, payment_id, user } = request;
+    const { basket_snapshot, delivery_id, payment_id, user, restaurant_id } = request;
 
     // todo: calculate total from basket_snapshot
     const total = 0; // basket_snapshot.reduce;
@@ -29,6 +29,7 @@ export const CreateOrder = async (
             total,
           },
         },
+        restaurant_id,
       },
       include: { basket_snapshot: true, user: true },
     });

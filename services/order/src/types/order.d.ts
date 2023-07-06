@@ -55,6 +55,7 @@ export type CreateOrderRequest = {
   delivery_id: string;
   user: UserMinimum;
   basket_snapshot: Basket;
+  restaurant_id: string;
 };
 
 export type UpdateOrderRequest = {
@@ -62,6 +63,7 @@ export type UpdateOrderRequest = {
   payment_id: string;
   delivery_id: string;
   status: Status;
+  restaurant_id: string;
 };
 
 export type DeleteOrderRequest = {
@@ -75,4 +77,18 @@ export type DeleteOrderResponse = {
 export type ExtendedOrder = Order & {
   user: UserMinimum;
   basket_snapshot: Basket;
+};
+
+export type GetOrdersAffluenceRequest = {
+  date: string;
+  restaurant_id: string;
+};
+
+export type GetOrdersAffluenceResponse = {
+  average: number;
+  total: number;
+  min: number;
+  max: number;
+
+  orders_per_hour: number[];
 };
