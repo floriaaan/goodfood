@@ -48,6 +48,8 @@ model Order {
   basket_snapshot    Basket @relation(fields: [basket_snapshot_id], references: [id])
   basket_snapshot_id String @unique
 
+  restaurant_id String
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }

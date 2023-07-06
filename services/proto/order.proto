@@ -37,6 +37,8 @@ message Order {
   UserMinimum user = 4;
   Basket basket_snapshot = 5;
   Status status = 6;
+
+  string restaurant_id = 7;
 }
 
 service OrderService {
@@ -48,6 +50,9 @@ service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (Order) {}
   rpc UpdateOrder(UpdateOrderRequest) returns (Order) {}
   rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse) {}
+
+  // reporting-related
+  rpc GetOrdersAffluence(GetOrdersAffluenceRequest) returns (GetOrdersAffluenceResponse) {}
 }
 
 message GetOrderRequest {
@@ -84,6 +89,8 @@ message CreateOrderRequest {
 
   UserMinimum user = 3;
   Basket basket_snapshot = 4;
+
+  string restaurant_id = 5;
 }
 
 message UpdateOrderRequest{
@@ -93,6 +100,8 @@ message UpdateOrderRequest{
   string delivery_id = 3;
 
   Status status = 4;
+
+  string restaurant_id = 5;
 }
 
 message DeleteOrderRequest {
@@ -103,3 +112,18 @@ message DeleteOrderResponse {
   string id = 1;
 }
 
+message GetOrdersAffluenceRequest {
+  string date = 1;
+  string restaurant_id = 2;
+}
+
+message GetOrdersAffluenceResponse {
+  float average = 1;
+  int32 total = 2;
+  int32 min = 3;
+  int32 max = 4;
+
+  // the number of orders for each hour of the day (0-23) (eg: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...])
+  repeated int32 orders_per_hour = 5;
+  
+}
