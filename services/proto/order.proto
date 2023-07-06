@@ -10,7 +10,13 @@ enum Status {
     IN_PROGRESS = 1;
     FULFILLED = 2;
     REJECTED = 3;
-  }
+}
+
+enum DeliveryType {
+    DELIVERY = 0;
+    PICKUP = 1;
+  
+}
 
   message UserMinimum {
     string id = 1;
@@ -33,6 +39,7 @@ message Order {
   
   string payment_id = 2;
   string delivery_id = 3;
+  DeliveryType delivery_type = 8;
   
   UserMinimum user = 4;
   Basket basket_snapshot = 5;
@@ -56,6 +63,7 @@ service OrderService {
 service OrderReportingService {
   rpc GetOrdersAffluence(GetOrdersAffluenceRequest) returns (GetOrdersAffluenceResponse) {}
   rpc GetTop5SellingProducts(GetTop5SellingProductsRequest) returns (GetTop5SellingProductsResponse) {}
+  rpc GetDeliveryTypeRepartition(GetDeliveryTypeRepartitionRequest) returns (GetDeliveryTypeRepartitionResponse) {}
 }
 
 message GetOrderRequest {
@@ -89,11 +97,12 @@ message GetOrdersByStatusResponse {
 message CreateOrderRequest {
   string payment_id = 1;
   string delivery_id = 2;
+  string delivery_type = 3;
 
-  UserMinimum user = 3;
-  Basket basket_snapshot = 4;
+  UserMinimum user = 4;
+  Basket basket_snapshot = 5;
 
-  string restaurant_id = 5;
+  string restaurant_id = 6;
 }
 
 message UpdateOrderRequest{
@@ -144,4 +153,15 @@ message GetTop5SellingProductsResponse {
 message ProductCount {
   string id = 1;
   int32 count = 2;
+}
+
+message GetDeliveryTypeRepartitionRequest {
+  optional string date = 1;
+  string interval = 2;
+  string restaurant_id = 3;
+}
+
+message GetDeliveryTypeRepartitionResponse {
+  int32 delivery = 1;
+  int32 takeaway = 2;
 }

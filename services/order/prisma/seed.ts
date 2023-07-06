@@ -7,6 +7,7 @@ const orders: Prisma.OrderCreateInput[] = [
     id: "order_id:1",
     payment_id: "payment_id:1",
     delivery_id: "delivery_id:1",
+    delivery_type: "DELIVERY",
     user: {
       connectOrCreate: {
         where: { id: "user_id:1" },
@@ -48,6 +49,7 @@ const orders: Prisma.OrderCreateInput[] = [
     id: "order_id:2",
     payment_id: "payment_id:2",
     delivery_id: "delivery_id:2",
+    delivery_type: "DELIVERY",
     user: {
       connectOrCreate: {
         where: { id: "user_id:1" },
@@ -81,6 +83,7 @@ const orders: Prisma.OrderCreateInput[] = [
     id: "order_id:3",
     payment_id: "payment_id:3",
     delivery_id: "delivery_id:3",
+    delivery_type: "TAKEAWAY",
     user: {
       connectOrCreate: {
         where: { id: "user_id:2" },

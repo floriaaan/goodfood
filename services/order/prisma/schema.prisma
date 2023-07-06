@@ -35,12 +35,19 @@ model Basket {
   Order Order?
 }
 
+enum DeliveryType {
+  TAKEAWAY
+  DELIVERY
+}
+
 model Order {
   id String @id @default(cuid()) @map("_id")
 
   payment_id  String
-  delivery_id String
   status      Status @default(PENDING)
+
+  delivery_id String
+  delivery_type DeliveryType
 
   user    UserMinimum @relation(fields: [user_id], references: [id])
   user_id String
