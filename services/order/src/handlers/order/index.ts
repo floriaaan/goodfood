@@ -10,7 +10,6 @@ import { GetOrderByDelivery } from "@order/handlers/order/get-delivery";
 import { GetOrderByPayment } from "@order/handlers/order/get-payment";
 import { GetOrdersByStatus } from "@order/handlers/order/get-status";
 
-import { GetOrdersAffluence } from "@order/handlers/order/affluence";
 
 const orderHandlers: UntypedServiceImplementation = {
   CreateOrder,
@@ -23,7 +22,6 @@ const orderHandlers: UntypedServiceImplementation = {
   GetOrderByPayment,
   GetOrdersByStatus,
 
-  GetOrdersAffluence,
 };
 
 export default orderHandlers;
