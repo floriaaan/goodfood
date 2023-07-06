@@ -1,3 +1,5 @@
+import { Interval } from "@order/types";
+
 export type GetOrdersAffluenceRequest = {
   date: string;
   restaurant_id: string;
@@ -14,7 +16,7 @@ export type GetOrdersAffluenceResponse = {
 
 export type GetTop5SellingProductsRequest = {
   date?: string;
-  interval: "1w" | "1m" | "1y";
+  interval: Interval;
   restaurant_id: string;
 };
 
