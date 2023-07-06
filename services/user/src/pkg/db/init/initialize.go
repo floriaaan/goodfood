@@ -43,15 +43,15 @@ func InitRoles(handler db.Handler) error {
 		},
 		{
 			Label: "User",
-			Code:  "user",
+			Code:  "USER",
 		},
 		{
 			Label: "Accountant",
-			Code:  "accountant",
+			Code:  "ACCOUNTANT",
 		},
 		{
 			Label: "Deliverer",
-			Code:  "deliverer",
+			Code:  "DELIVERER",
 		},
 	}
 
