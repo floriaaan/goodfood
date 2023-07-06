@@ -16,7 +16,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.8.14",
     "@grpc/proto-loader": "0.7.6",
-    "@prisma/client": "4.13.0",
+    "@prisma/client": "4.16.2",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
@@ -30,7 +30,7 @@
     "grpc-tools": "^1.12.4",
     "nodemon": "^2.0.22",
     "pkg": "^5.8.1",
-    "prisma": "4.13.0",
+    "prisma": "4.16.2",
     "ts-node": "10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "5.0.2",

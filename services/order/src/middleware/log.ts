@@ -35,7 +35,8 @@ export const logGRPC = async (ctx: Context, next: () => Promise<void>) => {
   const requestAt = new Date();
   await next();
   const responseAt = new Date();
-  const { request, path } = parseContext(ctx);
+  let { request, path } = parseContext(ctx);
+  path = path?.split(".").at(-1) || "";
   publish({ request, path }, "log");
   log.debug(msg("GRPC", path, requestAt, responseAt), JSON.stringify(request));
 };
