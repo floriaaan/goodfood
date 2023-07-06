@@ -3,7 +3,7 @@ import { log } from "@order/lib/log";
 import {
   GetOrdersAffluenceRequest,
   GetOrdersAffluenceResponse,
-} from "@order/types/order";
+} from "@order/types/reporting";
 import { Data } from "@order/types";
 
 export const GetOrdersAffluence = async (
