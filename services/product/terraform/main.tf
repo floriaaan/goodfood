@@ -5,47 +5,14 @@ terraform {
       version = "3.48.0"
     }
   }
-  backend "azurerm" {}
 }
 
 provider "azurerm" {
-  features {
-    key_vault {
-      purge_soft_deleted_secrets_on_destroy = true
-      recover_soft_deleted_secrets          = true
-    }
-  }
-}
-
-resource "azurerm_key_vault" "kv-goodfood-product" {
-  name                       = "kv-goodfood-product"
-  location                   = data.azurerm_resource_group.rg-goodfood.location
-  resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
-  tenant_id                  = data.azurerm_client_config.current.tenant_id
-  sku_name                   = "standard"
-  soft_delete_retention_days = 7
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "Create",
-      "Get",
-    ]
-
-    secret_permissions = [
-      "Set",
-      "Get",
-      "Delete",
-      "Purge",
-      "Recover"
-    ]
-  }
+  features {}
 }
 
 resource "azurerm_postgresql_server" "pg-goodfood-product" {
-  name                = "pg-goodfood-product${var.environnment_suffix}"
+  name                = "pg-goodfood-product-${var.environnment_suffix}"
   location            = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
 
@@ -60,9 +27,17 @@ resource "azurerm_postgresql_server" "pg-goodfood-product" {
   administrator_login_password = data.azurerm_key_vault_secret.product-db-password.value
   version                      = "11"
 
-  ssl_enforcement_enabled          = false
-  ssl_minimal_tls_version_enforced = "TLSEnforcementDisabled" // TODO: change to TLS1_2
+  ssl_enforcement_enabled          = true
+  ssl_minimal_tls_version_enforced = "TLS1_2" 
 
+}
+
+resource "azurerm_postgresql_database" "db-goodfood-product" {
+  name                = "db-goodfood-product-${var.environnment_suffix}"
+  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  server_name         = azurerm_postgresql_server.pg-goodfood-product.name
+  charset             = "UTF8"
+  collation           = "English_United States.1252"
 }
 
 resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-product" {
@@ -70,18 +45,34 @@ resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-product" {
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
   server_name         = azurerm_postgresql_server.pg-goodfood-product.name
   start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
+  end_ip_address      = "255.255.255.255"
 }
 
-ressource "azurerm_storage_account" "stac-goodfood-product" {
-	name                     = "stac-goodfood-product${var.environnment_suffix}"
-	resource_group_name      = data.azurerm_resource_group.rg-goodfood.name
-	location                 = data.azurerm_resource_group.rg-goodfood.location
-	account_tier             = "Standard"
-	account_replication_type = "GRS"
+resource "azurerm_storage_account" "stac-goodfood-product" {
+  name                     = "stacgoodfoodproduct${var.environnment_suffix}"
+  resource_group_name      = data.azurerm_resource_group.rg-goodfood.name
+  location                 = data.azurerm_resource_group.rg-goodfood.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+
+  blob_properties{
+    cors_rule{
+        allowed_headers = ["*"]
+        allowed_methods = ["GET","HEAD","POST","PUT", "DELETE", "MERGE", "OPTIONS"]
+        allowed_origins = ["*"]
+        exposed_headers = ["*"]
+        max_age_in_seconds = 86400
+        }
+    }
+}
+resource "azurerm_storage_container" "sc-goodfood-product" {
+  name                  = "image"
+  storage_account_name  = azurerm_storage_account.stac-goodfood-product.name
+  container_access_type = "private"
 }
 
-
-output "sas_url_query_string" {
-  value = data.azurerm_storage_account_sas.example.sas
+resource "azurerm_role_assignment" "rlas-goodfood-product" {
+  scope                = azurerm_storage_account.stac-goodfood-product.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azurerm_client_config.product-client-conf.object_id
 }

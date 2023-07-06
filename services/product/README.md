@@ -76,9 +76,27 @@ npx prisma migrate dev --name init
 When `npx prisma migrate dev` is executed against a newly created database, seeding is also triggered. The seed file
 in [`prisma/seed.ts`](./prisma/seed.ts) will be executed and your database will be populated with the sample data.
 
-## Build and Run with Docker
+## Build and Run on azure
 
 ### Build
+
+Connect to your azure acount.
+```
+az login
+```
+
+Go in the (./terraform) then plan and apply your terraform. When it's done export your output in the app's .env file.
+```
+terraform plan -out="tf.plan"
+terraform apply "tf.plan"
+terraform output > ../.env
+```
+
+Check if the AMQP_URL value is good.
+Then go to ./prisma to migrate your table schema in your azure database.
+```
+npx prisma migrate dev --name init
+```
 
 To build the image you need to be in the **parent folder** of the service you want to build. Then run the following
 command:
