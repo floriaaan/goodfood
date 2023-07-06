@@ -1,4 +1,4 @@
-import { Prisma, Status } from "@prisma/client";
+import { DeliveryType, Prisma, Status } from "@prisma/client";
 
 export type UserMinimum = {
   id: string;
@@ -17,6 +17,8 @@ export type Order = {
   id: string;
   payment_id: string;
   delivery_id: string;
+  delivery_type: DeliveryType
+  restaurant_id: string;
   user: UserMinimum;
   basket_snapshot: Basket;
   status: Status;
@@ -53,6 +55,7 @@ export type GetOrdersByStatusResponse = {
 export type CreateOrderRequest = {
   payment_id: string;
   delivery_id: string;
+  delivery_type: DeliveryType;
   user: UserMinimum;
   basket_snapshot: Basket;
   restaurant_id: string;
@@ -62,6 +65,7 @@ export type UpdateOrderRequest = {
   id: string;
   payment_id: string;
   delivery_id: string;
+  delivery_type: DeliveryType;
   status: Status;
   restaurant_id: string;
 };
