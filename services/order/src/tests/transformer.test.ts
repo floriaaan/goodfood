@@ -10,6 +10,8 @@ describe("tests@goodfood/order.transformer.toGrpc", function () {
       id: "order_id:1",
       payment_id: "payment_id:1",
       delivery_id: "delivery_id:1",
+      delivery_type: "DELIVERY",
+      restaurant_id: "restaurant_id:1",
       user: {
         id: "user_id:1",
         first_name: "first_name",
@@ -33,6 +35,8 @@ describe("tests@goodfood/order.transformer.toGrpc", function () {
     assert.equal(parsed?.id, "order_id:1");
     assert.equal(parsed?.payment_id, "payment_id:1");
     assert.equal(parsed?.delivery_id, "delivery_id:1");
+    assert.equal(parsed?.delivery_type, "DELIVERY");
+    assert.equal(parsed?.restaurant_id, "restaurant_id:1");
     assert.equal(parsed?.user.id, "user_id:1");
     assert.equal(parsed?.user.first_name, "first_name");
     assert.equal(parsed?.user.last_name, "last_name");
@@ -54,6 +58,8 @@ describe("tests@goodfood/order.transformer.toGrpc", function () {
       id: "",
       payment_id: "",
       delivery_id: "",
+      delivery_type: "DELIVERY",
+      restaurant_id: "",
       user: {
         id: "",
         first_name: "",
@@ -72,6 +78,8 @@ describe("tests@goodfood/order.transformer.toGrpc", function () {
     assert.equal(parsed?.id, "");
     assert.equal(parsed?.payment_id, "");
     assert.equal(parsed?.delivery_id, "");
+    assert.equal(parsed?.delivery_type, "DELIVERY");
+    assert.equal(parsed?.restaurant_id, "");
     assert.equal(parsed?.user.id, "");
     assert.equal(parsed?.user.first_name, "");
     assert.equal(parsed?.user.last_name, "");
