@@ -147,22 +147,30 @@ func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.Cha
 		}, nil
 	}
 
+	var connectedUser models.User
+
+	if result := s.H.DB.Where(&models.User{Id: claims.Id}).First(&connectedUser); result.Error != nil {
+		return &pb.ChangeRoleOutput{
+			Error: "User not found",
+		}, nil
+	}
+
 	var user models.User
 	var role models.Role
 
-	if result := s.H.DB.Where(&models.User{Id: claims.Id}); result.Error != nil {
+	if result := s.H.DB.Where(&models.User{Id: req.UserId}).First(&user); result.Error != nil {
 		return &pb.ChangeRoleOutput{
 			Error: "User not found",
 		}, nil
 	}
 
-	if result := s.H.DB.Where(&models.Role{Code: req.RoleCode}); result.Error != nil {
+	if result := s.H.DB.Where(&models.Role{Code: req.RoleCode}).First(&role); result.Error != nil {
 		return &pb.ChangeRoleOutput{
 			Error: "User not found",
 		}, nil
 	}
 
-	if user.Role.Code == "ADMIN" || user.Id == req.UserId {
+	if user.Role.Code == "ADMIN" {
 		user.Role = role
 		s.H.DB.Save(&user)
 
