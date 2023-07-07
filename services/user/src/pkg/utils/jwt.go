@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"github.com/golang-jwt/jwt"
+	"goodfood-user/pkg/db"
 	"goodfood-user/pkg/models"
 	"time"
 )
@@ -11,6 +12,7 @@ type JwtWrapper struct {
 	SecretKey       string
 	Issuer          string
 	ExpirationHours int64
+	H               db.Handler
 }
 
 type JwtClaims struct {
@@ -58,6 +60,10 @@ func (w *JwtWrapper) ValidateToken(signedToken string) (claims *JwtClaims, err e
 	}
 
 	claims, ok := token.Claims.(*JwtClaims)
+
+	if result := w.H.DB.Where(&models.User{Id: claims.Id}).First(&models.User{}); result.Error != nil || result.RowsAffected == 0 {
+		return nil, result.Error
+	}
 
 	if !ok {
 		return nil, errors.New("couldn't parse claims")
