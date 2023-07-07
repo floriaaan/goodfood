@@ -14,11 +14,12 @@ model Ingredient {
   description String?
 
   // needed to link the ingredient to the restaurant
-  IngredientRestaurant IngredientRestaurant[]
+  ingredient_restaurant IngredientRestaurant[]
 }
 
 model IngredientRestaurant {
-  id Int @id @default(autoincrement())
+  id  Int    @id @default(autoincrement())
+  key String @unique
 
   alert_threshold Int
   quantity        Int
@@ -35,7 +36,9 @@ model IngredientRestaurant {
   supplier    Supplier @relation(fields: [supplier_id], references: [id])
   supplier_id Int
 
-  updatedAt DateTime @updatedAt
+  updated_at DateTime @updatedAt
+
+  orders SupplyOrder[]
 }
 
 model Supplier {
@@ -44,4 +47,21 @@ model Supplier {
   contact String
 
   ingredients IngredientRestaurant[]
+  orders      SupplyOrder[]
+}
+
+model SupplyOrder {
+  id Int @id @default(autoincrement())
+
+  quantity   Int
+  unit_price Float
+
+  ingredient_restaurant_id Int
+  ingredient_restaurant    IngredientRestaurant @relation(fields: [ingredient_restaurant_id], references: [id])
+
+  supplier_id Int
+  supplier    Supplier @relation(fields: [supplier_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }

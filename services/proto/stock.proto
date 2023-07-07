@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 package com.goodfood.stock;
+import "google/protobuf/empty.proto";
+
 
 message Ingredient {
     int32 id = 1;
@@ -10,6 +12,7 @@ message Ingredient {
 
 message IngredientRestaurant {
     int32 id = 1;
+    string key = 13;
 
     int32 alert_threshold = 2;
     int32 quantity = 3;
@@ -35,28 +38,56 @@ message Supplier {
     string contact = 3;
 }
 
+message SupplyOrder {
+    int32 id = 1;
+
+    int32 quantity = 2;
+    double unit_price = 3;
+
+    int32 ingredient_restaurant_id = 4;
+    IngredientRestaurant ingredient_restaurant = 5;
+
+    int32 supplier_id = 6;
+    Supplier supplier = 7;
+
+    string created_at = 8;
+    string updated_at = 9;
+}
+
 service StockService {
     rpc GetIngredient(GetIngredientRequest) returns (Ingredient) {}
-    rpc GetIngredients() returns (GetIngredientsResponse) {}
+    rpc GetIngredients(google.protobuf.Empty) returns (GetIngredientsResponse) {}
     rpc CreateIngredient(CreateIngredientRequest) returns (Ingredient) {}
     rpc UpdateIngredient(UpdateIngredientRequest) returns (Ingredient) {}
     rpc DeleteIngredient(DeleteIngredientRequest) returns (DeleteIngredientResponse) {}
 
     rpc GetSupplier(GetSupplierRequest) returns (Supplier) {}
-    rpc GetSuppliers() returns (GetSuppliersResponse) {}
+    rpc GetSuppliers(google.protobuf.Empty) returns (GetSuppliersResponse) {}
     rpc CreateSupplier(CreateSupplierRequest) returns (Supplier) {}
     rpc UpdateSupplier(UpdateSupplierRequest) returns (Supplier) {}
     rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse) {}
 
     rpc GetIngredientRestaurant(GetIngredientRestaurantRequest) returns (IngredientRestaurant) {}
     rpc GetIngredientRestaurantsByRestaurant(GetIngredientRestaurantsByRestaurantRequest) returns (GetIngredientRestaurantsByRestaurantResponse) {}
+    rpc GetIngredientRestaurantsByProduct(GetIngredientRestaurantsByProductRequest) returns (GetIngredientRestaurantsByProductResponse) {}
     rpc CreateIngredientRestaurant(CreateIngredientRestaurantRequest) returns (IngredientRestaurant) {}
     rpc UpdateIngredientRestaurant(UpdateIngredientRestaurantRequest) returns (IngredientRestaurant) {}
     rpc DeleteIngredientRestaurant(DeleteIngredientRestaurantRequest) returns (DeleteIngredientRestaurantResponse) {}
 
+
+    // todo: add create supply order for multiple ingredient restaurants
+    rpc GetSupplyOrder(GetSupplyOrderRequest) returns (SupplyOrder) {}
+    rpc GetSupplyOrdersByRestaurant(GetSupplyOrdersByRestaurantRequest) returns (GetSupplyOrdersByRestaurantResponse) {}
+    rpc GetSupplyOrdersBySupplier(GetSupplyOrdersBySupplierRequest) returns (GetSupplyOrdersBySupplierResponse) {}
+    rpc GetSupplyOrdersByIngredientRestaurant(GetSupplyOrdersByIngredientRestaurantRequest) returns (GetSupplyOrdersByIngredientRestaurantResponse) {}
+    rpc CreateSupplyOrder(CreateSupplyOrderRequest) returns (SupplyOrder) {}
+    rpc UpdateSupplyOrder(UpdateSupplyOrderRequest) returns (SupplyOrder) {}
+    rpc DeleteSupplyOrder(DeleteSupplyOrderRequest) returns (DeleteSupplyOrderResponse) {}
+
 }
 
 service StockReportingService {
+    rpc GetOutcomesByRestaurant(GetOutcomesByRestaurantRequest) returns (GetOutcomesByRestaurantResponse) {}
 }
 
 message GetIngredientRequest {
@@ -66,6 +97,14 @@ message GetIngredientRequest {
 
 message GetIngredientsResponse {
     repeated Ingredient ingredients = 1;
+}
+
+message GetIngredientRestaurantsByProductRequest {
+    string product_id = 1;
+}
+
+message GetIngredientRestaurantsByProductResponse {
+    repeated IngredientRestaurant ingredient_restaurants = 1;
 }
 
 message CreateIngredientRequest {
@@ -115,7 +154,7 @@ message DeleteSupplierResponse {
 }
 
 message GetIngredientRestaurantRequest {
-    string id = 1;
+    int32 id = 1;
 }
 
 message GetIngredientRestaurantsByRestaurantRequest {
@@ -163,4 +202,66 @@ message DeleteIngredientRestaurantRequest {
 
 message DeleteIngredientRestaurantResponse {
     bool success = 1;
+}
+
+message GetSupplyOrderRequest {
+    int32 id = 1;
+}
+
+message GetSupplyOrdersByRestaurantRequest {
+    string restaurant_id = 1;
+}
+
+message GetSupplyOrdersByRestaurantResponse {
+    repeated SupplyOrder supply_orders = 1;
+}
+
+message GetSupplyOrdersBySupplierRequest {
+    int32 supplier_id = 1;
+}
+
+message GetSupplyOrdersBySupplierResponse {
+    repeated SupplyOrder supply_orders = 1;
+}
+
+message GetSupplyOrdersByIngredientRestaurantRequest {
+    int32 ingredient_restaurant_id = 1;
+}
+
+message GetSupplyOrdersByIngredientRestaurantResponse {
+    repeated SupplyOrder supply_orders = 1;
+}
+
+message CreateSupplyOrderRequest {
+    int32 quantity = 1;
+
+    int32 ingredient_restaurant_id = 2;
+
+    int32 supplier_id = 3;
+}
+
+message UpdateSupplyOrderRequest {
+    int32 id = 1;
+    int32 quantity = 2;
+
+    int32 ingredient_restaurant_id = 3;
+    int32 supplier_id = 4;
+}
+
+message DeleteSupplyOrderRequest {
+    int32 id = 1;
+}
+
+message DeleteSupplyOrderResponse {
+    bool success = 1;
+}
+
+message GetOutcomesByRestaurantRequest {
+    string restaurant_id = 1;
+    optional string date = 2;
+    string interval = 3;
+}
+
+message GetOutcomesByRestaurantResponse {
+    float value = 1;
 }
