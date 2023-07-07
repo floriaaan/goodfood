@@ -42,14 +42,19 @@ func main() {
 		logger.Fatal("Failed to listing:", err)
 	}
 
-	s := services.Server{
+	userServer := services.Server{
+		H:   h,
+		Jwt: jwt,
+	}
+	mainAddressServer := services.MainAddressServer{
 		H:   h,
 		Jwt: jwt,
 	}
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterUserServiceServer(grpcServer, &s)
+	pb.RegisterUserServiceServer(grpcServer, &userServer)
+	pb.RegisterMainAddressServiceServer(grpcServer, &mainAddressServer)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		logger.Fatal("Failed to serve:", err)
