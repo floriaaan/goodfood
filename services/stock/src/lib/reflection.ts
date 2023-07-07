@@ -16,7 +16,6 @@ export const addReflection = (server: Server, path: string) => {
 
     base_addReflection(server, path);
   } catch (err) {
-    console.log("here");
     log.warn(`Reflection file ${resolvedPath} is not readable`);
     return;
   }
