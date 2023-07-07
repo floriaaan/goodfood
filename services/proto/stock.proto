@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package com.goodfood.stock;
+
+message Ingredient {
+    int32 id = 1;
+    string name = 2;
+    optional string description = 3;
+}
+
+message IngredientRestaurant {
+    int32 id = 1;
+
+    int32 alert_threshold = 2;
+    int32 quantity = 3;
+    repeated string in_product_list = 12;
+
+    float unit_price = 4;
+    float price_per_kilo = 5;
+
+    string restaurant_id = 6;
+
+    int32 ingredient_id = 7;
+    Ingredient ingredient = 8;
+
+    int32 supplier_id = 9;
+    Supplier supplier = 10;
+
+    string updated_at = 11;
+}
+
+message Supplier {
+    int32 id = 1;
+    string name = 2;
+    string contact = 3;
+}
+
+service StockService {
+    rpc GetIngredient(GetIngredientRequest) returns (Ingredient) {}
+    rpc GetIngredients() returns (GetIngredientsResponse) {}
+    rpc CreateIngredient(CreateIngredientRequest) returns (Ingredient) {}
+    rpc UpdateIngredient(UpdateIngredientRequest) returns (Ingredient) {}
+    rpc DeleteIngredient(DeleteIngredientRequest) returns (DeleteIngredientResponse) {}
+
+    rpc GetSupplier(GetSupplierRequest) returns (Supplier) {}
+    rpc GetSuppliers() returns (GetSuppliersResponse) {}
+    rpc CreateSupplier(CreateSupplierRequest) returns (Supplier) {}
+    rpc UpdateSupplier(UpdateSupplierRequest) returns (Supplier) {}
+    rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse) {}
+
+    rpc GetIngredientRestaurant(GetIngredientRestaurantRequest) returns (IngredientRestaurant) {}
+    rpc GetIngredientRestaurantsByRestaurant(GetIngredientRestaurantsByRestaurantRequest) returns (GetIngredientRestaurantsByRestaurantResponse) {}
+    rpc CreateIngredientRestaurant(CreateIngredientRestaurantRequest) returns (IngredientRestaurant) {}
+    rpc UpdateIngredientRestaurant(UpdateIngredientRestaurantRequest) returns (IngredientRestaurant) {}
+    rpc DeleteIngredientRestaurant(DeleteIngredientRestaurantRequest) returns (DeleteIngredientRestaurantResponse) {}
+
+}
+
+service StockReportingService {
+}
+
+message GetIngredientRequest {
+    int32 id = 1;
+}
+    
+
+message GetIngredientsResponse {
+    repeated Ingredient ingredients = 1;
+}
+
+message CreateIngredientRequest {
+    string name = 1;
+    optional string description = 2;
+}
+
+message UpdateIngredientRequest {
+    int32 id = 1;
+    string name = 2;
+    optional string description = 3;
+}
+
+message DeleteIngredientRequest {
+    int32 id = 1;
+}
+
+message DeleteIngredientResponse {
+    bool success = 1;
+}
+
+message GetSupplierRequest {
+    int32 id = 1;
+}
+
+message GetSuppliersResponse {
+    repeated Supplier suppliers = 1;
+}
+
+message CreateSupplierRequest {
+    string name = 1;
+    string contact = 2;
+}
+
+message UpdateSupplierRequest {
+    int32 id = 1;
+    string name = 2;
+    string contact = 3;
+}
+
+message DeleteSupplierRequest {
+    int32 id = 1;
+}
+
+message DeleteSupplierResponse {
+    bool success = 1;
+}
+
+message GetIngredientRestaurantRequest {
+    string id = 1;
+}
+
+message GetIngredientRestaurantsByRestaurantRequest {
+    string restaurant_id = 1;
+}
+
+message GetIngredientRestaurantsByRestaurantResponse {
+    repeated IngredientRestaurant ingredient_restaurants = 1;
+}
+
+message CreateIngredientRestaurantRequest {
+    int32 alert_threshold = 1;
+    int32 quantity = 2;
+    repeated string in_product_list = 12;
+
+    float unit_price = 3;
+    float price_per_kilo = 4;
+
+    string restaurant_id = 5;
+
+    int32 ingredient_id = 6;
+
+    int32 supplier_id = 7;
+}
+
+message UpdateIngredientRestaurantRequest {
+    int32 id = 1;
+    int32 alert_threshold = 2;
+    int32 quantity = 3;
+    repeated string in_product_list = 12;
+
+    float unit_price = 4;
+    float price_per_kilo = 5;
+
+    string restaurant_id = 6;
+
+    int32 ingredient_id = 7;
+
+    int32 supplier_id = 8;
+}
+
+message DeleteIngredientRestaurantRequest {
+    int32 id = 1;
+}
+
+message DeleteIngredientRestaurantResponse {
+    bool success = 1;
+}
