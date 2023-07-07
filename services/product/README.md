@@ -90,26 +90,28 @@ Go in the [terraform](./terraform) then plan and apply your terraform. When it's
 ```
 terraform plan -out="tf.plan"
 terraform apply "tf.plan"
-terraform output > ../.env
+terraform output | sed 's/ //g' > ../.env
 ```
 
-Check if the AMQP_URL value is good.
+Check if the AMQP_URL value is good. (Ip de florian pour l'instant)
 Then go to [terraform](./prisma) to migrate your table schema in your azure database.
 ```
 npx prisma migrate dev --name init
 ```
 
-To build the image you need to be in the **parent folder** of the service you want to build. Then run the following
-command:
-
+Open an other terminal at the root folder (/service) and execute those
 ```
 docker build -t goodfood-product:1.0.0 -f ./product/Dockerfile .
+docker push pierrelbg/product-service:1.0.0
 ```
 
-### Run
-
-Create the .env base on the .env.example. Then run the following command:
-
+Back to the first terminal and execute
 ```
-docker run --env-file=.env goodfood-product:1.0.0 
+echo "$(terraform output kube_config)" > ./azurek8s
+export KUBECONFIG=./azurek8s
+kubectl apply -f ../k8s/
 ```
+Puis tu peux crée de quoi monitorer dans l'onglet Monitoring/Insights
+
+ça ne fonctionne pas, le contenaire est en erreur. Ce qui n'est normalement pas possible si le conteneur fonctionne en local.
+Verifier que le contener fonctionne en local.
