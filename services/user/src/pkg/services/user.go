@@ -24,6 +24,12 @@ func (s *Server) GetUser(_ context.Context, req *pb.UserId) (*pb.UserOutput, err
 }
 
 func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.UserOutput, error) {
+	if req.User == nil || req.Token == "" {
+		return &pb.UserOutput{
+			Error: "Invalid request",
+		}, nil
+	}
+
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
 		return &pb.UserOutput{
@@ -83,31 +89,52 @@ func (s *Server) ChangePassword(_ context.Context, req *pb.ChangePasswordInput) 
 }
 
 func (s *Server) DeleteUser(_ context.Context, req *pb.DeleteInput) (*pb.DeleteUserOutput, error) {
+	if req.UserId == 0 || req.Token == "" {
+		return &pb.DeleteUserOutput{
+			Error: "Invalid request",
+		}, nil
+	}
+
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
 		return &pb.DeleteUserOutput{
 			Error: "Invalid token",
 		}, nil
 	}
+	var connectedUser models.User
 
-	var user models.User
-
-	if result := s.H.DB.Where(&models.User{Id: claims.Id}); result.Error != nil {
+	if result := s.H.DB.Where(&models.User{Id: claims.Id}).Preload("Role").First(&connectedUser); result.Error != nil || result.RowsAffected == 0 {
 		return &pb.DeleteUserOutput{
 			Error: "User not found",
 		}, nil
 	}
 
-	if user.Role.Code == "ADMIN" || user.Id == req.UserId {
+	var user models.User
+	var mainAddress models.MainAddress
+
+	if result := s.H.DB.Where(&models.User{Id: req.UserId}).Preload("Role").First(&user); result.Error != nil || result.RowsAffected == 0 {
+		return &pb.DeleteUserOutput{
+			Error: "User not found",
+		}, nil
+	}
+
+	if result := s.H.DB.Where(&models.MainAddress{Id: user.MainAddressId}).First(&mainAddress); result.Error != nil || result.RowsAffected == 0 {
+		return &pb.DeleteUserOutput{
+			Error: "Main address not found",
+		}, nil
+	}
+
+	if user.Role.Code == "ADMIN" || user.Id == connectedUser.Id {
 
 		s.H.DB.Delete(&user)
+		s.H.DB.Delete(&mainAddress)
 
 		return &pb.DeleteUserOutput{
 			User: mapper.ToProtoUser(&user),
 		}, nil
 	} else {
 		return &pb.DeleteUserOutput{
-			Error: "You are not allowed to change this user role",
+			Error: "You are not allowed to delete this user",
 		}, nil
 	}
 }
