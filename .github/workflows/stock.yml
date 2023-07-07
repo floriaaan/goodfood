@@ -1,8 +1,8 @@
-name: Order Microservice CI/CD
+name: Stock Microservice CI/CD
 
 on:
   push:
-    branches: [ order ]
+    branches: [ stock ]
   pull_request:
     branches: [ main ]
 
@@ -18,14 +18,14 @@ jobs:
         with:
           node-version: "18.x"
           cache: "pnpm"
-          cache-dependency-path: services/order/pnpm-lock.yaml
+          cache-dependency-path: services/stock/pnpm-lock.yaml
       - name: Install dependencies
         run: |
-          cd ./services/order
+          cd ./services/stock
           pnpm install --frozen-lockfile
       - name: Build
         run: |
-          cd ./services/order
+          cd ./services/stock
           pnpm build
 
   test:
@@ -39,14 +39,14 @@ jobs:
         with:
           node-version: "18.x"
           cache: "pnpm"
-          cache-dependency-path: services/order/pnpm-lock.yaml
+          cache-dependency-path: services/stock/pnpm-lock.yaml
       - name: Install dependencies
         run: |
-          cd ./services/order
+          cd ./services/stock
           pnpm install --frozen-lockfile
       - name: Execute tests
         run: |
-          cd ./services/order
+          cd ./services/stock
           pnpm test
 
   publish:
@@ -64,6 +64,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/
-          file: ./services/order/Dockerfile
+          file: ./services/stock/Dockerfile
           push: true
-          tags: floriaaan/goodfood-order:latest
+          tags: floriaaan/goodfood-stock:latest
