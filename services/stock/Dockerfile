@@ -4,7 +4,7 @@ FROM node:18-alpine3.17  as builder
 WORKDIR /app
 
 # Copy the application code
-COPY ./order/ .
+COPY ./stock/ .
 
 # Install dependencies
 RUN npm install
@@ -35,4 +35,4 @@ COPY --from=builder /app/node_modules/.prisma /.prisma
 EXPOSE 50009
 
 # Start the server
-CMD [ "node", "index.js"]
+CMD ["node", "index.js"]
