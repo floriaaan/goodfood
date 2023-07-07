@@ -48,15 +48,14 @@ func ToProtoRole(role models.Role) *pb.Role {
 	}
 }
 
-func ToModelUser(user *pb.User) *models.User {
+func UpdateInputToModelUser(user *pb.User) *models.User {
 	return &models.User{
-		Id:          user.Id,
-		FirstName:   user.FirstName,
-		LastName:    user.LastName,
-		Email:       user.Email,
-		Phone:       user.Phone,
-		MainAddress: *ToModelMainAddress(user.MainAddress),
-		Role:        *ToModelRole(user.Role),
+		Id:        user.Id,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
+		Phone:     user.Phone,
+		RoleId:    user.RoleId,
 	}
 }
 
@@ -80,7 +79,7 @@ func InputToModelMainAddress(address *pb.MainAddressInput) *models.MainAddress {
 	}
 }
 
-func ToModelMainAddress(address *pb.MainAddress) *models.MainAddress {
+func UpdateInputToModelMainAddress(address *pb.MainAddress) *models.MainAddress {
 	return &models.MainAddress{
 		Id:      address.Id,
 		Street:  address.Street,
@@ -88,13 +87,5 @@ func ToModelMainAddress(address *pb.MainAddress) *models.MainAddress {
 		Country: address.Country,
 		Lat:     address.Lat,
 		Lng:     address.Lng,
-	}
-}
-
-func ToModelRole(role *pb.Role) *models.Role {
-	return &models.Role{
-		Id:    role.Id,
-		Label: role.Label,
-		Code:  role.Code,
 	}
 }
