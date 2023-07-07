@@ -31,7 +31,7 @@ func main() {
 	jwt := utils.JwtWrapper{
 		SecretKey:       c.JWTSecretKey,
 		Issuer:          "go-grpc-auth-svc",
-		ExpirationHours: 24 * 365,
+		ExpirationHours: 1,
 	}
 
 	logger.Infof("Starting server at ", c.Port)

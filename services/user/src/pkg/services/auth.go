@@ -2,11 +2,13 @@ package services
 
 import (
 	"context"
+	"errors"
 	"goodfood-user/pkg/db"
 	"goodfood-user/pkg/mapper"
 	"goodfood-user/pkg/models"
 	"goodfood-user/pkg/utils"
 	pb "goodfood-user/proto"
+	"time"
 )
 
 type Server struct {
@@ -58,7 +60,7 @@ func (s *Server) LogIn(_ context.Context, req *pb.LogInInput) (*pb.LogInResponse
 }
 
 func (s *Server) Validate(_ context.Context, req *pb.ValidateInput) (*pb.ValidateResponse, error) {
-	claims, err := s.Jwt.ValidateToken(req.Token)
+	token, err := s.Jwt.ParseToken(req.Token)
 
 	if err != nil {
 		return &pb.ValidateResponse{
@@ -66,15 +68,17 @@ func (s *Server) Validate(_ context.Context, req *pb.ValidateInput) (*pb.Validat
 		}, nil
 	}
 
-	var user models.User
+	claims, ok := token.Claims.(*utils.JwtClaims)
 
-	if result := s.H.DB.Where(&models.User{Email: claims.Email}).First(&user); result.Error != nil {
-		return &pb.ValidateResponse{
-			Error: "User not found",
-		}, nil
+	if !ok {
+		return nil, errors.New("couldn't parse claims")
+	}
+
+	if claims.ExpiresAt < time.Now().Local().Add(-time.Hour*1).Unix() {
+		return nil, errors.New("JWT is expired")
 	}
 
 	return &pb.ValidateResponse{
-		UserId: user.Id,
+		UserId: claims.Id,
 	}, nil
 }
