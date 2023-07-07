@@ -1,0 +1,62 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  FULFILLED
+  REJECTED
+}
+
+model UserMinimum {
+  id String @id @default(cuid()) @map("_id")
+
+  first_name String
+  last_name  String
+  email      String
+  phone      String
+
+  orders Order[]
+}
+
+model Basket {
+  id     String @id @default(cuid()) @map("_id")
+  json   Json?
+  string String
+  total  Float
+
+  Order Order?
+}
+
+enum DeliveryType {
+  TAKEAWAY
+  DELIVERY
+}
+
+model Order {
+  id String @id @default(cuid()) @map("_id")
+
+  payment_id  String
+  status      Status @default(PENDING)
+
+  delivery_id String
+  delivery_type DeliveryType
+
+  user    UserMinimum @relation(fields: [user_id], references: [id])
+  user_id String
+
+  basket_snapshot    Basket @relation(fields: [basket_snapshot_id], references: [id])
+  basket_snapshot_id String @unique
+
+  restaurant_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
