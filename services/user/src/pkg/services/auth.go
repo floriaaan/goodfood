@@ -18,11 +18,14 @@ type Server struct {
 func (s *Server) Register(_ context.Context, req *pb.UserCreateInput) (*pb.UserOutput, error) {
 	var role models.Role
 
-	if result := s.H.DB.Where(&models.User{Email: req.Email}).First(models.User{}); result.RowsAffected > 0 {
+	result := s.H.DB.Where(&models.User{Email: req.Email}).First(&models.User{})
+
+	if result.RowsAffected > 0 {
 		return &pb.UserOutput{
 			Error: "User already exists",
 		}, nil
 	}
+
 	s.H.DB.Where(&models.Role{Code: req.Role.Code}).First(&role)
 
 	user := mapper.InputToModelUser(req)

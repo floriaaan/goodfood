@@ -30,9 +30,9 @@ func (s *Server) UpdateMainAddress(_ context.Context, req *pb.MainAddressUpdateI
 			Error: "User not found",
 		}, nil
 	}
-	var mainAddress = mapper.ToModelMainAddress(req.MainAddress)
+	var mainAddress = mapper.UpdateInputToModelMainAddress(req.MainAddress)
 
-	s.H.DB.Save(&mainAddress)
+	s.H.DB.Updates(&mainAddress)
 
 	return &pb.UpdateMainAddressOutput{
 		MainAddress: mapper.ToProtoMainAddress(*mainAddress),

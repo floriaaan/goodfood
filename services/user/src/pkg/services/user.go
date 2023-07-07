@@ -36,9 +36,9 @@ func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.Use
 			Error: "User not found",
 		}, nil
 	}
-	var user = mapper.ToModelUser(req.User)
+	var user = mapper.UpdateInputToModelUser(req.User)
 
-	s.H.DB.Save(&user)
+	s.H.DB.Updates(&user)
 
 	return &pb.UserOutput{
 		User: mapper.ToProtoUser(user),
