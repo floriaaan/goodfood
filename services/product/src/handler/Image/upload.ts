@@ -4,7 +4,6 @@ import { Data } from "@product/types";
 import { log } from "@product/lib/log";
 import { ServerErrorResponse } from "@grpc/grpc-js";
 import { decode } from "base64-arraybuffer";
-import sharp from "sharp";
 import { File } from "node:buffer";
 
 export const UploadImage = async (
@@ -27,17 +26,7 @@ export const UploadImage = async (
 
 		// Resize image and compress
 		const buffer = decode(base64FileData);
-		const resizedBuffer = await sharp(Buffer.from(buffer), {
-			animated: true,
-			pages: -1,
-		})
-			.resize(128, 128, {
-				fit: sharp.fit.cover,
-				// position: sharp.strategy.entropy,
-			})
-			.toFormat("webp")
-			.webp({ quality: 90 })
-			.toBuffer();
+		const resizedBuffer = Buffer.from(buffer);
 
 		// Upload image
 		const fileName = request.name;

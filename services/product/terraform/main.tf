@@ -1,8 +1,20 @@
 terraform {
   required_providers {
+    azapi = {
+      source  = "azure/azapi"
+      version = "~>1.5"
+    }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.48.0"
+      version = "~>3.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~>3.0"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = "0.9.1"
     }
   }
 }
@@ -75,4 +87,53 @@ resource "azurerm_role_assignment" "rlas-goodfood-product" {
   scope                = azurerm_storage_account.stac-goodfood-product.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = data.azurerm_client_config.product-client-conf.object_id
+}
+
+resource "random_pet" "ssh_key_name-goodfood-product" {
+  prefix    = "ssh"
+  separator = ""
+}
+
+resource "azapi_resource" "ssh_public_key-goodfood-product" {
+  type      = "Microsoft.Compute/sshPublicKeys@2022-11-01"
+  name      = random_pet.ssh_key_name-goodfood-product.id
+  location  = "westus3"
+  parent_id = data.azurerm_resource_group.rg-goodfood.id
+}
+
+resource "azapi_resource_action" "ssh_public_key_gen-goodfood-product" {
+  type        = "Microsoft.Compute/sshPublicKeys@2022-11-01"
+  resource_id = azapi_resource.ssh_public_key-goodfood-product.id
+  action      = "generateKeyPair"
+  method      = "POST"
+
+  response_export_values = ["publicKey"]
+}
+
+resource "azurerm_kubernetes_cluster" "aks-goodfood-product" {
+  name                = "aks-goodfood-product-${var.environnment_suffix}"
+  location            = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  dns_prefix          = "goodfood-product"
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  default_node_pool {
+    name       = "agentpool"
+    vm_size    = "Standard_D2_v2"
+    node_count = 1
+  }
+  linux_profile {
+    admin_username = "ubuntu"
+
+    ssh_key {
+      key_data = jsondecode(azapi_resource_action.ssh_public_key_gen-goodfood-product.output).publicKey
+    }
+  }
+  network_profile {
+    network_plugin    = "kubenet"
+    load_balancer_sku = "standard"
+  }
 }

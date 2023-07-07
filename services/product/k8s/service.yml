@@ -9,5 +9,5 @@ spec:
     - name: "grpc"
       port: 50004
       targetPort: 50004
-status:
-  loadBalancer: {}
+  type: LoadBalancer
+  loadBalancerIP: 10.10.10.10

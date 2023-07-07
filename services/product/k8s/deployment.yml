@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: goodfood-product
-          image: pierrelbg/goodfood-product:1.0
+          image: pierrelbg/product-service:1.0.0
           resources:
             limits:
               memory: "128Mi"

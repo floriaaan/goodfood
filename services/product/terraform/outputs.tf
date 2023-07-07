@@ -10,11 +10,15 @@ output "AZURE_STORAGE_RESOURCE_NAME"{
   value = azurerm_storage_account.stac-goodfood-product.name
 }
 
-
 output "PORT" {
   value = 50004
 }
 
 output "AMQP_URL"{
   value = "amqp://guest:guest@localhost"
+}
+
+output "kube_config" {
+  value     = azurerm_kubernetes_cluster.aks-goodfood-product.kube_config_raw
+  sensitive = true
 }
