@@ -1,5 +1,9 @@
 import { UntypedServiceImplementation } from "@grpc/grpc-js";
 
-const reportingHandlers: UntypedServiceImplementation = {};
+import { GetOutcomesByRestaurant } from "@stock/handlers/reporting/outcomes";
+
+const reportingHandlers: UntypedServiceImplementation = {
+  GetOutcomesByRestaurant,
+};
 
 export default reportingHandlers;
