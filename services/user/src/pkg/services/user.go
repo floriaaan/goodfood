@@ -101,6 +101,13 @@ func (s *Server) DeleteUser(_ context.Context, req *pb.DeleteInput) (*pb.DeleteU
 			Error: "Invalid token",
 		}, nil
 	}
+	var connectedUser models.User
+
+	if result := s.H.DB.Where(&models.User{Id: claims.Id}).Preload("Role").First(&connectedUser); result.Error != nil || result.RowsAffected == 0 {
+		return &pb.DeleteUserOutput{
+			Error: "User not found",
+		}, nil
+	}
 
 	var user models.User
 	var mainAddress models.MainAddress
@@ -117,7 +124,8 @@ func (s *Server) DeleteUser(_ context.Context, req *pb.DeleteInput) (*pb.DeleteU
 		}, nil
 	}
 
-	if user.Role.Code == "ADMIN" || user.Id == claims.Id {
+	if user.Role.Code == "ADMIN" || user.Id == connectedUser.Id {
+
 		s.H.DB.Delete(&user)
 		s.H.DB.Delete(&mainAddress)
 
