@@ -73,7 +73,7 @@ func (s *Server) ChangePassword(_ context.Context, req *pb.ChangePasswordInput) 
 	}
 
 	var user models.User
-	if result := s.H.DB.Where(&models.User{Id: claims.Id}); result.Error != nil {
+	if result := s.H.DB.Where(&models.User{Id: claims.Id}).First(&user); result.Error != nil {
 		return &pb.ChangePasswordOutput{
 			Error: "User not found",
 		}, nil
@@ -81,7 +81,7 @@ func (s *Server) ChangePassword(_ context.Context, req *pb.ChangePasswordInput) 
 
 	user.Password = utils.HashPassword(req.NewPassword)
 
-	s.H.DB.Save(&user)
+	s.H.DB.Updates(&user)
 
 	return &pb.ChangePasswordOutput{
 		User: mapper.ToProtoUser(&user),
