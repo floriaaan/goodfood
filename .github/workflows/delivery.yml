@@ -2,9 +2,9 @@ name: Delivery Microservice CI/CD
 
 on:
   push:
-    branches: [ delivery ]
+    branches: [delivery]
   pull_request:
-    branches: [ dev, main ]
+    branches: [main]
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: latest
       - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: latest
       - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
@@ -52,7 +52,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [ build, test ]
+    needs: [build, test]
     steps:
       - name: Checkout code
         uses: actions/checkout@master
