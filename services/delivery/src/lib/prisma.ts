@@ -1,4 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { createPrismaRedisCache } from "prisma-redis-middleware";
+import { redis } from "@delivery/lib/redis";
 
 let prisma: PrismaClient;
 type GlobalWithPrisma = typeof globalThis & {
@@ -23,6 +25,20 @@ if (process.env.NODE_ENV === "production") {
 
   prisma = (global as GlobalWithPrisma).prisma;
 }
+
+const cacheMiddleware: Prisma.Middleware = createPrismaRedisCache({
+  models: [
+    { model: "DeliveryPerson", cacheTime: 300, cacheKey: "delivery_person" },
+  ],
+  storage: {
+    type: "redis",
+    options: { client: redis, invalidation: { referencesTTL: 300 } },
+  },
+  cacheTime: 300,
+});
+
+//todo: change to $extends when it's available for prisma-redis-middleware
+prisma.$use(cacheMiddleware);
 
 export default prisma;
 
