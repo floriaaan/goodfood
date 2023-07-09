@@ -80,7 +80,7 @@ message DeliveryList {
 }
 
 message DeliveryPersonList {
-  repeated DeliveryPersonList delivery_persons = 1;
+  repeated DeliveryPerson delivery_persons = 1;
 }
 
 message DeliveryPersonId {
