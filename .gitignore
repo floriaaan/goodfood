@@ -61,7 +61,16 @@ terraform.rc
 /**/build
 /**/.env
 
+
 # dotnet build files
 /**/obj
 /**/bin
 /**/.vs
+
+# reporting service
+/services/reporting/**/bin
+/services/reporting/**/obj
+/services/reporting/**/.vs
+
+# log service
+/services/log/goodfood-log

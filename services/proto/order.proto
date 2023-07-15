@@ -1,13 +1,22 @@
 syntax = "proto3";
 
-package com.goodfood.ordering;
+package com.goodfood.order;
+
+import "google/protobuf/struct.proto";
+
 
 enum Status {
     PENDING = 0;
     IN_PROGRESS = 1;
     FULFILLED = 2;
     REJECTED = 3;
-  }
+}
+
+enum DeliveryType {
+    DELIVERY = 0;
+    PICKUP = 1;
+  
+}
 
   message UserMinimum {
     string id = 1;
@@ -18,8 +27,8 @@ enum Status {
   }
   
   message Basket {
-  
-      // TODO: to be implemented
+    string string = 1;
+    optional google.protobuf.Struct json = 2;
   }
   
 
@@ -28,12 +37,131 @@ message Order {
   string id = 1;
 
   
-  string payment_id = 3;
-  string delivery_id = 4;
+  string payment_id = 2;
+  string delivery_id = 3;
+  DeliveryType delivery_type = 8;
   
-  UserMinimum user = 2;
+  UserMinimum user = 4;
   Basket basket_snapshot = 5;
   Status status = 6;
+
+  string restaurant_id = 7;
 }
 
+service OrderService {
+  rpc GetOrder(GetOrderRequest) returns (Order) {}
+  rpc GetOrdersByUser(GetOrdersByUserRequest) returns (GetOrdersByUserResponse) {}
+  rpc GetOrderByDelivery(GetOrderByDeliveryRequest) returns (Order) {}
+  rpc GetOrderByPayment(GetOrderByPaymentRequest) returns (Order) {}
+  rpc GetOrdersByStatus(GetOrdersByStatusRequest) returns (GetOrdersByStatusResponse) {}
+  rpc CreateOrder(CreateOrderRequest) returns (Order) {}
+  rpc UpdateOrder(UpdateOrderRequest) returns (Order) {}
+  rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse) {}
 
+}
+
+service OrderReportingService {
+  rpc GetOrdersAffluence(GetOrdersAffluenceRequest) returns (GetOrdersAffluenceResponse) {}
+  rpc GetTop5SellingProducts(GetTop5SellingProductsRequest) returns (GetTop5SellingProductsResponse) {}
+  rpc GetDeliveryTypeRepartition(GetDeliveryTypeRepartitionRequest) returns (GetDeliveryTypeRepartitionResponse) {}
+}
+
+message GetOrderRequest {
+  string id = 1;
+}
+
+message GetOrdersByUserRequest {
+  string id = 1;
+}
+
+message GetOrdersByUserResponse {
+  repeated Order orders = 1;
+}
+
+message GetOrderByDeliveryRequest {
+  string id = 1;
+}
+
+message GetOrderByPaymentRequest {
+  string id = 1;
+}
+
+message GetOrdersByStatusRequest {
+  Status status = 1;
+}
+
+message GetOrdersByStatusResponse {
+  repeated Order orders = 1;
+}
+
+message CreateOrderRequest {
+  string payment_id = 1;
+  string delivery_id = 2;
+  string delivery_type = 3;
+
+  UserMinimum user = 4;
+  Basket basket_snapshot = 5;
+
+  string restaurant_id = 6;
+}
+
+message UpdateOrderRequest{
+  string id = 1;
+
+  string payment_id = 2;
+  string delivery_id = 3;
+
+  Status status = 4;
+
+  string restaurant_id = 5;
+}
+
+message DeleteOrderRequest {
+  string id = 1;
+}
+
+message DeleteOrderResponse {
+  string id = 1;
+}
+
+message GetOrdersAffluenceRequest {
+  string date = 1;
+  string restaurant_id = 2;
+}
+
+message GetOrdersAffluenceResponse {
+  float average = 1;
+  int32 total = 2;
+  int32 min = 3;
+  int32 max = 4;
+
+  // the number of orders for each hour of the day (0-23) (eg: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...])
+  repeated int32 orders_per_hour = 5;
+  
+}
+
+message GetTop5SellingProductsRequest {
+  optional string date = 1;
+  string interval = 2;
+  string restaurant_id = 3;
+}
+
+message GetTop5SellingProductsResponse {
+  repeated ProductCount products_count = 1;
+}
+
+message ProductCount {
+  string id = 1;
+  int32 count = 2;
+}
+
+message GetDeliveryTypeRepartitionRequest {
+  optional string date = 1;
+  string interval = 2;
+  string restaurant_id = 3;
+}
+
+message GetDeliveryTypeRepartitionResponse {
+  int32 delivery = 1;
+  int32 takeaway = 2;
+}
