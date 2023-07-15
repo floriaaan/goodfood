@@ -19,11 +19,11 @@ The GoodFood 2.0 project was initiated to update the existing ordering applicati
 | Product     | 50004 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
 | Restaurant  | 50005 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
 | Promotion   | 50006 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
-| Order       | 50007 | NodeJS (ts) | MongoDB    | ❌     | @floriaaan      |
+| Order       | 50007 | NodeJS (ts) | PostgreSQL | ✅     | @floriaaan      |
 | Delivery    | 50008 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
 | Stock       | 50009 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
 | Reporting   | 50020 | C# (dotnet) | PostgreSQL | ❌     | @floriaaan      |
-| Log         | 50021 | Go          | PostgreSQL | ❌     | @floriaaan      |
+| Log         | 50021 | Go          | PostgreSQL | ✅     | @floriaaan      |
 | (...)       | (...) | (...)       | (...)      | (...)  |
 
 ## File Hierarchy
@@ -59,13 +59,11 @@ The file hierarchy for this project is as follows:
         └── (...) # proto files
 ```
 
-## Installation
+## Installation & usage
 
-TBW : Installation instructions
+Each service has its own README.md file with installation and usage instructions.
 
-## Usage
-
-TBW : Usage instructions
+Please refer to the README.md file of the service you want to install and use.
 
 ## Contributing
 
