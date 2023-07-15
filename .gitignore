@@ -57,15 +57,15 @@ terraform.rc
 /**/.DS_Store
 
 /**/node_modules
-/**/dist
-/**/build
 /**/.env
+!/**/.env.example
 
+/**/bin
+/**/obj
+/**/.vs
 
-# reporting service
+/**/goodfood-log
+# Ignore Visual Studio temporary files
 /services/reporting/**/bin
 /services/reporting/**/obj
 /services/reporting/**/.vs
-
-# log service
-/services/log/goodfood-log
