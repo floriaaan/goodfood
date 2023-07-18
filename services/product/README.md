@@ -101,7 +101,7 @@ npx prisma migrate dev --name init
 
 Open an other terminal at the root folder (/service) and execute those
 ```
-docker build -t goodfood-product:1.0.0 -f ./product/Dockerfile .
+docker build -t product-service:1.0.0 -f ./product/Dockerfile .
 docker push pierrelbg/product-service:1.0.0
 ```
 
@@ -109,8 +109,12 @@ Back to the first terminal and execute
 ```
 echo "$(terraform output kube_config)" > ./azurek8s
 export KUBECONFIG=./azurek8s
+```
+Remove la première et dernière ligne du fichier azurek8s puis execute 
+```
 kubectl apply -f ../k8s/
 ```
+
 Puis tu peux crée de quoi monitorer dans l'onglet Monitoring/Insights
 
 ça ne fonctionne pas, le contenaire est en erreur. Ce qui n'est normalement pas possible si le conteneur fonctionne en local.

@@ -15,7 +15,7 @@ output "PORT" {
 }
 
 output "AMQP_URL"{
-  value = "amqp://guest:guest@localhost"
+  value = "amqp://guest:guest@10.176.130.136"
 }
 
 output "kube_config" {
