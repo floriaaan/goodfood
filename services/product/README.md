@@ -101,8 +101,9 @@ npx prisma migrate dev --name init
 
 Open an other terminal at the root folder (/service) and execute those
 ```
-docker build -t product-service:1.0.0 -f ./product/Dockerfile .
-docker push pierrelbg/product-service:1.0.0
+docker build -t goodfood-product:1.0.x -f ./product/Dockerfile .
+docker tag goodfood-product:1.0.x pierrelbg/goodfood-product:1.0.x
+docker push pierrelbg/goodfood-product:1.0.x
 ```
 
 Back to the first terminal and execute
