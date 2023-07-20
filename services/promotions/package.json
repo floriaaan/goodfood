@@ -1,0 +1,28 @@
+{
+	"name": "@goodfood/delivery",
+	"bin": "dist/index.js",
+	"scripts": {
+		"start": "node dist/index.js",
+		"dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+		"build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js",
+		"test": "echo 'tests are disabled'",
+		"prisma:generate": "prisma generate",
+		"postinstall": "npm run prisma:generate"
+	},
+	"devDependencies": {
+		"@types/amqplib": "^0.10.1",
+		"prisma": "^5.0.0",
+		"typescript": "^5.1.6"
+	},
+	"dependencies": {
+		"@grpc/grpc-js": "^1.8.18",
+		"@grpc/proto-loader": "^0.7.8",
+		"@prisma/client": "5.0.0",
+		"amqplib": "^0.10.3",
+		"dotenv": "^16.3.1",
+		"nodemon": "^3.0.1",
+		"path": "^0.12.7",
+		"ts-node": "^10.9.1",
+		"tsconfig-paths": "^4.2.0"
+	}
+}
