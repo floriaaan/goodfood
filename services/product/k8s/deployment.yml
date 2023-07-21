@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-product
+  labels:
+    app: goodfood-product
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-product
+  template:
+    metadata:
+      labels:
+        app: goodfood-product
+    spec:
+      containers:
+        - name: goodfood-product
+          image: pierrelbg/goodfood-product:1.0.0
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: port
+          ports:
+            - containerPort: 50004
