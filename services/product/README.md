@@ -94,7 +94,7 @@ terraform output | sed 's/ //g' > ../.env
 ```
 
 Check if the AMQP_URL value is good. (Ip de florian pour l'instant)
-Then go to [terraform](./prisma) to migrate your table schema in your azure database.
+Then go to [terraform](./terraform) to migrate your table schema in your azure database.
 ```
 npx prisma migrate dev --name init
 ```
