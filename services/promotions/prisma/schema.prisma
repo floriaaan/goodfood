@@ -18,4 +18,5 @@ model Promotion{
   code String @unique
   reduction String
   method Method
+  restaurant_id String
 }
