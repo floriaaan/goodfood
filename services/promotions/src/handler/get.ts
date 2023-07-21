@@ -10,7 +10,7 @@ export const GetPromotion = async (
 	try {
 		const { code } = request;
 
-		const promotion = await prisma.promotion.findFirst({ where: { code } }) as unknown as Promotion;
+		const promotion = await prisma.promotion.findFirstOrThrow({ where: { code } }) as unknown as Promotion;
 
 		callback(null, promotion);
 	} catch (error) {
