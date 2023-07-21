@@ -27,4 +27,4 @@ spec:
                   name: goodfood-product-configmap
                   key: port
           ports:
-            - containerPort: 3000
+            - containerPort: 50004
