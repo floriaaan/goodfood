@@ -6,6 +6,8 @@ export type Promotion = {
     code: string;
     reduction: string;
     method: Method;
+
+    restaurant_id: string;
 }
 
 
