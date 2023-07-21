@@ -40,7 +40,7 @@ You can use the following tools to help you with the setup:
 ### 1. Clone the repository and install dependencies
 
 1. Clone the `goodfood` repository to your local machine.
-2. Navigate to the service directory (`services/delivery`) in your terminal.
+2. Navigate to the service directory (`services/promotions`) in your terminal.
 3. Run `npm install` to install the necessary dependencies.
 4. Create a `.env` file at the root of the project directory and add the environment variables values (
    see `.env.example`).
@@ -70,7 +70,9 @@ To build the image you need to be in the **parent folder** of the service you wa
 command:
 
 ```
-docker build -t goodfood-delivery:1.0.0 -f ./delivery/Dockerfile .
+docker build -t goodfood-promotions:1.0.0 -f ./promotions/Dockerfile .
+docker tag goodfood-promotions:1.0.0 pierrelbg/goodfood-promotions:1.0.0
+docker push pierrelbg/goodfood-promotions:1.0.0
 ```
 
 ### Run
