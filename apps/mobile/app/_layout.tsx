@@ -8,6 +8,7 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
+import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
@@ -58,16 +59,7 @@ function RootLayoutNav() {
             screenOptions={{
               headerShown: false,
             }}
-          >
-            <Stack.Screen
-              name="(onboarding)/first"
-              options={
-                {
-                  // statusBarStyle: "dark",
-                }
-              }
-            />
-          </Stack>
+          />
         </AuthProvider>
       </ThemeProvider>
     </NativeProvider>
