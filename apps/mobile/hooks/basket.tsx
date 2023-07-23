@@ -10,7 +10,9 @@ type BasketContextData = {
   removeProduct: (id: string, quantity: number) => void;
 };
 
-const BasketContext = createContext({} as BasketContextData);
+const BasketContext = createContext({
+  basket: {},
+} as BasketContextData);
 
 export const useBasket = () => {
   const context = useContext(BasketContext);
