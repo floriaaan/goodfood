@@ -19,7 +19,7 @@ export default function Index() {
   const [search, setSearch] = useState("");
 
   return (
-    <View className="flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
+    <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
       <View className="absolute bottom-0 left-0 w-screen bg-black h-96"></View>
       <SafeAreaView className="flex flex-col w-full h-full gap-4">
         <View className="w-full">
