@@ -1,7 +1,9 @@
+import { useBasket } from "@/hooks/basket";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 export const BasketHeader = () => {
+  const { total } = useBasket();
   return (
     <View
       key={"basket"}
@@ -20,7 +22,9 @@ export const BasketHeader = () => {
         </Text>
       </View>
       <View className="bg-[#B6E8D8] h-8 px-2 flex items-center justify-center">
-        <Text className="text-xl font-bold text-[#008D5E]">26€</Text>
+        <Text className="text-xl font-bold text-[#008D5E]">
+          {total?.toFixed(2).replace(".", "€")}
+        </Text>
       </View>
     </View>
   );
