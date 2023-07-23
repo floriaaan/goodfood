@@ -1,11 +1,17 @@
 import { useBasket } from "@/hooks/basket";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { useNavigation } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export const BasketHeader = () => {
   const { total } = useBasket();
+  const { navigate } = useNavigation() as {
+    navigate: (href: string, params?: any) => void;
+  };
+
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => navigate("(app)", { screen: "basket" })}
       key={"basket"}
       className="flex flex-row justify-between items-center px-4 w-full bg-[#8CFFD9]/50 h-14"
     >
@@ -26,6 +32,6 @@ export const BasketHeader = () => {
           {total?.toFixed(2).replace(".", "€")}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

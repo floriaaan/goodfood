@@ -6,15 +6,18 @@ import {
   useState,
 } from "react";
 import * as Location from "expo-location";
+import { useColorScheme } from "react-native";
 
 type NativeContextType = {
   location: Location.LocationObject | null;
   setLocation: (location: Location.LocationObject | null) => void;
+  theme: "light" | "dark";
 };
 
 const NativeContext = createContext<NativeContextType>({
   location: null,
   setLocation: () => {},
+  theme: "light",
 });
 
 export const useNative = () => {
@@ -25,6 +28,7 @@ export const useNative = () => {
 };
 
 export const NativeProvider = ({ children }: { children: ReactNode }) => {
+  const theme = useColorScheme() ?? "light";
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
@@ -44,6 +48,7 @@ export const NativeProvider = ({ children }: { children: ReactNode }) => {
       value={{
         location,
         setLocation,
+        theme,
       }}
     >
       {children}
