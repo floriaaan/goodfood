@@ -5,17 +5,12 @@ import { AppHeader } from "@/components/ui/header";
 import { CategoryHeader } from "@/components/ui/header/category";
 import { SearchInput } from "@/components/ui/input/search";
 import { productList, restaurantList } from "@/constants/data";
-import { useAuth } from "@/hooks/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Redirect } from "expo-router";
 import { useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const { user } = useAuth();
-  if (!user) return <Redirect href="(onboarding)/first" />;
-
   const [search, setSearch] = useState("");
 
   return (

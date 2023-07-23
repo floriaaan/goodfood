@@ -26,9 +26,7 @@ export const productList: Product[] = [
         icon: "🌶️",
       },
     ],
-    comment: `Vous cherchez un plat savoureux qui vous donne un peu de piquant pour faire passer la monotonie de votre journée ? Ne cherchez pas plus loin que notre Pork qué prik thaï !
-    Avec des poivrons rouges, verts et jaunes, des edamames et une généreuse portion de riz, ce sauté de porc au poivre est tout ce dont vous avez besoin pour ajouter un peu de piquant à votre vie.
-    Mais pas de soucis, aucun porc épic n'a été blessé pendant la préparation de ce plat !`,
+    comment: `Vous cherchez un plat savoureux qui vous donne un peu de piquant pour faire passer la monotonie de votre journée ? Ne cherchez pas plus loin que notre Pork qué prik thaï !\nAvec des poivrons rouges, verts et jaunes, des edamames et une généreuse portion de riz, ce sauté de porc au poivre est tout ce dont vous avez besoin pour ajouter un peu de piquant à votre vie.\nMais pas de soucis, aucun porc épic n'a été blessé pendant la préparation de ce plat !`,
   },
   {
     id: "product-2",

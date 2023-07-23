@@ -1,3 +1,4 @@
+import { BasketProvider } from "@/hooks/basket";
 import { createContext, useContext, useState } from "react";
 type User = {
   token: string;
@@ -20,6 +21,12 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User>(null);
+  /**
+   *  todo: auto redirect to login if user is not logged in
+   *  ex: if (!user && route.includes("/(app)")) navigate("login")
+   * 
+   *  todo: auto login with async storage (refresh token ?)
+   * */
   return (
     <AuthContext.Provider
       value={{
@@ -27,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser,
       }}
     >
-      {children}
+      {user ? <BasketProvider>{children}</BasketProvider> : children}
     </AuthContext.Provider>
   );
 };

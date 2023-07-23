@@ -43,7 +43,7 @@ export const DrawerContent = (props: DrawerContentComponentProps) => {
           <MaterialCommunityIcons name="basket" color={color} size={size} />
         )}
         focused={routeName === "orders"}
-        onPress={() => navigate("(app)", { screen: "orders" })}
+        onPress={() => navigate("(app)", { screen: "orders/index" })}
       />
     </DrawerContentScrollView>
   );

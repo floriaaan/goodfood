@@ -1,4 +1,5 @@
 import { Product } from "@/types/product";
+import { useNavigation } from "expo-router";
 import {
   Image,
   ImageSourcePropType,
@@ -8,12 +9,18 @@ import {
 } from "react-native";
 
 export const ProductCard = (props: Product) => {
+  const { navigate } = useNavigation() as {
+    navigate: (href: string, params?: any) => void;
+  };
   return (
     <TouchableOpacity
       // don't transparent on press
       // activeOpacity={0.8}
       key={props.id}
       className="relative flex flex-col mr-4 w-52"
+      onPress={() =>
+        navigate("(app)", { screen: "products/[id]", params: { id: props.id } })
+      }
     >
       <Image
         className="w-full h-28"
