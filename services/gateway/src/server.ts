@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {userController} from "@order/controller/user/userController";
+import {orderController} from "@order/controller/order/orderController";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,6 +15,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 userController(app);
+orderController(app);
 
 app.listen(PORT, () => {
     console.log(`API Gateway is running on port ${PORT}`);
