@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: goodfood-delivery
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: delivery.localdev.me
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: goodfood-delivery
+                port:
+                  number: 50008
+            path: /

@@ -1,0 +1,50 @@
+services:
+  goodfood-log:
+    depends_on:
+      - postgres
+      - rabbitmq
+    image: floriaaan/goodfood-log:latest
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/postgres
+      - PORT=50021
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
+    ports:
+      - "50021:50021"
+    networks:
+      - goodfood-log-network
+
+  rabbitmq:
+    restart: always
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - goodfood-log-network
+
+  postgres:
+    image: postgres:15.2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - goodfood-log-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-log-network
+
+  adminer:
+    depends_on:
+      - postgres
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - goodfood-log-network
+
+volumes:
+  goodfood-log-volume:
+  
+networks:
+  goodfood-log-network:
