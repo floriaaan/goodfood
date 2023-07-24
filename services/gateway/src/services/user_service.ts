@@ -1,6 +1,16 @@
-import services from '../proto/user_grpc_pb';
-import * as grpc from "grpc";
+import {User, UserId} from "@order/proto/user_pb";
+import userServiceClient from "@order/services/clients/user_client";
 
-export default new services.UserServiceClient(
-    'http://localhost:50001',
-    grpc.credentials.createInsecure());
+export const getUser = (id: number): User | undefined => {
+    const userId = new UserId();
+    userId.setId(Number(id));
+    let user: User | undefined = undefined;
+    userServiceClient.getUser(userId, (error, response) => {
+        if (error) {
+            throw Error(error.message);
+        } else {
+            user = response.getUser()
+        }
+    });
+    return user;
+}
