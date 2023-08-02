@@ -27,6 +27,7 @@
     "@types/node": "^18.15.9",
     "@vitest/coverage-c8": "^0.33.0",
     "esbuild": "^0.17.18",
+    "grpc_tools_node_protoc_ts": "^5.3.3",
     "grpc-tools": "^1.12.4",
     "nodemon": "^3.0.1",
     "pkg": "^5.8.1",
