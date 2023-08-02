@@ -1,4 +1,4 @@
-import orderService from '../../services/clients/order_client';
+import orderService from '../../services/clients/order.client';
 import express, {Request, Response} from "express";
 import {
     CreateOrderRequest,
@@ -10,9 +10,9 @@ import {
     GetOrdersByUserRequest,
     UpdateOrderRequest,
     UserMinimum
-} from "@order/proto/order_pb";
-import {getUser} from "@order/services/user_service";
-import {User} from "@order/proto/user_pb";
+} from "@gateway/proto/order_pb";
+import {getUser} from "@gateway/services/user.service";
+import {User} from "@gateway/proto/user_pb";
 
 export const orderController = (app: express.Application) => {
     app.get('/api/order/:id', (req: Request, res: Response) => {
