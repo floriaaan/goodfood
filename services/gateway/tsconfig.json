@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@order/*": ["src/*"]
+      "@gateway/*": ["src/*"]
     }
   },
   "include": ["src/**/*.ts"],
