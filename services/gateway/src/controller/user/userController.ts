@@ -1,5 +1,5 @@
 import express, {Request, Response} from 'express';
-import userServiceClient from '../../services/clients/user_client';
+import {userServiceClient} from '../../services/clients/user.client';
 import {
     changePasswordInput,
     changeRoleInput,
@@ -9,9 +9,9 @@ import {
     User,
     UserCreateInput,
     validateInput
-} from "@order/proto/user_pb";
+} from "@gateway/proto/user_pb";
 import {Empty} from "google-protobuf/google/protobuf/empty_pb";
-import {getUser} from "@order/services/user_service";
+import {getUser} from "@gateway/services/user.service";
 
 export const userController = (app: express.Application) => {
     app.get('/api/user/:id', (req: Request, res: Response) => {
