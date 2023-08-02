@@ -1,5 +1,5 @@
-import {User, UserId} from "@order/proto/user_pb";
-import userServiceClient from "@order/services/clients/user_client";
+import {User, UserId} from "@gateway/proto/user_pb";
+import {userServiceClient} from "@gateway/services/clients/user.client";
 
 export const getUser = (id: number): User | undefined => {
     const userId = new UserId();
