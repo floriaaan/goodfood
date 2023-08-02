@@ -1,6 +1,9 @@
 import {Request, Response} from "express";
-import {userController} from "@order/controller/user/userController";
-import {orderController} from "@order/controller/order/orderController";
+import {userController} from "@gateway/controller/user/userController";
+import {orderController} from "@gateway/controller/order/orderController";
+import {productController} from "@gateway/controller/product/productController";
+import {categoryController} from "@gateway/controller/product/categoryController";
+import {allergenController} from "@gateway/controller/product/allergenController";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -16,6 +19,9 @@ app.get('/', (req: Request, res: Response) => {
 
 userController(app);
 orderController(app);
+categoryController(app);
+allergenController(app);
+productController(app);
 
 app.listen(PORT, () => {
     console.log(`API Gateway is running on port ${PORT}`);
