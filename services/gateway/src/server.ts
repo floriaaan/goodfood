@@ -6,6 +6,7 @@ import {categoryController} from "@gateway/controller/product/category.controlle
 import {allergenController} from "@gateway/controller/product/allergen.controller";
 import {deliveryController} from "@gateway/controller/delivery/delivery.controller";
 import {deliveryPersonController} from "@gateway/controller/delivery/deliveryPerson.controller";
+import {promotionsController} from "@gateway/controller/promotions/promotions.controller";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -26,6 +27,7 @@ allergenController(app);
 productController(app);
 deliveryController(app);
 deliveryPersonController(app);
+promotionsController(app);
 
 app.listen(PORT, () => {
     console.log(`API Gateway is running on port ${PORT}`);
