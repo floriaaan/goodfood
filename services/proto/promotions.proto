@@ -1,0 +1,53 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package com.goodfood.promotions;
+
+message Promotion {
+  string id = 1;
+
+  string code = 2;
+  string reduction = 3;
+  Method method = 4;
+
+  string restaurant_id = 5;
+}
+
+message PromotionCreateInput{
+    string code = 1;
+    string reduction = 2;
+    Method method = 3;
+
+  string restaurant_id = 4;
+}
+
+message PromotionId{
+    string id = 1;
+}
+
+message RestaurantId{
+    string id = 1;
+}
+
+message PromotionCode{
+    string code = 1;
+}
+
+message PromotionList{
+    repeated Promotion promotions = 1;
+}
+
+enum Method {
+  PERCENT = 0;
+  VALUE = 1;
+}
+
+service PromotionService {
+  rpc CreatePromotion (PromotionCreateInput) returns (Promotion) {}
+  rpc GetPromotion (PromotionCode) returns (Promotion) {}
+  rpc UpdatePromotion (Promotion) returns (Promotion) {}
+  rpc DeletePromotion (PromotionId) returns (google.protobuf.Empty) {}
+  rpc GetPromotions (google.protobuf.Empty) returns (PromotionList) {}
+  rpc GetPromotionsByRestaurant (RestaurantId) returns (PromotionList) {}
+
+}
