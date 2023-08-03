@@ -1,11 +1,11 @@
 import {Request, Response} from "express";
-import {userController} from "@gateway/controller/user/userController";
-import {orderController} from "@gateway/controller/order/orderController";
-import {productController} from "@gateway/controller/product/productController";
-import {categoryController} from "@gateway/controller/product/categoryController";
-import {allergenController} from "@gateway/controller/product/allergenController";
-import {deliveryController} from "@gateway/controller/delivery/deliveryController";
-import {deliveryPersonController} from "@gateway/controller/delivery/deliveryPersonController";
+import {userController} from "@gateway/controller/user/user.controller";
+import {orderController} from "@gateway/controller/order/order.controller";
+import {productController} from "@gateway/controller/product/product.controller";
+import {categoryController} from "@gateway/controller/product/category.controller";
+import {allergenController} from "@gateway/controller/product/allergen.controller";
+import {deliveryController} from "@gateway/controller/delivery/delivery.controller";
+import {deliveryPersonController} from "@gateway/controller/delivery/deliveryPerson.controller";
 
 const express = require('express');
 const bodyParser = require('body-parser');
