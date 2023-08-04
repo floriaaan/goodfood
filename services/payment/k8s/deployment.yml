@@ -29,3 +29,6 @@ spec:
                   key: port
           ports:
             - containerPort: 50003
+              name: grpc
+            - containerPort: 4242
+              name: webhook

@@ -34,5 +34,8 @@ COPY --from=builder /app/node_modules/.prisma /.prisma
 # Expose the gRPC port
 EXPOSE 50003
 
+# Expose the Webhook port
+EXPOSE 4242
+
 # Start the server
 CMD [ "node", "index.js"]
