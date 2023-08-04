@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 const payments: Prisma.PaymentCreateInput[] = [
   {
     id: "payment_id:1",
+    stripe_id: "stripe_id:1",
     total: 100,
     status: PaymentStatus.PENDING,
     user: {
@@ -22,6 +23,7 @@ const payments: Prisma.PaymentCreateInput[] = [
   },
   {
     id: "payment_id:2",
+    stripe_id: "stripe_id:2",
     total: 200,
     status: PaymentStatus.APPROVED,
     user: {
@@ -39,6 +41,7 @@ const payments: Prisma.PaymentCreateInput[] = [
   },
   {
     id: "payment_id:3",
+    stripe_id: "stripe_id:3",
     total: 5,
     status: PaymentStatus.REJECTED,
     user: {
