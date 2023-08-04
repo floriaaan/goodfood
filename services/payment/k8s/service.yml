@@ -9,5 +9,8 @@ spec:
     - name: "grpc"
       port: 50003
       targetPort: 50003
+    - name: "webook"
+      port: 4242
+      targetPort: 4242
 status:
   loadBalancer: {}
