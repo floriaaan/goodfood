@@ -1,0 +1,35 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id       String    @id // no default value because it is a foreign key created by the user microservice
+  name     String
+  email    String
+  payments Payment[]
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  total  Float
+  status PaymentStatus @default(PENDING)
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
