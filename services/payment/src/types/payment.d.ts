@@ -29,16 +29,3 @@ export type GetPaymentsByUserRequest = {
 export type GetPaymentsByUserResponse = {
   payments: Payment[];
 };
-
-export type CreatePaymentRequest = {
-  total: number;
-
-  user_id: string;
-  name: string;
-  email: string;
-};
-
-export type UpdatePaymentRequest = {
-  id: string;
-  status: PaymentStatus;
-};

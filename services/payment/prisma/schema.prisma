@@ -22,7 +22,8 @@ model User {
 }
 
 model Payment {
-  id String @id @default(cuid())
+  id        String @id @default(cuid())
+  stripe_id String @unique
 
   total  Float
   status PaymentStatus @default(PENDING)

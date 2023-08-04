@@ -16,7 +16,13 @@ export const GetPaymentsByUser = async (
       where: { user_id: id },
       include: { user: true },
     });
-    callback(null, { payments });
+    callback(null, {
+      payments: payments.map((payment) => ({
+        ...payment,
+        created_at: payment.created_at.toISOString(),
+        updated_at: payment.updated_at.toISOString(),
+      })),
+    });
   } catch (error) {
     log.error(error);
     callback(error, null);

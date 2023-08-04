@@ -13,7 +13,11 @@ export const GetPayment = async (
       where: { id },
       include: { user: true },
     });
-    callback(null, payment);
+    callback(null, {
+      ...payment,
+      created_at: payment.created_at.toISOString(),
+      updated_at: payment.updated_at.toISOString(),
+    });
   } catch (error) {
     log.error(error);
     callback(error, null);
