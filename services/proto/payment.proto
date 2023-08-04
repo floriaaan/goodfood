@@ -12,6 +12,7 @@ message User {
 
 message Payment {
   string id = 1;
+  string stripe_id = 8;
 
   float total = 2;
   string status = 3;
@@ -19,15 +20,17 @@ message Payment {
   User user = 4;
   string user_id = 5;
 
-  string createdAt = 6;
-  string updatedAt = 7;
+  string created_at = 6;
+  string updated_at = 7;
 }
 
 service PaymentService {
   rpc GetPayment(GetPaymentRequest) returns (Payment) {}
   rpc GetPaymentsByUser(GetPaymentsByUserRequest) returns (GetPaymentsByUserResponse) {}
-  rpc CreatePayment(CreatePaymentRequest) returns (Payment) {}
-  rpc UpdatePayment(UpdatePaymentRequest) returns (Payment) {}
+}
+
+service StripeService {
+  rpc CreateCheckoutSession(CreateCheckoutSessionRequest) returns (CreateCheckoutSessionResponse) {}
 }
 
 message GetPaymentRequest {
@@ -42,15 +45,15 @@ message GetPaymentsByUserResponse {
   repeated Payment payments = 1;
 }
 
-message CreatePaymentRequest {
+message CreateCheckoutSessionRequest {
   float total = 1;
-  string userId = 2;
+  string user_id = 2;
 
   string name = 3;
   string email = 4;
 }
 
-message UpdatePaymentRequest {
-  string id = 1;
-  string status = 2;
+message CreateCheckoutSessionResponse {
+  Payment payment = 1;
+  string url = 2;
 }
