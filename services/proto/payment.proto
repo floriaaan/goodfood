@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package com.goodfood.payment;
+
+
+message User {
+  string id = 1;
+
+  string name = 2;
+  string email = 3;
+}
+
+message Payment {
+  string id = 1;
+
+  float total = 2;
+  string status = 3;
+
+  User user = 4;
+  string user_id = 5;
+
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+service PaymentService {
+  rpc GetPayment(GetPaymentRequest) returns (Payment) {}
+  rpc GetPaymentsByUser(GetPaymentsByUserRequest) returns (GetPaymentsByUserResponse) {}
+  rpc CreatePayment(CreatePaymentRequest) returns (Payment) {}
+  rpc UpdatePayment(UpdatePaymentRequest) returns (Payment) {}
+}
+
+message GetPaymentRequest {
+  string id = 1;
+}
+
+message GetPaymentsByUserRequest {
+  string id = 1;
+}
+
+message GetPaymentsByUserResponse {
+  repeated Payment payments = 1;
+}
+
+message CreatePaymentRequest {
+  float total = 1;
+  string userId = 2;
+
+  string name = 3;
+  string email = 4;
+}
+
+message UpdatePaymentRequest {
+  string id = 1;
+  string status = 2;
+}

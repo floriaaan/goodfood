@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: goodfood-payment
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: payment.localdev.me
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: goodfood-payment
+                port:
+                  number: 50003
+            path: /
