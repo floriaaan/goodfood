@@ -76,3 +76,7 @@ terraform.rc
 /services/reporting/**/bin
 /services/reporting/**/obj
 /services/reporting/**/.vs
+
+
+# expo cache files
+/apps/mobile/.expo
