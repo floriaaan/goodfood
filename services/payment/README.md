@@ -11,7 +11,12 @@
 
 ## gRPC Methods
 
-The service provides the following gRPC methods:
+- `GetPayment(GetPaymentRequest) returns (Payment) {}`
+  This RPC function is part of the PaymentService service. It is used to retrieve information about a single payment. The client sends a request GetPaymentRequest containing the necessary information (e.g., payment ID), and the server responds with a Payment message containing the details of the requested payment.
+- `GetPaymentsByUser(GetPaymentsByUserRequest) returns (GetPaymentsByUserResponse) {}`
+  Also part of the PaymentService service, this RPC function allows the client to get a list of payments associated with a specific user. The client sends a GetPaymentsByUserRequest, typically containing the user's ID, and the server responds with a GetPaymentsByUserResponse message containing a list of payments relevant to that user.
+- `CreateCheckoutSession(CreateCheckoutSessionRequest) returns (CreateCheckoutSessionResponse) {}`
+  This RPC function belongs to the StripeService service. It is utilized to create a checkout session for Stripe, which typically involves setting up a payment gateway or initiating a payment process for a user. The client sends a CreateCheckoutSessionRequest with relevant information required for the session, and the server responds with a CreateCheckoutSessionResponse, which may contain details or identifiers related to the created session.
 
 ## Requirements
 
@@ -45,6 +50,20 @@ NB: If you want to run the microservice in development mode, you can run `npm ru
 
 ## Testing
 
-### Requests examples
+How to test the microservice:
 
-**Install `grpcurl` on your machine.**
+Pre-requisites:
+
+- You need to have a Postgres database running on your machine, the migrations need to be applied.
+- You need to have an internet connection.
+
+1. Run the microservice (see [Getting started](#getting-started)).
+2. Use a gRPC client (e.g. [Postman](https://www.postman.com/)) to send requests to the microservice (see [gRPC Methods](#grpc-methods)).
+   - Send a request to the `CreateCheckoutSession` method to create a payment.
+     It should return a `CreateCheckoutSessionResponse` with the created payment, and an URL by Stripe to pay the order.
+     The payment should be created in the database.
+     When the payment is paid, the order should be updated in the database using the webhook, it should also be updated in the database when the checkout has expired.
+   - Send a request to the `GetPayment` method to get a payment.
+     It should return a `GetPaymentResponse` with the payment.
+   - Send a request to the `GetPaymentsByUser` method to get all payments.
+     It should return a `GetPaymentsByUserResponse` with all payments.
