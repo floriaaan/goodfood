@@ -15,7 +15,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - run: npm ci
-      - run: npm run lint
+      - run: |
+          cd ./apps/mobile
+          npm ci
+      - run: |
+          cd ./apps/mobile
+          npm run lint
 
 
