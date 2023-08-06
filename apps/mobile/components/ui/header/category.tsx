@@ -1,6 +1,5 @@
-import { Text } from "@/components/Themed";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export const CategoryHeader = ({
   title,

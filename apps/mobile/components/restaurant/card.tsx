@@ -15,7 +15,7 @@ export const RestaurantCard = (props: (typeof restaurantList)[number]) => {
             className="w-24 h-6"
             source={require("@/assets/images/logo-text.png")}
           />
-          <Text className="ml-1 font-bold text-white">{props.name}</Text>
+          <Text className="ml-1 font-bold text-white flex-shrink-0 flex-nowrap grow">{props.name}</Text>
         </View>
         {location && (
           <View className="flex flex-row propss-center">
