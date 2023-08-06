@@ -1,9 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-  DrawerItem,
-} from "@react-navigation/drawer";
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { useNavigation } from "expo-router";
 
 export const DrawerContent = (props: DrawerContentComponentProps) => {
@@ -19,9 +15,7 @@ export const DrawerContent = (props: DrawerContentComponentProps) => {
         label="Accueil"
         activeBackgroundColor="#008D5E33"
         activeTintColor="black"
-        icon={({ color, size }) => (
-          <MaterialCommunityIcons name="home" color={color} size={size} />
-        )}
+        icon={({ color, size }) => <MaterialCommunityIcons name="home" color={color} size={size} />}
         focused={routeName === "home"}
         onPress={() => navigate("(app)", { screen: "home" })}
       />
@@ -29,9 +23,7 @@ export const DrawerContent = (props: DrawerContentComponentProps) => {
         label="Mon compte"
         activeBackgroundColor="#008D5E33"
         activeTintColor="black"
-        icon={({ color, size }) => (
-          <MaterialCommunityIcons name="account" color={color} size={size} />
-        )}
+        icon={({ color, size }) => <MaterialCommunityIcons name="account" color={color} size={size} />}
         focused={routeName === "user"}
         onPress={() => navigate("(app)", { screen: "user" })}
       />
@@ -39,9 +31,7 @@ export const DrawerContent = (props: DrawerContentComponentProps) => {
         label="Mes commandes"
         activeBackgroundColor="#008D5E33"
         activeTintColor="black"
-        icon={({ color, size }) => (
-          <MaterialCommunityIcons name="basket" color={color} size={size} />
-        )}
+        icon={({ color, size }) => <MaterialCommunityIcons name="basket" color={color} size={size} />}
         focused={routeName === "orders"}
         onPress={() => navigate("(app)", { screen: "orders/index" })}
       />

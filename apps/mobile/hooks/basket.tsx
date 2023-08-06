@@ -1,5 +1,6 @@
-import { productList } from "@/constants/data";
 import { createContext, useContext, useMemo, useState } from "react";
+
+import { productList } from "@/constants/data";
 type Basket = Record<string, number>;
 
 type BasketContextData = {
@@ -16,8 +17,7 @@ const BasketContext = createContext({
 
 export const useBasket = () => {
   const context = useContext(BasketContext);
-  if (context === null)
-    throw new Error("useAuth must be used within an AuthProvider");
+  if (context === null) throw new Error("useAuth must be used within an AuthProvider");
 
   return context;
 };
@@ -33,7 +33,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
             if (!product) return acc;
             return acc + product.price * quantity;
           }, 0)
-          .toFixed(2)
+          .toFixed(2),
       ) || 0
     );
   }, [basket]);

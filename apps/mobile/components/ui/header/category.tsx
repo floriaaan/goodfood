@@ -1,15 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
 
-export const CategoryHeader = ({
-  title,
-  subtitle,
-  href
-}: {
-  title: string;
-  subtitle: string;
-  href: string;
-}) => {
+export const CategoryHeader = ({ title, subtitle, href }: { title: string; subtitle: string; href: string }) => {
   return (
     <View className="flex flex-row items-center justify-between w-full">
       <View className="flex flex-col">
