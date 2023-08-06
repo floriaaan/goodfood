@@ -1,13 +1,12 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { AppHeader } from "@/components/ui/header";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Image, ImageSourcePropType, View } from "react-native";
+import { Image, ImageSourcePropType, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BasketHeader } from "@/components/basket/header";
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
 import { productList } from "@/constants/data";
-import { Text } from "@/components/Themed";
 import { Button } from "@/components/ui/button";
 import { useBasket } from "@/hooks/basket";
 
