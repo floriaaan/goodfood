@@ -1,6 +1,7 @@
+import { useRouter } from "expo-router";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+
 import { Button } from "@/components/ui/button";
 
 export default function Onboarding() {
@@ -12,10 +13,7 @@ export default function Onboarding() {
         source={require("@/assets/images/onboarding_bg.jpg")}
       />
       <SafeAreaView className="flex flex-col justify-between h-full">
-        <Image
-          className="w-32 h-32"
-          source={require("@/assets/images/logo.png")}
-        />
+        <Image className="w-32 h-32" source={require("@/assets/images/logo.png")} />
         <Button
           title="C'est parti !"
           onPress={() => {

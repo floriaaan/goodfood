@@ -1,6 +1,6 @@
-import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import classNames from "classnames";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export const Button = ({
   onPress,
@@ -26,10 +26,8 @@ export const Button = ({
         icon ? "justify-between" : "justify-center",
       )}
     >
-      {icon && title && <View className="w-6"></View>}
-      <Text className="text-white font-bold text-[24px] text-center uppercase">
-        {title}
-      </Text>
+      {icon && title && <View className="w-6" />}
+      <Text className="text-white font-bold text-[24px] text-center uppercase">{title}</Text>
       {icon && <Icon name={icon} size={24} color="#fff" />}
     </TouchableOpacity>
   );

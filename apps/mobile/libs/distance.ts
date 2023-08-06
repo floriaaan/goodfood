@@ -4,10 +4,7 @@ function toRadians(degrees: number): number {
 }
 
 // Function to calculate the distance between two LatLng points in kilometers
-export function calculateDistance(
-  [lat1, lng1]: [number, number],
-  [lat2, lng2]: [number, number]
-): number {
+export function calculateDistance([lat1, lng1]: [number, number], [lat2, lng2]: [number, number]): number {
   const earthRadiusKm = 6371; // Earth's radius in kilometers
 
   // Convert latitude and longitude from degrees to radians
@@ -21,10 +18,7 @@ export function calculateDistance(
   const deltaLng = lng2Rad - lng1Rad;
   const a =
     Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(lat1Rad) *
-      Math.cos(lat2Rad) *
-      Math.sin(deltaLng / 2) *
-      Math.sin(deltaLng / 2);
+    Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadiusKm * c;
 

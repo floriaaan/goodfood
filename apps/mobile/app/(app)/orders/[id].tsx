@@ -1,13 +1,14 @@
-import { Link, useLocalSearchParams, useNavigation } from "expo-router";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
-import MapViewDirections from "react-native-maps-directions";
-import { useEffect, useMemo, useState } from "react";
-import { orderList } from "@/constants/data";
-import { DeliveryType, Order } from "@/types/order";
-import MapView, { Marker, UrlTile } from "react-native-maps";
-import { useNative } from "@/hooks/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
+import { Link, useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker, UrlTile } from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
+
+import { orderList } from "@/constants/data";
+import { useNative } from "@/hooks/native";
+import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_APIKEY || "";
@@ -48,12 +49,7 @@ export default function OrderPage() {
 
   return (
     <View className="h-screen w-screen">
-      <MapView
-        className="w-screen h-screen"
-        region={region}
-        showsUserLocation
-        scrollEnabled={false}
-      >
+      <MapView className="w-screen h-screen" region={region} showsUserLocation scrollEnabled={false}>
         {Platform.OS === "ios" && (
           <UrlTile
             urlTemplate="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
@@ -90,29 +86,20 @@ export default function OrderPage() {
       </TouchableOpacity>
       <View className="absolute bottom-0 left-0 w-screen bg-black h-64 flex flex-col gap-y-6 px-4">
         {eta && (
-          <Text className="text-white text-xl font-bold">{`Arrivée prévue à ${format(
-            new Date(eta),
-            "HH:mm"
-          )}`}</Text>
+          <Text className="text-white text-xl font-bold">{`Arrivée prévue à ${format(new Date(eta), "HH:mm")}`}</Text>
         )}
         <View className="flex flex-row items-center gap-x-4">
           <MaterialCommunityIcons name="walk" size={24} color="white" />
           <View className="flex flex-col gap-y-1">
             <Text className="text-white font-bold">
-              {delivery_type === DeliveryType.DELIVERY
-                ? "Je fais livrer ma commande"
-                : "Je vais chercher ma commande"}
+              {delivery_type === DeliveryType.DELIVERY ? "Je fais livrer ma commande" : "Je vais chercher ma commande"}
             </Text>
             <Text className="text-white">{address}</Text>
           </View>
         </View>
         <View className="flex flex-row items-center gap-x-4">
           <MaterialCommunityIcons
-            name={
-              payment?.status === PaymentStatus.APPROVED
-                ? "basket-check-outline"
-                : "basket-remove-outline"
-            }
+            name={payment?.status === PaymentStatus.APPROVED ? "basket-check-outline" : "basket-remove-outline"}
             size={24}
             color="white"
           />
@@ -122,16 +109,9 @@ export default function OrderPage() {
                 ? `La commande ${id} a été payée`
                 : "La commande n'a pas encore été payée"}
             </Text>
-            <Link
-              href={`/(app)/orders/${id}`}
-              className="w-full items-center flex flex-row"
-            >
+            <Link href={`/(app)/orders/${id}`} className="w-full items-center flex flex-row">
               <Text className="text-white underline mr-2">Voir le détail</Text>
-              <MaterialCommunityIcons
-                name="arrow-right"
-                size={12}
-                color="white"
-              />
+              <MaterialCommunityIcons name="arrow-right" size={12} color="white" />
             </Link>
           </View>
         </View>

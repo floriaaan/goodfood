@@ -1,11 +1,5 @@
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
 import * as Location from "expo-location";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 
 type NativeContextType = {
@@ -22,23 +16,20 @@ const NativeContext = createContext<NativeContextType>({
 
 export const useNative = () => {
   const context = useContext(NativeContext);
-  if (!context)
-    throw new Error("useNative must be used within a NativeProvider");
+  if (!context) throw new Error("useNative must be used within a NativeProvider");
   return context;
 };
 
 export const NativeProvider = ({ children }: { children: ReactNode }) => {
   const theme = useColorScheme() ?? "light";
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
-  );
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") return;
 
-      let location = await Location.getCurrentPositionAsync({});
+      const location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
   }, []);

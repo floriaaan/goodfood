@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/auth";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/auth";
 
 export default function AuthLogin() {
   const { setUser } = useAuth();
@@ -14,29 +15,14 @@ export default function AuthLogin() {
 
   return (
     <View className="flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
-      <View className="absolute bottom-0 left-0 w-screen h-32 bg-black"></View>
+      <View className="absolute bottom-0 left-0 w-screen h-32 bg-black" />
       <SafeAreaView className="flex flex-col justify-between h-full">
-        <Image
-          className="w-32 h-32"
-          source={require("@/assets/images/logo.png")}
-        />
+        <Image className="w-32 h-32" source={require("@/assets/images/logo.png")} />
         <View className="flex flex-col gap-2 grow">
-          <Text className="text-black font-bold text-[20px] mb-6">
-            Se connecter
-          </Text>
+          <Text className="text-black font-bold text-[20px] mb-6">Se connecter</Text>
 
-          <Input
-            keyboardType="email-address"
-            placeholder="Adresse email"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <Input
-            secureTextEntry
-            placeholder="Mot de passe"
-            value={password}
-            onChangeText={setPassword}
-          />
+          <Input keyboardType="email-address" placeholder="Adresse email" value={email} onChangeText={setEmail} />
+          <Input secureTextEntry placeholder="Mot de passe" value={password} onChangeText={setPassword} />
 
           <View className="flex flex-row justify-between">
             <Text className="text-black underline">Mot de passe oublié ?</Text>

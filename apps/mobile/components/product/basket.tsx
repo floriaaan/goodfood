@@ -1,14 +1,9 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image, ImageSourcePropType, Text, TouchableOpacity, View } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
+
 import { useBasket } from "@/hooks/basket";
 import { Product } from "@/types/product";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  Image,
-  ImageSourcePropType,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
 
 export const ProductBasketCard = ({ id, name, price, image }: Product) => {
   const { addProduct, basket, removeProduct } = useBasket();
@@ -19,26 +14,16 @@ export const ProductBasketCard = ({ id, name, price, image }: Product) => {
         <View className="flex flex-col justify-between h-full pt-1 pb-2 ml-2 grow">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-lg font-bold text-black">{name}</Text>
-            <Text className="text-sm text-black">
-              {price.toFixed(2).replace(".", "€")}
-            </Text>
+            <Text className="text-sm text-black">{price.toFixed(2).replace(".", "€")}</Text>
           </View>
           <View className="flex flex-row items-center ml-auto space-x-2">
-            <TouchableOpacity
-              onPress={() => removeProduct(id, 1)}
-              className="p-2 border border-neutral-500"
-            >
+            <TouchableOpacity onPress={() => removeProduct(id, 1)} className="p-2 border border-neutral-500">
               <MaterialCommunityIcons name="minus" size={16} color="black" />
             </TouchableOpacity>
             <View className="flex items-center justify-center p-2 border border-neutral-300">
-              <Text className="w-4 h-4 text-[14px] font-bold text-center text-black">
-                {basket[id]}
-              </Text>
+              <Text className="w-4 h-4 text-[14px] font-bold text-center text-black">{basket[id]}</Text>
             </View>
-            <TouchableOpacity
-              onPress={() => addProduct(id, 1)}
-              className="p-2 border border-neutral-500"
-            >
+            <TouchableOpacity onPress={() => addProduct(id, 1)} className="p-2 border border-neutral-500">
               <MaterialCommunityIcons name="plus" size={16} color="black" />
             </TouchableOpacity>
           </View>
