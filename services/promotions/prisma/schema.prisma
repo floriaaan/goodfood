@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Method {
+  PERCENT
+  VALUE
+}
+
+model Promotion{
+  id  String   @id @default(cuid())
+
+  code String @unique
+  reduction String
+  method Method
+  restaurant_id String
+}
