@@ -2,8 +2,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Link, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
-import MapView, { Marker, UrlTile } from "react-native-maps";
+import { Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 
 import { orderList } from "@/constants/data";
@@ -48,15 +48,15 @@ export default function OrderPage() {
   }, [user_location, delivery_location]);
 
   return (
-    <View className="h-screen w-screen">
-      <MapView className="w-screen h-screen" region={region} showsUserLocation scrollEnabled={false}>
-        {Platform.OS === "ios" && (
+    <View className="w-screen h-screen">
+      <MapView className="w-screen h-screen" region={region} showsUserLocation>
+        {/* {Platform.OS === "ios" && (
           <UrlTile
             urlTemplate="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
             maximumZ={19}
             flipY={false}
           />
-        )}
+        )} */}
         <Marker
           coordinate={{
             latitude: delivery_location[0],
@@ -80,18 +80,18 @@ export default function OrderPage() {
       </MapView>
       <TouchableOpacity
         onPress={() => navigate(`(app)`, { screen: "orders/index" })}
-        className="absolute top-12 left-0 flex items-center justify-center w-12 h-12 p-2 m-4 bg-black"
+        className="absolute left-0 flex items-center justify-center w-12 h-12 p-2 m-4 bg-black top-12"
       >
         <MaterialCommunityIcons name="arrow-left" size={24} color="white" />
       </TouchableOpacity>
-      <View className="absolute bottom-0 left-0 w-screen bg-black h-64 flex flex-col gap-y-6 px-4">
+      <View className="absolute bottom-0 left-0 flex flex-col w-screen h-64 px-4 bg-black gap-y-6">
         {eta && (
-          <Text className="text-white text-xl font-bold">{`Arrivée prévue à ${format(new Date(eta), "HH:mm")}`}</Text>
+          <Text className="text-xl font-bold text-white">{`Arrivée prévue à ${format(new Date(eta), "HH:mm")}`}</Text>
         )}
         <View className="flex flex-row items-center gap-x-4">
           <MaterialCommunityIcons name="walk" size={24} color="white" />
           <View className="flex flex-col gap-y-1">
-            <Text className="text-white font-bold">
+            <Text className="font-bold text-white">
               {delivery_type === DeliveryType.DELIVERY ? "Je fais livrer ma commande" : "Je vais chercher ma commande"}
             </Text>
             <Text className="text-white">{address}</Text>
@@ -104,13 +104,13 @@ export default function OrderPage() {
             color="white"
           />
           <View className="flex flex-col gap-y-1">
-            <Text className="text-white font-bold">
+            <Text className="font-bold text-white">
               {payment?.status === PaymentStatus.APPROVED
                 ? `La commande ${id} a été payée`
                 : "La commande n'a pas encore été payée"}
             </Text>
-            <Link href={`/(app)/orders/${id}`} className="w-full items-center flex flex-row">
-              <Text className="text-white underline mr-2">Voir le détail</Text>
+            <Link href={`/(app)/orders/${id}`} className="flex flex-row items-center w-full">
+              <Text className="mr-2 text-white underline">Voir le détail</Text>
               <MaterialCommunityIcons name="arrow-right" size={12} color="white" />
             </Link>
           </View>
