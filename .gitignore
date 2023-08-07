@@ -64,6 +64,7 @@ terraform.rc
 /**/obj
 /**/.vs
 
+
 # dotnet build files
 /**/obj
 /**/bin
@@ -77,6 +78,8 @@ terraform.rc
 /services/reporting/**/obj
 /services/reporting/**/.vs
 
+# log service
+/services/log/goodfood-log
 
 # expo cache files
 /apps/mobile/.expo
