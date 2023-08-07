@@ -1,0 +1,47 @@
+version: "3"
+services:
+  goodfood-log:
+    image: floriaaan/goodfood-log
+    container_name: goodfood-log
+    restart: unless-stopped
+    ports:
+      - "50021:50021"
+    depends_on:
+      - log-postgres
+      - goodfood-rabbitmq
+    environment:
+      DATABASE_URL: postgres://postgres:password@log-postgres:5432/postgres
+      PORT: 50021
+      AMQP_URL: amqp://guest:guest@goodfood-rabbitmq:5672
+    networks:
+      - goodfood-log-network
+
+  log-postgres:
+    image: postgres
+    container_name: log-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+      - log-postgres:/var/lib/postgresql/data
+    networks:
+      - goodfood-log-network
+
+  goodfood-rabbitmq:
+    image: rabbitmq:3-management
+    container_name: goodfood-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - goodfood-log-network
+
+networks:
+  goodfood-log-network:
+    driver: bridge
+
+volumes:
+  log-postgres:
