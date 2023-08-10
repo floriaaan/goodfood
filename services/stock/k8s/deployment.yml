@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-stock
+  labels:
+    app: goodfood-stock
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-stock
+  template:
+    metadata:
+      labels:
+        app: goodfood-stock
+    spec:
+      containers:
+        - name: goodfood-stock
+          image: floriaaan/goodfood-stock:1.0.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-stock-configmap
+                  key: port
+          ports:
+            - containerPort: 50009
