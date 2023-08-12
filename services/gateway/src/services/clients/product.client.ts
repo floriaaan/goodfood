@@ -1,4 +1,4 @@
-import * as grpc from "grpc";
+import * as grpc from '@grpc/grpc-js';
 import {AllergenServiceClient, CategoryServiceClient, ProductServiceClient} from "@gateway/proto/product_grpc_pb";
 
 // TODO: add order env

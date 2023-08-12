@@ -1,5 +1,5 @@
 import services from '../../proto/user_grpc_pb';
-import * as grpc from "grpc";
+import * as grpc from '@grpc/grpc-js';
 
 export const userServiceClient = new services.UserServiceClient(
     'http://localhost:50001',
