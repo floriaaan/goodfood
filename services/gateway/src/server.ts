@@ -19,18 +19,42 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 50000;
 
-app.use('/', userRoutes);
-app.use('/', orderRoutes);
-app.use('/', categoryRoutes);
-app.use('/', allergenRoutes);
-app.use('/', productRoutes);
-app.use('/', deliveryRoutes);
-app.use('/', deliveryPersonRoutes);
-app.use('/', logRoutes);
-app.use('/', metricRoutes);
-app.use('/', promotionsRoutes);
-app.use('/', stockRoutes);
-app.use('/', stockPersonRoutes);
+app.use('/', userRoutes
+// #swagger.tags = ['User']
+);
+app.use('/', orderRoutes
+// #swagger.tags = ['Order']
+);
+app.use('/', categoryRoutes
+// #swagger.tags = ['Category']
+);
+app.use('/', allergenRoutes
+// #swagger.tags = ['Allergen']
+);
+app.use('/', productRoutes
+// #swagger.tags = ['Product']
+);
+app.use('/', deliveryRoutes
+// #swagger.tags = ['Delivery']
+);
+app.use('/', deliveryPersonRoutes
+// #swagger.tags = ['DeliveryPerson']
+);
+app.use('/', logRoutes
+// #swagger.tags = ['Log']
+);
+app.use('/', metricRoutes
+// #swagger.tags = ['Metric']
+);
+app.use('/', promotionsRoutes
+// #swagger.tags = ['Promotions']
+);
+app.use('/', stockRoutes
+// #swagger.tags = ['Stock']
+);
+app.use('/', stockPersonRoutes
+// #swagger.tags = ['StockPerson']
+);
 
 app.listen(PORT, () => {
     console.log(`API Gateway is running on port ${PORT}`);
