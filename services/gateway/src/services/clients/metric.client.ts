@@ -1,5 +1,5 @@
 import services from '../../proto/metric_grpc_pb';
-import * as grpc from "grpc";
+import * as grpc from '@grpc/grpc-js';
 
 // TODO: add metric env
 export default new services.ReportingServiceClient(
