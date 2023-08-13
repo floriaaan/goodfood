@@ -1,0 +1,51 @@
+{
+  "name": "@goodfood/basket",
+  "bin": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js",
+    "test": "echo 'tests are disabled' # vitest",
+    "coverage": "vitest --coverage",
+    "pkg": "pkg ."
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.8.13",
+    "@grpc/proto-loader": "0.7.6",
+    "@prisma/client": "4.16.2",
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.0.3",
+    "ioredis": "5.3.2",
+    "prisma-redis-middleware": "4.8.0",
+    "protobufjs": "7.2.2"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "@types/node": "18.15.9",
+    "esbuild": "^0.17.14",
+    "nodemon": "^2.0.22",
+    "pkg": "^5.8.1",
+    "prisma": "4.16.2",
+    "ts-node": "10.9.1",
+    "tsconfig-paths": "^4.1.2",
+    "typescript": "5.0.2",
+    "vite-tsconfig-paths": "^4.0.7",
+    "vitest": "^0.29.8"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "pkg": {
+    "scripts": "./src/dist/index.js",
+    "assets": [
+      "./prisma/**/*",
+      "../proto/**/*"
+    ],
+    "targets": [
+      "node18-macos-arm64",
+      "node18-linux-x64",
+      "node18-linux-arm64"
+    ],
+    "outputPath": "bin/"
+  }
+}
