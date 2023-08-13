@@ -4,16 +4,13 @@ FROM node:18-alpine3.17  as builder
 WORKDIR /app
 
 # Copy the application code
-COPY ./order/ .
+COPY ./gateway/ .
 
 # Install dependencies
 RUN npm install
 
 # Copy the proto files  
 COPY ./proto ./proto/
-
-# Generate Prisma client
-RUN npx prisma generate
 
 # Build the application
 RUN npm run build
@@ -27,12 +24,10 @@ WORKDIR /app
 
 # Copy the application package
 COPY --from=builder /app/dist .
-COPY --from=builder /app/prisma/ .
 COPY --from=builder /app/proto/ /proto/
-COPY --from=builder /app/node_modules/.prisma /.prisma
 
 # Expose the gRPC port
-EXPOSE 50007
+EXPOSE 50000
 
 # Start the server
 CMD [ "node", "index.js"]

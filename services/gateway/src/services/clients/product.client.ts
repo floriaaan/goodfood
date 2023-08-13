@@ -1,15 +1,16 @@
 import * as grpc from '@grpc/grpc-js';
 import {AllergenServiceClient, CategoryServiceClient, ProductServiceClient} from "@gateway/proto/product_grpc_pb";
 
-// TODO: add order env
+const url = process.env.GATEWAY_PRODUCT_URL || "localhost:50004";
+
 export const categoryServiceClient = new CategoryServiceClient(
-    'http://localhost:50007',
+    url,
     grpc.credentials.createInsecure());
 
 export const allergenServiceClient = new AllergenServiceClient(
-    'http://localhost:50007',
+    url,
     grpc.credentials.createInsecure());
 
 export const productServiceClient = new ProductServiceClient(
-    'http://localhost:50007',
+    url,
     grpc.credentials.createInsecure());
