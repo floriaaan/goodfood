@@ -17,7 +17,7 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
-const PORT = process.env.PORT || 50000;
+const PORT = process.env.GATEWAY_PORT || 50000;
 
 app.use('/', userRoutes
 // #swagger.tags = ['User']

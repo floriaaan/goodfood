@@ -5,7 +5,7 @@ const doc = {
     title: 'The Gateway API',
     description: 'The Gateway API for the Microservices',
   },
-  host: `localhost:${process.env.PORT || 50000}`
+  host: `localhost:${process.env.GATEWAY_PORT || 50000}`
 };
 
 const outputFile = './swagger-output.json';
