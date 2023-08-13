@@ -1,7 +1,8 @@
 import services from '../../proto/metric_grpc_pb';
 import * as grpc from '@grpc/grpc-js';
 
-// TODO: add metric env
+const url = process.env.GATEWAY_REPORTING_URL || "localhost:50020";
+
 export default new services.ReportingServiceClient(
-    'http://localhost:50007',
+    url,
     grpc.credentials.createInsecure());
