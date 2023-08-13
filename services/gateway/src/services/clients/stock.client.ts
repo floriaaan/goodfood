@@ -1,11 +1,12 @@
 import services from '../../proto/stock_grpc_pb';
 import * as grpc from '@grpc/grpc-js';
 
-// TODO: add stock env
+const url = process.env.GATEWAY_STOCK_URL || "localhost:50009";
+
 export const stockServiceClient = new services.StockServiceClient(
-    'http://localhost:50007',
+    url,
     grpc.credentials.createInsecure());
 
 export const stockPersonServiceClient = new services.StockReportingServiceClient(
-    'http://localhost:50007',
+    url,
     grpc.credentials.createInsecure());

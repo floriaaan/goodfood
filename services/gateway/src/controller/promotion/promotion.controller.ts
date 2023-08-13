@@ -1,13 +1,13 @@
 import {Router} from "express";
-import {promotionsServiceClient} from "@gateway/services/clients/promotions.client";
+import {promotionServiceClient} from "@gateway/services/clients/promotion.client";
 import {Empty} from "google-protobuf/google/protobuf/empty_pb";
 import {Promotion, PromotionCode, PromotionCreateInput, PromotionId, RestaurantId} from "@gateway/proto/promotions_pb";
 
-export const promotionsRoutes = Router();
+export const promotionRoutes = Router();
 
-promotionsRoutes.get('/api/promotions/:code', (req, res) => {
+promotionRoutes.get('/api/promotion/:code', (req, res) => {
     const {code} = req.params;
-    promotionsServiceClient.getPromotion(new PromotionCode().setCode(code), (error, response) => {
+    promotionServiceClient.getPromotion(new PromotionCode().setCode(code), (error, response) => {
         if (error) {
             res.json({error: error.message});
         } else {
@@ -16,8 +16,8 @@ promotionsRoutes.get('/api/promotions/:code', (req, res) => {
     });
 });
 
-promotionsRoutes.get('/api/promotions', (req, res) => {
-    promotionsServiceClient.getPromotions(new Empty(), (error, response) => {
+promotionRoutes.get('/api/promotion', (req, res) => {
+    promotionServiceClient.getPromotions(new Empty(), (error, response) => {
         if (error) {
             res.json({error: error.message});
         } else {
@@ -26,9 +26,9 @@ promotionsRoutes.get('/api/promotions', (req, res) => {
     });
 });
 
-promotionsRoutes.get('/api/promotions/by-restaurant/:restaurantId', (req, res) => {
+promotionRoutes.get('/api/promotion/by-restaurant/:restaurantId', (req, res) => {
     const {restaurantId} = req.params;
-    promotionsServiceClient.getPromotionsByRestaurant(new RestaurantId().setId(restaurantId), (error, response) => {
+    promotionServiceClient.getPromotionsByRestaurant(new RestaurantId().setId(restaurantId), (error, response) => {
         if (error) {
             res.json({error: error.message});
         } else {
@@ -37,13 +37,13 @@ promotionsRoutes.get('/api/promotions/by-restaurant/:restaurantId', (req, res) =
     });
 });
 
-promotionsRoutes.post('/api/promotions', (req, res) => {
+promotionRoutes.post('/api/promotion', (req, res) => {
     const {code, reduction, method, restaurantId} = req.body;
     const promotionCreateInput = new PromotionCreateInput().setCode(code)
         .setReduction(reduction)
         .setMethod(method)
         .setRestaurantId(restaurantId);
-    promotionsServiceClient.createPromotion(promotionCreateInput, (error, response) => {
+    promotionServiceClient.createPromotion(promotionCreateInput, (error, response) => {
         if (error) {
             res.json({error: error.message});
         } else {
@@ -52,7 +52,7 @@ promotionsRoutes.post('/api/promotions', (req, res) => {
     });
 });
 
-promotionsRoutes.put('/api/promotions/:id', (req, res) => {
+promotionRoutes.put('/api/promotion/:id', (req, res) => {
     const {id} = req.params;
     const {code, reduction, method, restaurantId} = req.body;
     const promotionUpdateInput = new Promotion().setId(id).setCode(code)
@@ -60,7 +60,7 @@ promotionsRoutes.put('/api/promotions/:id', (req, res) => {
         .setMethod(method)
         .setRestaurantId(restaurantId);
 
-    promotionsServiceClient.createPromotion(promotionUpdateInput, (error, response) => {
+    promotionServiceClient.createPromotion(promotionUpdateInput, (error, response) => {
         if (error) {
             res.json({error: error.message});
         } else {
@@ -69,10 +69,10 @@ promotionsRoutes.put('/api/promotions/:id', (req, res) => {
     });
 });
 
-promotionsRoutes.delete('/api/promotions/:id', (req, res) => {
+promotionRoutes.delete('/api/promotion/:id', (req, res) => {
     const {id} = req.params;
 
-    promotionsServiceClient.deletePromotion(new PromotionId().setId(id), (error, response) => {
+    promotionServiceClient.deletePromotion(new PromotionId().setId(id), (error, response) => {
         if (error) {
             res.json({error: error.message});
         } else {
