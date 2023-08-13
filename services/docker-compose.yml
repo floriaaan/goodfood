@@ -1,0 +1,59 @@
+version: "3"
+services:
+  # gateway:
+  gateway:
+    image: goodfood-gateway:1.0.0
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+
+    env_file:
+      - ./gateway/.env
+    ports:
+      - "50000:50000"
+    networks:
+      - goodfood-network
+
+  #  delivery-service:
+  delivery-redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - goodfood-delivery-volume:/data
+    networks:
+      - goodfood-network
+    command: redis-server --appendonly yes
+    environment:
+      REDIS_USERNAME: redis
+      REDIS_PASSWORD: password
+
+  delivery-postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - goodfood-delivery-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  delivery-service:
+    image: goodfood-delivery:1.0.0
+    build:
+      context: .
+      dockerfile: ./delivery/Dockerfile
+    env_file:
+      - ./delivery/.env
+    ports:
+      - "50008:50008"
+
+volumes:
+  goodfood-delivery-volume:
+
+networks:
+  goodfood-network:
