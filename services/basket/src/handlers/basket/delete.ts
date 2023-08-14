@@ -24,7 +24,6 @@ export const DeleteProduct = async (
             products_ids: storedBasket.products_ids.filter(productId => productId !== product_id),
             restaurant_id: storedBasket.restaurant_id
         };
-        log.info(basket);
         await client.set(`user:${user_id}`, JSON.stringify(newBasket));
         callback(null, {user_id, ...newBasket});
     } catch (error) {

@@ -17,11 +17,10 @@ export const GetBasket = async (
         if (!basket) {
             callback(null, {});
         } else {
-            const {products_ids, restaurant_id}: RedisBasket = JSON.parse(basket);
+            const storedBasket: RedisBasket = JSON.parse(basket);
             callback(null, {
                 user_id: id,
-                products_ids,
-                restaurant_id
+                ...storedBasket
             });
         }
     } catch (error) {
