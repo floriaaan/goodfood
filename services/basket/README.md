@@ -17,7 +17,7 @@
     - `AddProduct`: Adds a product to a basket.
     - `DeleteProduct`: Deletes a product from a basket.
     - `Reset`: Resets a basket.
-    - `SetRestaurant`: Sets a restaurant to a basket.
+    - `UpdateRestaurant`: Sets a restaurant to a basket.
 
 ## Requirements
 
