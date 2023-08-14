@@ -8,7 +8,7 @@ service BasketService {
   rpc AddProduct (ProductRequest) returns (Basket);
   rpc DeleteProduct (ProductRequest) returns (Basket);
   rpc Reset (UserId) returns (Basket);
-  rpc SetRestaurant (RestaurantId) returns (Basket);
+  rpc UpdateRestaurant (RestaurantId) returns (Basket);
 }
 
 message UserId {
@@ -21,11 +21,12 @@ message RestaurantId {
 
 message Basket {
   uint64 user_id = 1;
-  repeated string products_id = 2;
+  repeated string products_ids = 2;
   string  restaurant_id = 3;
 }
 
 message ProductRequest {
   uint64 user_id = 1;
   string product_id = 2;
+  string  restaurant_id = 3;
 }
