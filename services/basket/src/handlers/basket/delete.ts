@@ -10,7 +10,9 @@ export const DeleteProduct = async (
 ) => {
     try {
         const {product_id, user_id} = request;
-
+        if (!product_id || !user_id) {
+            throw new Error("Invalid request");
+        }
         const basket = await client.get(`user:${user_id}`);
         if (!basket) {
             callback(null, "Basket not found");

@@ -9,11 +9,12 @@ export type UserId = {
 };
 
 export type Basket = {
-    user_id: string;
+    user_id: number;
     products_ids: string[];
     restaurant_id: string;
 };
 
-export type RestaurantId = {
-    id: string;
+export type RestaurantRequest = {
+    user_id: number;
+    restaurant_id: string;
 };

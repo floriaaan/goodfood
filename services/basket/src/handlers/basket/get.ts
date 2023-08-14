@@ -10,6 +10,9 @@ export const GetBasket = async (
 ) => {
     try {
         const {id} = request;
+        if (!id) {
+            throw new Error("Invalid request");
+        }
         const basket = await client.get(`user:${id}`);
         if (!basket) {
             callback(null, {});

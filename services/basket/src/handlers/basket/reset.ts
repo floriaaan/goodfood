@@ -9,6 +9,10 @@ export const Reset = async (
 ) => {
     try {
         const {id} = request;
+        if (!id) {
+            throw new Error("Invalid request");
+        }
+
         await client.del(`user:${id}`);
         callback(null, {});
     } catch (error) {
