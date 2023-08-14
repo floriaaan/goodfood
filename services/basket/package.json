@@ -15,13 +15,14 @@
     "@prisma/client": "4.16.2",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
-    "ioredis": "5.3.2",
     "prisma-redis-middleware": "4.8.0",
-    "protobufjs": "7.2.2"
+    "protobufjs": "7.2.2",
+    "redis": "^4.6.7"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
     "@types/node": "18.15.9",
+    "@types/redis": "^4.0.11",
     "esbuild": "^0.17.14",
     "nodemon": "^2.0.22",
     "pkg": "^5.8.1",
@@ -32,13 +33,9 @@
     "vite-tsconfig-paths": "^4.0.7",
     "vitest": "^0.29.8"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
   "pkg": {
     "scripts": "./src/dist/index.js",
     "assets": [
-      "./prisma/**/*",
       "../proto/**/*"
     ],
     "targets": [
