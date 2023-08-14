@@ -5,17 +5,15 @@ import client from "@basket/lib/redis";
 import {RedisBasket} from "@basket/types/redisBasket";
 
 export const GetBasket = async (
-    data: Data<UserId>,
+    {request}: Data<UserId>,
     callback: (err: any, response: any) => void
 ) => {
     try {
-        const {request} = data;
         const {id} = request;
         const basket = await client.get(`user:${id}`);
         if (!basket) {
             callback(null, {});
         } else {
-            log.debug(basket)
             const {products_ids, restaurant_id}: RedisBasket = JSON.parse(basket);
             callback(null, {
                 user_id: id,

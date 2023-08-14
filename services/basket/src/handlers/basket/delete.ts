@@ -5,11 +5,10 @@ import client from "@basket/lib/redis";
 import {RedisBasket} from "@basket/types/redisBasket";
 
 export const DeleteProduct = async (
-    data: Data<ProductRequest>,
+    {request}: Data<ProductRequest>,
     callback: (err: any, response: any) => void
 ) => {
     try {
-        const {request} = data;
         const {product_id, user_id} = request;
 
         const basket = await client.get(`user:${user_id}`);
