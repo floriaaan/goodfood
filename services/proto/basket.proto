@@ -4,10 +4,9 @@ package com.goodfood.basket;
 
 // The Basket service definition.
 service BasketService {
-  // Sends a greeting
   rpc GetBasket (UserId) returns (Basket);
-  rpc AddProduct (AddProductRequest) returns (Basket);
-  rpc DeleteProduct (DeleteProductRequest) returns (Basket);
+  rpc AddProduct (ProductRequest) returns (Basket);
+  rpc DeleteProduct (ProductRequest) returns (Basket);
   rpc Reset (UserId) returns (Basket);
   rpc SetRestaurant (RestaurantId) returns (Basket);
 }
@@ -17,30 +16,16 @@ message UserId {
 }
 
 message RestaurantId {
-  uint64 id = 1;
+  string id = 1;
 }
 
 message Basket {
-  string message = 1;
-}
-message AddProductRequest {
   uint64 user_id = 1;
-  Product product = 2;
+  repeated string products_id = 2;
+  string  restaurant_id = 3;
 }
 
-message DeleteProductRequest {
+message ProductRequest {
   uint64 user_id = 1;
   string product_id = 2;
-}
-message Product {
-  string id = 1;
-  string name = 2;
-  string image = 3;
-  string comment = 4;
-  int32 price = 5;
-  string preparation = 6;
-  string weight = 7;
-  string kilocalories = 8;
-  int32 nutriscore = 9;
-  int32 restaurant_id = 10;
 }
