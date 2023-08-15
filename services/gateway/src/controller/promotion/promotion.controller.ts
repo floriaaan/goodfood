@@ -9,8 +9,7 @@ promotionRoutes.get('/api/promotion/:code', (req, res) => {
     const {code} = req.params;
     promotionServiceClient.getPromotion(new PromotionCode().setCode(code), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -20,8 +19,7 @@ promotionRoutes.get('/api/promotion/:code', (req, res) => {
 promotionRoutes.get('/api/promotion', (req, res) => {
     promotionServiceClient.getPromotions(new Empty(), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -32,8 +30,7 @@ promotionRoutes.get('/api/promotion/by-restaurant/:restaurantId', (req, res) => 
     const {restaurantId} = req.params;
     promotionServiceClient.getPromotionsByRestaurant(new RestaurantId().setId(restaurantId), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -48,8 +45,7 @@ promotionRoutes.post('/api/promotion', (req, res) => {
         .setRestaurantId(restaurantId);
     promotionServiceClient.createPromotion(promotionCreateInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -66,8 +62,7 @@ promotionRoutes.put('/api/promotion/:id', (req, res) => {
 
     promotionServiceClient.createPromotion(promotionUpdateInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -79,8 +74,7 @@ promotionRoutes.delete('/api/promotion/:id', (req, res) => {
 
     promotionServiceClient.deletePromotion(new PromotionId().setId(id), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }

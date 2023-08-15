@@ -109,10 +109,38 @@ services:
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
 
+  #  Promotion service
+  promotion-service:
+    image: goodfood-promotion:1.0.0
+    build:
+      context: .
+      dockerfile: ./promotions/Dockerfile
+    env_file:
+      - promotions/.env.docker
+    ports:
+      - "50006"
+    networks:
+      - goodfood-network
+
+  promotion-postgres:
+    image: postgres:latest
+    ports:
+      - "5432"
+    volumes:
+      - goodfood-promotion-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
 volumes:
   goodfood-delivery-volume:
   goodfood-order-volume:
   goodfood-product-volume:
+  goodfood-promotion-volume:
 
 networks:
   goodfood-network:
