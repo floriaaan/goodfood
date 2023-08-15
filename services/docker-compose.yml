@@ -136,11 +136,39 @@ services:
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
 
+  #  Stock service
+  stock-service:
+    image: goodfood-stock:1.0.0
+    build:
+      context: .
+      dockerfile: ./stock/Dockerfile
+    env_file:
+      - stock/.env.docker
+    ports:
+      - "50009"
+    networks:
+      - goodfood-network
+
+  stock-postgres:
+    image: postgres:latest
+    ports:
+      - "5432"
+    volumes:
+      - goodfood-stock-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
 volumes:
   goodfood-delivery-volume:
   goodfood-order-volume:
   goodfood-product-volume:
   goodfood-promotion-volume:
+  goodfood-stock-volume:
 
 networks:
   goodfood-network:
