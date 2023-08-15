@@ -14,7 +14,20 @@ services:
     networks:
       - goodfood-network
 
-  #  delivery-service:
+  #  Delivery service
+
+  delivery-service:
+    image: goodfood-delivery:1.0.0
+    build:
+      context: .
+      dockerfile: ./delivery/Dockerfile
+    env_file:
+      - delivery/.env.docker
+    ports:
+      - "50008"
+    networks:
+      - goodfood-network
+
   delivery-redis:
     image: redis:latest
     ports:
@@ -41,18 +54,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
-
-  delivery-service:
-    image: goodfood-delivery:1.0.0
-    build:
-      context: .
-      dockerfile: ./delivery/Dockerfile
-    env_file:
-      - delivery/.env.docker
-    ports:
-      - "50008"
-    networks:
-      - goodfood-network
 
   #  Order service
   order-sercice:
@@ -81,9 +82,37 @@ services:
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
 
+  #  Product service
+  product-service:
+    image: goodfood-product:1.0.0
+    build:
+      context: .
+      dockerfile: ./product/Dockerfile
+    env_file:
+      - product/.env.docker
+    ports:
+      - "50004"
+    networks:
+      - goodfood-network
+
+  product-postgres:
+    image: postgres:latest
+    ports:
+      - "5432"
+    volumes:
+      - goodfood-product-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
 volumes:
   goodfood-delivery-volume:
   goodfood-order-volume:
+  goodfood-product-volume:
 
 networks:
   goodfood-network:
