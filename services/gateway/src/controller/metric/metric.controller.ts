@@ -9,8 +9,7 @@ metricRoutes.get('/api/metric/:key', (req, res) => {
     const metricInput = new GetMetricRequest().setKey(key);
     metricService.getMetric(metricInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -24,8 +23,7 @@ metricRoutes.post('/api/metric', (req, res) => {
 
     metricService.pushMetric(newMetric, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
