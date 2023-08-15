@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --minify",
     "test": "vitest",
     "coverage": "vitest --coverage",
     "generate:proto": "sh proto/build-protos.sh",
