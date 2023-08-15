@@ -8,6 +8,7 @@ export const categoryRoutes = Router();
 categoryRoutes.get('/api/category', (req: Request, res: Response) => {
     categoryServiceClient.getCategoryList(new Empty(), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -21,6 +22,7 @@ categoryRoutes.get('/api/category/:id', (req: Request, res: Response) => {
 
     categoryServiceClient.readCategory(categoryId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -33,6 +35,7 @@ categoryRoutes.post('/api/category', (req: Request, res: Response) => {
     const category = new Category().setLibelle(label).setIcon(icon).setHexaColor(hexaColor)
     categoryServiceClient.createCategory(category, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -46,6 +49,7 @@ categoryRoutes.put('/api/category/:id', (req: Request, res: Response) => {
     const category = new Category().setId(id).setLibelle(label).setIcon(icon).setHexaColor(hexaColor)
     categoryServiceClient.updateCategory(category, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -57,6 +61,7 @@ categoryRoutes.delete('/api/category/:id', (req: Request, res: Response) => {
     const {id} = req.params;
     categoryServiceClient.deleteCategory(new CategoryId().setId(id), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());

@@ -9,6 +9,8 @@ deliveryRoutes.get('/api/delivery/:id', (req: Request, res: Response) => {
 
     deliveryServiceClient.getDelivery(new DeliveryId().setId(id), (error, response) => {
         if (error) {
+            res.status(500)
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -22,6 +24,7 @@ deliveryRoutes.get('/api/delivery/by-restaurant/:id', (req: Request, res: Respon
 
     deliveryServiceClient.listDeliveriesByRestaurant(restaurantId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -35,6 +38,7 @@ deliveryRoutes.get('/api/delivery/by-user/:id', (req: Request, res: Response) =>
 
     deliveryServiceClient.listDeliveriesByUser(userId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -57,13 +61,14 @@ deliveryRoutes.post('/api/delivery', (req: Request, res: Response) => {
         .setDeliveryPersonId(deliveryPersonId)
         .setUserId(userId)
         .setRestaurantId(restaurantId);
-    console.log(deliveryCreateInput.toObject());
+
     deliveryServiceClient.createDelivery(deliveryCreateInput, (error, response) => {
         console.log(error, response)
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
-            res.json(response);
+            res.json(response.toObject());
         }
     });
 });
@@ -80,6 +85,7 @@ deliveryRoutes.put('/api/delivery/:id', (req: Request, res: Response) => {
 
     deliveryServiceClient.updateDelivery(delivery, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -92,6 +98,7 @@ deliveryRoutes.delete('/api/delivery/:id', (req: Request, res: Response) => {
 
     deliveryServiceClient.deleteDelivery(new DeliveryId().setId(id), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());

@@ -37,6 +37,7 @@ stockRoutes.get('/api/stock/supplier/:id', (req: Request, res: Response) => {
 
     stockServiceClient.getSupplier(supplierRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -48,6 +49,7 @@ stockRoutes.get('/api/stock/supplier', (req: Request, res: Response) => {
 
     stockServiceClient.getSuppliers(new Empty(), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -61,6 +63,7 @@ stockRoutes.get('/api/stock/ingredient/:id', (req: Request, res: Response) => {
 
     stockServiceClient.getIngredient(ingredientRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -72,6 +75,7 @@ stockRoutes.get('/api/stock/ingredient', (req: Request, res: Response) => {
 
     stockServiceClient.getIngredients(new Empty(), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -85,6 +89,7 @@ stockRoutes.post('/api/stock/ingredient', (req: Request, res: Response) => {
 
     stockServiceClient.createIngredient(ingredientRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -99,6 +104,7 @@ stockRoutes.put('/api/stock/ingredient/:id', (req: Request, res: Response) => {
 
     stockServiceClient.updateIngredient(ingredientRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -112,6 +118,7 @@ stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) =>
 
     stockServiceClient.deleteIngredient(ingredientRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -125,6 +132,7 @@ stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) =>
 
     stockServiceClient.deleteIngredient(ingredientRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -142,6 +150,7 @@ stockRoutes.get('/api/stock/ingredient/restaurant/:id', (req: Request, res: Resp
 
     stockServiceClient.getIngredientRestaurant(ingredientRestaurantRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -155,6 +164,7 @@ stockRoutes.get('/api/stock/ingredient/restaurant/by-restaurant/:id', (req: Requ
 
     stockServiceClient.getIngredientRestaurantsByRestaurant(ingredientRestaurantsByRestaurantRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -168,6 +178,7 @@ stockRoutes.get('/api/stock/ingredient/restaurant/by-product/:id', (req: Request
 
     stockServiceClient.getIngredientRestaurantsByProduct(ingredientRestaurantsByProductRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -188,6 +199,7 @@ stockRoutes.post('/api/stock/ingredient/restaurant', (req: Request, res: Respons
 
     stockServiceClient.createIngredientRestaurant(ingredientRestaurant, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -209,6 +221,7 @@ stockRoutes.put('/api/stock/ingredient/restaurant/:id', (req: Request, res: Resp
 
     stockServiceClient.updateIngredientRestaurant(ingredientRestaurant, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -221,6 +234,7 @@ stockRoutes.delete('/api/stock/ingredient/restaurant/:id', (req: Request, res: R
 
     stockServiceClient.deleteIngredientRestaurant(new DeleteIngredientRestaurantRequest().setId(Number(id)), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -237,6 +251,7 @@ stockRoutes.get('/api/stock/supplier/:id', (req: Request, res: Response) => {
 
     stockServiceClient.getSupplier(new GetSupplierRequest().setId(Number(id)), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -247,6 +262,7 @@ stockRoutes.get('/api/stock/supplier/:id', (req: Request, res: Response) => {
 stockRoutes.get('/api/stock/supplier', (req: Request, res: Response) => {
     stockServiceClient.getSuppliers(new Empty(), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -260,6 +276,7 @@ stockRoutes.post('/api/stock/supplier', (req: Request, res: Response) => {
 
     stockServiceClient.createSupplier(supplierRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -274,6 +291,7 @@ stockRoutes.put('/api/stock/supplier/:id', (req: Request, res: Response) => {
 
     stockServiceClient.updateSupplier(supplierRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -286,6 +304,7 @@ stockRoutes.delete('/api/stock/supplier/:id', (req: Request, res: Response) => {
 
     stockServiceClient.deleteSupplier(new DeleteSupplierRequest().setId(Number(id)), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -302,6 +321,7 @@ stockRoutes.get('/api/stock/supply/order/:id', (req: Request, res: Response) => 
 
     stockServiceClient.getSupplyOrder(new GetSupplyOrderRequest().setId(Number(id)), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -313,6 +333,7 @@ stockRoutes.get('/api/stock/supply/order/by-restaurant/:id', (req: Request, res:
     const {id} = req.params;
     stockServiceClient.getSupplyOrdersByRestaurant(new GetSupplyOrdersByRestaurantRequest().setRestaurantId(id), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -324,6 +345,7 @@ stockRoutes.get('/api/stock/supply/order/by-supplier/:id', (req: Request, res: R
     const {id} = req.params;
     stockServiceClient.getSupplyOrdersBySupplier(new GetSupplyOrdersBySupplierRequest().setSupplierId(Number(id)), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -335,6 +357,7 @@ stockRoutes.get('/api/stock/supply/order/by-ingredient-restaurant/:id', (req: Re
     const {id} = req.params;
     stockServiceClient.getSupplyOrdersByIngredientRestaurant(new GetSupplyOrdersByIngredientRestaurantRequest().setIngredientRestaurantId(Number(id)), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -350,6 +373,7 @@ stockRoutes.post('/api/stock/supply/order', (req: Request, res: Response) => {
 
     stockServiceClient.createSupplyOrder(supplyOrderRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -366,6 +390,7 @@ stockRoutes.put('/api/stock/supply/order/:id', (req: Request, res: Response) => 
 
     stockServiceClient.updateSupplyOrder(supplyOrderRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -377,6 +402,7 @@ stockRoutes.delete('/api/stock/supply/order/:id', (req: Request, res: Response) 
     const {id} = req.params;
     stockServiceClient.deleteSupplyOrder(new DeleteSupplyOrderRequest().setId(Number(id)), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
