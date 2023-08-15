@@ -9,8 +9,7 @@ basketRoutes.get('/api/basket/:userId', (req: Request, res: Response) => {
 
     basketServiceClient.getBasket(new UserId().setId(Number(userId)), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -22,8 +21,7 @@ basketRoutes.post('/api/basket', (req: Request, res: Response) => {
     const basketRequest = new ProductRequest().setUserId(userId).setProductId(productId).setRestaurantId(restaurantId);
     basketServiceClient.addProduct(basketRequest, (error, response) => {
             if (error) {
-                res.status(500)
-            res.json({error: error.message});
+                res.status(500).send({error: error.message});
             } else {
                 res.json(response.toObject());
             }
@@ -36,8 +34,7 @@ basketRoutes.delete('/api/basket', (req: Request, res: Response) => {
     const basketRequest = new ProductRequest().setUserId(userId).setProductId(productId).setRestaurantId(restaurantId);
     basketServiceClient.deleteProduct(basketRequest, (error, response) => {
             if (error) {
-                res.status(500)
-            res.json({error: error.message});
+                res.status(500).send({error: error.message});
             } else {
                 res.json(response.toObject());
             }
@@ -49,8 +46,7 @@ basketRoutes.put('/api/basket/restaurant', (req: Request, res: Response) => {
     const {restaurantId, userId} = req.body;
     basketServiceClient.updateRestaurant(new RestaurantRequest().setRestaurantId(restaurantId).setUserId(userId), (error, response) => {
             if (error) {
-                res.status(500)
-            res.json({error: error.message});
+                res.status(500).send({error: error.message});
             } else {
                 res.json(response.toObject());
             }
@@ -62,8 +58,7 @@ basketRoutes.post('/api/basket/reset', (req: Request, res: Response) => {
     const {userId} = req.body;
     basketServiceClient.reset(new UserId().setId(userId), (error, response) => {
             if (error) {
-                res.status(500)
-            res.json({error: error.message});
+                res.status(500).send({error: error.message});
             } else {
                 res.json(response.toObject());
             }

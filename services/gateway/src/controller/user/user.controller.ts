@@ -26,8 +26,7 @@ userRoutes.get('/api/user/:id', (req: Request, res: Response) => {
 userRoutes.get('/api/user', (req: Request, res: Response) => {
     userServiceClient.listUser(new Empty(), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -52,8 +51,7 @@ userRoutes.post('/api/user', (req: Request, res: Response) => {
 
     userServiceClient.register(userInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -86,8 +84,7 @@ userRoutes.put('/api/user/:id', (req: Request, res: Response) => {
 
     userServiceClient.updateUser(userInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -104,8 +101,7 @@ userRoutes.delete('/api/user/:id', (req: Request, res: Response) => {
 
     userServiceClient.deleteUser(new DeleteInput().setUserid(Number(id)).setToken(authorization), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -118,8 +114,7 @@ userRoutes.post('/api/user/login', (req: Request, res: Response) => {
 
     userServiceClient.logIn(inInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -136,8 +131,7 @@ userRoutes.post('/api/user/validate', (req: Request, res: Response) => {
 
     userServiceClient.validate(validate, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -164,8 +158,7 @@ userRoutes.put('/api/user/:id/password', (req: Request, res: Response) => {
 
     userServiceClient.changePassword(updatePasswordInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -191,8 +184,7 @@ userRoutes.put('/api/user/:id/role', (req: Request, res: Response) => {
     }
     userServiceClient.changeRole(updatePasswordInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
