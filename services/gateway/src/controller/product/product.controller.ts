@@ -12,6 +12,7 @@ productRoutes.get('/api/product/by-restaurant/:id', (req: Request, res: Response
 
     productServiceClient.getProductList(restaurantId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -25,6 +26,7 @@ productRoutes.get('/api/product/:id', (req: Request, res: Response) => {
 
     productServiceClient.readProduct(productId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -35,6 +37,7 @@ productRoutes.get('/api/product/:id', (req: Request, res: Response) => {
 productRoutes.get('/api/product/type', (req: Request, res: Response) => {
     productServiceClient.getProductTypeList(new Empty(), (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -47,6 +50,7 @@ productRoutes.delete('/api/product/:id', (req: Request, res: Response) => {
     const productId = new ProductId().setId(id)
     productServiceClient.deleteProduct(productId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -90,6 +94,7 @@ productRoutes.post('/api/product', (req: Request, res: Response) => {
 
     productServiceClient.createProduct(productId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -134,6 +139,7 @@ productRoutes.put('/api/product/:id', (req: Request, res: Response) => {
 
     productServiceClient.createProduct(productId, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
@@ -149,6 +155,7 @@ productRoutes.post('/api/product/image', (req: Request, res: Response) => {
     const file = new File().setName(input_file).setData(base64File);
     productServiceClient.uploadImage(file, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
