@@ -19,7 +19,7 @@ const PROTO_PATH = resolvePath(__dirname + "/../../proto/basket.proto");
 const packageDefinition = loadSync(PROTO_PATH, options);
 const grpc = loadPackageDefinition(packageDefinition) as any;
 const {
-    BasketService: {service: ds},
+    BasketService: {service: bs},
 } = grpc.com.goodfood.basket;
 
 const server = createServerProxy(new Server());
