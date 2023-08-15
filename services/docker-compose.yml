@@ -48,9 +48,11 @@ services:
       context: .
       dockerfile: ./delivery/Dockerfile
     env_file:
-      - ./delivery/.env
+      - delivery/.env.docker
     ports:
       - "50008:50008"
+    networks:
+      - goodfood-network
 
 volumes:
   goodfood-delivery-volume:
