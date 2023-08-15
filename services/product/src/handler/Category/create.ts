@@ -15,7 +15,7 @@ export const CreateCategory = async (
 			!icon && icon.trim().length <= 0 &&
 			!hexa_color && hexa_color.trim().length <= 0
 		   )
-			throw(Error("Aucun des valeurs de la catégorie ne peuvent être null") as ServerErrorResponse)
+			throw(Error("Aucune des valeurs de la catégorie ne peuvent être null") as ServerErrorResponse)
 
 		var categorieInDb =	await prisma.category.findMany({
 				where: {
