@@ -23,8 +23,7 @@ orderRoutes.get('/api/order/:id', (req: Request, res: Response) => {
 
     orderService.getOrder(orderId, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -61,8 +60,7 @@ orderRoutes.post('/api/order', (req: Request, res: Response) => {
 
     orderService.createOrder(orderInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -74,8 +72,7 @@ orderRoutes.get('/api/order/by-user/:userId', (req: Request, res: Response) => {
     const orderInput = new GetOrdersByUserRequest().setId(userId);
     orderService.getOrdersByUser(orderInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -87,8 +84,7 @@ orderRoutes.post('/api/order/by-status', (req: Request, res: Response) => {
 
     orderService.getOrdersByStatus(orderInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -100,8 +96,7 @@ orderRoutes.get('/api/order/by-delivery/:deliveryId', (req: Request, res: Respon
     const orderInput = new GetOrderByDeliveryRequest().setId(deliveryId);
     orderService.getOrderByDelivery(orderInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -113,8 +108,7 @@ orderRoutes.get('/api/order/by-payment/:paymentId', (req: Request, res: Response
     const orderInput = new GetOrderByPaymentRequest().setId(paymentId);
     orderService.getOrderByPayment(orderInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -131,8 +125,7 @@ orderRoutes.put('/api/order/:orderId', (req: Request, res: Response) => {
         .setRestaurantId(req.body.restaurantId);
     orderService.updateOrder(orderInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -144,8 +137,7 @@ orderRoutes.delete('/api/order/:orderId', (req: Request, res: Response) => {
     const orderInput = new DeleteOrderRequest().setId(orderId);
     orderService.deleteOrder(orderInput, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }

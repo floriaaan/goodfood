@@ -10,8 +10,7 @@ deliveryPersonRoutes.get('/api/delivery-person/:id', (req, res) => {
 
     deliveryPersonServiceClient.getDeliveryPerson(new DeliveryPersonId().setId(id), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -21,8 +20,7 @@ deliveryPersonRoutes.get('/api/delivery-person/:id', (req, res) => {
 deliveryPersonRoutes.get('/api/delivery-person', (req, res) => {
     deliveryPersonServiceClient.listDeliveryPersons(new Empty(), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -36,8 +34,7 @@ deliveryPersonRoutes.get('/api/delivery-person', (req, res) => {
         .setLongitude(lng);
     deliveryPersonServiceClient.listNearDeliveryPersons(location, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -53,8 +50,7 @@ deliveryPersonRoutes.post('/api/delivery-person', (req, res) => {
         .setLocationList(locationList);
     deliveryPersonServiceClient.createDeliveryPerson(deliveryPerson, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -72,8 +68,7 @@ deliveryPersonRoutes.put('/api/delivery-person/:id', (req, res) => {
 
     deliveryPersonServiceClient.updateDeliveryPerson(deliveryPerson, (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
@@ -85,8 +80,7 @@ deliveryPersonRoutes.delete('/api/delivery-person/:id', (req, res) => {
 
     deliveryPersonServiceClient.deleteDeliveryPerson(new DeliveryPersonId().setId(id), (error, response) => {
         if (error) {
-            res.status(500)
-            res.json({error: error.message});
+            res.status(500).send({error: error.message});
         } else {
             res.json(response.toObject());
         }
