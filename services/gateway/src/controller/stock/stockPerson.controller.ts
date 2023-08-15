@@ -11,6 +11,7 @@ stockPersonRoutes.post('/api/stock/outcomes/by-restaurant/:id', (req: Request, r
 
     stockPersonServiceClient.getOutcomesByRestaurant(outcomesByRestaurantRequest, (error, response) => {
         if (error) {
+            res.status(500)
             res.json({error: error.message});
         } else {
             res.json(response.toObject());
