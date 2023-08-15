@@ -23,7 +23,7 @@ const {
 } = grpc.com.goodfood.basket;
 
 const server = createServerProxy(new Server());
-server.addService(ds, basketHandlers);
+server.addService(bs, basketHandlers);
 server.use(logGRPC);
 
 server.bindAsync(ADDRESS, serverInsecure, () => {
