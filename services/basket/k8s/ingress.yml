@@ -13,5 +13,5 @@ spec:
               service:
                 name: goodfood-basket
                 port:
-                  number: 50008
+                  number: 50002
             path: /
