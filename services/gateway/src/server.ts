@@ -5,11 +5,13 @@ import {categoryRoutes} from "@gateway/controller/product/category.controller";
 import {allergenRoutes} from "@gateway/controller/product/allergen.controller";
 import {deliveryRoutes} from "@gateway/controller/delivery/delivery.controller";
 import {deliveryPersonRoutes} from "@gateway/controller/delivery/deliveryPerson.controller";
-import {promotionsRoutes} from "@gateway/controller/promotions/promotions.controller";
+import {promotionRoutes} from "@gateway/controller/promotion/promotion.controller";
 import {stockPersonRoutes} from "@gateway/controller/stock/stockPerson.controller";
 import {stockRoutes} from "@gateway/controller/stock/stock.controller";
 import {logRoutes} from "@gateway/controller/log/log.controller";
 import {metricRoutes} from "@gateway/controller/metric/metric.controller";
+import {basketRoutes} from "@gateway/controller/basket/basket.controller";
+import {log, utils} from "@gateway/lib/log/log";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -21,6 +23,9 @@ const PORT = process.env.GATEWAY_PORT || 50000;
 
 app.use('/', userRoutes
 // #swagger.tags = ['User']
+);
+app.use('/', basketRoutes
+// #swagger.tags = ['Basket']
 );
 app.use('/', orderRoutes
 // #swagger.tags = ['Order']
@@ -46,8 +51,8 @@ app.use('/', logRoutes
 app.use('/', metricRoutes
 // #swagger.tags = ['Metric']
 );
-app.use('/', promotionsRoutes
-// #swagger.tags = ['Promotions']
+app.use('/', promotionRoutes
+// #swagger.tags = ['Promotion']
 );
 app.use('/', stockRoutes
 // #swagger.tags = ['Stock']
@@ -57,5 +62,10 @@ app.use('/', stockPersonRoutes
 );
 
 app.listen(PORT, () => {
-    console.log(`API Gateway is running on port ${PORT}`);
+    const message = `---- ${utils.green("good")}${utils.yellow(
+        "food"
+    )} Gateway ----\nstarted on: ${utils.bold(`0.0.0.0:${PORT}`)} ${utils.green(
+        "✓"
+    )}\n`;
+    log.debug(message);
 });
