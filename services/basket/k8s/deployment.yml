@@ -28,4 +28,4 @@ spec:
                   name: goodfood-basket-configmap
                   key: port
           ports:
-            - containerPort: 50008
+            - containerPort: 50002
