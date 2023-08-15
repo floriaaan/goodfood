@@ -9,7 +9,7 @@
     "test": "vitest",
     "coverage": "vitest --coverage",
     "generate:proto": "sh proto/build-protos.sh",
-    "swagger": "node src/utils/swagger.utils.js",
+    "swagger": "node src/lib/swagger/swagger.utils.js",
     "pkg": "pkg ."
   },
   "dependencies": {
