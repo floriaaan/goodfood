@@ -27,7 +27,7 @@ deliveryPersonRoutes.get('/api/delivery-person', (req, res) => {
     });
 });
 
-deliveryPersonRoutes.post('/api/delivery-person', (req, res) => {
+deliveryPersonRoutes.get('/api/delivery-person', (req, res) => {
     const {lat, lng} = req.body;
     const location = new Location()
         .setLatitude(lat)
