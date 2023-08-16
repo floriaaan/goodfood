@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-basket
+  labels:
+    app: goodfood-basket
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-basket
+  template:
+    metadata:
+      labels:
+        app: goodfood-basket
+    spec:
+      containers:
+        - name: goodfood-basket
+          image: floriaaan/goodfood-basket:1.0.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-basket-configmap
+                  key: port
+          ports:
+            - containerPort: 50002

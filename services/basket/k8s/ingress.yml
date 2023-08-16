@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: goodfood-basket
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: basket.localdev.me
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: goodfood-basket
+                port:
+                  number: 50002
+            path: /
