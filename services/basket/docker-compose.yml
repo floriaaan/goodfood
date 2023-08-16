@@ -1,0 +1,19 @@
+services:
+  basket-redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - goodfood-basket-volume:/data
+    networks:
+      - goodfood-basket-network
+    command: redis-server --appendonly yes
+    environment:
+      REDIS_USERNAME: redis
+      REDIS_PASSWORD: password
+
+volumes:
+  goodfood-basket-volume:
+
+networks:
+  goodfood-basket-network:
