@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: goodfood-stock-configmap
+  labels:
+    app: goodfood-stock
+data:
+  port: "50009"
