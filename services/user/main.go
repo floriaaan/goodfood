@@ -19,7 +19,7 @@ func main() {
 
 	c, err := config.LoadConfig()
 
-	url := "localhost:" + c.Port
+	url := "0.0.0.0:" + c.Port
 
 	if err != nil {
 		logger.Fatal("Failed at config", err)

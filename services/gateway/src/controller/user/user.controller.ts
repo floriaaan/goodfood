@@ -5,6 +5,8 @@ import {
     changeRoleInput,
     DeleteInput,
     logInInput,
+    MainAddress,
+    RoleInput,
     UpdateUserInput,
     User,
     UserCreateInput,
@@ -34,16 +36,16 @@ userRoutes.get('/api/user', (req: Request, res: Response) => {
 });
 
 userRoutes.post('/api/user', (req: Request, res: Response) => {
-    const body = req.body;
-    let userInput = new UserCreateInput();
+    const {firstName, lastName, email, phone, country, zipCode, street, lat, lng, roleCode} = req.body;
+    const userInput = new UserCreateInput();
     try {
-        userInput.setFirstName(body.firstName)
-            .setLastName(body.lastName)
-            .setEmail(body.email)
-            .setPassword(body.password)
-            .setPhone(body.phone)
-            .setMainaddress(body.address)
-            .setRole(body.role);
+        const address = new MainAddress().setCountry(country).setZipcode(zipCode).setStreet(street).setLat(lat).setLng(lng)
+        userInput.setFirstName(firstName)
+            .setLastName(lastName)
+            .setEmail(email)
+            .setPhone(phone)
+            .setMainaddress(address)
+            .setRole(new RoleInput().setCode(roleCode));
 
     } catch (e: any) {
         res.json({error: e.message});
@@ -64,17 +66,18 @@ userRoutes.put('/api/user/:id', (req: Request, res: Response) => {
         res.json({error: 'Not authorized'});
         return;
     }
-
-    const body = req.body;
+    const {firstName, lastName, email, phone, country, zipCode, street, lat, lng, role} = req.body;
     const userInput = new UpdateUserInput()
+
     try {
+        const address = new MainAddress().setCountry(country).setZipcode(zipCode).setStreet(street).setLat(lat).setLng(lng)
         const user = new User().setId(Number(req.params.id))
-            .setFirstName(body.firstName)
-            .setLastName(body.lastName)
-            .setEmail(body.email)
-            .setPhone(body.phone)
-            .setMainaddress(body.address)
-            .setRole(body.role);
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setEmail(email)
+            .setPhone(phone)
+            .setMainaddress(address)
+            .setRole(role);
 
         userInput.setUser(user).setToken(authorization);
 
