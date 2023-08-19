@@ -1,18 +1,46 @@
 version: "3"
 services:
-  # gateway:
+
+  # Gateway :
+
   gateway:
     image: goodfood-gateway:1.0.0
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
-
     env_file:
       - ./gateway/.env
     ports:
       - "50000:50000"
     networks:
       - goodfood-network
+
+  # Basket service
+
+  basket-service:
+    image: goodfood-basket:1.0.0
+    build:
+      context: .
+      dockerfile: ./basket/Dockerfile
+    env_file:
+      - basket/.env.docker
+    ports:
+      - "50002"
+    networks:
+      - goodfood-network
+
+  basket-redis:
+    image: redis:latest
+    ports:
+      - "6379"
+    volumes:
+      - goodfood-basket-volume:/data
+    networks:
+      - goodfood-network
+    command: redis-server --appendonly yes
+    environment:
+      REDIS_USERNAME: redis
+      REDIS_PASSWORD: password
 
   #  Delivery service
 
@@ -83,6 +111,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
   #  Product service
+
   product-service:
     image: goodfood-product:1.0.0
     build:
@@ -110,6 +139,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
   #  Promotion service
+
   promotion-service:
     image: goodfood-promotion:1.0.0
     build:
@@ -137,6 +167,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
   #  Stock service
+
   stock-service:
     image: goodfood-stock:1.0.0
     build:
@@ -164,6 +195,8 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
 volumes:
+volumes:
+  goodfood-basket-volume:
   goodfood-delivery-volume:
   goodfood-order-volume:
   goodfood-product-volume:
