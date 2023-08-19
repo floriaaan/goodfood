@@ -1,0 +1,58 @@
+{
+  "name": "@goodfood/payment",
+  "bin": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js",
+    "test": "vitest",
+    "coverage": "vitest --coverage",
+    "pkg": "pkg .",
+    "prisma:generate": "prisma generate",
+    "seed": "ts-node prisma/seed.ts",
+    "grpc:reflection": "./generate_grpc_reflection.sh",
+    "postinstall": "npm run prisma:generate"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "1.8.14",
+    "@grpc/proto-loader": "0.7.6",
+    "@prisma/client": "5.1.1",
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "grpc-server-reflection": "^0.1.5",
+    "protobufjs": "7.2.2",
+    "stripe": "^12.17.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "@types/express": "^4.17.17",
+    "@types/node": "18.15.9",
+    "esbuild": "^0.17.18",
+    "grpc-tools": "^1.12.4",
+    "nodemon": "^2.0.22",
+    "pkg": "^5.8.1",
+    "prisma": "5.1.1",
+    "ts-node": "10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "5.0.2",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.29.8"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "pkg": {
+    "scripts": "./src/dist/index.js",
+    "assets": [
+      "./prisma/**/*",
+      "../proto/**/*"
+    ],
+    "targets": [
+      "node18-macos-arm64",
+      "node18-linux-x64",
+      "node18-linux-arm64"
+    ],
+    "outputPath": "bin/"
+  }
+}
