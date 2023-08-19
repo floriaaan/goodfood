@@ -23,6 +23,9 @@ dependencies:
   esbuild:
     specifier: ^0.18.15
     version: 0.18.15
+  geolib:
+    specifier: ^3.3.4
+    version: 3.3.4
   nodemon:
     specifier: ^3.0.1
     version: 3.0.1
@@ -607,6 +610,10 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /geolib@3.3.4:
+    resolution: {integrity: sha512-EicrlLLL3S42gE9/wde+11uiaYAaeSVDwCUIv2uMIoRBfNJCn8EsSI+6nS3r4TCKDO6+RQNM9ayLq2at+oZQWQ==}
+    dev: false
 
   /get-caller-file@2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
