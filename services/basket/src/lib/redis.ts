@@ -1,6 +1,6 @@
 import {createClient} from "redis";
 
-const client = createClient();
+const client = createClient({url: process.env.REDIS_URL});
 
 client.on('error', (err: any) => {
     console.log('could not establish a connection with redis. ' + err);
