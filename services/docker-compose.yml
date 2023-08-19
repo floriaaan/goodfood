@@ -194,7 +194,46 @@ services:
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
 
-volumes:
+  # Log service
+
+  log-service:
+    depends_on:
+      - log-postgres
+      - log-rabbitmq
+    restart:
+      always
+    image: floriaaan/goodfood-log:latest
+    build:
+      context: .
+      dockerfile: ./log/Dockerfile
+    env_file:
+      - ./log/.env.docker
+    ports:
+      - "50021"
+    networks:
+      - goodfood-network
+
+  log-rabbitmq:
+    restart: always
+    image: rabbitmq:3-management
+    ports:
+      - "5672"
+      - "15672"
+    networks:
+      - goodfood-network
+
+  log-postgres:
+    image: postgres:15.2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432"
+    volumes:
+      - goodfood-log-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+
 volumes:
   goodfood-basket-volume:
   goodfood-delivery-volume:
@@ -202,6 +241,7 @@ volumes:
   goodfood-product-volume:
   goodfood-promotion-volume:
   goodfood-stock-volume:
+  goodfood-log-volume:
 
 networks:
   goodfood-network:
