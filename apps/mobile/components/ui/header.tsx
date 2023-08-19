@@ -9,7 +9,7 @@ export const AppHeader = () => {
   return (
     <View key="header" className="flex flex-row items-center justify-between w-full ">
       <TouchableOpacity
-        className="flex items-center justify-center w-12 h-12 bg-white"
+        className="flex items-center justify-center w-10 h-10 bg-white"
         onPress={() => {
           // @ts-ignore
           navigation.openDrawer();

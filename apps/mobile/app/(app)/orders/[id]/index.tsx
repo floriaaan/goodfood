@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Link, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 
@@ -17,7 +17,7 @@ export default function OrderPage() {
   const { navigate } = useNavigation() as {
     navigate: (href: string, params?: any) => void;
   };
-  const { id } = useLocalSearchParams<"/(app)/orders/[id]">();
+  const { id } = useLocalSearchParams<"/(app)/orders/[id]/">();
 
   const [order, setOrder] = useState<Order | undefined>(undefined);
   useEffect(() => {
@@ -78,12 +78,18 @@ export default function OrderPage() {
           strokeColor="#008D5E"
         />
       </MapView>
-      <TouchableOpacity
-        onPress={() => navigate(`(app)`, { screen: "orders/index" })}
-        className="absolute left-0 flex items-center justify-center w-12 h-12 p-2 m-4 bg-black top-12"
-      >
-        <MaterialCommunityIcons name="arrow-left" size={24} color="white" />
-      </TouchableOpacity>
+      <View key="header" className="flex flex-row items-center justify-between w-full absolute left-0 p-2 -mt-px">
+        <TouchableOpacity
+          onPress={() => navigate(`(app)`, { screen: "orders/index" })}
+          className=" flex items-center justify-center w-10 h-10 p-2 m-4 bg-black top-12"
+        >
+          <MaterialCommunityIcons name="arrow-left" size={24} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {}} className=" flex items-center justify-center w-10 h-10 p-2 m-4 top-12">
+          <Image className="w-10 h-10  bg-white" source={require("@/assets/images/avatar.png")} />
+        </TouchableOpacity>
+      </View>
+
       <View className="absolute bottom-0 left-0 flex flex-col w-screen h-64 px-4 bg-black gap-y-6">
         {eta && (
           <Text className="text-xl font-bold text-white">{`Arrivée prévue à ${format(new Date(eta), "HH:mm")}`}</Text>
