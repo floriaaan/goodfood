@@ -15,6 +15,38 @@ services:
     networks:
       - goodfood-network
 
+  #  User service
+
+  user-service:
+    image: goodfood-user:1.0.0
+    build:
+      context: .
+      dockerfile: ./user/Dockerfile
+    depends_on:
+      - user-postgres
+    restart: always
+    env_file:
+      - user/dev.env
+    ports:
+      - "50007"
+    networks:
+      - goodfood-network
+
+  user-postgres:
+    image: postgres:latest
+    ports:
+      - "5432"
+    volumes:
+      - goodfood-user-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+
   # Basket service
 
   basket-service:
@@ -84,7 +116,8 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
 
   #  Order service
-  order-sercice:
+
+  order-service:
     image: goodfood-order:1.0.0
     build:
       context: .
@@ -235,6 +268,7 @@ services:
       - goodfood-network
 
 volumes:
+  goodfood-user-volume:
   goodfood-basket-volume:
   goodfood-delivery-volume:
   goodfood-order-volume:
