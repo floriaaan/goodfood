@@ -14,5 +14,10 @@ model Notification {
   id  String   @id @default(cuid())
   title String 
   message String
-  message_type String
+  message_type MessageType
+}
+
+enum MessageType {
+  USER_REQUEST
+  OUTPUT
 }
