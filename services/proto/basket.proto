@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package com.goodfood.basket;
+
+// The Basket service definition.
+service BasketService {
+  rpc GetBasket (UserId) returns (Basket);
+  rpc AddProduct (ProductRequest) returns (Basket);
+  rpc DeleteProduct (ProductRequest) returns (Basket);
+  rpc Reset (UserId) returns (Basket);
+  rpc UpdateRestaurant (RestaurantRequest) returns (Basket);
+}
+
+message UserId {
+  uint64 id = 1;
+}
+
+message RestaurantRequest {
+  uint64 user_id = 1;
+  string restaurant_id = 2;
+}
+
+message Basket {
+  uint64 user_id = 1;
+  repeated string products_ids = 2;
+  string  restaurant_id = 3;
+}
+
+message ProductRequest {
+  uint64 user_id = 1;
+  string product_id = 2;
+  string  restaurant_id = 3;
+}
