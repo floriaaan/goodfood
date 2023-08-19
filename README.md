@@ -10,21 +10,22 @@ The GoodFood 2.0 project was initiated to update the existing ordering applicati
 
 ## Microservices ports
 
-| Service     | Port  | Language    | Database   | Status | Assignee        |
-| ----------- | ----- | ----------- | ---------- | ------ | --------------- |
-| Gateway     | 50000 | Go          | ❌         | ❌     | @Anatole-Godard |
-| User (auth) | 50001 | Go          | PostgreSQL | ❌     | @Anatole-Godard |
-| Basket      | 50002 | NodeJS (ts) | Redis      | ❌     | @Anatole-Godard |
-| Payment     | 50003 | NodeJS (ts) | PostgreSQL | ❌     | @Anatole-Godard |
-| Product     | 50004 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
-| Restaurant  | 50005 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
-| Promotion   | 50006 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
-| Order       | 50007 | NodeJS (ts) | PostgreSQL | ✅     | @floriaaan      |
-| Delivery    | 50008 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
-| Stock       | 50009 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
-| Reporting   | 50020 | C# (dotnet) | PostgreSQL | ❌     | @floriaaan      |
-| Log         | 50021 | Go          | PostgreSQL | ✅     | @floriaaan      |
-| (...)       | (...) | (...)       | (...)      | (...)  |
+| Service      | Port  | Language    | Database   | Status | Assignee        |
+| ------------ | ----- | ----------- | ---------- | ------ | --------------- |
+| Gateway      | 50000 | Go          | ❌         | ❌     | @Anatole-Godard |
+| User (auth)  | 50001 | Go          | PostgreSQL | ❌     | @Anatole-Godard |
+| Basket       | 50002 | NodeJS (ts) | Redis      | ❌     | @Anatole-Godard |
+| Payment      | 50003 | NodeJS (ts) | PostgreSQL | ❌     | @Anatole-Godard |
+| Product      | 50004 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Restaurant   | 50005 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Promotion    | 50006 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Order        | 50007 | NodeJS (ts) | PostgreSQL | ✅     | @floriaaan      |
+| Delivery     | 50008 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
+| Stock        | 50009 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
+| Reporting    | 50020 | C# (dotnet) | PostgreSQL | ❌     | @floriaaan      |
+| Log          | 50021 | Go          | PostgreSQL | ✅     | @floriaaan      |
+| Notification | 50022 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| (...)        | (...) | (...)       | (...)      | (...)  |
 
 ## File Hierarchy
 
