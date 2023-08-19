@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-payment
+  labels:
+    app: goodfood-payment
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-payment
+  template:
+    metadata:
+      labels:
+        app: goodfood-payment
+    spec:
+      containers:
+        - name: goodfood-payment
+          image: floriaaan/goodfood-payment:1.0.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-payment-configmap
+                  key: port
+          ports:
+            - containerPort: 50003
+              name: grpc
+            - containerPort: 4242
+              name: webhook
