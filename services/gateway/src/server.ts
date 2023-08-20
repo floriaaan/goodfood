@@ -12,6 +12,8 @@ import {logRoutes} from "@gateway/controller/log/log.controller";
 import {metricRoutes} from "@gateway/controller/metric/metric.controller";
 import {basketRoutes} from "@gateway/controller/basket/basket.controller";
 import {log, utils} from "@gateway/lib/log/log";
+import {stripeRoutes} from "@gateway/controller/payment/stripe.controller";
+import {paymentRoutes} from "@gateway/controller/payment/payment.controller";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -26,6 +28,12 @@ app.use('/', userRoutes
 );
 app.use('/', basketRoutes
 // #swagger.tags = ['Basket']
+);
+app.use('/', paymentRoutes
+// #swagger.tags = ['Payment']
+);
+app.use('/', stripeRoutes
+// #swagger.tags = ['Payment']
 );
 app.use('/', orderRoutes
 // #swagger.tags = ['Order']

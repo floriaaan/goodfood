@@ -37,7 +37,8 @@ You can use the following tools to help you with the setup:
 4. Create a `.env` file at the root of the project directory and add the environment variables values (
    see `.env.example`).
 5. Run `sh proto/build-protos.sh` to generate js file to create the clients.   
-5.1. Then replace all "grpc" package iteration by "@grpc/grpc-js"
+5.1. Then replace all "import * as grpc from "grpc";" package iteration by "import * as grpc from "@grpc/grpc-js";"  
+All the occurence of the package "grpc" must be replaced by "@grpc/grpc-js" in the folder "services/gateway/src/proto" 
 6. Run `npm run start` to start the microservice.
 
 You can now access the microservice at `http://localhost:50000`.
