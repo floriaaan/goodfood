@@ -19,6 +19,6 @@ public class ReportingContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         // TODO: Move to config
-        options.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=password");
+        options.UseNpgsql("Host=reporting-postgres;Database=postgres;Username=postgres;Password=password");
     }
 }
