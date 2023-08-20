@@ -36,13 +36,14 @@ userRoutes.get('/api/user', (req: Request, res: Response) => {
 });
 
 userRoutes.post('/api/user/register', (req: Request, res: Response) => {
-    const {firstName, lastName, email, phone, country, zipCode, street, lat, lng, roleCode} = req.body;
+    const {firstName, lastName, email, password, phone, country, zipCode, street, lat, lng, roleCode} = req.body;
     const userInput = new UserCreateInput();
     try {
         const address = new MainAddress().setCountry(country).setZipcode(zipCode).setStreet(street).setLat(lat).setLng(lng)
         userInput.setFirstName(firstName)
             .setLastName(lastName)
             .setEmail(email)
+            .setPassword(password)
             .setPhone(phone)
             .setMainaddress(address)
             .setRole(new RoleInput().setCode(roleCode));

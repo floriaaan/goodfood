@@ -124,7 +124,7 @@ func (s *Server) DeleteUser(_ context.Context, req *pb.DeleteInput) (*pb.DeleteU
 		}, nil
 	}
 
-	if user.Role.Code == "ADMIN" || user.Id == connectedUser.Id {
+	if connectedUser.Role.Code == "ADMIN" || user.Id == connectedUser.Id {
 
 		s.H.DB.Delete(&user)
 		s.H.DB.Delete(&mainAddress)
