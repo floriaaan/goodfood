@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-restaurant
+  labels:
+    app: goodfood-restaurant
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-restaurant
+  template:
+    metadata:
+      labels:
+        app: goodfood-restaurant
+    spec:
+      containers:
+        - name: goodfood-restaurant
+          image: floriaaan/goodfood-restaurant:1.0.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-restaurant-configmap
+                  key: port
+          ports:
+            - containerPort: 50005
