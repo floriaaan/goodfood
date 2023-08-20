@@ -13,10 +13,10 @@ import {metricRoutes} from "@gateway/controller/metric/metric.controller";
 import {basketRoutes} from "@gateway/controller/basket/basket.controller";
 import {log, utils} from "@gateway/lib/log/log";
 import {stripeRoutes} from "@gateway/controller/payment/stripe.controller";
+import {restaurantRoutes} from "@gateway/controller/restaurant/restaurant.controller";
 import {paymentRoutes} from "@gateway/controller/payment/payment.controller";
 
 import bodyParser from "body-parser";
-
 import express from "express";
 
 const app = express();
@@ -47,6 +47,9 @@ app.use('/', allergenRoutes
 );
 app.use('/', productRoutes
 // #swagger.tags = ['Product']
+);
+app.use('/', restaurantRoutes
+// #swagger.tags = ['Restaurant']
 );
 app.use('/', deliveryRoutes
 // #swagger.tags = ['Delivery']
