@@ -35,7 +35,7 @@ userRoutes.get('/api/user', (req: Request, res: Response) => {
     });
 });
 
-userRoutes.post('/api/user', (req: Request, res: Response) => {
+userRoutes.post('/api/user/register', (req: Request, res: Response) => {
     const {firstName, lastName, email, phone, country, zipCode, street, lat, lng, roleCode} = req.body;
     const userInput = new UserCreateInput();
     try {
@@ -192,5 +192,4 @@ userRoutes.put('/api/user/:id/role', (req: Request, res: Response) => {
             res.json(response.toObject());
         }
     });
-
 });
