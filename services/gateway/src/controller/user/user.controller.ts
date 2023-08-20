@@ -1,196 +1,242 @@
-import {Request, Response, Router} from 'express';
-import {userServiceClient} from '../../services/clients/user.client';
+import { Request, Response, Router } from "express";
+import { userServiceClient } from "../../services/clients/user.client";
 import {
-    changePasswordInput,
-    changeRoleInput,
-    DeleteInput,
-    logInInput,
-    MainAddress,
-    RoleInput,
-    UpdateUserInput,
-    User,
-    UserCreateInput,
-    validateInput
+  changePasswordInput,
+  changeRoleInput,
+  DeleteInput,
+  logInInput,
+  MainAddress,
+  RoleInput,
+  UpdateUserInput,
+  User,
+  UserCreateInput,
+  validateInput,
 } from "@gateway/proto/user_pb";
-import {Empty} from "google-protobuf/google/protobuf/empty_pb";
-import {getUser} from "@gateway/services/user.service";
+import { Empty } from "google-protobuf/google/protobuf/empty_pb";
+import { getUser } from "@gateway/services/user.service";
+import { check, withCheck } from "@gateway/middleware/auth";
 
 export const userRoutes = Router();
-userRoutes.get('/api/user/:id', (req: Request, res: Response) => {
-    const {id} = req.params;
-    try {
-        res.json(getUser(Number(id)));
-    } catch (e: any) {
-        res.json({error: e.message});
-    }
+userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  // Auth check and :id check
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  if (!(await check(token, { id: Number(id) })))
+    return res.status(403).json({ message: "Forbidden" });
+
+  try {
+    res.json(getUser(Number(id)));
+  } catch (e: any) {
+    res.json({ error: e.message });
+  }
 });
 
-userRoutes.get('/api/user', (req: Request, res: Response) => {
+userRoutes.get(
+  "/api/user",
+  withCheck({ role: "ADMIN" }),
+  (req: Request, res: Response) => {
     userServiceClient.listUser(new Empty(), (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
+      if (error) res.status(500).send({ error: error.message });
+      else res.json(response.toObject());
     });
+  }
+);
+
+userRoutes.post("/api/user", (req: Request, res: Response) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    country,
+    zipCode,
+    street,
+    lat,
+    lng,
+    roleCode,
+  } = req.body;
+  const userInput = new UserCreateInput();
+  try {
+    const address = new MainAddress()
+      .setCountry(country)
+      .setZipcode(zipCode)
+      .setStreet(street)
+      .setLat(lat)
+      .setLng(lng);
+    userInput
+      .setFirstName(firstName)
+      .setLastName(lastName)
+      .setEmail(email)
+      .setPhone(phone)
+      .setMainaddress(address)
+      .setRole(new RoleInput().setCode(roleCode));
+  } catch (e: any) {
+    res.json({ error: e.message });
+  }
+
+  userServiceClient.register(userInput, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
+    }
+  });
 });
 
-userRoutes.post('/api/user/register', (req: Request, res: Response) => {
-    const {firstName, lastName, email, password, phone, country, zipCode, street, lat, lng, roleCode} = req.body;
-    const userInput = new UserCreateInput();
-    try {
-        const address = new MainAddress().setCountry(country).setZipcode(zipCode).setStreet(street).setLat(lat).setLng(lng)
-        userInput.setFirstName(firstName)
-            .setLastName(lastName)
-            .setEmail(email)
-            .setPassword(password)
-            .setPhone(phone)
-            .setMainaddress(address)
-            .setRole(new RoleInput().setCode(roleCode));
+userRoutes.put("/api/user/:id", (req: Request, res: Response) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.json({ error: "Not authorized" });
+    return;
+  }
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    country,
+    zipCode,
+    street,
+    lat,
+    lng,
+    role,
+  } = req.body;
+  const userInput = new UpdateUserInput();
 
-    } catch (e: any) {
-        res.json({error: e.message});
+  try {
+    const address = new MainAddress()
+      .setCountry(country)
+      .setZipcode(zipCode)
+      .setStreet(street)
+      .setLat(lat)
+      .setLng(lng);
+    const user = new User()
+      .setId(Number(req.params.id))
+      .setFirstName(firstName)
+      .setLastName(lastName)
+      .setEmail(email)
+      .setPhone(phone)
+      .setMainaddress(address)
+      .setRole(role);
+
+    userInput.setUser(user).setToken(authorization);
+  } catch (e: any) {
+    res.json({ error: e.message });
+  }
+
+  userServiceClient.updateUser(userInput, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
     }
-
-    userServiceClient.register(userInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  });
 });
 
-userRoutes.put('/api/user/:id', (req: Request, res: Response) => {
-    const {authorization} = req.headers;
-    if (!authorization) {
-        res.json({error: 'Not authorized'});
-        return;
+userRoutes.delete("/api/user/:id", (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.json({ error: "Not authorized" });
+    return;
+  }
+
+  userServiceClient.deleteUser(
+    new DeleteInput().setUserid(Number(id)).setToken(authorization),
+    (error, response) => {
+      if (error) {
+        res.status(500).send({ error: error.message });
+      } else {
+        res.json(response.toObject());
+      }
     }
-    const {firstName, lastName, email, phone, country, zipCode, street, lat, lng, role} = req.body;
-    const userInput = new UpdateUserInput()
-
-    try {
-        const address = new MainAddress().setCountry(country).setZipcode(zipCode).setStreet(street).setLat(lat).setLng(lng)
-        const user = new User().setId(Number(req.params.id))
-            .setFirstName(firstName)
-            .setLastName(lastName)
-            .setEmail(email)
-            .setPhone(phone)
-            .setMainaddress(address)
-            .setRole(role);
-
-        userInput.setUser(user).setToken(authorization);
-
-    } catch (e: any) {
-        res.json({error: e.message});
-    }
-
-    userServiceClient.updateUser(userInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  );
 });
 
-userRoutes.delete('/api/user/:id', (req: Request, res: Response) => {
-    const {id} = req.params;
-    const {authorization} = req.headers;
-    if (!authorization) {
-        res.json({error: 'Not authorized'});
-        return;
-    }
+userRoutes.post("/api/user/login", (req: Request, res: Response) => {
+  const body = req.body;
+  const inInput = new logInInput()
+    .setEmail(body.email)
+    .setPassword(body.password);
 
-    userServiceClient.deleteUser(new DeleteInput().setUserid(Number(id)).setToken(authorization), (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  userServiceClient.logIn(inInput, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
+    }
+  });
 });
 
-userRoutes.post('/api/user/login', (req: Request, res: Response) => {
-    const body = req.body;
-    const inInput = new logInInput().setEmail(body.email).setPassword(body.password);
+userRoutes.post("/api/user/validate", (req: Request, res: Response) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.json({ error: "Not authorized" });
+    return;
+  }
+  const validate = new validateInput().setToken(authorization);
 
-    userServiceClient.logIn(inInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  userServiceClient.validate(validate, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
+    }
+  });
 });
 
-userRoutes.post('/api/user/validate', (req: Request, res: Response) => {
-    const {authorization} = req.headers;
-    if (!authorization) {
-        res.json({error: 'Not authorized'});
-        return;
-    }
-    const validate = new validateInput().setToken(authorization);
+userRoutes.put("/api/user/:id/password", (req: Request, res: Response) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.json({ error: "Not authorized" });
+    return;
+  }
 
-    userServiceClient.validate(validate, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  const body = req.body;
+  const updatePasswordInput = new changePasswordInput();
+  try {
+    updatePasswordInput
+      .setToken(authorization)
+      .setOldpassword(body.oldpassword)
+      .setNewpassword(body.password);
+  } catch (e: any) {
+    res.json({ error: e.message });
+  }
+
+  userServiceClient.changePassword(updatePasswordInput, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
+    }
+  });
 });
 
-userRoutes.put('/api/user/:id/password', (req: Request, res: Response) => {
-    const {authorization} = req.headers;
-    if (!authorization) {
-        res.json({error: 'Not authorized'});
-        return;
+userRoutes.put("/api/user/:id/role", (req: Request, res: Response) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.json({ error: "Not authorized" });
+    return;
+  }
+  const body = req.body;
+  const id = req.params.id;
+  const updatePasswordInput = new changeRoleInput();
+  try {
+    updatePasswordInput
+      .setToken(authorization)
+      .setUserid(Number(id))
+      .setRolecode(body.role);
+  } catch (e: any) {
+    res.json({ error: e.message });
+  }
+  userServiceClient.changeRole(updatePasswordInput, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
     }
-
-    const body = req.body;
-    const updatePasswordInput = new changePasswordInput();
-    try {
-        updatePasswordInput
-            .setToken(authorization)
-            .setOldpassword(body.oldpassword)
-            .setNewpassword(body.password);
-    } catch (e: any) {
-        res.json({error: e.message});
-    }
-
-    userServiceClient.changePassword(updatePasswordInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
-});
-
-userRoutes.put('/api/user/:id/role', (req: Request, res: Response) => {
-    const {authorization} = req.headers;
-    if (!authorization) {
-        res.json({error: 'Not authorized'});
-        return;
-    }
-    const body = req.body;
-    const id = req.params.id;
-    const updatePasswordInput = new changeRoleInput();
-    try {
-        updatePasswordInput
-            .setToken(authorization)
-            .setUserid(Number(id))
-            .setRolecode(body.role);
-    } catch (e: any) {
-        res.json({error: e.message});
-    }
-    userServiceClient.changeRole(updatePasswordInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  });
 });
