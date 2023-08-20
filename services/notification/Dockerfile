@@ -32,7 +32,7 @@ COPY --from=builder /app/proto/ /proto/
 COPY --from=builder /app/node_modules/.prisma /.prisma
 
 # Expose the gRPC port
-EXPOSE 50006
+EXPOSE 50022
 
 # Start the server
 CMD [ "node", "index.js"]
