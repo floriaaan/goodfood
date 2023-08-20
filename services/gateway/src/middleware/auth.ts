@@ -1,4 +1,3 @@
-import { User } from "@gateway/proto/user_pb";
 import { user_service_promises } from "@gateway/services/user.service";
 
 export const ROLES = {
