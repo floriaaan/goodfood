@@ -1,4 +1,4 @@
-export type Notification = {
+export interface Notification {
     id: string;
 
     title: string;
@@ -6,21 +6,21 @@ export type Notification = {
     message_type: MessageType;
 }
 
-export type NotificationCreateInput = {
+export interface NotificationCreateInput {
     title: string;
     message: string;
     message_type: MessageType;
 }
 
-export type NotificationId = {
+export interface NotificationId {
     id: string;
 }
 
-export type NotificationList = {
+export interface NotificationList {
 	notifications: Notification[];
 }
 
-export type MessageTypeInput = {
+export interface MessageTypeInput {
     message_type: string;
 }
 
