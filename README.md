@@ -29,7 +29,7 @@ a high volume of concurrent users, up to several thousand.
 | Stock        | 50009 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
 | Reporting    | 50020 | C# (dotnet) | PostgreSQL | ⚠️     | @floriaaan      |
 | Log          | 50021 | Go          | PostgreSQL | ✅     | @floriaaan      |
-| Notification | 50022 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Notification | 50022 | NodeJS (ts) | PostgreSQL | ✅     | @PierreLbg      |
 | (...)        | (...) | (...)       | (...)      | (...)  |
 
 ## File Hierarchy
