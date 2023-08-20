@@ -15,8 +15,9 @@ import {log, utils} from "@gateway/lib/log/log";
 import {stripeRoutes} from "@gateway/controller/payment/stripe.controller";
 import {paymentRoutes} from "@gateway/controller/payment/payment.controller";
 
-const express = require('express');
-const bodyParser = require('body-parser');
+import bodyParser from "body-parser";
+
+import express from "express";
 
 const app = express();
 app.use(bodyParser.json());
