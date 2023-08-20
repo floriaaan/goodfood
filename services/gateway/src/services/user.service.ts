@@ -1,16 +1,59 @@
-import {User, UserId} from "@gateway/proto/user_pb";
-import {userServiceClient} from "@gateway/services/clients/user.client";
+import { User, UserId, validateInput } from "@gateway/proto/user_pb";
+import { userServiceClient } from "@gateway/services/clients/user.client";
 
 export const getUser = (id: number): User | undefined => {
+  const userId = new UserId();
+  userId.setId(Number(id));
+  let user: User | undefined = undefined;
+  userServiceClient.getUser(userId, (error, response) => {
+    if (error) {
+      throw Error(error.message);
+    } else {
+      user = response.getUser();
+    }
+  });
+  return user;
+};
+
+export const getUserIdFromToken = (token: string): number | undefined => {
+  const userToken = new validateInput();
+  userToken.setToken(token);
+  let user: number | undefined = undefined;
+  userServiceClient.validate(userToken, (error, response) => {
+    if (error) {
+      throw Error(error.message);
+    } else {
+      user = response.getUserid();
+    }
+  });
+  return user;
+};
+
+export const user_service_promises = {
+  getUser: (id: number): Promise<User | undefined> => {
     const userId = new UserId();
     userId.setId(Number(id));
-    let user: User | undefined = undefined;
-    userServiceClient.getUser(userId, (error, response) => {
+    return new Promise((resolve, reject) => {
+      userServiceClient.getUser(userId, (error, response) => {
         if (error) {
-            throw Error(error.message);
+          reject(error);
         } else {
-            user = response.getUser()
+          resolve(response.getUser());
         }
+      });
     });
-    return user;
-}
+  },
+  getUserIdFromToken: (token: string): Promise<number | undefined> => {
+    const userToken = new validateInput();
+    userToken.setToken(token);
+    return new Promise((resolve, reject) => {
+      userServiceClient.validate(userToken, (error, response) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response.getUserid());
+        }
+      });
+    });
+  },
+};
