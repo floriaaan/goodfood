@@ -2,9 +2,9 @@ import amqp from "amqplib";
 import plunk from "@notifications/lib/plunk";
 import { msg } from "@notifications/middleware/log";
 import { log } from "@notifications/lib/log";
-import { CreateNotification } from "@notifications/handler/create";
-import { NotificationCreateInput, MessageType } from "@notifications/types/notification";
 import { Data } from "@notifications/types";
+import { NotificationCreateInput, MessageType } from "@notifications/types/notification";
+import { CreateNotification } from "@notifications/handler/create";
 
 const DEFAULT_QUEUE = "log";
 const DEFAULT_SUB_QUEUE = "notification";
@@ -42,7 +42,6 @@ const toNotification = (message: any) => {
 }
 
 export const subscribe = async (queue = DEFAULT_SUB_QUEUE) => {
-	log.debug("Subscribe")
 	const channel = await connectQueue(queue);
 	if (channel instanceof Error)
 		return console.log("Error to connect to queue: ", channel);
@@ -75,7 +74,7 @@ export const subscribe = async (queue = DEFAULT_SUB_QUEUE) => {
 			else
 				log.debug(
 					msg("AMQP", `${queue} (queue)`, new Date(), new Date()),
-					"Email send"
+					"Email not send"
 				);
 		},
 		{
