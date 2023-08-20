@@ -28,7 +28,7 @@ services:
     env_file:
       - user/dev.env
     ports:
-      - "50007"
+      - "50001"
     networks:
       - goodfood-network
 
@@ -45,7 +45,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
-
 
   # Basket service
 
@@ -73,6 +72,38 @@ services:
     environment:
       REDIS_USERNAME: redis
       REDIS_PASSWORD: password
+
+  #  Payment service
+
+  payment-service:
+    image: goodfood-payment:1.0.0
+    build:
+      context: .
+      dockerfile: ./payment/Dockerfile
+    depends_on:
+      - payment-postgres
+    restart: always
+    env_file:
+      - payment/.env.docker
+    ports:
+      - "50003"
+      - "4242:4242"
+    networks:
+      - goodfood-network
+
+  payment-postgres:
+    image: postgres:latest
+    ports:
+      - "5432"
+    volumes:
+      - goodfood-payment-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
 
   #  Delivery service
 
@@ -270,6 +301,7 @@ services:
 volumes:
   goodfood-user-volume:
   goodfood-basket-volume:
+  goodfood-payment-volume:
   goodfood-delivery-volume:
   goodfood-order-volume:
   goodfood-product-volume:
