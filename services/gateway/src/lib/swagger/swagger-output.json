@@ -429,6 +429,20 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -451,17 +465,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "productId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "stringId"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "stringId"
                 }
               }
             }
@@ -475,8 +493,10 @@
             "description": "Internal Server Error"
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/api/basket/remove-product": {
+      "put": {
         "tags": [
           "Basket"
         ],
@@ -485,17 +505,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "productId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "stringId"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "stringId"
                 }
               }
             }
@@ -521,14 +545,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "restaurantId": {
-                  "example": "any"
-                },
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
+                },
+                "restaurantId": {
+                  "type": "string",
+                  "example": "stringId"
                 }
               }
             }
@@ -554,11 +581,13 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 }
               }
             }
@@ -632,20 +661,25 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Id"
                 },
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "John"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "mail"
                 },
                 "total": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 12
                 }
               }
             }
