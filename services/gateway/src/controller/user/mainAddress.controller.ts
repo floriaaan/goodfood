@@ -2,9 +2,9 @@ import {Request, Response, Router} from 'express';
 import {mainAddressServiceClient} from "@gateway/services/clients/user.client";
 import {MainAddress, MainAddressId, MainAddressUpdateInput} from "@gateway/proto/user_pb";
 
-export const userRoutes = Router();
+export const mainAddressRoutes = Router();
 
-userRoutes.get('/api/user/main-address/:id', async (req: Request, res: Response) => {
+mainAddressRoutes.get('/api/user/main-address/:id', async (req: Request, res: Response) => {
     const {id} = req.params;
     mainAddressServiceClient.getMainAddress(new MainAddressId().setId(Number(id)), (err, response) => {
         if (err) {
@@ -14,7 +14,7 @@ userRoutes.get('/api/user/main-address/:id', async (req: Request, res: Response)
     });
 });
 
-userRoutes.put('/api/user/main-address/:id', async (req: Request, res: Response) => {
+mainAddressRoutes.put('/api/user/main-address/:id', async (req: Request, res: Response) => {
     const {authorization} = req.headers;
     if (!authorization) {
         res.json({error: 'Not authorized'});
