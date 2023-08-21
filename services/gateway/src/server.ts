@@ -58,7 +58,7 @@ app.use('/', deliveryRoutes
 // #swagger.tags = ['Delivery']
 );
 app.use('/', deliveryPersonRoutes
-// #swagger.tags = ['DeliveryPerson']
+// #swagger.tags = ['Delivery']
 );
 app.use('/', logRoutes
 // #swagger.tags = ['Log']
@@ -73,7 +73,7 @@ app.use('/', stockRoutes
 // #swagger.tags = ['Stock']
 );
 app.use('/', stockPersonRoutes
-// #swagger.tags = ['StockPerson']
+// #swagger.tags = ['Stock']
 );
 
 app.listen(PORT, () => {

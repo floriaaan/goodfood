@@ -5,13 +5,6 @@ import {basketServiceClient} from "@gateway/services/clients/basket.client";
 export const basketRoutes = Router();
 
 basketRoutes.get('/api/basket/:userId', (req: Request, res: Response) => {
-    /* #swagger.parameters['params'] = {
-            in: 'params',
-            required: true,
-            schema: {
-                userId: 1
-            }
-    } */
     const {userId} = req.params;
 
     basketServiceClient.getBasket(new UserId().setId(Number(userId)), (error, response) => {
