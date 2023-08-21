@@ -1658,26 +1658,32 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "eta": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
                 },
                 "address": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "10 Rue de la République, 75003 Paris, France"
                 },
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 },
                 "deliveryPersonId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "cllcdmeci0000pm01su98mxtb"
                 },
                 "userId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "user_id:1"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -1686,6 +1692,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1773,26 +1782,32 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "eta": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
                 },
                 "address": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "10 Rue de la République, 75003 Paris, France"
                 },
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 },
                 "deliveryPersonId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "cllcdmeci0000pm01su98mxtb"
                 },
                 "userId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "user_id:1"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -1801,6 +1816,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -2907,6 +2925,17 @@
           }
         }
       }
+    }
+  },
+  "definitions": {
+    "Status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "IN_PROGRESS",
+        "FULFILLED",
+        "REJECTED"
+      ]
     }
   }
 }
