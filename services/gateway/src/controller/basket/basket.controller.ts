@@ -12,7 +12,6 @@ basketRoutes.get('/api/basket/:userId', (req: Request, res: Response) => {
                 userId: 1
             }
     } */
-
     const {userId} = req.params;
 
     basketServiceClient.getBasket(new UserId().setId(Number(userId)), (error, response) => {
