@@ -5,8 +5,12 @@ import {basketServiceClient} from "@gateway/services/clients/basket.client";
 export const basketRoutes = Router();
 
 basketRoutes.get('/api/basket/:userId', (req: Request, res: Response) => {
+    /* #swagger.parameters['userId'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {userId} = req.params;
-
     basketServiceClient.getBasket(new UserId().setId(Number(userId)), (error, response) => {
         if (error) {
             res.status(500).send({error: error.message});

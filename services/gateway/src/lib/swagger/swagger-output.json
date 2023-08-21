@@ -428,7 +428,7 @@
             "name": "userId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2018,6 +2018,90 @@
         }
       }
     },
+    "/api/metric/by-restaurant-and-date": {
+      "post": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "restaurantId": {
+                  "type": "string",
+                  "example": "restaurant_id:1"
+                },
+                "date": {
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/by-restaurant/{restaurantId}": {
+      "get": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/by-restaurant-group/{restaurantGroupId}": {
+      "get": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantGroupId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/metric": {
       "post": {
         "tags": [
@@ -2028,20 +2112,25 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 },
                 "code": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "income_1h"
                 },
                 "value": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "99.99"
                 },
                 "key": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "example_key"
                 }
               }
             }
