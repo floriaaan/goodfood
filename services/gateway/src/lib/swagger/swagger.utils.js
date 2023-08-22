@@ -20,6 +20,12 @@ const doc = {
         "TAKEAWAY",
         "DELIVERY"
       ]
+    },
+    Method: {
+      '@enum': [
+        "PERCENT",
+        "VALUE"
+      ]
     }
   }
 };
