@@ -1559,26 +1559,45 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-name"
                 },
                 "description": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-desc"
                 },
                 "locationList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    1.099,
+                    49.443
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
                 },
                 "address": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-address"
                 },
                 "openingHoursList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    "12h-14h",
+                    "19h-22h"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "phone": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-phone"
                 }
               }
             }
@@ -1640,26 +1659,45 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-name"
                 },
                 "description": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-desc"
                 },
                 "locationList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    1.099,
+                    49.443
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
                 },
                 "address": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-address"
                 },
                 "openingHoursList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    "12h-14h",
+                    "19h-22h"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "phone": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant-phone"
                 }
               }
             }
@@ -1685,11 +1723,19 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "locationList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    1.099,
+                    49.443
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
                 }
               }
             }
