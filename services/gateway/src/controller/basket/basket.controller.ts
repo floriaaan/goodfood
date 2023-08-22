@@ -26,8 +26,8 @@ basketRoutes.post('/api/basket', (req: Request, res: Response) => {
             required: true,
             schema: {
                 userId: 0,
-                productId: "stringId",
-                restaurantId:"stringId"
+                productId: "product_id:0",
+                restaurantId:"restaurant_id:0"
             }
     } */
     const {userId, productId, restaurantId} = req.body;
@@ -48,8 +48,8 @@ basketRoutes.put('/api/basket/remove-product', (req: Request, res: Response) => 
             required: true,
             schema: {
                 userId: 0,
-                productId: "stringId",
-                restaurantId:"stringId"
+                productId: "product_id:0",
+                restaurantId:"restaurant_id:0"
             }
     } */
     const {userId, productId, restaurantId} = req.body;
@@ -70,7 +70,7 @@ basketRoutes.put('/api/basket/restaurant', (req: Request, res: Response) => {
             required: true,
             schema: {
                 userId: 0,
-                restaurantId:"stringId"
+                restaurantId:"restaurant_id:0"
             }
     } */
     const {restaurantId, userId} = req.body;
