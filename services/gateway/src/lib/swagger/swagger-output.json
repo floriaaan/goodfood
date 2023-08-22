@@ -2730,7 +2730,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2752,19 +2752,22 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-name"
                 },
                 "contact": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-contact"
                 }
               }
             }
@@ -2789,7 +2792,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2826,14 +2829,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-name"
                 },
                 "contact": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-contact"
                 }
               }
             }
@@ -2860,7 +2866,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2882,19 +2888,22 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "ingredient-name"
                 },
-                "desciption": {
-                  "example": "any"
+                "description": {
+                  "type": "string",
+                  "example": "ingredient-desc"
                 }
               }
             }
@@ -2919,7 +2928,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2956,14 +2965,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "ingredient-name"
                 },
-                "desciption": {
-                  "example": "any"
+                "description": {
+                  "type": "string",
+                  "example": "ingredient-desc"
                 }
               }
             }
@@ -2990,7 +3002,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -3012,34 +3024,48 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "alertThreshold": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 5
                 },
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "productList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    "product_id:1",
+                    "product_id:2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "unitPrice": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "pricePerKilo": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.5
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 },
                 "ingredientId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -3064,7 +3090,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -3135,29 +3161,43 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "alertThreshold": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 5
                 },
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "productList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    "product_id:1",
+                    "product_id:2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "unitPrice": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "pricePerKilo": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.5
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 },
                 "ingredientId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -3184,7 +3224,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -3206,22 +3246,26 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 3
                 },
                 "ingredientRestaurantId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 },
                 "supplierId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -3246,7 +3290,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -3294,7 +3338,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -3318,7 +3362,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -3341,17 +3385,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 3
                 },
                 "ingredientRestaurantId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 },
                 "supplierId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
