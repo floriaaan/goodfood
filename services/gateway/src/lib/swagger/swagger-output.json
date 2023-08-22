@@ -715,23 +715,28 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
+                "userId": {
+                  "type": "number",
+                  "example": 0
+                },
                 "paymentId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "payment_id:1"
                 },
                 "deliveryId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "delivery_id:1"
                 },
                 "deliveryType": {
-                  "example": "any"
-                },
-                "basketSnapshot": {
-                  "example": "any"
+                  "$ref": "#/definitions/DeliveryType"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -740,6 +745,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -781,11 +789,12 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 }
               }
             }
@@ -865,20 +874,24 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 },
                 "deliveryId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "delivery_id:1"
                 },
                 "paymentId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "payment_id:1"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -3262,6 +3275,13 @@
         "IN_PROGRESS",
         "FULFILLED",
         "REJECTED"
+      ]
+    },
+    "DeliveryType": {
+      "type": "string",
+      "enum": [
+        "TAKEAWAY",
+        "DELIVERY"
       ]
     }
   }

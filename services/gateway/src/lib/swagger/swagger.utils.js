@@ -14,6 +14,12 @@ const doc = {
         "FULFILLED",
         "REJECTED"
       ]
+    },
+    DeliveryType: {
+      '@enum': [
+        "TAKEAWAY",
+        "DELIVERY"
+      ]
     }
   }
 };
