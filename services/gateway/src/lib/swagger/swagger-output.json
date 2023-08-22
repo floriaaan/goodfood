@@ -22,7 +22,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -41,7 +41,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -51,38 +51,52 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "John"
                 },
                 "lastName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Doe"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "johnDoe@mail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
                 },
                 "phone": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "0642424242"
                 },
                 "country": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "France"
                 },
                 "zipCode": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "76000"
                 },
                 "street": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "7 rue de la paix"
                 },
                 "lat": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 49.443232
                 },
                 "lng": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.099971
                 },
-                "role": {
-                  "example": "any"
+                "roleCode": {
+                  "$ref": "#/definitions/RoleCode"
                 }
               }
             }
@@ -107,7 +121,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -151,41 +165,52 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "John"
                 },
                 "lastName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Doe"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "johnDoe@mail.com"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "password"
                 },
                 "phone": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "0642424242"
                 },
                 "country": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "France"
                 },
                 "zipCode": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "76000"
                 },
                 "street": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "7 rue de la paix"
                 },
                 "lat": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 49.443232
                 },
                 "lng": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.099971
                 },
                 "roleCode": {
-                  "example": "any"
+                  "$ref": "#/definitions/RoleCode"
                 }
               }
             }
@@ -211,14 +236,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "johnDoe@mail.com"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "password"
                 }
               }
             }
@@ -278,14 +306,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "oldpassword": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "oldpassword"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "newPassword"
                 }
               }
             }
@@ -312,7 +343,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -322,11 +353,12 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "role": {
-                  "example": "any"
+                  "$ref": "#/definitions/RoleCode"
                 }
               }
             }
@@ -353,7 +385,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -375,7 +407,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -385,23 +417,29 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "country": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "France"
                 },
                 "zipCode": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "76000"
                 },
                 "street": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "7 rue de la paix"
                 },
                 "lat": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 49.443232
                 },
                 "lng": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.099971
                 }
               }
             }
@@ -3431,14 +3469,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "date": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
                 },
                 "interval": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "interval-example"
                 }
               }
             }
@@ -3477,6 +3518,15 @@
       "enum": [
         "PERCENT",
         "VALUE"
+      ]
+    },
+    "RoleCode": {
+      "type": "string",
+      "enum": [
+        "ADMIN",
+        "USER",
+        "ACCOUNTANT",
+        "DELIVERER"
       ]
     }
   }

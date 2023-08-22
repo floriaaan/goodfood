@@ -26,6 +26,14 @@ const doc = {
         "PERCENT",
         "VALUE"
       ]
+    },
+    RoleCode: {
+      '@enum': [
+        "ADMIN",
+        "USER",
+        "ACCOUNTANT",
+        "DELIVERER"
+      ]
     }
   }
 };
