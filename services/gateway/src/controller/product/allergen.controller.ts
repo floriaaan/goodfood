@@ -29,6 +29,13 @@ allergenRoutes.get('/api/allergen/:id', (req: Request, res: Response) => {
 });
 
 allergenRoutes.post('/api/allergen', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                label: "allergen-label",
+            }
+    } */
     const {label} = req.body;
     const allergen = new Allergen().setLibelle(label);
     allergenServiceClient.createAllergen(allergen, (error, response) => {
@@ -41,6 +48,13 @@ allergenRoutes.post('/api/allergen', (req: Request, res: Response) => {
 });
 
 allergenRoutes.put('/api/allergen/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                label: "allergen-label",
+            }
+    } */
     const {id} = req.params;
     const {label} = req.body;
     const allergen = new Allergen().setId(id).setLibelle(label);
