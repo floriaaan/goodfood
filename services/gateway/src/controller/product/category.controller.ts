@@ -29,6 +29,15 @@ categoryRoutes.get('/api/category/:id', (req: Request, res: Response) => {
 });
 
 categoryRoutes.post('/api/category', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                label: "category-label",
+                icon: "category-icon",
+                hexaColor: "#ffffff",
+            }
+    } */
     const {label, icon, hexaColor} = req.body;
     const category = new Category().setLibelle(label).setIcon(icon).setHexaColor(hexaColor)
     categoryServiceClient.createCategory(category, (error, response) => {
@@ -41,6 +50,15 @@ categoryRoutes.post('/api/category', (req: Request, res: Response) => {
 });
 
 categoryRoutes.put('/api/category/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                label: "category-label",
+                icon: "category-icon",
+                hexaColor: "#ffffff",
+            }
+    } */
     const {id} = req.params;
     const {label, icon, hexaColor} = req.body;
     const category = new Category().setId(id).setLibelle(label).setIcon(icon).setHexaColor(hexaColor)

@@ -38,6 +38,16 @@ promotionRoutes.get('/api/promotion/by-restaurant/:restaurantId', (req, res) => 
 });
 
 promotionRoutes.post('/api/promotion', (req, res) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                code: "code-example",
+                reduction: "reduction-example",
+                method: {'$ref': '#/definitions/Method'},
+                restaurantId: "restaurant_id:0",
+            }
+    } */
     const {code, reduction, method, restaurantId} = req.body;
     const promotionCreateInput = new PromotionCreateInput().setCode(code)
         .setReduction(reduction)
@@ -53,6 +63,16 @@ promotionRoutes.post('/api/promotion', (req, res) => {
 });
 
 promotionRoutes.put('/api/promotion/:id', (req, res) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                code: "code-example",
+                reduction: "reduction-example",
+                method: {'$ref': '#/definitions/Method'},
+                restaurantId: "restaurant_id:0",
+            }
+    } */
     const {id} = req.params;
     const {code, reduction, method, restaurantId} = req.body;
     const promotionUpdateInput = new Promotion().setId(id).setCode(code)

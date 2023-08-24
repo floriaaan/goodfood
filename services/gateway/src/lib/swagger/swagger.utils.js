@@ -5,7 +5,37 @@ const doc = {
     title: 'The Gateway API',
     description: 'The Gateway API for the Microservices',
   },
-  host: `localhost:${process.env.GATEWAY_PORT || 50000}`
+  host: `localhost:${process.env.GATEWAY_PORT || 50000}`,
+  definitions: {
+    Status: {
+      '@enum': [
+        "PENDING",
+        "IN_PROGRESS",
+        "FULFILLED",
+        "REJECTED"
+      ]
+    },
+    DeliveryType: {
+      '@enum': [
+        "TAKEAWAY",
+        "DELIVERY"
+      ]
+    },
+    Method: {
+      '@enum': [
+        "PERCENT",
+        "VALUE"
+      ]
+    },
+    RoleCode: {
+      '@enum': [
+        "ADMIN",
+        "USER",
+        "ACCOUNTANT",
+        "DELIVERER"
+      ]
+    }
+  }
 };
 
 const outputFile = './swagger-output.json';

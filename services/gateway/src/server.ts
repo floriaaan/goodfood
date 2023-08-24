@@ -15,7 +15,7 @@ import {log, utils} from "@gateway/lib/log/log";
 import {stripeRoutes} from "@gateway/controller/payment/stripe.controller";
 import {restaurantRoutes} from "@gateway/controller/restaurant/restaurant.controller";
 import {paymentRoutes} from "@gateway/controller/payment/payment.controller";
-
+import {mainAddressRoutes} from "@gateway/controller/user/mainAddress.controller";
 import bodyParser from "body-parser";
 import express from "express";
 
@@ -25,6 +25,9 @@ app.use(bodyParser.json());
 const PORT = process.env.GATEWAY_PORT || 50000;
 
 app.use('/', userRoutes
+// #swagger.tags = ['User']
+);
+app.use('/', mainAddressRoutes
 // #swagger.tags = ['User']
 );
 app.use('/', basketRoutes
@@ -55,7 +58,7 @@ app.use('/', deliveryRoutes
 // #swagger.tags = ['Delivery']
 );
 app.use('/', deliveryPersonRoutes
-// #swagger.tags = ['DeliveryPerson']
+// #swagger.tags = ['Delivery']
 );
 app.use('/', logRoutes
 // #swagger.tags = ['Log']
@@ -70,7 +73,7 @@ app.use('/', stockRoutes
 // #swagger.tags = ['Stock']
 );
 app.use('/', stockPersonRoutes
-// #swagger.tags = ['StockPerson']
+// #swagger.tags = ['Stock']
 );
 
 app.listen(PORT, () => {

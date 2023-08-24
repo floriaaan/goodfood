@@ -8,6 +8,7 @@ RUN dotnet restore
 
 # Copy the rest of the application files and build
 COPY ./reporting/Server .
+COPY ./reporting/docker-entrypoint.sh .
 COPY ./proto ./Protos
 
 RUN dotnet build -c Release -o out
