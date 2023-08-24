@@ -1,4 +1,5 @@
-import { user_service_promises } from "@gateway/services/user.service";
+import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
+import { Request, Response, NextFunction } from "express";
 
 export const ROLES = {
   ADMIN: "ADMIN",
@@ -8,15 +9,15 @@ export const ROLES = {
 };
 
 const checkRole = async (token: string, expectedRole: keyof typeof ROLES) => {
-  const userId = await user_service_promises.getUserIdFromToken(token);
+  const userId = await getUserIdFromToken(token);
   if (userId === undefined) return false;
-  const user = await user_service_promises.getUser(userId);
+  const user = await getUser(userId);
   if (user === undefined) return false;
   return user.getRole()?.getCode() === expectedRole;
 };
 
 const checkRight = async (token: string, expectedId: number) => {
-  const userId = await user_service_promises.getUserIdFromToken(token);
+  const userId = await getUserIdFromToken(token);
   if (userId === undefined) return false;
   return userId === expectedId;
 };
@@ -26,21 +27,17 @@ export const check = async (
   expect: {
     role?: keyof typeof ROLES;
     id?: number;
-  }
+  },
 ) => {
   const { role, id } = expect;
-  if (role !== undefined && id !== undefined)
-    return (await checkRole(token, role)) && (await checkRight(token, id));
+  if (role !== undefined && id !== undefined) return (await checkRole(token, role)) && (await checkRight(token, id));
   else if (role !== undefined) return await checkRole(token, role);
   else if (id !== undefined) return await checkRight(token, id);
   else return false;
 };
 
-import { Request, Response, NextFunction } from "express";
-
 export const withCheck =
-  (expect: { role?: keyof typeof ROLES; id?: number }) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  (expect: { role?: keyof typeof ROLES; id?: number }) => async (req: Request, res: Response, next: NextFunction) => {
     const { role, id } = expect;
     const token = req.headers.authorization?.split("Bearer ")[0];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
