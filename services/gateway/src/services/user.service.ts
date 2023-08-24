@@ -15,18 +15,18 @@ export const getUser = (id: number): Promise<User | undefined> => {
     })
 };
 
-export const getUserIdFromToken = (token: string): number | undefined => {
+export const getUserIdFromToken = (token: string): Promise<number | undefined> => {
   const userToken = new validateInput();
   userToken.setToken(token);
-  let user: number | undefined = undefined;
-  userServiceClient.validate(userToken, (error, response) => {
-    if (error) {
-      throw Error(error.message);
-    } else {
-      user = response.getUserid();
-    }
-  });
-  return user;
+    return new Promise((resolve, reject) => {
+      userServiceClient.validate(userToken, (error, response) => {
+            if (error) {
+                reject(error);
+            } else {
+              resolve(response.getUserid());
+            }
+      });
+    });
 };
 
 export const user_service_promises = {
