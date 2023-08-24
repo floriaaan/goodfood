@@ -135,7 +135,6 @@ userRoutes.put("/api/user", async (req: Request, res: Response) => {
   const token = authorization.split("Bearer ")[1];
   const userId = await getUserIdFromToken(token);
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
-  if (!(await check(token, { id: Number(userId) }))) return res.status(403).json({ message: "Forbidden" });
 
   const { firstName, lastName, email, phone, country, zipCode, street, lat, lng, roleCode } = req.body;
   const userInput = new UpdateUserInput();
