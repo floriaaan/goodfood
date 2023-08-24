@@ -7,7 +7,7 @@ export type ProductRequest = {
 export type UserId = {
     id: number;
 };
-
+// todo: change to product minimum ({count: number, id: string, price: number}}})
 export type Basket = {
     user_id: number;
     products_ids: string[];
