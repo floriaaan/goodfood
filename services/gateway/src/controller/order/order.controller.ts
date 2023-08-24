@@ -33,7 +33,7 @@ orderRoutes.get('/api/order/:id', (req: Request, res: Response) => {
 });
 
 //TODO: to test this route with the user and basket service
-orderRoutes.post('/api/order', (req: Request, res: Response) => {
+orderRoutes.post('/api/order', async (req: Request, res: Response) => {
     /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -48,15 +48,14 @@ orderRoutes.post('/api/order', (req: Request, res: Response) => {
     const {userId, paymentId, deliveryId, deliveryType, restaurantId} = req.body;
     let user: User | undefined = undefined;
     try {
-        user = getUser(Number(userId));
-    } catch (e: any) {
-        res.status(500).send({error: e.message});
+       user = await getUser(Number(userId));
+    } catch (e) {
+        return res.status(500).send({error: e});
     }
 
-    if (!user) {
-        res.status(404).send({error: "User not found"});
-        return;
-    }
+    if (!user) 
+        return res.status(404).send({error: "User not found"});
+    
 
     const miniUser = new UserMinimum().setId(String(user.getId()))
         .setEmail(user.getEmail())
@@ -66,8 +65,8 @@ orderRoutes.post('/api/order', (req: Request, res: Response) => {
 
     let orderBasket: BasketSnapshot | undefined = undefined;
     try {
-        const basket = getBasketByUser(userId);
-        if (basket !== undefined) orderBasket = new BasketSnapshot().setString(basket.toString());
+        const basket = (await getBasketByUser(userId))?.toObject();
+        if (basket) orderBasket = new BasketSnapshot().setString(JSON.stringify(basket));
     } catch (e: any) {
         res.status(500).send({error: e.message});
     }
@@ -81,11 +80,10 @@ orderRoutes.post('/api/order', (req: Request, res: Response) => {
         .setRestaurantId(restaurantId);
 
     orderService.createOrder(orderInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
+        if (error) 
+            return res.status(500).send({error: error.message});
+         else 
+            return res.json(response.toObject());
     });
 });
 
