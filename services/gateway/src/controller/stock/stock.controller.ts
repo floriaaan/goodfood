@@ -32,6 +32,11 @@ export const stockRoutes = Router();
  */
 
 stockRoutes.get('/api/stock/supplier/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
     const supplierRequest = new GetSupplierRequest().setId(Number(id));
 
@@ -56,6 +61,11 @@ stockRoutes.get('/api/stock/supplier', (req: Request, res: Response) => {
 });
 
 stockRoutes.get('/api/stock/ingredient/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
     const ingredientRequest = new GetIngredientRequest().setId(Number(id));
 
@@ -80,6 +90,14 @@ stockRoutes.get('/api/stock/ingredient', (req: Request, res: Response) => {
 });
 
 stockRoutes.post('/api/stock/ingredient', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                name: "ingredient-name",
+                description: "ingredient-desc",
+            }
+    } */
     const {name, desciption} = req.body
     const ingredientRequest = new CreateIngredientRequest().setName(name).setDescription(desciption)
 
@@ -93,6 +111,19 @@ stockRoutes.post('/api/stock/ingredient', (req: Request, res: Response) => {
 });
 
 stockRoutes.put('/api/stock/ingredient/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+      }
+    #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                name: "ingredient-name",
+                description: "ingredient-desc",
+            }
+    } */
     const {id} = req.params
     const {name, desciption} = req.body
     const ingredientRequest = new UpdateIngredientRequest().setId(Number(id)).setName(name).setDescription(desciption)
@@ -107,6 +138,11 @@ stockRoutes.put('/api/stock/ingredient/:id', (req: Request, res: Response) => {
 });
 
 stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params
     const ingredientRequest = new DeleteIngredientRequest().setId(Number(id));
 
@@ -120,6 +156,11 @@ stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) =>
 });
 
 stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params
     const ingredientRequest = new DeleteIngredientRequest().setId(Number(id));
 
@@ -137,6 +178,11 @@ stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) =>
  */
 
 stockRoutes.get('/api/stock/ingredient/restaurant/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
     const ingredientRestaurantRequest = new GetIngredientRestaurantRequest().setId(Number(id));
 
@@ -176,6 +222,19 @@ stockRoutes.get('/api/stock/ingredient/restaurant/by-product/:id', (req: Request
 });
 
 stockRoutes.post('/api/stock/ingredient/restaurant', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                alertThreshold: 5,
+                quantity: 2,
+                productList: ["product_id:1", "product_id:2"],
+                unitPrice: 2,
+                pricePerKilo: 1.5,
+                restaurantId: "restaurant_id:1",
+                ingredientId: 1,
+            }
+    } */
     const {alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId} = req.body;
     const ingredientRestaurant = new CreateIngredientRestaurantRequest().setAlertThreshold(alertThreshold)
         .setQuantity(quantity)
@@ -196,6 +255,24 @@ stockRoutes.post('/api/stock/ingredient/restaurant', (req: Request, res: Respons
 });
 
 stockRoutes.put('/api/stock/ingredient/restaurant/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }
+     #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                alertThreshold: 5,
+                quantity: 2,
+                productList: ["product_id:1", "product_id:2"],
+                unitPrice: 2,
+                pricePerKilo: 1.5,
+                restaurantId: "restaurant_id:1",
+                ingredientId: 1,
+            }
+    } */
     const {id} = req.params;
     const {alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId} = req.body;
     const ingredientRestaurant = new UpdateIngredientRestaurantRequest().setId(Number(id)).setAlertThreshold(alertThreshold)
@@ -217,6 +294,11 @@ stockRoutes.put('/api/stock/ingredient/restaurant/:id', (req: Request, res: Resp
 });
 
 stockRoutes.delete('/api/stock/ingredient/restaurant/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
 
     stockServiceClient.deleteIngredientRestaurant(new DeleteIngredientRestaurantRequest().setId(Number(id)), (error, response) => {
@@ -233,6 +315,11 @@ stockRoutes.delete('/api/stock/ingredient/restaurant/:id', (req: Request, res: R
  */
 
 stockRoutes.get('/api/stock/supplier/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
 
     stockServiceClient.getSupplier(new GetSupplierRequest().setId(Number(id)), (error, response) => {
@@ -255,6 +342,14 @@ stockRoutes.get('/api/stock/supplier', (req: Request, res: Response) => {
 });
 
 stockRoutes.post('/api/stock/supplier', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                name: "supplier-name",
+                contact: "supplier-contact"
+            }
+    } */
     const {name, contact} = req.body;
     const supplierRequest = new CreateSupplierRequest().setName(name).setContact(contact)
 
@@ -268,6 +363,19 @@ stockRoutes.post('/api/stock/supplier', (req: Request, res: Response) => {
 });
 
 stockRoutes.put('/api/stock/supplier/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }
+     #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                name: "supplier-name",
+                contact: "supplier-contact"
+            }
+    } */
     const {id} = req.params;
     const {name, contact} = req.body;
     const supplierRequest = new UpdateSupplierRequest().setId(Number(id)).setName(name).setContact(contact)
@@ -282,6 +390,11 @@ stockRoutes.put('/api/stock/supplier/:id', (req: Request, res: Response) => {
 });
 
 stockRoutes.delete('/api/stock/supplier/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
 
     stockServiceClient.deleteSupplier(new DeleteSupplierRequest().setId(Number(id)), (error, response) => {
@@ -298,6 +411,11 @@ stockRoutes.delete('/api/stock/supplier/:id', (req: Request, res: Response) => {
  */
 
 stockRoutes.get('/api/stock/supply/order/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
 
     stockServiceClient.getSupplyOrder(new GetSupplyOrderRequest().setId(Number(id)), (error, response) => {
@@ -321,6 +439,11 @@ stockRoutes.get('/api/stock/supply/order/by-restaurant/:id', (req: Request, res:
 });
 
 stockRoutes.get('/api/stock/supply/order/by-supplier/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
     stockServiceClient.getSupplyOrdersBySupplier(new GetSupplyOrdersBySupplierRequest().setSupplierId(Number(id)), (error, response) => {
         if (error) {
@@ -332,6 +455,11 @@ stockRoutes.get('/api/stock/supply/order/by-supplier/:id', (req: Request, res: R
 });
 
 stockRoutes.get('/api/stock/supply/order/by-ingredient-restaurant/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
     stockServiceClient.getSupplyOrdersByIngredientRestaurant(new GetSupplyOrdersByIngredientRestaurantRequest().setIngredientRestaurantId(Number(id)), (error, response) => {
         if (error) {
@@ -343,6 +471,15 @@ stockRoutes.get('/api/stock/supply/order/by-ingredient-restaurant/:id', (req: Re
 });
 
 stockRoutes.post('/api/stock/supply/order', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                quantity: 3,
+                ingredientRestaurantId: 1,
+                supplierId: 1
+            }
+    } */
     const {quantity, ingredientRestaurantId, supplierId} = req.body;
     const supplyOrderRequest = new CreateSupplyOrderRequest().setQuantity(quantity)
         .setIngredientRestaurantId(ingredientRestaurantId)
@@ -358,6 +495,20 @@ stockRoutes.post('/api/stock/supply/order', (req: Request, res: Response) => {
 });
 
 stockRoutes.put('/api/stock/supply/order/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }
+     #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                quantity: 3,
+                ingredientRestaurantId: 1,
+                supplierId: 1
+            }
+    } */
     const {id} = req.params;
     const {quantity, ingredientRestaurantId, supplierId} = req.body;
     const supplyOrderRequest = new UpdateSupplyOrderRequest().setId(Number(id)).setQuantity(quantity)
@@ -374,6 +525,11 @@ stockRoutes.put('/api/stock/supply/order/:id', (req: Request, res: Response) => 
 });
 
 stockRoutes.delete('/api/stock/supply/order/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
     stockServiceClient.deleteSupplyOrder(new DeleteSupplyOrderRequest().setId(Number(id)), (error, response) => {
         if (error) {

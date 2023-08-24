@@ -6,6 +6,7 @@ import {
     DeleteInput,
     logInInput,
     MainAddress,
+    Role,
     RoleInput,
     UpdateUserInput,
     User,
@@ -17,6 +18,11 @@ import {getUser} from "@gateway/services/user.service";
 
 export const userRoutes = Router();
 userRoutes.get('/api/user/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }*/
     const {id} = req.params;
     try {
         res.json(getUser(Number(id)));
@@ -36,6 +42,23 @@ userRoutes.get('/api/user', (req: Request, res: Response) => {
 });
 
 userRoutes.post('/api/user/register', (req: Request, res: Response) => {
+    /*  #swagger.parameters['body'] = {
+         in: 'body',
+         required: true,
+         schema: {
+             firstName: "John",
+             lastName: "Doe",
+             email: "johnDoe@mail.com",
+             password: "password",
+             phone: "0642424242",
+             country: "France",
+             zipCode: "76000",
+             street: "7 rue de la paix",
+             lat: 49.443232,
+             lng: 1.099971,
+             roleCode: {'$ref': '#/definitions/RoleCode'},
+         }
+ } */
     const {firstName, lastName, email, password, phone, country, zipCode, street, lat, lng, roleCode} = req.body;
     const userInput = new UserCreateInput();
     try {
@@ -62,12 +85,34 @@ userRoutes.post('/api/user/register', (req: Request, res: Response) => {
 });
 
 userRoutes.put('/api/user/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }
+     #swagger.parameters['body'] = {
+         in: 'body',
+         required: true,
+         schema: {
+             firstName: "John",
+             lastName: "Doe",
+             email: "johnDoe@mail.com",
+             password: "password",
+             phone: "0642424242",
+             country: "France",
+             zipCode: "76000",
+             street: "7 rue de la paix",
+             lat: 49.443232,
+             lng: 1.099971,
+             roleCode: {'$ref': '#/definitions/RoleCode'},
+         }
+ } */
     const {authorization} = req.headers;
     if (!authorization) {
         res.json({error: 'Not authorized'});
         return;
     }
-    const {firstName, lastName, email, phone, country, zipCode, street, lat, lng, role} = req.body;
+    const {firstName, lastName, email, phone, country, zipCode, street, lat, lng, roleCode} = req.body;
     const userInput = new UpdateUserInput()
 
     try {
@@ -78,7 +123,7 @@ userRoutes.put('/api/user/:id', (req: Request, res: Response) => {
             .setEmail(email)
             .setPhone(phone)
             .setMainaddress(address)
-            .setRole(role);
+            .setRole(new Role().setCode(roleCode));
 
         userInput.setUser(user).setToken(authorization);
 
@@ -96,6 +141,11 @@ userRoutes.put('/api/user/:id', (req: Request, res: Response) => {
 });
 
 userRoutes.delete('/api/user/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     } */
     const {id} = req.params;
     const {authorization} = req.headers;
     if (!authorization) {
@@ -113,8 +163,16 @@ userRoutes.delete('/api/user/:id', (req: Request, res: Response) => {
 });
 
 userRoutes.post('/api/user/login', (req: Request, res: Response) => {
-    const body = req.body;
-    const inInput = new logInInput().setEmail(body.email).setPassword(body.password);
+    /* #swagger.parameters['body'] = {
+          in: 'body',
+          required: true,
+          schema: {
+              email: "johnDoe@mail.com",
+              password: "password",
+          }
+    } */
+    const {email, password} = req.body;
+    const inInput = new logInInput().setEmail(email).setPassword(password);
 
     userServiceClient.logIn(inInput, (error, response) => {
         if (error) {
@@ -143,19 +201,27 @@ userRoutes.post('/api/user/validate', (req: Request, res: Response) => {
 });
 
 userRoutes.put('/api/user/:id/password', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+          in: 'body',
+          required: true,
+          schema: {
+              oldpassword: "oldpassword",
+              password: "newPassword",
+          }
+    } */
     const {authorization} = req.headers;
     if (!authorization) {
         res.json({error: 'Not authorized'});
         return;
     }
 
-    const body = req.body;
+    const {oldpassword, password} = req.body;
     const updatePasswordInput = new changePasswordInput();
     try {
         updatePasswordInput
             .setToken(authorization)
-            .setOldpassword(body.oldpassword)
-            .setNewpassword(body.password);
+            .setOldpassword(oldpassword)
+            .setNewpassword(password);
     } catch (e: any) {
         res.json({error: e.message});
     }
@@ -170,19 +236,30 @@ userRoutes.put('/api/user/:id/password', (req: Request, res: Response) => {
 });
 
 userRoutes.put('/api/user/:id/role', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+     }
+     #swagger.parameters['body'] = {
+         in: 'body',
+         required: true,
+         schema: {
+             role: {'$ref': '#/definitions/RoleCode'},
+         }
+ } */
     const {authorization} = req.headers;
     if (!authorization) {
         res.json({error: 'Not authorized'});
         return;
     }
-    const body = req.body;
     const id = req.params.id;
     const updatePasswordInput = new changeRoleInput();
     try {
         updatePasswordInput
             .setToken(authorization)
             .setUserid(Number(id))
-            .setRolecode(body.role);
+            .setRolecode(req.body.role);
     } catch (e: any) {
         res.json({error: e.message});
     }

@@ -43,23 +43,33 @@ deliveryRoutes.get('/api/delivery/by-user/:id', (req: Request, res: Response) =>
 });
 
 deliveryRoutes.post('/api/delivery', (req: Request, res: Response) => {
-    const {eta, address, status, deliveryPersonId, userId, restaurantId}: {
-        eta: string,
-        address: string,
-        status: Status,
-        deliveryPersonId: string,
-        userId: string,
-        restaurantId: string
-    } = req.body;
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                eta: "2022-01-01T00:00:00.000Z",
+                address: "10 Rue de la République, 75003 Paris, France",
+                status: {'$ref': '#/definitions/Status'},
+                deliveryPersonId: "cllcdmeci0000pm01su98mxtb",
+                userId: "user_id:1",
+                restaurantId: "restaurant_id:1"
+            }
+      }
+    */
+    const {eta, address, status, deliveryPersonId, userId, restaurantId} = req.body;
+    const deliveryStatus = Status[status] as unknown as Status;
+    if (!deliveryStatus) {
+        res.status(400).send({error: "Status not found"});
+        return;
+    }
     const deliveryCreateInput = new DeliveryCreateInput().setEta(eta)
         .setAddress(address)
-        .setStatus(status)
+        .setStatus(deliveryStatus)
         .setDeliveryPersonId(deliveryPersonId)
         .setUserId(userId)
         .setRestaurantId(restaurantId);
 
     deliveryServiceClient.createDelivery(deliveryCreateInput, (error, response) => {
-        console.log(error, response)
         if (error) {
             res.status(500).send({error: error.message});
         } else {
@@ -69,11 +79,29 @@ deliveryRoutes.post('/api/delivery', (req: Request, res: Response) => {
 });
 
 deliveryRoutes.put('/api/delivery/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                eta: "2022-01-01T00:00:00.000Z",
+                address: "10 Rue de la République, 75003 Paris, France",
+                status: {'$ref': '#/definitions/Status'},
+                deliveryPersonId: "cllcdmeci0000pm01su98mxtb",
+                userId: "user_id:1",
+                restaurantId: "restaurant_id:1"
+            }
+      }
+    */
     const {id} = req.params;
     const {eta, address, status, deliveryPersonId, userId, restaurantId} = req.body;
+    const deliveryStatus = Status[status] as unknown as Status;
+    if (!deliveryStatus) {
+        res.status(400).send({error: "Status not found"});
+        return;
+    }
     const delivery = new Delivery().setId(id).setEta(eta)
         .setAddress(address)
-        .setStatus(status)
+        .setStatus(deliveryStatus)
         .setDeliveryPersonId(deliveryPersonId)
         .setUserId(userId)
         .setRestaurantId(restaurantId);

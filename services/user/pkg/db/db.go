@@ -17,6 +17,7 @@ func Init(url string) Handler {
 
 	if err != nil {
 		log.Fatal(err)
+		return Handler{}
 	}
 
 	err = db.AutoMigrate(&models.Role{})
