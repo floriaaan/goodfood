@@ -8,11 +8,15 @@ export const ROLES = {
   DELIVERER: "DELIVERER",
 };
 
-const checkRole = async (token: string, expectedRole: keyof typeof ROLES) => {
+export type Role = keyof typeof ROLES;
+
+const checkRole = async (token: string, expectedRole: Role | Role[]) => {
   const userId = await getUserIdFromToken(token);
   if (userId === undefined) return false;
   const user = await getUser(userId);
   if (user === undefined) return false;
+
+  if (Array.isArray(expectedRole)) return expectedRole.includes(user.getRole()?.getCode() as Role);
   return user.getRole()?.getCode() === expectedRole;
 };
 
@@ -25,7 +29,7 @@ const checkRight = async (token: string, expectedId: number) => {
 export const check = async (
   token: string,
   expect: {
-    role?: keyof typeof ROLES;
+    role?: Role | Role[];
     id?: number;
   },
 ) => {
@@ -37,7 +41,7 @@ export const check = async (
 };
 
 export const withCheck =
-  (expect: { role?: keyof typeof ROLES; id?: number }) => async (req: Request, res: Response, next: NextFunction) => {
+  (expect: { role?: Role | Role[]; id?: number }) => async (req: Request, res: Response, next: NextFunction) => {
     const { role, id } = expect;
     const token = req.headers.authorization?.split("Bearer ")[0];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
