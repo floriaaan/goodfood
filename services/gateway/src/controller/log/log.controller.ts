@@ -21,11 +21,11 @@ logRoutes.get("/api/log", withCheck({ role: "ADMIN" }), (_: Request, res: Respon
 });
 
 logRoutes.get("/api/log/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['id'] = {
+        in: 'path',
         required: true,
         schema: {
-            id: "delivery_person_id:1"
+            id: "log_id:1"
         }
     }
     #swagger.parameters['headers'] = {
@@ -35,7 +35,7 @@ logRoutes.get("/api/log/:id", withCheck({ role: "ADMIN" }), (req: Request, res: 
             Authorization: "Bearer <token>"
         }
     } */
-  const { id } = req.query as { id: string };
+  const { id } = req.params;
 
   logServiceClient.getLog(new GetLogRequest().setId(Number(id)), (error, response) => {
     if (error) return res.status(500).send({ error: error.message });
