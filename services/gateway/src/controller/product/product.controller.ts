@@ -55,6 +55,33 @@ productRoutes.delete('/api/product/:id', (req: Request, res: Response) => {
 });
 
 productRoutes.post('/api/product', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+            restaurantId: 0,
+            type: "type",
+            name: "name",
+            image: "image",
+            comment: "comment",
+            price: 0,
+            preparation: "preparation",
+            weight: "weight",
+            kilocalories: "0",
+            nutriscore: 0,
+            categories: [
+                {
+                    label: "category-label",
+                    icon: "category-icon",
+                    hexaColor: "#ffffff",
+                }],
+            allergens: [
+                {
+                    label: "allergen-label",
+                }
+            ],
+        }
+    } */
     const {
         restaurantId,
         type,
@@ -98,6 +125,33 @@ productRoutes.post('/api/product', (req: Request, res: Response) => {
 });
 
 productRoutes.put('/api/product/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+            restaurantId: 0,
+            type: "type",
+            name: "name",
+            image: "image",
+            comment: "comment",
+            price: 0,
+            preparation: "preparation",
+            weight: "weight",
+            kilocalories: "0",
+            nutriscore: 0,
+            categories: [
+                {
+                    label: "category-label",
+                    icon: "category-icon",
+                    hexaColor: "#ffffff",
+                }],
+            allergens: [
+                {
+                    label: "allergen-label",
+                }
+            ],
+        }
+    } */
     const {id} = req.params
     const {
         restaurantId,
@@ -143,8 +197,8 @@ productRoutes.put('/api/product/:id', (req: Request, res: Response) => {
 
 productRoutes.post('/api/product/image', (req: Request, res: Response) => {
     const {input_file} = req.body;
-    var bitmap = fs.readFileSync(input_file);
-    var base64File = new Buffer(bitmap).toString('base64');
+    const bitmap = fs.readFileSync(input_file);
+    const base64File = new Buffer(bitmap).toString('base64');
 
     const file = new File().setName(input_file).setData(base64File);
     productServiceClient.uploadImage(file, (error, response) => {
