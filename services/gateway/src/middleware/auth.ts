@@ -43,7 +43,7 @@ export const check = async (
 export const withCheck =
   (expect: { role?: Role | Role[]; id?: number }) => async (req: Request, res: Response, next: NextFunction) => {
     const { role, id } = expect;
-    const token = req.headers.authorization?.split("Bearer ")[0];
+    const token = req.headers.authorization?.split("Bearer ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     try {

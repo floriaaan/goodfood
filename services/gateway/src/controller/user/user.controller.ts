@@ -38,7 +38,8 @@ userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
   if (!(await check(token, { id: Number(id) }))) return res.status(403).json({ message: "Forbidden" });
 
   try {
-    res.json(getUser(Number(id)));
+    const user = await getUser(Number(id))
+    res.json(user?.toObject());
   } catch (e: any) {
     res.json({ error: e.message });
   }
