@@ -6,14 +6,6 @@ import { getUserIdFromToken } from "@gateway/services/user.service";
 export const basketRoutes = Router();
 
 basketRoutes.get("/api/basket/", async (req: Request, res: Response) => {
-  /* #swagger.parameters['headers'] = {
-        in: 'header',
-        required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
-
   // Auth check and :id check ---
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
@@ -36,13 +28,6 @@ basketRoutes.post("/api/basket", async (req: Request, res: Response) => {
                 productId: "product_id:0",
                 restaurantId:"restaurant_id:0"
             }
-    } 
-    #swagger.parameters['headers'] = {
-        in: 'header',
-        required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
     } */
 
   // Auth check and :id check ---
@@ -69,13 +54,6 @@ basketRoutes.put("/api/basket/remove-product", async (req: Request, res: Respons
                 productId: "product_id:0",
                 restaurantId:"restaurant_id:0"
             }
-    } 
-    #swagger.parameters['headers'] = {
-        in: 'header',
-        required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
     } */
 
   // Auth check and :id check ---
@@ -102,13 +80,6 @@ basketRoutes.put("/api/basket/restaurant", async (req: Request, res: Response) =
             schema: {
                 restaurantId:"restaurant_id:0"
             }
-    } 
-    #swagger.parameters['headers'] = {
-        in: 'header',
-        required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
     } */
 
   // Auth check and :id check ---
@@ -130,14 +101,6 @@ basketRoutes.put("/api/basket/restaurant", async (req: Request, res: Response) =
 });
 
 basketRoutes.post("/api/basket/reset", async (req: Request, res: Response) => {
-  /* #swagger.parameters['headers'] = {
-        in: 'header',
-        required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
-
   // Auth check and :id check ---
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
