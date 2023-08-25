@@ -6,6 +6,11 @@ import {Promotion, PromotionCode, PromotionCreateInput, PromotionId, RestaurantI
 export const promotionRoutes = Router();
 
 promotionRoutes.get('/api/promotion/:code', (req, res) => {
+    /* #swagger.parameters['code'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
     const {code} = req.params;
     promotionServiceClient.getPromotion(new PromotionCode().setCode(code), (error, response) => {
         if (error) {
@@ -27,6 +32,11 @@ promotionRoutes.get('/api/promotion', (req, res) => {
 });
 
 promotionRoutes.get('/api/promotion/by-restaurant/:restaurantId', (req, res) => {
+    /* #swagger.parameters['restaurantId'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
     const {restaurantId} = req.params;
     promotionServiceClient.getPromotionsByRestaurant(new RestaurantId().setId(restaurantId), (error, response) => {
         if (error) {
@@ -72,7 +82,12 @@ promotionRoutes.put('/api/promotion/:id', (req, res) => {
                 method: {'$ref': '#/definitions/Method'},
                 restaurantId: "restaurant_id:0",
             }
-    } */
+    }
+    #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
     const {id} = req.params;
     const {code, reduction, method, restaurantId} = req.body;
     const promotionUpdateInput = new Promotion().setId(id).setCode(code)
@@ -90,6 +105,11 @@ promotionRoutes.put('/api/promotion/:id', (req, res) => {
 });
 
 promotionRoutes.delete('/api/promotion/:id', (req, res) => {
+    /* #swagger.parameters['id'] = {
+       in: 'path',
+       required: true,
+       type: 'string'
+    } */
     const {id} = req.params;
 
     promotionServiceClient.deletePromotion(new PromotionId().setId(id), (error, response) => {

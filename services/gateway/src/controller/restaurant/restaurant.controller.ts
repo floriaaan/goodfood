@@ -7,6 +7,11 @@ import {ByLocationInput, Restaurant, RestaurantCreateInput} from "@gateway/proto
 export const restaurantRoutes = Router();
 
 restaurantRoutes.get('/api/restaurant/:id', (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
     const {id} = req.params;
 
     restaurantServiceClient.getRestaurant(new RestaurantId().setId(id), (error, response) => {

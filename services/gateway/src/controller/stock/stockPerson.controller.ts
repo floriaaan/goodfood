@@ -12,7 +12,11 @@ stockPersonRoutes.post('/api/stock/outcomes/by-restaurant/:id', (req: Request, r
                 date: "2022-01-01T00:00:00.000Z",
                 interval: "interval-example"
             }
-    } */
+    }  #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
     const {id} = req.params;
     const {date, interval} = req.body;
     const outcomesByRestaurantRequest = new GetOutcomesByRestaurantRequest().setRestaurantId(id).setDate(date).setInterval(interval);

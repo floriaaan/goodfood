@@ -19,14 +19,12 @@ import {check, withCheck} from "@gateway/middleware/auth";
 
 export const userRoutes = Router();
 userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['header'] = {
-          in: 'header',
-          required: true,
-          schema: {
-              Authorization: "Bearer <token>"
-          }
-      }
-      #swagger.parameters['id'] = {
+  /* #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['id'] = {
              in: 'path',
              required: true,
              type: 'integer'
@@ -47,12 +45,10 @@ userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
 });
 
 userRoutes.get("/api/user", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['header'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
   } */
   userServiceClient.listUser(new Empty(), (error, response) => {
     if (error) res.status(500).send({ error: error.message });
@@ -104,12 +100,10 @@ userRoutes.post("/api/user/register", (req: Request, res: Response) => {
 });
 
 userRoutes.put("/api/user", async (req: Request, res: Response) => {
-  /* #swagger.parameters['header'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
   }
   #swagger.parameters['body'] = {
          in: 'body',
@@ -165,12 +159,10 @@ userRoutes.put("/api/user", async (req: Request, res: Response) => {
 });
 
 userRoutes.delete('/api/user/:id', (req: Request, res: Response) => {
-    /* #swagger.parameters['header'] = {
+    /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
   }
    #swagger.parameters['id'] = {
            in: 'path',
@@ -213,12 +205,10 @@ userRoutes.post("/api/user/login", (req: Request, res: Response) => {
 });
 
 userRoutes.post("/api/user/validate", (req: Request, res: Response) => {
-  /* #swagger.parameters['header'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
   } */
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
@@ -235,12 +225,10 @@ userRoutes.post("/api/user/validate", (req: Request, res: Response) => {
 });
 
 userRoutes.put('/api/user/password', (req: Request, res: Response) => {
-    /* #swagger.parameters['header'] = {
+    /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
       }
      #swagger.parameters['body'] = {
         in: 'body',
@@ -272,12 +260,10 @@ userRoutes.put('/api/user/password', (req: Request, res: Response) => {
 });
 
 userRoutes.put('/api/user/:id/role', withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-    /* #swagger.parameters['header'] = {
+    /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
       }
      #swagger.parameters['id'] = {
            in: 'path',

@@ -7,20 +7,16 @@ import { check, withCheck } from "@gateway/middleware/auth";
 export const deliveryRoutes = Router();
 
 deliveryRoutes.get("/api/delivery/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-          id: "delivery_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
 
   // Auth check and :id check ---
   const { authorization } = req.headers;
@@ -51,20 +47,16 @@ deliveryRoutes.get(
   "/api/delivery/by-restaurant/:id",
   withCheck({ role: "ACCOUNTANT" }),
   (req: Request, res: Response) => {
-    /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "restaurant_id:1"
-        }
-      } 
-      #swagger.parameters['headers'] = {
+    /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
 
     const { id } = req.params;
     const restaurantId = new RestaurantId().setId(id);
@@ -77,12 +69,10 @@ deliveryRoutes.get(
 );
 
 deliveryRoutes.get("/api/delivery/by-user", async (req: Request, res: Response) => {
-  /* #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
 
   // Auth check and :id check ---
@@ -111,12 +101,10 @@ deliveryRoutes.post("/api/delivery", async (req: Request, res: Response) => {
                 restaurantId: "restaurant_id:1"
             }
       }
-      #swagger.parameters['headers'] = {
+      #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } 
     */
   // Auth check and :id check ---
@@ -158,21 +146,16 @@ deliveryRoutes.put("/api/delivery/:id", async (req: Request, res: Response) => {
             restaurantId: "restaurant_id:1"
         }
       }
-      #swagger.parameters['headers'] = {
+      #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } 
-    #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "delivery_id:1"
-        }
+        type: 'string'
     }
-    */
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   // Auth check and :id check ---
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
@@ -202,19 +185,10 @@ deliveryRoutes.put("/api/delivery/:id", async (req: Request, res: Response) => {
 });
 
 deliveryRoutes.delete("/api/delivery/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "delivery_id:1"
-        }
-      } 
-      #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
       } */
   // Auth check and :id check ---
   const { authorization } = req.headers;

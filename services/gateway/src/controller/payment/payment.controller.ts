@@ -7,20 +7,16 @@ import { check } from "@gateway/middleware/auth";
 export const paymentRoutes = Router();
 
 paymentRoutes.get("/api/payment/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "payment_id:1"
-        }
-    } 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
 
   // Auth check and :id check ---
   const { authorization } = req.headers;
@@ -47,20 +43,16 @@ paymentRoutes.get("/api/payment/:id", async (req: Request, res: Response) => {
 });
 
 paymentRoutes.get("/api/payment/by-user/:userId", async (req: Request, res: Response) => {
-  /* #swagger.parameters['userId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            userId: "user_id:1"
-        }
-    } 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['userId'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
 
   // Auth check and :id check ---
   const { authorization } = req.headers;
