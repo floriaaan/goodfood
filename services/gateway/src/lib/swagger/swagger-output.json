@@ -1815,6 +1815,12 @@
                 }
               }
             }
+          },
+          {
+            "name": "header",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -1835,6 +1841,12 @@
           {
             "name": "id",
             "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "header",
+            "in": "header",
             "required": true,
             "type": "string"
           }
@@ -1915,11 +1927,17 @@
                 }
               }
             }
+          },
+          {
+            "name": "header",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "500": {
             "description": "Internal Server Error"
@@ -2995,11 +3013,20 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -3052,11 +3079,17 @@
                 }
               }
             }
+          },
+          {
+            "name": "header",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "500": {
             "description": "Internal Server Error"
@@ -3076,11 +3109,25 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "header",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -3125,6 +3172,12 @@
                 }
               }
             }
+          },
+          {
+            "name": "header",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -3145,6 +3198,12 @@
           {
             "name": "id",
             "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "header",
+            "in": "header",
             "required": true,
             "type": "string"
           }
