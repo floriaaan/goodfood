@@ -33,7 +33,7 @@ deliveryRoutes.get("/api/delivery/:id", async (req: Request, res: Response) => {
       });
     });
 
-    if (Number(delivery.userId) !== userId) return res.status(401).json({ message: "Unauthorized" });
+    if (delivery.userId !== userId.toString()) return res.status(401).json({ message: "Unauthorized" });
     else return res.status(200).json(delivery);
   } catch (error) {
     return res.status(500).send({ error });
