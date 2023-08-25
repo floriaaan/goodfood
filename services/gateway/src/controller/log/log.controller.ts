@@ -7,12 +7,10 @@ import { withCheck } from "@gateway/middleware/auth";
 export const logRoutes = Router();
 
 logRoutes.get("/api/log", withCheck({ role: "ADMIN" }), (_: Request, res: Response) => {
-  /* #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+          type: 'string'
     } */
   logServiceClient.listLog(new Empty(), (error, response) => {
     if (error) return res.status(500).send({ error: error.message });
@@ -21,20 +19,16 @@ logRoutes.get("/api/log", withCheck({ role: "ADMIN" }), (_: Request, res: Respon
 });
 
 logRoutes.get("/api/log/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "log_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'number'
+     } */
   const { id } = req.params;
 
   logServiceClient.getLog(new GetLogRequest().setId(Number(id)), (error, response) => {

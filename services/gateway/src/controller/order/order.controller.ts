@@ -21,20 +21,16 @@ import { check, withCheck } from "@gateway/middleware/auth";
 export const orderRoutes = Router();
 
 orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "order_id:1"
-        }
-    } 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
 
   // Auth check and :id check ---
   const { authorization } = req.headers;
@@ -78,12 +74,10 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
                 restaurantId :"restaurant_id:1"
             }
       }
-      #swagger.parameters['headers'] = {
+      #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
 
   // Auth check and :id check ---
@@ -134,19 +128,10 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
 });
 
 orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response) => {
-  /* #swagger.parameters['userId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            userId: "user_id:1"
-        }
-    } 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
 
   // Auth check and :id check ---
@@ -175,12 +160,10 @@ orderRoutes.post("/api/order/by-status", withCheck({ role: "ACCOUNTANT" }), (req
             status :{'$ref': '#/definitions/Status'},
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const orderInput = new GetOrdersByStatusRequest().setStatus(req.body.status);
 
@@ -191,19 +174,10 @@ orderRoutes.post("/api/order/by-status", withCheck({ role: "ACCOUNTANT" }), (req
 });
 
 orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: Response) => {
-  /* #swagger.parameters['deliveryId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            deliveryId: "delivery_id:1"
-        }
-    } 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   // Auth check and :id check ---
   const { authorization } = req.headers;
@@ -224,19 +198,10 @@ orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: 
 });
 
 orderRoutes.get("/api/order/by-payment/:paymentId", async (req: Request, res: Response) => {
-  /* #swagger.parameters['paymentId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            paymentId: "payment_id:1"
-        }
-    } 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   // Auth check and :id check ---
   const { authorization } = req.headers;
@@ -257,14 +222,7 @@ orderRoutes.get("/api/order/by-payment/:paymentId", async (req: Request, res: Re
 });
 
 orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['orderId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            orderId: "order_id:1"
-        }
-    } 
-    #swagger.parameters['body'] = {
+  /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
         schema: {
@@ -274,12 +232,10 @@ orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Reque
             restaurantId :"restaurant_id:1"
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     }*/
   const { orderId } = req.params;
   const { status, deliveryId, paymentId, restaurantId } = req.body;
@@ -296,19 +252,10 @@ orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Reque
 });
 
 orderRoutes.delete("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['orderId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            orderId: "order_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     }*/
   const { orderId } = req.params;
   const orderInput = new DeleteOrderRequest().setId(orderId);

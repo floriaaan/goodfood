@@ -8,21 +8,6 @@ import { withCheck } from "@gateway/middleware/auth";
 export const deliveryPersonRoutes = Router();
 
 deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
-  /*  #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "delivery_person_id:1"
-        }
-      } 
-      #swagger.parameters['headers'] = {
-        in: 'header',
-        required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-      } */
-
   // Auth check and :id check ---
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
@@ -40,15 +25,11 @@ deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
 });
 
 deliveryPersonRoutes.get("/api/delivery-person", withCheck({ role: "ADMIN" }), async (_, res) => {
-  /*
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
-
+        type: 'string'
+   } */
   deliveryPersonServiceClient.listDeliveryPersons(new Empty(), (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
@@ -56,20 +37,15 @@ deliveryPersonRoutes.get("/api/delivery-person", withCheck({ role: "ADMIN" }), a
 });
 
 deliveryPersonRoutes.get("/api/delivery-person/near", async (req, res) => {
-  /* #swagger.parameters['query'] = {
+  /* #swagger.parameters['lat'] = {
         in: 'query',
         required: true,
-        schema: {
-            lat: "0",
-            lng: "0"
-        }
-    } 
-    #swagger.parameters['headers'] = {
-        in: 'header',
+        type: 'integer'
+    }
+    #swagger.parameters['lng'] = {
+        in: 'query',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'integer'
     } */
 
   // Auth check and :id check ---
@@ -98,13 +74,11 @@ deliveryPersonRoutes.post("/api/delivery-person", withCheck({ role: "ADMIN" }), 
             phone:"0612345678",
             locationList:[41.40338, 2.17403]
         }
-    } 
-    #swagger.parameters['headers'] = {
+    }
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
 
   const { firstName, lastName, phone, locationList } = req.body;
@@ -120,14 +94,7 @@ deliveryPersonRoutes.post("/api/delivery-person", withCheck({ role: "ADMIN" }), 
 });
 
 deliveryPersonRoutes.put("/api/delivery-person/:id", withCheck({ role: "ADMIN" }), (req, res) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "delivery_person_id:1"
-        }
-    } 
-    #swagger.parameters['body'] = {
+  /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
         schema: {
@@ -136,13 +103,11 @@ deliveryPersonRoutes.put("/api/delivery-person/:id", withCheck({ role: "ADMIN" }
             phone:"0612345678",
             locationList:[41.40338, 2.17403]
         }
-    } 
-    #swagger.parameters['headers'] = {
+    }
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { id } = req.params;
   const { firstName, lastName, phone, locationList } = req.body;
@@ -160,19 +125,10 @@ deliveryPersonRoutes.put("/api/delivery-person/:id", withCheck({ role: "ADMIN" }
 });
 
 deliveryPersonRoutes.delete("/api/delivery-person/:id", withCheck({ role: "ADMIN" }), (req, res) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "delivery_person_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { id } = req.params;
 

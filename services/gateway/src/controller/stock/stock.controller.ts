@@ -155,24 +155,6 @@ stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) =>
     });
 });
 
-stockRoutes.delete('/api/stock/ingredient/:id', (req: Request, res: Response) => {
-    /* #swagger.parameters['id'] = {
-           in: 'path',
-           required: true,
-           type: 'integer'
-     }*/
-    const {id} = req.params
-    const ingredientRequest = new DeleteIngredientRequest().setId(Number(id));
-
-    stockServiceClient.deleteIngredient(ingredientRequest, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
-});
-
 /**
  * Ingredient Restaurant Routes
  */

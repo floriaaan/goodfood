@@ -9,12 +9,10 @@ export const productRoutes = Router();
 
 productRoutes.get("/api/product/by-restaurant/:id", (req: Request, res: Response) => {
   /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "restaurant_id:1"
-        }
-    } */
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { id } = req.params;
 
   productServiceClient.getProductList(new RestaurantId().setId(id), (error, response) => {
@@ -25,12 +23,10 @@ productRoutes.get("/api/product/by-restaurant/:id", (req: Request, res: Response
 
 productRoutes.get("/api/product/:id", (req: Request, res: Response) => {
   /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "product_id:1"
-        }
-    } */
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { id } = req.params;
   productServiceClient.readProduct(new ProductId().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });
@@ -46,20 +42,16 @@ productRoutes.get("/api/product/type", (_: Request, res: Response) => {
 });
 
 productRoutes.delete("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "product_id:1"
-        }
-    } 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { id } = req.params;
   const productId = new ProductId().setId(id);
   productServiceClient.deleteProduct(productId, (error, response) => {
@@ -96,12 +88,10 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
             ],
         }
     } 
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const {
     restaurantId,
@@ -144,15 +134,7 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
 });
 
 productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "product_id:1"
-        }
-    }
-
-    #swagger.parameters['body'] = {
+  /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
         schema: {
@@ -179,13 +161,16 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
             ],
         }
     } 
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { id } = req.params;
   const {
     restaurantId,
@@ -236,14 +221,11 @@ productRoutes.post("/api/product/image", withCheck({ role: "ACCOUNTANT" }), (req
             input_file: Buffer
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } 
-    */
+        type: 'string'
+    } */
   const { input_file } = req.body;
   const bitmap = fs.readFileSync(input_file);
   const base64File = new Buffer(bitmap).toString("base64");

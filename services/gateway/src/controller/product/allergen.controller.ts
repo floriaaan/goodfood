@@ -16,14 +16,6 @@ allergenRoutes.get("/api/allergen", (_: Request, res: Response) => {
 
 // TODO: check if route should be accessible
 allergenRoutes.get("/api/allergen/:id", (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "allergen_id:1"
-        }
-    } 
-    */
   const { id } = req.params;
 
   allergenServiceClient.readAllergen(new AllergenId().setId(id), (error, response) => {
@@ -40,14 +32,11 @@ allergenRoutes.post("/api/allergen", withCheck({ role: "ACCOUNTANT" }), (req: Re
             label: "allergen-label",
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    }
-    */
+        type: 'string'
+    } */
   const { label } = req.body;
   const allergen = new Allergen().setLibelle(label);
   allergenServiceClient.createAllergen(allergen, (error, response) => {
@@ -57,28 +46,18 @@ allergenRoutes.post("/api/allergen", withCheck({ role: "ACCOUNTANT" }), (req: Re
 });
 
 allergenRoutes.put("/api/allergen/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "allergen_id:1"
-        }
-    }
-    #swagger.parameters['body'] = {
+  /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
         schema: {
             label: "allergen-label",
         }
-    } 
-    #swagger.parameters['headers'] = {
+    }
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    }
-    */
+        type: 'string'
+    } */
   const { id } = req.params;
   const { label } = req.body;
   const allergen = new Allergen().setId(id).setLibelle(label);
@@ -89,21 +68,11 @@ allergenRoutes.put("/api/allergen/:id", withCheck({ role: "ACCOUNTANT" }), (req:
 });
 
 allergenRoutes.delete("/api/allergen/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "allergen_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    }
-    */
+        type: 'string'
+    }*/
   const { id } = req.params;
   allergenServiceClient.deleteAllergen(new AllergenId().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });

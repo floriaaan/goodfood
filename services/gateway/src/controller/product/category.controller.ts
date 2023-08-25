@@ -15,12 +15,10 @@ categoryRoutes.get("/api/category", (_: Request, res: Response) => {
 
 categoryRoutes.get("/api/category/:id", (req: Request, res: Response) => {
   /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "category_id:1"
-        }
-    }   */
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { id } = req.params;
 
   categoryServiceClient.readCategory(new CategoryId().setId(id), (error, response) => {
@@ -39,13 +37,11 @@ categoryRoutes.post("/api/category", withCheck({ role: "ACCOUNTANT" }), (req: Re
                 hexaColor: "#ffffff",
             }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    }  */
+        type: 'string'
+    } */
   const { label, icon, hexaColor } = req.body;
   const category = new Category().setLibelle(label).setIcon(icon).setHexaColor(hexaColor);
   categoryServiceClient.createCategory(category, (error, response) => {
@@ -55,14 +51,7 @@ categoryRoutes.post("/api/category", withCheck({ role: "ACCOUNTANT" }), (req: Re
 });
 
 categoryRoutes.put("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "category_id:1"
-        }
-    }
-  #swagger.parameters['body'] = {
+  /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -71,13 +60,16 @@ categoryRoutes.put("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (req:
                 hexaColor: "#ffffff",
             }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { id } = req.params;
   const { label, icon, hexaColor } = req.body;
   const category = new Category().setId(id).setLibelle(label).setIcon(icon).setHexaColor(hexaColor);
@@ -88,21 +80,16 @@ categoryRoutes.put("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (req:
 });
 
 categoryRoutes.delete("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "category_id:1"
-        }
-    }
- 
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { id } = req.params;
   categoryServiceClient.deleteCategory(new CategoryId().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });

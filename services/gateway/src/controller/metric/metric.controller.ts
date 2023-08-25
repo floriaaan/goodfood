@@ -20,20 +20,16 @@ import { withCheck } from "@gateway/middleware/auth";
 export const metricRoutes = Router();
 
 metricRoutes.get("/api/metric/:key", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['key'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            key: "key_example"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    } */
+        type: 'string'
+    }
+     #swagger.parameters['key'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
   const { key } = req.params;
   const metricInput = new GetMetricRequest().setKey(key);
   metricService.getMetric(metricInput, (error, response) => {
@@ -51,12 +47,10 @@ metricRoutes.post("/api/metric/by-restaurant-and-date", withCheck({ role: "ACCOU
             date: "2022-01-01T00:00:00.000Z",
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { restaurantId, date } = req.body;
   const getMetricsByRestaurantAndDateRequest = new GetMetricsByRestaurantAndDateRequest()
@@ -69,19 +63,10 @@ metricRoutes.post("/api/metric/by-restaurant-and-date", withCheck({ role: "ACCOU
 });
 
 metricRoutes.get("/api/metric/by-restaurant/:restaurantId", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['restaurantId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            restaurantId: "restaurant_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { restaurantId } = req.params;
   const getMetricsByRestaurantRequest = new GetMetricsByRestaurantRequest().setRestaurantId(restaurantId);
@@ -95,19 +80,10 @@ metricRoutes.get(
   "/api/metric/by-restaurant-group/:restaurantGroupId",
   withCheck({ role: "ACCOUNTANT" }),
   (req, res) => {
-    /* #swagger.parameters['restaurantGroupId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            restaurantGroupId: "restaurant_group_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+    /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
     const { restaurantGroupId } = req.params;
     const getMetricsByRestaurantGroupRequest = new GetMetricsByRestaurantGroupRequest().setRestaurantGroupId(
@@ -121,19 +97,10 @@ metricRoutes.get(
 );
 
 metricRoutes.get("/api/metric/restaurant/:restaurantId", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['restaurantId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            restaurantId: "restaurant_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { restaurantId } = req.params;
   metricService.getRestaurant(new GetRestaurantRequest().setId(restaurantId), (error, response) => {
@@ -167,12 +134,10 @@ metricRoutes.post("/api/metric/restaurant", withCheck({ role: "ACCOUNTANT" }), (
             "group_id": 1
         }
     } 
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { name, key, address, groupId } = req.body;
   const createRestaurantRequest = new CreateRestaurantRequest()
@@ -195,12 +160,10 @@ metricRoutes.post("/api/metric/restaurant-group", withCheck({ role: "ACCOUNTANT"
             "name": "example_name",
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { name } = req.body;
   const createRestaurantGroupRequest = new CreateRestaurantGroupRequest().setName(name);
@@ -212,15 +175,7 @@ metricRoutes.post("/api/metric/restaurant-group", withCheck({ role: "ACCOUNTANT"
 });
 
 metricRoutes.put("/api/metric/restaurant/:restaurantId", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* 
-    #swagger.parameters['restaurantId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            restaurantId: "restaurant_id:1"
-        }
-      }
-    #swagger.parameters['body'] = {
+  /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
         schema: {
@@ -230,12 +185,10 @@ metricRoutes.put("/api/metric/restaurant/:restaurantId", withCheck({ role: "ACCO
             "group_id": 1
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { restaurantId } = req.params;
   const { name, key, address, groupId } = req.body;
@@ -253,12 +206,10 @@ metricRoutes.put("/api/metric/restaurant/:restaurantId", withCheck({ role: "ACCO
 });
 
 metricRoutes.put("/api/metric/restaurant-group/:restaurantGroupId", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['restaurantGroupId'] = {
+        in: 'path',
         required: true,
-        schema: {
-            restaurantGroupId: "restaurant_group_id:1"
-        }
+        type: 'integer'
     }
     #swagger.parameters['body'] = {
         in: 'body',
@@ -266,6 +217,11 @@ metricRoutes.put("/api/metric/restaurant-group/:restaurantGroupId", withCheck({ 
         schema: {
             "name": "example_name",
         }
+    }
+    #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
     } */
   const { restaurantGroupId } = req.query as { restaurantGroupId: string };
   const { name } = req.body;
@@ -280,19 +236,10 @@ metricRoutes.put("/api/metric/restaurant-group/:restaurantGroupId", withCheck({ 
 });
 
 metricRoutes.delete("/api/metric/restaurant/:restaurantId", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['restaurantId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            restaurantId: "restaurant_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { restaurantId } = req.params;
   const deleteRestaurantRequest = new DeleteRestaurantRequest().setId(restaurantId);
@@ -307,16 +254,12 @@ metricRoutes.delete("/api/metric/restaurant-group/:restaurantGroupId", (req, res
   /* #swagger.parameters['restaurantGroupId'] = {
         in: 'path',
         required: true,
-        schema: {
-            restaurantGroupId: "restaurant_group_id:1"
-        }
+        type: 'integer'
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { restaurantGroupId } = req.params;
   const deleteRestaurantGroupRequest = new DeleteRestaurantGroupRequest().setId(Number(restaurantGroupId));
@@ -339,13 +282,11 @@ metricRoutes.post("/api/metric", withCheck({ role: "ACCOUNTANT" }), (req, res) =
             key :"example_key"
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    }*/
+        type: 'string'
+    } */
   const { restaurantId, code, value, key } = req.body;
   const newMetric = new Metric().setKey(key).setRestaurantId(restaurantId).setCode(code).setValue(value);
 
