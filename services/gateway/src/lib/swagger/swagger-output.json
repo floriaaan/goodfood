@@ -22,7 +22,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -41,7 +41,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -51,38 +51,52 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "John"
                 },
                 "lastName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Doe"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "johnDoe@mail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
                 },
                 "phone": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "0642424242"
                 },
                 "country": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "France"
                 },
                 "zipCode": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "76000"
                 },
                 "street": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "7 rue de la paix"
                 },
                 "lat": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 49.443232
                 },
                 "lng": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.099971
                 },
-                "role": {
-                  "example": "any"
+                "roleCode": {
+                  "$ref": "#/definitions/RoleCode"
                 }
               }
             }
@@ -107,7 +121,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -151,38 +165,52 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "John"
                 },
                 "lastName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Doe"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "johnDoe@mail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
                 },
                 "phone": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "0642424242"
                 },
                 "country": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "France"
                 },
                 "zipCode": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "76000"
                 },
                 "street": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "7 rue de la paix"
                 },
                 "lat": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 49.443232
                 },
                 "lng": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.099971
                 },
                 "roleCode": {
-                  "example": "any"
+                  "$ref": "#/definitions/RoleCode"
                 }
               }
             }
@@ -208,14 +236,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "johnDoe@mail.com"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "password"
                 }
               }
             }
@@ -275,14 +306,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "oldpassword": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "oldpassword"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "newPassword"
                 }
               }
             }
@@ -309,7 +343,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "authorization",
@@ -319,11 +353,93 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "role": {
-                  "example": "any"
+                  "$ref": "#/definitions/RoleCode"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/main-address/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "country": {
+                  "type": "string",
+                  "example": "France"
+                },
+                "zipCode": {
+                  "type": "string",
+                  "example": "76000"
+                },
+                "street": {
+                  "type": "string",
+                  "example": "7 rue de la paix"
+                },
+                "lat": {
+                  "type": "number",
+                  "example": 49.443232
+                },
+                "lng": {
+                  "type": "number",
+                  "example": 1.099971
                 }
               }
             }
@@ -350,7 +466,7 @@
             "name": "userId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -373,17 +489,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "productId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "product_id:0"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:0"
                 }
               }
             }
@@ -397,8 +517,10 @@
             "description": "Internal Server Error"
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/api/basket/remove-product": {
+      "put": {
         "tags": [
           "Basket"
         ],
@@ -407,17 +529,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "productId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "product_id:0"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:0"
                 }
               }
             }
@@ -443,14 +569,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "restaurantId": {
-                  "example": "any"
-                },
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
+                },
+                "restaurantId": {
+                  "type": "string",
+                  "example": "restaurant_id:0"
                 }
               }
             }
@@ -476,11 +605,13 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 }
               }
             }
@@ -554,20 +685,25 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "userId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Id"
                 },
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "John"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "mail"
                 },
                 "total": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 12
                 }
               }
             }
@@ -617,23 +753,28 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
+                "userId": {
+                  "type": "number",
+                  "example": 0
+                },
                 "paymentId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "payment_id:1"
                 },
                 "deliveryId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "delivery_id:1"
                 },
                 "deliveryType": {
-                  "example": "any"
-                },
-                "basketSnapshot": {
-                  "example": "any"
+                  "$ref": "#/definitions/DeliveryType"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -642,6 +783,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -683,11 +827,12 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 }
               }
             }
@@ -767,20 +912,24 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 },
                 "deliveryId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "delivery_id:1"
                 },
                 "paymentId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "payment_id:1"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -842,17 +991,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "label": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "category-label"
                 },
                 "icon": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "category-icon"
                 },
                 "hexaColor": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "#ffffff"
                 }
               }
             }
@@ -906,17 +1059,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "label": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "category-label"
                 },
                 "icon": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "category-icon"
                 },
                 "hexaColor": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "#ffffff"
                 }
               }
             }
@@ -978,11 +1135,13 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "label": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "allergen-label"
                 }
               }
             }
@@ -1036,11 +1195,13 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "label": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "allergen-label"
                 }
               }
             }
@@ -1162,44 +1323,81 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "restaurantId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "type": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "type"
                 },
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "name"
                 },
                 "image": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "image"
                 },
                 "comment": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "comment"
                 },
                 "price": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "preparation": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "preparation"
                 },
                 "weight": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "weight"
                 },
                 "kilocalories": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "0"
                 },
                 "nutriscore": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "categories": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "example": "category-label"
+                      },
+                      "icon": {
+                        "type": "string",
+                        "example": "category-icon"
+                      },
+                      "hexaColor": {
+                        "type": "string",
+                        "example": "#ffffff"
+                      }
+                    }
+                  }
                 },
                 "allergens": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "example": "allergen-label"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1241,44 +1439,81 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "restaurantId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "type": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "type"
                 },
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "name"
                 },
                 "image": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "image"
                 },
                 "comment": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "comment"
                 },
                 "price": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "preparation": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "preparation"
                 },
                 "weight": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "weight"
                 },
                 "kilocalories": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "0"
                 },
                 "nutriscore": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "categories": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "example": "category-label"
+                      },
+                      "icon": {
+                        "type": "string",
+                        "example": "category-icon"
+                      },
+                      "hexaColor": {
+                        "type": "string",
+                        "example": "#ffffff"
+                      }
+                    }
+                  }
                 },
                 "allergens": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "example": "allergen-label"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1309,6 +1544,236 @@
               "properties": {
                 "input_file": {
                   "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/restaurant/{id}": {
+      "get": {
+        "tags": [
+          "Restaurant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Restaurant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "restaurant-name"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "restaurant-desc"
+                },
+                "locationList": {
+                  "type": "array",
+                  "example": [
+                    1.099,
+                    49.443
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "address": {
+                  "type": "string",
+                  "example": "restaurant-address"
+                },
+                "openingHoursList": {
+                  "type": "array",
+                  "example": [
+                    "12h-14h",
+                    "19h-22h"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "restaurant-phone"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Restaurant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/restaurant": {
+      "get": {
+        "tags": [
+          "Restaurant"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Restaurant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "restaurant-name"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "restaurant-desc"
+                },
+                "locationList": {
+                  "type": "array",
+                  "example": [
+                    1.099,
+                    49.443
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "address": {
+                  "type": "string",
+                  "example": "restaurant-address"
+                },
+                "openingHoursList": {
+                  "type": "array",
+                  "example": [
+                    "12h-14h",
+                    "19h-22h"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "restaurant-phone"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/restaurant/by-location": {
+      "post": {
+        "tags": [
+          "Restaurant"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "locationList": {
+                  "type": "array",
+                  "example": [
+                    1.099,
+                    49.443
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
                 }
               }
             }
@@ -1362,26 +1827,32 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "eta": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
                 },
                 "address": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "10 Rue de la République, 75003 Paris, France"
                 },
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 },
                 "deliveryPersonId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "cllcdmeci0000pm01su98mxtb"
                 },
                 "userId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "user_id:1"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -1390,6 +1861,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1477,26 +1951,32 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "eta": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
                 },
                 "address": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "10 Rue de la République, 75003 Paris, France"
                 },
                 "status": {
-                  "example": "any"
+                  "$ref": "#/definitions/Status"
                 },
                 "deliveryPersonId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "cllcdmeci0000pm01su98mxtb"
                 },
                 "userId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "user_id:1"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 }
               }
             }
@@ -1505,6 +1985,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1515,7 +1998,7 @@
     "/api/delivery-person/{id}": {
       "get": {
         "tags": [
-          "DeliveryPerson"
+          "Delivery"
         ],
         "description": "",
         "parameters": [
@@ -1537,7 +2020,7 @@
       },
       "put": {
         "tags": [
-          "DeliveryPerson"
+          "Delivery"
         ],
         "description": "",
         "parameters": [
@@ -1580,7 +2063,7 @@
       },
       "delete": {
         "tags": [
-          "DeliveryPerson"
+          "Delivery"
         ],
         "description": "",
         "parameters": [
@@ -1604,7 +2087,7 @@
     "/api/delivery-person": {
       "get": {
         "tags": [
-          "DeliveryPerson"
+          "Delivery"
         ],
         "description": "",
         "responses": {
@@ -1618,7 +2101,7 @@
       },
       "post": {
         "tags": [
-          "DeliveryPerson"
+          "Delivery"
         ],
         "description": "",
         "parameters": [
@@ -1718,6 +2201,342 @@
         }
       }
     },
+    "/api/metric/by-restaurant-and-date": {
+      "post": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "restaurantId": {
+                  "type": "string",
+                  "example": "restaurant_id:1"
+                },
+                "date": {
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/by-restaurant/{restaurantId}": {
+      "get": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/by-restaurant-group/{restaurantGroupId}": {
+      "get": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantGroupId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/restaurant/{restaurantId}": {
+      "get": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "example_name"
+                },
+                "key": {
+                  "type": "string",
+                  "example": "example_key"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "example_address"
+                },
+                "group_id": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/restaurant-group/{restaurantGroupId}": {
+      "get": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantGroupId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantGroupId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "example_name"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "restaurantGroupId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/restaurant": {
+      "post": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "example_name"
+                },
+                "key": {
+                  "type": "string",
+                  "example": "example_key"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "example_address"
+                },
+                "group_id": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/metric/restaurant-group": {
+      "post": {
+        "tags": [
+          "Metric"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "example_name"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/metric": {
       "post": {
         "tags": [
@@ -1728,20 +2547,25 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 },
                 "code": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "income_1h"
                 },
                 "value": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "99.99"
                 },
                 "key": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "example_key"
                 }
               }
             }
@@ -1805,20 +2629,24 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "code": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "code-example"
                 },
                 "reduction": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "reduction-example"
                 },
                 "method": {
-                  "example": "any"
+                  "$ref": "#/definitions/Method"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:0"
                 }
               }
             }
@@ -1874,20 +2702,24 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "code": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "code-example"
                 },
                 "reduction": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "reduction-example"
                 },
                 "method": {
-                  "example": "any"
+                  "$ref": "#/definitions/Method"
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:0"
                 }
               }
             }
@@ -1936,7 +2768,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1958,19 +2790,22 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-name"
                 },
                 "contact": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-contact"
                 }
               }
             }
@@ -1995,7 +2830,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2032,14 +2867,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-name"
                 },
                 "contact": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "supplier-contact"
                 }
               }
             }
@@ -2066,7 +2904,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2088,19 +2926,22 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "ingredient-name"
                 },
-                "desciption": {
-                  "example": "any"
+                "description": {
+                  "type": "string",
+                  "example": "ingredient-desc"
                 }
               }
             }
@@ -2125,7 +2966,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2162,14 +3003,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "ingredient-name"
                 },
-                "desciption": {
-                  "example": "any"
+                "description": {
+                  "type": "string",
+                  "example": "ingredient-desc"
                 }
               }
             }
@@ -2196,7 +3040,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2218,34 +3062,48 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "alertThreshold": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 5
                 },
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "productList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    "product_id:1",
+                    "product_id:2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "unitPrice": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "pricePerKilo": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.5
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 },
                 "ingredientId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -2270,7 +3128,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2341,29 +3199,43 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "alertThreshold": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 5
                 },
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "productList": {
-                  "example": "any"
+                  "type": "array",
+                  "example": [
+                    "product_id:1",
+                    "product_id:2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "unitPrice": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "pricePerKilo": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1.5
                 },
                 "restaurantId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "restaurant_id:1"
                 },
                 "ingredientId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -2390,7 +3262,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2412,22 +3284,26 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 3
                 },
                 "ingredientRestaurantId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 },
                 "supplierId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -2452,7 +3328,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2500,7 +3376,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2524,7 +3400,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer"
           }
         ],
         "responses": {
@@ -2547,17 +3423,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "quantity": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 3
                 },
                 "ingredientRestaurantId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 },
                 "supplierId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -2576,7 +3456,7 @@
     "/api/stock/outcomes/by-restaurant/{id}": {
       "post": {
         "tags": [
-          "StockPerson"
+          "Stock"
         ],
         "description": "",
         "parameters": [
@@ -2589,14 +3469,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "date": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "2022-01-01T00:00:00.000Z"
                 },
                 "interval": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "interval-example"
                 }
               }
             }
@@ -2611,6 +3494,40 @@
           }
         }
       }
+    }
+  },
+  "definitions": {
+    "Status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "IN_PROGRESS",
+        "FULFILLED",
+        "REJECTED"
+      ]
+    },
+    "DeliveryType": {
+      "type": "string",
+      "enum": [
+        "TAKEAWAY",
+        "DELIVERY"
+      ]
+    },
+    "Method": {
+      "type": "string",
+      "enum": [
+        "PERCENT",
+        "VALUE"
+      ]
+    },
+    "RoleCode": {
+      "type": "string",
+      "enum": [
+        "ADMIN",
+        "USER",
+        "ACCOUNTANT",
+        "DELIVERER"
+      ]
     }
   }
 }
