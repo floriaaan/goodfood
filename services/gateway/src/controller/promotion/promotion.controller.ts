@@ -1,44 +1,91 @@
-import {Router} from "express";
-import {promotionServiceClient} from "@gateway/services/clients/promotion.client";
-import {Empty} from "google-protobuf/google/protobuf/empty_pb";
-import {Promotion, PromotionCode, PromotionCreateInput, PromotionId, RestaurantId} from "@gateway/proto/promotions_pb";
+import { Router } from "express";
+import { promotionServiceClient } from "@gateway/services/clients/promotion.client";
+import { Empty } from "google-protobuf/google/protobuf/empty_pb";
+import {
+  Promotion,
+  PromotionCode,
+  PromotionCreateInput,
+  PromotionId,
+  RestaurantId,
+} from "@gateway/proto/promotions_pb";
+import { getUserIdFromToken } from "@gateway/services/user.service";
+import { withCheck } from "@gateway/middleware/auth";
 
 export const promotionRoutes = Router();
 
-promotionRoutes.get('/api/promotion/:code', (req, res) => {
-    const {code} = req.params;
-    promotionServiceClient.getPromotion(new PromotionCode().setCode(code), (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
+promotionRoutes.get("/api/promotion/:code", async (req, res) => {
+  /* #swagger.parameters['code'] = {
+        in: 'path',
+        required: true,
+        schema: {
+            code: "code-example"
         }
-    });
+    }
+    #swagger.parameters['headers'] = {
+        in: 'header',
+        required: true,
+        schema: {
+            Authorization: "Bearer <token>"
+        }
+    } */
+
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  // ----------------------------
+  const { code } = req.params;
+  promotionServiceClient.getPromotion(new PromotionCode().setCode(code), (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
 });
 
-promotionRoutes.get('/api/promotion', (req, res) => {
-    promotionServiceClient.getPromotions(new Empty(), (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+promotionRoutes.get("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (_, res) => {
+  promotionServiceClient.getPromotions(new Empty(), (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
 });
 
-promotionRoutes.get('/api/promotion/by-restaurant/:restaurantId', (req, res) => {
-    const {restaurantId} = req.params;
+promotionRoutes.get(
+  "/api/promotion/by-restaurant/:restaurantId",
+  withCheck({ role: "ACCOUNTANT" }),
+  async (req, res) => {
+    /* #swagger.parameters['restaurantId'] = {
+        in: 'path',
+        required: true,
+        schema: {
+            restaurantId: "restaurant_id:0"
+        }
+    }
+    #swagger.parameters['headers'] = {
+        in: 'header',
+        required: true,
+        schema: {
+            Authorization: "Bearer <token>"
+        }
+    } */
+
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
+    const { restaurantId } = req.params;
     promotionServiceClient.getPromotionsByRestaurant(new RestaurantId().setId(restaurantId), (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
     });
-});
+  },
+);
 
-promotionRoutes.post('/api/promotion', (req, res) => {
-    /* #swagger.parameters['body'] = {
+promotionRoutes.post("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
+  /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -47,23 +94,35 @@ promotionRoutes.post('/api/promotion', (req, res) => {
                 method: {'$ref': '#/definitions/Method'},
                 restaurantId: "restaurant_id:0",
             }
-    } */
-    const {code, reduction, method, restaurantId} = req.body;
-    const promotionCreateInput = new PromotionCreateInput().setCode(code)
-        .setReduction(reduction)
-        .setMethod(method)
-        .setRestaurantId(restaurantId);
-    promotionServiceClient.createPromotion(promotionCreateInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
+    } #swagger.parameters['headers'] = {
+        in: 'header',
+        required: true,
+        schema: {
+            Authorization: "Bearer <token>"
         }
-    });
+    } */
+  const { code, reduction, method, restaurantId } = req.body;
+  const promotionCreateInput = new PromotionCreateInput()
+    .setCode(code)
+    .setReduction(reduction)
+    .setMethod(method)
+    .setRestaurantId(restaurantId);
+  promotionServiceClient.createPromotion(promotionCreateInput, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(201).json(response.toObject());
+  });
 });
 
-promotionRoutes.put('/api/promotion/:id', (req, res) => {
-    /* #swagger.parameters['body'] = {
+promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
+  /* #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        schema: {
+            id: "promotion_id:1"
+        }
+  }
+  
+  #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -72,31 +131,50 @@ promotionRoutes.put('/api/promotion/:id', (req, res) => {
                 method: {'$ref': '#/definitions/Method'},
                 restaurantId: "restaurant_id:0",
             }
-    } */
-    const {id} = req.params;
-    const {code, reduction, method, restaurantId} = req.body;
-    const promotionUpdateInput = new Promotion().setId(id).setCode(code)
-        .setReduction(reduction)
-        .setMethod(method)
-        .setRestaurantId(restaurantId);
-
-    promotionServiceClient.createPromotion(promotionUpdateInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
+    }
+    #swagger.parameters['headers'] = {
+        in: 'header',
+        required: true,
+        schema: {
+            Authorization: "Bearer <token>"
         }
-    });
+    }
+    */
+  const { id } = req.params;
+  const { code, reduction, method, restaurantId } = req.body;
+  const promotionUpdateInput = new Promotion()
+    .setId(id)
+    .setCode(code)
+    .setReduction(reduction)
+    .setMethod(method)
+    .setRestaurantId(restaurantId);
+
+  promotionServiceClient.updatePromotion(promotionUpdateInput, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
 });
 
-promotionRoutes.delete('/api/promotion/:id', (req, res) => {
-    const {id} = req.params;
-
-    promotionServiceClient.deletePromotion(new PromotionId().setId(id), (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
+promotionRoutes.delete("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
+  /* #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        schema: {
+            id: "promotion_id:1"
         }
-    });
+    }
+    #swagger.parameters['headers'] = {
+        in: 'header',
+        required: true,
+        schema: {
+            Authorization: "Bearer <token>"
+        }
+    }
+    */
+  const { id } = req.params;
+
+  promotionServiceClient.deletePromotion(new PromotionId().setId(id), (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
 });
