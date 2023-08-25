@@ -8,14 +8,20 @@ import { withCheck } from "@gateway/middleware/auth";
 export const deliveryPersonRoutes = Router();
 
 deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
-  /*
-    #swagger.parameters['headers'] = {
+  /*  #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        schema: {
+            id: "delivery_person_id:1"
+        }
+      } 
+      #swagger.parameters['headers'] = {
         in: 'header',
         required: true,
         schema: {
             Authorization: "Bearer <token>"
         }
-    } */
+      } */
 
   // Auth check and :id check ---
   const { authorization } = req.headers;
@@ -28,7 +34,7 @@ deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
   const { id } = req.params;
 
   deliveryPersonServiceClient.getDeliveryPerson(new DeliveryPersonId().setId(id), (error, response) => {
-    if (error) return res.status(500).send({ error: error });
+    if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
 });
@@ -114,8 +120,8 @@ deliveryPersonRoutes.post("/api/delivery-person", withCheck({ role: "ADMIN" }), 
 });
 
 deliveryPersonRoutes.put("/api/delivery-person/:id", withCheck({ role: "ADMIN" }), (req, res) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['id'] = {
+        in: 'path',
         required: true,
         schema: {
             id: "delivery_person_id:1"
@@ -154,8 +160,8 @@ deliveryPersonRoutes.put("/api/delivery-person/:id", withCheck({ role: "ADMIN" }
 });
 
 deliveryPersonRoutes.delete("/api/delivery-person/:id", withCheck({ role: "ADMIN" }), (req, res) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['id'] = {
+        in: 'path',
         required: true,
         schema: {
             id: "delivery_person_id:1"

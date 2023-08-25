@@ -21,8 +21,8 @@ import { check, withCheck } from "@gateway/middleware/auth";
 export const orderRoutes = Router();
 
 orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['id'] = {
+        in: 'path',
         required: true,
         schema: {
             id: "order_id:1"
@@ -44,7 +44,7 @@ orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   // ----------------------------
 
-  const { id } = req.query as { id: string };
+  const { id } = req.params;
   const orderId = new GetOrderRequest();
   orderId.setId(id);
 
@@ -134,8 +134,8 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
 });
 
 orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['userId'] = {
+        in: 'path',
         required: true,
         schema: {
             userId: "user_id:1"
@@ -154,7 +154,7 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
   const token = authorization.split("Bearer ")[1];
 
-  const userId = req.query.userId as string;
+  const { userId } = req.params;
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: Number(userId) })))
     return res.status(401).send({ error: "Unauthorized" });
@@ -191,8 +191,8 @@ orderRoutes.post("/api/order/by-status", withCheck({ role: "ACCOUNTANT" }), (req
 });
 
 orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: Response) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['deliveryId'] = {
+        in: 'path',
         required: true,
         schema: {
             deliveryId: "delivery_id:1"
@@ -224,8 +224,8 @@ orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: 
 });
 
 orderRoutes.get("/api/order/by-payment/:paymentId", async (req: Request, res: Response) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['paymentId'] = {
+        in: 'path',
         required: true,
         schema: {
             paymentId: "payment_id:1"
@@ -248,20 +248,17 @@ orderRoutes.get("/api/order/by-payment/:paymentId", async (req: Request, res: Re
 
   // TODO: check for user in payments
 
-  const { paymentId } = req.query as { paymentId: string };
+  const { paymentId } = req.params;
   const orderInput = new GetOrderByPaymentRequest().setId(paymentId);
   orderService.getOrderByPayment(orderInput, (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
-    }
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
   });
 });
 
 orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['orderId'] = {
+        in: 'path',
         required: true,
         schema: {
             orderId: "order_id:1"
@@ -284,7 +281,7 @@ orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Reque
             Authorization: "Bearer <token>"
         }
     }*/
-  const { orderId } = req.query as { orderId: string };
+  const { orderId } = req.params;
   const { status, deliveryId, paymentId, restaurantId } = req.body;
   const orderInput = new UpdateOrderRequest()
     .setId(orderId)
@@ -299,8 +296,8 @@ orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Reque
 });
 
 orderRoutes.delete("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['query'] = {
-        in: 'query',
+  /* #swagger.parameters['orderId'] = {
+        in: 'path',
         required: true,
         schema: {
             orderId: "order_id:1"
@@ -313,7 +310,7 @@ orderRoutes.delete("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Re
             Authorization: "Bearer <token>"
         }
     }*/
-  const { orderId } = req.query as { orderId: string };
+  const { orderId } = req.params;
   const orderInput = new DeleteOrderRequest().setId(orderId);
   orderService.deleteOrder(orderInput, (error, response) => {
     if (error) return res.status(500).send({ error });
