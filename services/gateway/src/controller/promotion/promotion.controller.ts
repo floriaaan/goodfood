@@ -51,18 +51,14 @@ promotionRoutes.get(
   withCheck({ role: "ACCOUNTANT" }),
   async (req, res) => {
     /* #swagger.parameters['restaurantId'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            restaurantId: "restaurant_id:0"
-        }
-    }
-    #swagger.parameters['headers'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     }
+    #swagger.parameters['header'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
 
     // Auth check and :id check ---
@@ -95,12 +91,10 @@ promotionRoutes.post("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (req, 
                 method: {'$ref': '#/definitions/Method'},
                 restaurantId: "restaurant_id:0",
             }
-    } #swagger.parameters['headers'] = {
+    } #swagger.parameters['header'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     } */
   const { code, reduction, method, restaurantId } = req.body;
   const promotionCreateInput = new PromotionCreateInput()
@@ -115,15 +109,7 @@ promotionRoutes.post("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (req, 
 });
 
 promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "promotion_id:1"
-        }
-  }
-  
-  #swagger.parameters['body'] = {
+  /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -133,12 +119,10 @@ promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (re
                 restaurantId: "restaurant_id:0",
             }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['header'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     }
     #swagger.parameters['id'] = {
            in: 'path',
@@ -161,22 +145,12 @@ promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (re
 });
 
 promotionRoutes.delete("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        schema: {
-            id: "promotion_id:1"
-        }
-    }
-    #swagger.parameters['headers'] = {
+  /* #swagger.parameters['header'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
+        type: 'string'
     }
-    */
-  /* #swagger.parameters['id'] = {
+    #swagger.parameters['id'] = {
        in: 'path',
        required: true,
        type: 'string'

@@ -12,8 +12,7 @@ restaurantRoutes.get("/api/restaurant/:id", (req: Request, res: Response) => {
         in: 'path',
         required: true,
         type: 'string'
-    }
-   */
+    } */
   const { id } = req.params;
 
   restaurantServiceClient.getRestaurant(new RestaurantId().setId(id), (error, response) => {
@@ -62,14 +61,11 @@ restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Req
             phone: "restaurant-phone"
         }
     }
-    #swagger.parameters['headers'] = {
+    #swagger.parameters['header'] = {
         in: 'header',
         required: true,
-        schema: {
-            Authorization: "Bearer <token>"
-        }
-    }
-    */
+        type: 'string'
+    } */
   const { name, description, locationList, address, openingHoursList, phone } = req.body;
   const restaurantCreateInput = new RestaurantCreateInput()
     .setName(name)
@@ -89,13 +85,10 @@ restaurantRoutes.put(
   "/api/restaurant/:id",
   withCheck({ role: ["ADMIN", "ACCOUNTANT"] }),
   (req: Request, res: Response) => {
-    /*
-        #swagger.parameters['id'] = {
+    /* #swagger.parameters['id'] = {
             in: 'path',
             required: true,
-            schema: {
-                id: "restaurant-id:1"
-            }
+           type: 'string'
         }
         #swagger.parameters['body'] = {
             in: 'body',
@@ -109,14 +102,11 @@ restaurantRoutes.put(
                 phone: "restaurant-phone"
             }
         }
-        #swagger.parameters['headers'] = {
+        #swagger.parameters['header'] = {
             in: 'header',
             required: true,
-            schema: {
-                Authorization: "Bearer <token>"
-            }
-        }
-    */
+            type: 'string'
+        } */
     const { id } = req.params;
     const { name, description, locationList, address, openingHoursList, phone } = req.body;
     const restaurantCreateInput = new Restaurant()
@@ -136,21 +126,16 @@ restaurantRoutes.put(
 );
 
 restaurantRoutes.delete("/api/restaurant/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /*
-        #swagger.parameters['id'] = {
-            in: 'path',
-            required: true,
-            schema: {
-                id: "restaurant-id:1"
-            }
-        }
-        #swagger.parameters['headers'] = {
-            in: 'header',
-            required: true,
-            schema: {
-                Authorization: "Bearer <token>"
-            }
-        }
+  /* #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'string'
+     }
+     #swagger.parameters['header'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+     }
     */
   const { id } = req.params;
 
