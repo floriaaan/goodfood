@@ -315,7 +315,7 @@ services:
   log-service:
     depends_on:
       - log-postgres
-      - log-rabbitmq
+      - event-broker
     restart:
       always
     image: floriaaan/goodfood-log:latest
@@ -326,15 +326,6 @@ services:
       - ./log/.env.docker
     ports:
       - "50021"
-    networks:
-      - goodfood-network
-
-  log-rabbitmq:
-    restart: always
-    image: rabbitmq:3-management
-    ports:
-      - "5672"
-      - "15672"
     networks:
       - goodfood-network
 
@@ -349,6 +340,19 @@ services:
       - goodfood-log-volume:/var/lib/postgresql/data
     networks:
       - goodfood-network
+
+#  RabbitMQ
+
+  event-broker:
+    restart: always
+    image: rabbitmq:3-management
+    ports:
+      - "5672"
+      - "15672"
+    networks:
+      - goodfood-network
+
+#  Volumes
 
 volumes:
   goodfood-user-volume:

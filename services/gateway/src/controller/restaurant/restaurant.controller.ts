@@ -61,7 +61,7 @@ restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Req
             phone: "restaurant-phone"
         }
     }
-    #swagger.parameters['header'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -102,7 +102,7 @@ restaurantRoutes.put(
                 phone: "restaurant-phone"
             }
         }
-        #swagger.parameters['header'] = {
+        #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
             type: 'string'
@@ -131,7 +131,7 @@ restaurantRoutes.delete("/api/restaurant/:id", withCheck({ role: "ADMIN" }), (re
         required: true,
         type: 'string'
      }
-     #swagger.parameters['header'] = {
+     #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
