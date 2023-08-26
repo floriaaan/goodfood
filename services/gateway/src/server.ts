@@ -16,6 +16,7 @@ import {stripeRoutes} from "@gateway/controller/payment/stripe.controller";
 import {restaurantRoutes} from "@gateway/controller/restaurant/restaurant.controller";
 import {paymentRoutes} from "@gateway/controller/payment/payment.controller";
 import {mainAddressRoutes} from "@gateway/controller/user/mainAddress.controller";
+import {notificationRoutes} from "@gateway/controller/notification/notification.controller";
 import bodyParser from "body-parser";
 import express from "express";
 
@@ -43,10 +44,10 @@ app.use('/', orderRoutes
 // #swagger.tags = ['Order']
 );
 app.use('/', categoryRoutes
-// #swagger.tags = ['Category']
+// #swagger.tags = ['Order']
 );
 app.use('/', allergenRoutes
-// #swagger.tags = ['Allergen']
+// #swagger.tags = ['Order']
 );
 app.use('/', productRoutes
 // #swagger.tags = ['Product']
@@ -74,6 +75,9 @@ app.use('/', stockRoutes
 );
 app.use('/', stockPersonRoutes
 // #swagger.tags = ['Stock']
+);
+app.use('/', notificationRoutes
+// #swagger.tags = ['Notification']
 );
 
 app.listen(PORT, () => {
