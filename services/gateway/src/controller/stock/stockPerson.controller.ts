@@ -1,11 +1,11 @@
-import {stockPersonServiceClient} from "@gateway/services/clients/stock.client";
-import {Request, Response, Router} from "express";
-import {GetOutcomesByRestaurantRequest} from "@gateway/proto/stock_pb";
+import { stockPersonServiceClient } from "@gateway/services/clients/stock.client";
+import { Request, Response, Router } from "express";
+import { GetOutcomesByRestaurantRequest } from "@gateway/proto/stock_pb";
 
 export const stockPersonRoutes = Router();
 
-stockPersonRoutes.post('/api/stock/outcomes/by-restaurant/:id', (req: Request, res: Response) => {
-    /* #swagger.parameters['body'] = {
+stockPersonRoutes.post("/api/stock/outcomes/by-restaurant/:id", (req: Request, res: Response) => {
+  /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -17,15 +17,18 @@ stockPersonRoutes.post('/api/stock/outcomes/by-restaurant/:id', (req: Request, r
            required: true,
            type: 'string'
      } */
-    const {id} = req.params;
-    const {date, interval} = req.body;
-    const outcomesByRestaurantRequest = new GetOutcomesByRestaurantRequest().setRestaurantId(id).setDate(date).setInterval(interval);
+  const { id } = req.params;
+  const { date, interval } = req.body;
+  const outcomesByRestaurantRequest = new GetOutcomesByRestaurantRequest()
+    .setRestaurantId(id)
+    .setDate(date)
+    .setInterval(interval);
 
-    stockPersonServiceClient.getOutcomesByRestaurant(outcomesByRestaurantRequest, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  stockPersonServiceClient.getOutcomesByRestaurant(outcomesByRestaurantRequest, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
+    }
+  });
 });
