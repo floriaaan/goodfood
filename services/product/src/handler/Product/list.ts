@@ -4,7 +4,7 @@ import { log } from "@product/lib/log";
 import prisma from "@product/lib/prisma";
 import { ServerErrorResponse } from "@grpc/grpc-js";
 
-export const ListProduct = async (
+export const getProductList = async (
 	{ request }: Data<RestaurantId>,
 	callback: (err: ServerErrorResponse | any, response: ProductList | null) => void
 ) => {
