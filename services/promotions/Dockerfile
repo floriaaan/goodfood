@@ -29,10 +29,11 @@ WORKDIR /app
 COPY --from=builder /app/dist .
 COPY --from=builder /app/prisma/ .
 COPY --from=builder /app/proto/ /proto/
+COPY --from=builder /app/script.sh ./script.sh
 COPY --from=builder /app/node_modules/.prisma /.prisma
 
 # Expose the gRPC port
 EXPOSE 50006
 
 # Start the server
-CMD [ "node", "index.js"]
+CMD ["sh", "script.sh"]
