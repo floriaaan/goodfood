@@ -155,7 +155,7 @@ promotionRoutes.delete("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), 
        required: true,
        type: 'string'
     } */
-    const {id} = req.params;
+  const { id } = req.params;
 
   promotionServiceClient.deletePromotion(new PromotionId().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });
