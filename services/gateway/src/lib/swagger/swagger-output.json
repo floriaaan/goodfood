@@ -1064,20 +1064,11 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
+          "default": {
+            "description": ""
           }
         }
       }
@@ -1611,8 +1602,7 @@
                   "example": 0
                 },
                 "type": {
-                  "type": "string",
-                  "example": "type"
+                  "$ref": "#/definitions/ProductType"
                 },
                 "name": {
                   "type": "string",
@@ -1646,34 +1636,26 @@
                   "type": "number",
                   "example": 0
                 },
-                "categories": {
+                "categoryIds": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
-                      "label": {
+                      "id": {
                         "type": "string",
-                        "example": "category-label"
-                      },
-                      "icon": {
-                        "type": "string",
-                        "example": "category-icon"
-                      },
-                      "hexaColor": {
-                        "type": "string",
-                        "example": "#ffffff"
+                        "example": "category:id"
                       }
                     }
                   }
                 },
-                "allergens": {
+                "allergenIds": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
-                      "label": {
+                      "id": {
                         "type": "string",
-                        "example": "allergen-label"
+                        "example": "allergen:id"
                       }
                     }
                   }
@@ -3983,6 +3965,16 @@
         "USER",
         "ACCOUNTANT",
         "DELIVERER"
+      ]
+    },
+    "ProductType": {
+      "type": "string",
+      "enum": [
+        "ENTREES",
+        "PLATS",
+        "DESSERTS",
+        "BOISSONS",
+        "SNACKS"
       ]
     }
   }

@@ -34,6 +34,15 @@ const doc = {
         "ACCOUNTANT",
         "DELIVERER"
       ]
+    },
+    ProductType: {
+      '@enum': [
+        "ENTREES",
+        "PLATS",
+        "DESSERTS",
+        "BOISSONS",
+        "SNACKS"
+      ]
     }
   }
 };
