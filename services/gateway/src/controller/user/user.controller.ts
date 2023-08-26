@@ -15,7 +15,7 @@ import {
 } from "@gateway/proto/user_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
-import {check, withCheck} from "@gateway/middleware/auth";
+import { check, withCheck } from "@gateway/middleware/auth";
 
 export const userRoutes = Router();
 userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
@@ -38,7 +38,7 @@ userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
   if (!(await check(token, { id: Number(id) }))) return res.status(403).json({ message: "Forbidden" });
 
   try {
-    const user = await getUser(Number(id))
+    const user = await getUser(Number(id));
     res.json(user?.toObject());
   } catch (e: any) {
     res.json({ error: e.message });
@@ -159,8 +159,8 @@ userRoutes.put("/api/user", async (req: Request, res: Response) => {
   });
 });
 
-userRoutes.delete('/api/user/:id', (req: Request, res: Response) => {
-    /* #swagger.parameters['authorization'] = {
+userRoutes.delete("/api/user/:id", (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -170,9 +170,9 @@ userRoutes.delete('/api/user/:id', (req: Request, res: Response) => {
            required: true,
            type: 'integer'
    } */
-    const {id} = req.params;
-    const {authorization} = req.headers;
-    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const { id } = req.params;
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
 
   // The delete route in the user service implement the user validation
   userServiceClient.deleteUser(new DeleteInput().setUserid(Number(id)).setToken(authorization), (error, response) => {
@@ -225,8 +225,8 @@ userRoutes.post("/api/user/validate", (req: Request, res: Response) => {
   });
 });
 
-userRoutes.put('/api/user/password', (req: Request, res: Response) => {
-    /* #swagger.parameters['authorization'] = {
+userRoutes.put("/api/user/password", (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -240,8 +240,8 @@ userRoutes.put('/api/user/password', (req: Request, res: Response) => {
         }
     } */
 
-    const {authorization} = req.headers;
-    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
 
   const { oldpassword, password } = req.body;
   const updatePasswordInput = new changePasswordInput();
@@ -260,8 +260,8 @@ userRoutes.put('/api/user/password', (req: Request, res: Response) => {
   });
 });
 
-userRoutes.put('/api/user/:id/role', withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-    /* #swagger.parameters['authorization'] = {
+userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -278,26 +278,23 @@ userRoutes.put('/api/user/:id/role', withCheck({ role: "ADMIN" }), (req: Request
              role: {'$ref': '#/definitions/RoleCode'},
          }
  } */
-    const {authorization} = req.headers;
-    if (!authorization) {
-        res.json({error: 'Not authorized'});
-        return;
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.json({ error: "Not authorized" });
+    return;
+  }
+  const id = req.params.id;
+  const updatePasswordInput = new changeRoleInput();
+  try {
+    updatePasswordInput.setToken(authorization).setUserid(Number(id)).setRolecode(req.body.role);
+  } catch (e: any) {
+    res.json({ error: e.message });
+  }
+  userServiceClient.changeRole(updatePasswordInput, (error, response) => {
+    if (error) {
+      res.status(500).send({ error: error.message });
+    } else {
+      res.json(response.toObject());
     }
-    const id = req.params.id;
-    const updatePasswordInput = new changeRoleInput();
-    try {
-        updatePasswordInput
-            .setToken(authorization)
-            .setUserid(Number(id))
-            .setRolecode(req.body.role);
-    } catch (e: any) {
-        res.json({error: e.message});
-    }
-    userServiceClient.changeRole(updatePasswordInput, (error, response) => {
-        if (error) {
-            res.status(500).send({error: error.message});
-        } else {
-            res.json(response.toObject());
-        }
-    });
+  });
 });
