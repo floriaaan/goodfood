@@ -1076,7 +1076,7 @@
     "/api/category": {
       "get": {
         "tags": [
-          "Category"
+          "Order"
         ],
         "description": "",
         "responses": {
@@ -1090,7 +1090,7 @@
       },
       "post": {
         "tags": [
-          "Category"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -1136,7 +1136,7 @@
     "/api/category/{id}": {
       "get": {
         "tags": [
-          "Category"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -1158,7 +1158,7 @@
       },
       "put": {
         "tags": [
-          "Category"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -1208,7 +1208,7 @@
       },
       "delete": {
         "tags": [
-          "Category"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -1238,7 +1238,7 @@
     "/api/allergen": {
       "get": {
         "tags": [
-          "Allergen"
+          "Order"
         ],
         "description": "",
         "responses": {
@@ -1252,7 +1252,7 @@
       },
       "post": {
         "tags": [
-          "Allergen"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -1290,7 +1290,7 @@
     "/api/allergen/{id}": {
       "get": {
         "tags": [
-          "Allergen"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -1312,7 +1312,7 @@
       },
       "put": {
         "tags": [
-          "Allergen"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -1354,7 +1354,7 @@
       },
       "delete": {
         "tags": [
-          "Allergen"
+          "Order"
         ],
         "description": "",
         "parameters": [
@@ -3932,6 +3932,183 @@
           }
         }
       }
+    },
+    "/api/notification/by-message-type": {
+      "post": {
+        "tags": [
+          "Notification"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "$ref": "#/definitions/MessageType"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/notification/{id}": {
+      "get": {
+        "tags": [
+          "Notification"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Notification"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "notification-title"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "notification-message"
+                },
+                "messageType": {
+                  "$ref": "#/definitions/MessageType"
+                }
+              }
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Notification"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/notification": {
+      "post": {
+        "tags": [
+          "Notification"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "notification-title"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "notification-message"
+                },
+                "messageType": {
+                  "$ref": "#/definitions/MessageType"
+                }
+              }
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -3975,6 +4152,13 @@
         "DESSERTS",
         "BOISSONS",
         "SNACKS"
+      ]
+    },
+    "MessageType": {
+      "type": "string",
+      "enum": [
+        "USER_REQUEST",
+        "OUTPUT"
       ]
     }
   }

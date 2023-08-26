@@ -341,6 +341,34 @@ services:
     networks:
       - goodfood-network
 
+#  Notification service
+
+  notification-service:
+      image: goodfood-notification:1.0.0
+      build:
+        context: .
+        dockerfile: ./notification/Dockerfile
+      env_file:
+      - notification/.env.docker
+      ports:
+      - "50022"
+      networks:
+      - goodfood-network
+
+  notification-postgres:
+      image: postgres:15.2
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: notification
+        PGDATA: /var/lib/postgresql/data/pgdata
+      ports:
+      - "5432"
+      volumes:
+      - goodfood-notification-volume:/var/lib/postgresql/data
+      networks:
+      - goodfood-network
+
 #  RabbitMQ
 
   event-broker:
@@ -366,6 +394,7 @@ volumes:
   goodfood-stock-volume:
   goodfood-reporting-volume:
   goodfood-log-volume:
+  goodfood-notification-volume:
 
 networks:
   goodfood-network:

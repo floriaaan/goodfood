@@ -43,6 +43,12 @@ const doc = {
         "BOISSONS",
         "SNACKS"
       ]
+    },
+    MessageType:{
+      '@enum': [
+        "USER_REQUEST",
+        "OUTPUT"
+      ]
     }
   }
 };
