@@ -31,8 +31,11 @@ export const stockRoutes = Router();
  * Ingredient Routes
  */
 
-stockRoutes.get("/api/stock/supplier/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['id'] = {
+stockRoutes.get(
+  "/api/stock/supplier/:id",
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
         in: 'path',
         required: true,
         type: 'integer'
@@ -42,16 +45,17 @@ stockRoutes.get("/api/stock/supplier/:id", withCheck({ role: "ACCOUNTANT" }), (r
         required: true,
         type: 'string'
     } */
-  const { id } = req.params;
-  const supplierRequest = new GetSupplierRequest().setId(Number(id));
+    const { id } = req.params;
+    const supplierRequest = new GetSupplierRequest().setId(Number(id));
 
-  stockServiceClient.getSupplier(supplierRequest, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    stockServiceClient.getSupplier(supplierRequest, (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);
 
-stockRoutes.get("/api/stock/supplier", withCheck({ role: "ACCOUNTANT" }), (_: Request, res: Response) => {
+stockRoutes.get("/api/stock/supplier", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (_: Request, res: Response) => {
   /*    #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
@@ -64,8 +68,11 @@ stockRoutes.get("/api/stock/supplier", withCheck({ role: "ACCOUNTANT" }), (_: Re
   });
 });
 
-stockRoutes.get("/api/stock/ingredient/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /*    #swagger.parameters['id'] = {
+stockRoutes.get(
+  "/api/stock/ingredient/:id",
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /*    #swagger.parameters['id'] = {
            in: 'path',
            required: true,
            type: 'integer'
@@ -76,14 +83,15 @@ stockRoutes.get("/api/stock/ingredient/:id", withCheck({ role: "ACCOUNTANT" }), 
             type: 'string'
         }
      */
-  const { id } = req.params;
-  const ingredientRequest = new GetIngredientRequest().setId(Number(id));
+    const { id } = req.params;
+    const ingredientRequest = new GetIngredientRequest().setId(Number(id));
 
-  stockServiceClient.getIngredient(ingredientRequest, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    stockServiceClient.getIngredient(ingredientRequest, (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);
 
 stockRoutes.get("/api/stock/ingredient", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (_: Request, res: Response) => {
   /*    #swagger.parameters['authorization'] = {

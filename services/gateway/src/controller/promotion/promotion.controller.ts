@@ -39,7 +39,7 @@ promotionRoutes.get("/api/promotion/:code", async (req, res) => {
   });
 });
 
-promotionRoutes.get("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (_, res) => {
+promotionRoutes.get("/api/promotion", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (_, res) => {
   promotionServiceClient.getPromotions(new Empty(), (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
@@ -48,7 +48,7 @@ promotionRoutes.get("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (_, res
 
 promotionRoutes.get(
   "/api/promotion/by-restaurant/:restaurantId",
-  withCheck({ role: "ACCOUNTANT" }),
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
   async (req, res) => {
     /* #swagger.parameters['restaurantId'] = {
            in: 'path',
@@ -81,7 +81,7 @@ promotionRoutes.get(
   },
 );
 
-promotionRoutes.post("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
+promotionRoutes.post("/api/promotion", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -108,7 +108,7 @@ promotionRoutes.post("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (req, 
   });
 });
 
-promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
+promotionRoutes.put("/api/promotion/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -144,7 +144,7 @@ promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (re
   });
 });
 
-promotionRoutes.delete("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
+promotionRoutes.delete("/api/promotion/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,

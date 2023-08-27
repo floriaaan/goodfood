@@ -41,8 +41,11 @@ productRoutes.get("/api/product/type", (_: Request, res: Response) => {
   });
 });
 
-productRoutes.delete("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['authorization'] = {
+productRoutes.delete(
+  "/api/product/:id",
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
             type: 'string'
@@ -52,15 +55,16 @@ productRoutes.delete("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req
                required: true,
                type: 'string'
          } */
-  const { id } = req.params;
-  const productId = new ProductId().setId(id);
-  productServiceClient.deleteProduct(productId, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    const { id } = req.params;
+    const productId = new ProductId().setId(id);
+    productServiceClient.deleteProduct(productId, (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);
 
-productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
+productRoutes.post("/api/product", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -123,13 +127,12 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
 
   productServiceClient.createProduct(product, (error, response) => {
     if (error) {
-      console.log(error);
       return res.status(500).send({ error });
     } else return res.status(201).json(response.toObject());
   });
 });
 
-productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
+productRoutes.put("/api/product/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -178,7 +181,6 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
     allergens,
   } = req.body;
 
-
   const categoryList = categories.map((category: { id: string }) => new Category().setId(category.id));
   const allergenList = allergens.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
 
@@ -203,8 +205,11 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
   });
 });
 
-productRoutes.post("/api/product/image", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['body'] = {
+productRoutes.post(
+  "/api/product/image",
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -216,13 +221,14 @@ productRoutes.post("/api/product/image", withCheck({ role: "ACCOUNTANT" }), (req
             required: true,
             type: 'string'
         } */
-  const { input_file } = req.body;
-  const bitmap = fs.readFileSync(input_file);
-  const base64File = new Buffer(bitmap).toString("base64");
+    const { input_file } = req.body;
+    const bitmap = fs.readFileSync(input_file);
+    const base64File = new Buffer(bitmap).toString("base64");
 
-  const file = new File().setName(input_file).setData(base64File);
-  productServiceClient.uploadImage(file, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    const file = new File().setName(input_file).setData(base64File);
+    productServiceClient.uploadImage(file, (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);
