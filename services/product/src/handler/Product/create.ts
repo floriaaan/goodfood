@@ -8,6 +8,8 @@ import { Category } from "@product/types/Category";
 import { Product } from "@product/types/Product";
 import prisma from "@product/lib/prisma";
 import { ServerErrorResponse } from "@grpc/grpc-js";
+import {ReadCategory} from "@product/handler/Category/read";
+import {CreateCategory} from "@product/handler/Category/create";
 
 export const CreateProduct = async (
 	{ request }: Data<Product>,
@@ -16,23 +18,42 @@ export const CreateProduct = async (
 	try {
 		const { name, image, comment, price, preparation, weight, kilocalories, nutriscore, restaurant_id, type, categories, allergens } = request;
 
+		const handleMapRequest = (err: any, response: Allergen | Category | null) => {
+			if (err) {
+				log.error(err);
+			} else {
+				return response;
+			}
+		};
+
 		allergens.map(async allergen => {
 			if(allergen.id != "" && allergen.id != null)
-				ReadAllergen({
-					request: { id: allergen.id }
-				}, handlMapAllergen);
+				await ReadAllergen({
+					request: {id: allergen.id}
+				}, () =>{
+					CreateAllergen({
+						request: allergen
+					}, handleMapRequest)
+				});
 			else
-				CreateAllergen({
-					request:  allergen
-				}, handlMapAllergen);
+				await CreateAllergen({
+					request: allergen
+				}, handleMapRequest);
 		});
 
-		categories.map(async categorie => {
-			const categorieFind = await prisma.category.findFirst({
-				where : { libelle: categorie.libelle } 
-			}) as Category
-			if(categorieFind)
-				categorie = categorieFind;
+		categories.map(async category => {
+			if(category.id != "" && category.id != null)
+				await ReadCategory({
+					request: {id: category.id}
+				}, () =>{
+					CreateCategory({
+						request: category
+					}, handleMapRequest)
+				});
+			else
+				await CreateCategory({
+					request: category
+				}, handleMapRequest);
 		});
 
 		const product = await prisma.product.create({
@@ -61,13 +82,5 @@ export const CreateProduct = async (
 		log.error(error);
 		callback(error, null);
 	}
-
-	const handlMapAllergen = (err: any, response: Allergen | null) => {
-		if (err) {
-			log.error(err);
-		} else {
-			return response;
-		}
-	};
 };
 
