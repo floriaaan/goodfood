@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { productServiceClient } from "../../services/clients/product.client";
-import { Allergen, Category, File, Product, ProductId, RestaurantId } from "../../proto/product_pb";
+import { Allergen, Category, File, Product, ProductId, ProductType, RestaurantId } from "../../proto/product_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import * as fs from "fs";
 import { withCheck } from "@gateway/middleware/auth";
@@ -65,29 +65,30 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
         in: 'body',
         required: true,
         schema: {
-            restaurantId: 0,
-            type: "type",
+            restaurantId: "restaurant:id",
+            type: {'$ref': '#/definitions/ProductType'},
             name: "name",
-            image: "image",
+            image: "bucket_url_to_image",
             comment: "comment",
             price: 0,
             preparation: "preparation",
             weight: "weight",
             kilocalories: "0",
             nutriscore: 0,
-            categories: [
-                {
+            categories: [{
+                    id: "category:id|null",
                     label: "category-label",
                     icon: "category-icon",
                     hexaColor: "#ffffff",
                 }],
             allergens: [
                 {
+                    id:"allergen:id|null",
                     label: "allergen-label",
                 }
             ],
         }
-    } 
+    }
     #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
@@ -104,18 +105,29 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
     weight,
     kilocalories,
     nutriscore,
-    categories,
     allergens,
+    categories,
   } = req.body;
 
-  const allergensList = allergens.map((allergen: { label: string }) => new Allergen().setLibelle(allergen.label));
-  const categoryList = categories.map((category: { label: string; hexaColor: string; icon: string }) =>
-    new Category().setLibelle(category.label).setHexaColor(category.hexaColor).setIcon(category.icon),
+  const allergenList = allergens.map((allergen: { id: string | null; label: string }) => {
+    const newAllergen = new Allergen().setLibelle(allergen.label);
+    if (allergen.id) newAllergen.setId(allergen.id);
+    return newAllergen;
+  });
+  const categoryList = categories.map(
+    (category: { id: string | null; label: string; hexaColor: string; icon: string }) => {
+      const newCategory = new Category()
+        .setLibelle(category.label)
+        .setHexaColor(category.hexaColor)
+        .setIcon(category.icon);
+      if (category.id) newCategory.setId(category.id);
+      return newCategory;
+    },
   );
 
   const productId = new Product()
     .setRestaurantId(Number(restaurantId))
-    .setType(type)
+    .setType(ProductType[type as keyof typeof ProductType])
     .setName(name)
     .setImage(image)
     .setComment(comment)
@@ -125,11 +137,12 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
     .setCategoriesList(categoryList)
-    .setAllergensList(allergensList);
+    .setAllergensList(allergenList);
 
   productServiceClient.createProduct(productId, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(201).json(response.toObject());
+    if (error) {
+      return res.status(500).send({ error });
+    } else return res.status(201).json(response.toObject());
   });
 });
 
@@ -141,7 +154,7 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
             restaurantId: 0,
             type: "type",
             name: "name",
-            image: "image",
+            image: "bucket_url_to_image",
             comment: "comment",
             price: 0,
             preparation: "preparation",
@@ -160,7 +173,7 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
                 }
             ],
         }
-    } 
+    }
     #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
