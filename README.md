@@ -17,13 +17,13 @@ a high volume of concurrent users, up to several thousand.
 
 | Service      | Port  | Language    | Database   | Status | Assignee        |
 | ------------ | ----- | ----------- | ---------- | ------ | --------------- |
-| Gateway      | 50000 | Go          | ❌         | ❌     | @Anatole-Godard |
+| Gateway      | 50000 | Go          | ❌         | ⚠️     | @Anatole-Godard |
 | User (auth)  | 50001 | Go          | PostgreSQL | ⚠️     | @Anatole-Godard |
 | Basket       | 50002 | NodeJS (ts) | Redis      | ⚠️     | @Anatole-Godard |
 | Payment      | 50003 | NodeJS (ts) | PostgreSQL | ✅     | @floriaaan      |
-| Product      | 50004 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
-| Restaurant   | 50005 | NodeJS (ts) | PostgreSQL | ❌     | @floriaaan      |
-| Promotion    | 50006 | NodeJS (ts) | PostgreSQL | ❌     | @PierreLbg      |
+| Product      | 50004 | NodeJS (ts) | PostgreSQL | ⚠️     | @PierreLbg      |
+| Restaurant   | 50005 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
+| Promotion    | 50006 | NodeJS (ts) | PostgreSQL | ⚠️     | @PierreLbg      |
 | Order        | 50007 | NodeJS (ts) | PostgreSQL | ✅     | @floriaaan      |
 | Delivery     | 50008 | NodeJS (ts) | PostgreSQL | ✅     | @floriaaan      |
 | Stock        | 50009 | NodeJS (ts) | PostgreSQL | ⚠️     | @floriaaan      |
@@ -66,6 +66,20 @@ The file hierarchy for this project is as follows:
 ```
 
 ## Installation & usage
+
+### Docker
+
+You can use Docker to run the microservices and the gateway.
+
+To do so, you will need to have Docker installed on your system.
+
+You can then run the following command to start the microservices and the gateway:
+
+```shell
+docker-compose up -f services/docker-compose.yml -d --build
+```
+
+### Development
 
 Each service has its own README.md file with installation and usage instructions.
 
