@@ -56,18 +56,18 @@ app.use(
   // #swagger.tags = ['Order']
 );
 app.use(
+    "/",
+    productRoutes,
+    // #swagger.tags = ['Product']
+);
+app.use(
   "/",
   categoryRoutes,
-  // #swagger.tags = ['Order']
+  // #swagger.tags = ['Product']
 );
 app.use(
   "/",
   allergenRoutes,
-  // #swagger.tags = ['Order']
-);
-app.use(
-  "/",
-  productRoutes,
   // #swagger.tags = ['Product']
 );
 app.use(
