@@ -9,6 +9,18 @@ import { CreateNotification } from "@notifications/handler/create";
 const DEFAULT_QUEUE = "log";
 const DEFAULT_SUB_QUEUE = "notification";
 
+
+async function createQueue(queue = DEFAULT_QUEUE) {
+	try {
+		const connection = await amqp.connect(process.env.AMQP_URL || "");
+		const channel = await connection.createChannel();
+		await channel.assertQueue(queue, { durable: false });
+		return channel;
+	} catch (error) {
+		return error as Error;
+	}
+}
+
 async function connectQueue(queue = DEFAULT_QUEUE) {
 	try {
 		const connection = await amqp.connect(process.env.AMQP_URL || "");
@@ -37,36 +49,38 @@ export const publish = async (message: any, queue = DEFAULT_QUEUE) => {
 };
 
 const toNotification = (message: any) => {
-	const { email, title, messageTexte } = JSON.parse(message.content.toString());
-	return { email: email, title: title, messageTexte: messageTexte, messageType: MessageType.OUTPUT };
+	const { email, title, messageText: messageText } = JSON.parse(message.content.toString());
+	return { email: email, title: title, messageText: messageText, messageType: MessageType.OUTPUT };
 }
 
 export const subscribe = async (queue = DEFAULT_SUB_QUEUE) => {
-	const channel = await connectQueue(queue);
+	const channel = await createQueue(queue);
 	if (channel instanceof Error)
-		return console.log("Error to connect to queue: ", channel);
-	channel.consume(
-		queue, 
-		async function(message) {
-			const { email, title, messageTexte, messageType } = toNotification(message);
+		return console.log("Error to create queue: ", channel);
+
+	await channel.consume(
+		queue,
+		async function (message) {
+			const {email, title, messageText, messageType} = toNotification(message);
 			const notification = {
-			 request:
-				{
-					title: title,
-					message: messageTexte,
-					message_type: messageType as unknown as MessageType
-				}
+				request:
+					{
+						title: title,
+						message: messageText,
+						message_type: messageType as unknown as MessageType
+					}
 			} as Data<NotificationCreateInput>
 
-			CreateNotification(notification, () => {});
+			await CreateNotification(notification, () => {
+			});
 
-			const { success } = await plunk.emails.send({
+			const {success} = await plunk.emails.send({
 				to: email,
-				body: messageTexte,
+				body: messageText,
 				subject: title
 			});
 
-			if(success)
+			if (success)
 				log.debug(
 					msg("AMQP", `${queue} (queue)`, new Date(), new Date()),
 					"Email send"
