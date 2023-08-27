@@ -1227,18 +1227,6 @@
                       "id": {
                         "type": "string",
                         "example": "category:id"
-                      },
-                      "label": {
-                        "type": "string",
-                        "example": "category-label"
-                      },
-                      "icon": {
-                        "type": "string",
-                        "example": "category-icon"
-                      },
-                      "hexaColor": {
-                        "type": "string",
-                        "example": "#ffffff"
                       }
                     }
                   }
@@ -1251,10 +1239,6 @@
                       "id": {
                         "type": "string",
                         "example": "allergen:id"
-                      },
-                      "label": {
-                        "type": "string",
-                        "example": "allergen-label"
                       }
                     }
                   }
@@ -1355,19 +1339,7 @@
                     "properties": {
                       "id": {
                         "type": "string",
-                        "example": "category:id|null"
-                      },
-                      "label": {
-                        "type": "string",
-                        "example": "category-label"
-                      },
-                      "icon": {
-                        "type": "string",
-                        "example": "category-icon"
-                      },
-                      "hexaColor": {
-                        "type": "string",
-                        "example": "#ffffff"
+                        "example": "category:id"
                       }
                     }
                   }
@@ -1379,11 +1351,7 @@
                     "properties": {
                       "id": {
                         "type": "string",
-                        "example": "allergen:id|null"
-                      },
-                      "label": {
-                        "type": "string",
-                        "example": "allergen-label"
+                        "example": "allergen:id"
                       }
                     }
                   }
