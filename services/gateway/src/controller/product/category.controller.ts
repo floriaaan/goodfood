@@ -27,7 +27,7 @@ categoryRoutes.get("/api/category/:id", (req: Request, res: Response) => {
   });
 });
 
-categoryRoutes.post("/api/category", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
+categoryRoutes.post("/api/category", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -50,7 +50,7 @@ categoryRoutes.post("/api/category", withCheck({ role: "ACCOUNTANT" }), (req: Re
   });
 });
 
-categoryRoutes.put("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
+categoryRoutes.put("/api/category/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -79,8 +79,11 @@ categoryRoutes.put("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (req:
   });
 });
 
-categoryRoutes.delete("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['authorization'] = {
+categoryRoutes.delete(
+  "/api/category/:id",
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -90,9 +93,10 @@ categoryRoutes.delete("/api/category/:id", withCheck({ role: "ACCOUNTANT" }), (r
            required: true,
            type: 'string'
      } */
-  const { id } = req.params;
-  categoryServiceClient.deleteCategory(new CategoryId().setId(id), (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    const { id } = req.params;
+    categoryServiceClient.deleteCategory(new CategoryId().setId(id), (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);

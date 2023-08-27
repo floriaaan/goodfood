@@ -45,7 +45,7 @@ deliveryRoutes.get("/api/delivery/:id", async (req: Request, res: Response) => {
 
 deliveryRoutes.get(
   "/api/delivery/by-restaurant/:id",
-  withCheck({ role: "ACCOUNTANT" }),
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['authorization'] = {
         in: 'header',

@@ -24,7 +24,7 @@ allergenRoutes.get("/api/allergen/:id", (req: Request, res: Response) => {
   });
 });
 
-allergenRoutes.post("/api/allergen", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
+allergenRoutes.post("/api/allergen", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -45,7 +45,7 @@ allergenRoutes.post("/api/allergen", withCheck({ role: "ACCOUNTANT" }), (req: Re
   });
 });
 
-allergenRoutes.put("/api/allergen/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
+allergenRoutes.put("/api/allergen/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -67,15 +67,19 @@ allergenRoutes.put("/api/allergen/:id", withCheck({ role: "ACCOUNTANT" }), (req:
   });
 });
 
-allergenRoutes.delete("/api/allergen/:id", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['authorization'] = {
+allergenRoutes.delete(
+  "/api/allergen/:id",
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
     }*/
-  const { id } = req.params;
-  allergenServiceClient.deleteAllergen(new AllergenId().setId(id), (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    const { id } = req.params;
+    allergenServiceClient.deleteAllergen(new AllergenId().setId(id), (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);

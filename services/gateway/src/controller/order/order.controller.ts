@@ -153,8 +153,11 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   });
 });
 
-orderRoutes.post("/api/order/by-status", withCheck({ role: "ACCOUNTANT" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['body'] = {
+orderRoutes.post(
+  "/api/order/by-status",
+  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
         schema: {
@@ -166,14 +169,15 @@ orderRoutes.post("/api/order/by-status", withCheck({ role: "ACCOUNTANT" }), (req
         required: true,
         type: 'string'
     } */
-  const { status }: { status: keyof typeof Status } = req.body;
-  const orderInput = new GetOrdersByStatusRequest().setStatus(Status[status]);
+    const { status }: { status: keyof typeof Status } = req.body;
+    const orderInput = new GetOrdersByStatusRequest().setStatus(Status[status]);
 
-  orderService.getOrdersByStatus(orderInput, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    orderService.getOrdersByStatus(orderInput, (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);
 
 orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
