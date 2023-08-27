@@ -81,12 +81,10 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
                     icon: "category-icon",
                     hexaColor: "#ffffff",
                 }],
-            allergens: [
-                {
+            allergens: [{
                     id:"allergen:id|null",
                     label: "allergen-label",
-                }
-            ],
+                }],
         }
     }
     #swagger.parameters['authorization'] = {
@@ -94,6 +92,7 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
         required: true,
         type: 'string'
     } */
+
   const {
     restaurantId,
     type,
@@ -109,24 +108,8 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
     categories,
   } = req.body;
 
-  const allergenList = allergens.map((allergen: { id: string | null; label: string }) => {
-    const newAllergen = new Allergen().setLibelle(allergen.label);
-    if (allergen.id) newAllergen.setId(allergen.id);
-    return newAllergen;
-  });
-  const categoryList = categories.map(
-    (category: { id: string | null; label: string; hexaColor: string; icon: string }) => {
-      const newCategory = new Category()
-        .setLibelle(category.label)
-        .setHexaColor(category.hexaColor)
-        .setIcon(category.icon);
-      if (category.id) newCategory.setId(category.id);
-      return newCategory;
-    },
-  );
-
-  const productId = new Product()
-    .setRestaurantId(Number(restaurantId))
+  const product = new Product()
+    .setRestaurantId(restaurantId)
     .setType(ProductType[type as keyof typeof ProductType])
     .setName(name)
     .setImage(image)
@@ -135,12 +118,26 @@ productRoutes.post("/api/product", withCheck({ role: "ACCOUNTANT" }), (req: Requ
     .setPreparation(preparation)
     .setWeight(weight)
     .setKilocalories(kilocalories)
-    .setNutriscore(nutriscore)
-    .setCategoriesList(categoryList)
-    .setAllergensList(allergenList);
+    .setNutriscore(nutriscore);
 
-  productServiceClient.createProduct(productId, (error, response) => {
+  categories.map((category: { id: string | null; label: string; hexaColor: string; icon: string }) => {
+    const newCategory = new Category()
+      .setLibelle(category.label)
+      .setHexaColor(category.hexaColor)
+      .setIcon(category.icon);
+    if (category.id) newCategory.setId(category.id);
+    product.addCategories(newCategory);
+  });
+
+  allergens.map((allergen: { id: string | null; label: string }) => {
+    const newAllergen = new Allergen().setLibelle(allergen.label);
+    if (allergen.id) newAllergen.setId(allergen.id);
+    product.addAllergens(newAllergen);
+  });
+
+  productServiceClient.createProduct(product, (error, response) => {
     if (error) {
+      console.log(error)
       return res.status(500).send({ error });
     } else return res.status(201).json(response.toObject());
   });
@@ -151,8 +148,8 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
         in: 'body',
         required: true,
         schema: {
-            restaurantId: 0,
-            type: "type",
+            restaurantId: "restaurant:id",
+            type: {'$ref': '#/definitions/ProductType'},
             name: "name",
             image: "bucket_url_to_image",
             comment: "comment",
@@ -161,17 +158,16 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
             weight: "weight",
             kilocalories: "0",
             nutriscore: 0,
-            categories: [
-                {
+            categories: [{
+                    id: "category:id",
                     label: "category-label",
                     icon: "category-icon",
                     hexaColor: "#ffffff",
                 }],
-            allergens: [
-                {
+            allergens: [{
+                    id:"allergen:id",
                     label: "allergen-label",
-                }
-            ],
+                }],
         }
     }
     #swagger.parameters['authorization'] = {
@@ -200,14 +196,17 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
     allergens,
   } = req.body;
 
-  const allergensList = allergens.map((allergen: { label: string }) => new Allergen().setLibelle(allergen.label));
-  const categoryList = categories.map((category: { label: string; hexaColor: string; icon: string }) =>
-    new Category().setLibelle(category.label).setHexaColor(category.hexaColor).setIcon(category.icon),
+  const allergenList = allergens.map((allergen: { id: string; label: string }) => new Allergen().setLibelle(allergen.label).setId(allergen.id));
+  const categoryList = categories.map(
+      (category: { id: string; label: string; hexaColor: string; icon: string }) =>
+          new Category().setLibelle(category.label)
+            .setHexaColor(category.hexaColor)
+            .setIcon(category.icon).setId(category.id)
   );
 
-  const productId = new Product()
+  const product = new Product()
     .setId(id)
-    .setRestaurantId(Number(restaurantId))
+    .setRestaurantId(restaurantId)
     .setType(type)
     .setName(name)
     .setImage(image)
@@ -218,9 +217,9 @@ productRoutes.put("/api/product/:id", withCheck({ role: "ACCOUNTANT" }), (req: R
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
     .setCategoriesList(categoryList)
-    .setAllergensList(allergensList);
+    .setAllergensList(allergenList);
 
-  productServiceClient.updateProduct(productId, (error, response) => {
+  productServiceClient.updateProduct(product, (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });

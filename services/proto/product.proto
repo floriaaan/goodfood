@@ -40,7 +40,7 @@ message Product {
 	string weight = 7;
 	string kilocalories = 8;
 	int32 nutriscore = 9;
-	int32 restaurant_id = 10;
+	string restaurant_id = 10;
 	ProductType type = 11;
 	repeated Category categories = 12;
 	repeated Allergen allergens = 13;
