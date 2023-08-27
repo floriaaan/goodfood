@@ -55,7 +55,7 @@ promotionRoutes.get(
            required: true,
            type: 'string'
      }
-    #swagger.parameters['header'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -91,7 +91,7 @@ promotionRoutes.post("/api/promotion", withCheck({ role: "ACCOUNTANT" }), (req, 
                 method: {'$ref': '#/definitions/Method'},
                 restaurantId: "restaurant_id:0",
             }
-    } #swagger.parameters['header'] = {
+    } #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -119,7 +119,7 @@ promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (re
                 restaurantId: "restaurant_id:0",
             }
     }
-    #swagger.parameters['header'] = {
+    #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -145,7 +145,7 @@ promotionRoutes.put("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (re
 });
 
 promotionRoutes.delete("/api/promotion/:id", withCheck({ role: "ACCOUNTANT" }), (req, res) => {
-  /* #swagger.parameters['header'] = {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'

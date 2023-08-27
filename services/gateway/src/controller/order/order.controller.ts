@@ -10,6 +10,7 @@ import {
   GetOrdersByStatusRequest,
   GetOrdersByUserRequest,
   Order,
+  Status,
   UpdateOrderRequest,
   UserMinimum,
 } from "@gateway/proto/order_pb";
@@ -165,7 +166,8 @@ orderRoutes.post("/api/order/by-status", withCheck({ role: "ACCOUNTANT" }), (req
         required: true,
         type: 'string'
     } */
-  const orderInput = new GetOrdersByStatusRequest().setStatus(req.body.status);
+  const { status }: { status: keyof typeof Status } = req.body;
+  const orderInput = new GetOrdersByStatusRequest().setStatus(Status[status]);
 
   orderService.getOrdersByStatus(orderInput, (error, response) => {
     if (error) return res.status(500).send({ error });
@@ -253,7 +255,7 @@ orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Reque
 
 orderRoutes.delete("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
-        in: 'header',
+)        in: 'header',
         required: true,
         type: 'string'
     }*/
