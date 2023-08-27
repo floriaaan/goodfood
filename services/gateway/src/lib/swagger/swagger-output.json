@@ -411,11 +411,20 @@
             "in": "path",
             "required": true,
             "type": "integer"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -433,11 +442,6 @@
             "in": "path",
             "required": true,
             "type": "integer"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           },
           {
             "name": "body",
@@ -468,11 +472,20 @@
                 }
               }
             }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1168,12 +1181,11 @@
               "type": "object",
               "properties": {
                 "restaurantId": {
-                  "type": "number",
-                  "example": 0
+                  "type": "string",
+                  "example": "restaurant:id"
                 },
                 "type": {
-                  "type": "string",
-                  "example": "type"
+                  "$ref": "#/definitions/ProductType"
                 },
                 "name": {
                   "type": "string",
@@ -1212,6 +1224,10 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "category:id"
+                      },
                       "label": {
                         "type": "string",
                         "example": "category-label"
@@ -1232,6 +1248,10 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "allergen:id"
+                      },
                       "label": {
                         "type": "string",
                         "example": "allergen-label"
