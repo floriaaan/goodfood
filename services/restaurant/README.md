@@ -4,8 +4,8 @@
 | ------------------------------------------------------------------ |
 | **Port:** 50005                                                    |
 | **Developer:** @floriaaan                                          |
-| **Status:** In progress                                            |
-| **Last update:** 2023-08-19                                        |
+| **Status:** Done (may have some improvements)                      |
+| **Last update:** 2023-08-27                                        |
 | **Language:** NodeJS                                               |
 | **Dependencies:** TypeScript, Prisma, gRPC, Postgres               |
 | **Models:** (see [`prisma/schema.prisma`](./prisma/schema.prisma)) |
