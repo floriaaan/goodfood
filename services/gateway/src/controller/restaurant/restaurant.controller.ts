@@ -58,7 +58,8 @@ restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Req
             locationList: [1.099, 49.443],
             address: "restaurant-address",
             openingHoursList:  ["12h-14h", "19h-22h"],
-            phone: "restaurant-phone"
+            phone: "restaurant-phone",
+            userIds: ["user-id-1", "user-id-2"]
         }
     }
     #swagger.parameters['authorization'] = {
@@ -66,14 +67,15 @@ restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Req
         required: true,
         type: 'string'
     } */
-  const { name, description, locationList, address, openingHoursList, phone } = req.body;
+  const { name, description, locationList, address, openingHoursList, phone, userIds } = req.body;
   const restaurantCreateInput = new RestaurantCreateInput()
     .setName(name)
     .setDescription(description)
     .setLocationList(locationList)
     .setAddress(address)
     .setOpeninghoursList(openingHoursList)
-    .setPhone(phone);
+    .setPhone(phone)
+    .setUseridsList(userIds);
 
   restaurantServiceClient.createRestaurant(restaurantCreateInput, (error, response) => {
     if (error) return res.status(500).send({ error });
@@ -99,7 +101,8 @@ restaurantRoutes.put(
                 locationList: [1.099, 49.443],
                 address: "restaurant-address",
                 openingHoursList:  ["12h-14h", "19h-22h"],
-                phone: "restaurant-phone"
+                phone: "restaurant-phone",
+                userIds: ["user-id-1", "user-id-2"]
             }
         }
         #swagger.parameters['authorization'] = {
@@ -108,17 +111,18 @@ restaurantRoutes.put(
             type: 'string'
         } */
     const { id } = req.params;
-    const { name, description, locationList, address, openingHoursList, phone } = req.body;
-    const restaurantCreateInput = new Restaurant()
+    const { name, description, locationList, address, openingHoursList, phone, userIds } = req.body;
+    const restaurantInput = new Restaurant()
       .setId(id)
       .setName(name)
       .setDescription(description)
       .setLocationList(locationList)
       .setAddress(address)
       .setOpeninghoursList(openingHoursList)
-      .setPhone(phone);
+      .setPhone(phone)
+      .setUseridsList(userIds);
 
-    restaurantServiceClient.updateRestaurant(restaurantCreateInput, (error, response) => {
+    restaurantServiceClient.updateRestaurant(restaurantInput, (error, response) => {
       if (error) return res.status(500).send({ error });
       else return res.status(200).json(response.toObject());
     });
