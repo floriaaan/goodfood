@@ -18,13 +18,18 @@ import {
   GetSupplyOrdersByIngredientRestaurantRequest,
   GetSupplyOrdersByRestaurantRequest,
   GetSupplyOrdersBySupplierRequest,
+  IngredientRestaurant,
+  SupplyOrder,
   UpdateIngredientRequest,
   UpdateIngredientRestaurantRequest,
   UpdateSupplierRequest,
   UpdateSupplyOrderRequest,
 } from "@gateway/proto/stock_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { withCheck } from "@gateway/middleware/auth";
+import { check, withCheck } from "@gateway/middleware/auth";
+import { getUserIdFromToken } from "@gateway/services/user.service";
+import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
+import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
 
 export const stockRoutes = Router();
 /**
@@ -168,11 +173,8 @@ stockRoutes.put(
   },
 );
 
-stockRoutes.delete(
-  "/api/stock/ingredient/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /*  #swagger.parameters['id'] = {
+stockRoutes.delete("/api/stock/ingredient/:id", withCheck({ role: ["ADMIN"] }), (req: Request, res: Response) => {
+  /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
            type: 'integer'
@@ -183,15 +185,14 @@ stockRoutes.delete(
             type: 'string'
         }
      */
-    const { id } = req.params;
-    const ingredientRequest = new DeleteIngredientRequest().setId(Number(id));
+  const { id } = req.params;
+  const ingredientRequest = new DeleteIngredientRequest().setId(Number(id));
 
-    stockServiceClient.deleteIngredient(ingredientRequest, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  stockServiceClient.deleteIngredient(ingredientRequest, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
 
 /**
  * Ingredient Restaurant Routes
@@ -200,7 +201,7 @@ stockRoutes.delete(
 stockRoutes.get(
   "/api/stock/ingredient/restaurant/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
@@ -212,30 +213,84 @@ stockRoutes.get(
             type: 'string'
         }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
+
     const { id } = req.params;
     const ingredientRestaurantRequest = new GetIngredientRestaurantRequest().setId(Number(id));
 
-    stockServiceClient.getIngredientRestaurant(ingredientRestaurantRequest, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
+    try {
+      // todo: refactor this into a getter
+      const ingredient_restaurant: IngredientRestaurant.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getIngredientRestaurant(ingredientRestaurantRequest, (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(
+          new RestaurantId().setId(ingredient_restaurant.restaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+
+      return res.status(200).json(ingredient_restaurant);
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
   },
 );
 
 stockRoutes.get(
   "/api/stock/ingredient/restaurant/by-restaurant/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
             type: 'string'
         }
      */
+
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
     const { id } = req.params;
     const ingredientRestaurantsByRestaurantRequest = new GetIngredientRestaurantsByRestaurantRequest().setRestaurantId(
       id,
     );
+
+    try {
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(new RestaurantId().setId(id), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
 
     stockServiceClient.getIngredientRestaurantsByRestaurant(
       ingredientRestaurantsByRestaurantRequest,
@@ -270,7 +325,7 @@ stockRoutes.get(
 stockRoutes.post(
   "/api/stock/ingredient/restaurant",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -290,6 +345,14 @@ stockRoutes.post(
             type: 'string'
         }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
+
     const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId } = req.body;
     const ingredientRestaurant = new CreateIngredientRestaurantRequest()
       .setAlertThreshold(alertThreshold)
@@ -299,6 +362,21 @@ stockRoutes.post(
       .setPricePerKilo(pricePerKilo)
       .setRestaurantId(restaurantId)
       .setIngredientId(ingredientId);
+
+    try {
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(new RestaurantId().setId(restaurantId), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
 
     stockServiceClient.createIngredientRestaurant(ingredientRestaurant, (error, response) => {
       if (error) return res.status(500).send({ error });
@@ -310,31 +388,39 @@ stockRoutes.post(
 stockRoutes.put(
   "/api/stock/ingredient/restaurant/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /*  #swagger.parameters['id'] = {
-           in: 'path',
-           required: true,
-           type: 'integer'
+  async (req: Request, res: Response) => {
+    /*  
+      #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'integer'
+      }
+      #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+          alertThreshold: 5,
+          quantity: 2,
+          productList: ["product_id:1", "product_id:2"],
+          unitPrice: 2,
+          pricePerKilo: 1.5,
+          restaurantId: "restaurant_id:1",
+          ingredientId: 1,
         }
-        #swagger.parameters['body'] = {
-            in: 'body',
-            required: true,
-            schema: {
-                alertThreshold: 5,
-                quantity: 2,
-                productList: ["product_id:1", "product_id:2"],
-                unitPrice: 2,
-                pricePerKilo: 1.5,
-                restaurantId: "restaurant_id:1",
-                ingredientId: 1,
-            }
-        }
-        #swagger.parameters['authorization'] = {
-            in: 'header',
-            required: true,
-            type: 'string'
-        }
+      }
+      #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+      }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
     const { id } = req.params;
     const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId } = req.body;
     const ingredientRestaurant = new UpdateIngredientRestaurantRequest()
@@ -347,6 +433,21 @@ stockRoutes.put(
       .setRestaurantId(restaurantId)
       .setIngredientId(ingredientId);
 
+    try {
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(new RestaurantId().setId(restaurantId), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
+
     stockServiceClient.updateIngredientRestaurant(ingredientRestaurant, (error, response) => {
       if (error) return res.status(500).send({ error });
       else return res.status(200).json(response.toObject());
@@ -357,7 +458,7 @@ stockRoutes.put(
 stockRoutes.delete(
   "/api/stock/ingredient/restaurant/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
@@ -369,7 +470,43 @@ stockRoutes.delete(
             type: 'string'
         }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
     const { id } = req.params;
+
+    try {
+      // todo: refactor this into a getter
+      const ingredientRestaurant: IngredientRestaurant.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getIngredientRestaurant(
+          new GetIngredientRestaurantRequest().setId(Number(id)),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(
+          new RestaurantId().setId(ingredientRestaurant.restaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
 
     stockServiceClient.deleteIngredientRestaurant(
       new DeleteIngredientRestaurantRequest().setId(Number(id)),
@@ -514,7 +651,7 @@ stockRoutes.delete(
 stockRoutes.get(
   "/api/stock/supply/order/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
@@ -526,20 +663,96 @@ stockRoutes.get(
             type: 'string'
         }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
     const { id } = req.params;
 
-    stockServiceClient.getSupplyOrder(new GetSupplyOrderRequest().setId(Number(id)), (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
+    try {
+      // todo: refactor this into a getter
+      const supplyOrder: SupplyOrder.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getSupplyOrder(new GetSupplyOrderRequest().setId(Number(id)), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      // todo: WARN - supplyOrder support only one product by one product so it work for now
+      // todo: refactor this into a getter
+      const ingredient_restaurant: IngredientRestaurant.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getIngredientRestaurant(
+          new GetIngredientRestaurantRequest().setId(supplyOrder.ingredientRestaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(
+          new RestaurantId().setId(ingredient_restaurant.restaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+
+      return res.status(200).json(supplyOrder);
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
   },
 );
 
 stockRoutes.get(
   "/api/stock/supply/order/by-restaurant/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
+    /*  #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'integer'
+        }
+        #swagger.parameters['authorization'] = {
+            in: 'header',
+            required: true,
+            type: 'string'
+        }
+     */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
     const { id } = req.params;
+
+    try {
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(new RestaurantId().setId(id), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
+
     stockServiceClient.getSupplyOrdersByRestaurant(
       new GetSupplyOrdersByRestaurantRequest().setRestaurantId(id),
       (error, response) => {
@@ -579,7 +792,7 @@ stockRoutes.get(
 stockRoutes.get(
   "/api/stock/supply/order/by-ingredient-restaurant/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
@@ -591,6 +804,43 @@ stockRoutes.get(
             type: 'string'
         }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
+
+    try {
+      // todo: refactor this into a getter
+      const ingredient_restaurant: IngredientRestaurant.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getIngredientRestaurant(
+          new GetIngredientRestaurantRequest().setId(Number(req.params.id)),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(
+          new RestaurantId().setId(ingredient_restaurant.restaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
+
     const { id } = req.params;
     stockServiceClient.getSupplyOrdersByIngredientRestaurant(
       new GetSupplyOrdersByIngredientRestaurantRequest().setIngredientRestaurantId(Number(id)),
@@ -605,7 +855,7 @@ stockRoutes.get(
 stockRoutes.post(
   "/api/stock/supply/order",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -621,11 +871,49 @@ stockRoutes.post(
             type: 'string'
         }
       */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
+
     const { quantity, ingredientRestaurantId, supplierId } = req.body;
     const supplyOrderRequest = new CreateSupplyOrderRequest()
       .setQuantity(quantity)
       .setIngredientRestaurantId(ingredientRestaurantId)
       .setSupplierId(supplierId);
+
+    try {
+      // todo: WARN - supplyOrder support only one product by one product so it work for now
+      // todo: refactor this into a getter
+      const ingredient_restaurant: IngredientRestaurant.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getIngredientRestaurant(
+          new GetIngredientRestaurantRequest().setId(ingredientRestaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(
+          new RestaurantId().setId(ingredient_restaurant.restaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
 
     stockServiceClient.createSupplyOrder(supplyOrderRequest, (error, response) => {
       if (error) return res.status(500).send({ error });
@@ -637,7 +925,7 @@ stockRoutes.post(
 stockRoutes.put(
   "/api/stock/supply/order/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
@@ -658,6 +946,52 @@ stockRoutes.put(
             type: 'string'
         }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
+
+    try {
+      // todo: refactor this into a getter
+      const supplyOrder: SupplyOrder.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getSupplyOrder(new GetSupplyOrderRequest().setId(Number(id)), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      // todo: WARN - supplyOrder support only one product by one product so it work for now
+      // todo: refactor this into a getter
+      const ingredient_restaurant: IngredientRestaurant.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getIngredientRestaurant(
+          new GetIngredientRestaurantRequest().setId(supplyOrder.ingredientRestaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(
+          new RestaurantId().setId(ingredient_restaurant.restaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
+
     const { id } = req.params;
     const { quantity, ingredientRestaurantId, supplierId } = req.body;
     const supplyOrderRequest = new UpdateSupplyOrderRequest()
@@ -676,7 +1010,7 @@ stockRoutes.put(
 stockRoutes.delete(
   "/api/stock/supply/order/:id",
   withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     /* #swagger.parameters['id'] = {
            in: 'path',
            required: true,
@@ -688,7 +1022,53 @@ stockRoutes.delete(
             type: 'string'
         }
      */
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    // ----------------------------
+
     const { id } = req.params;
+
+    try {
+      // todo: refactor this into a getter
+      const supplyOrder: SupplyOrder.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getSupplyOrder(new GetSupplyOrderRequest().setId(Number(id)), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      });
+
+      // todo: WARN - supplyOrder support only one product by one product so it work for now
+      // todo: refactor this into a getter
+      const ingredient_restaurant: IngredientRestaurant.AsObject = await new Promise((resolve, reject) => {
+        stockServiceClient.getIngredientRestaurant(
+          new GetIngredientRestaurantRequest().setId(supplyOrder.ingredientRestaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      // todo: refactor this into a getter
+      const restaurant: Restaurant.AsObject = await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(
+          new RestaurantId().setId(ingredient_restaurant.restaurantId),
+          (error, response) => {
+            if (error) reject(error);
+            else resolve(response.toObject());
+          },
+        );
+      });
+
+      if (!(await check(token, { role: "ADMIN" })) && !restaurant.useridsList.includes(userId.toString()))
+        return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      return res.status(500).send({ error });
+    }
     stockServiceClient.deleteSupplyOrder(new DeleteSupplyOrderRequest().setId(Number(id)), (error, response) => {
       if (error) return res.status(500).send({ error });
       else return res.status(200).json(response.toObject());
