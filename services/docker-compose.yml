@@ -35,7 +35,7 @@ services:
   user-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51001:5432"
     volumes:
       - goodfood-user-volume:/var/lib/postgresql/data
     networks:
@@ -94,7 +94,7 @@ services:
   payment-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51003:5432"
     volumes:
       - goodfood-payment-volume:/var/lib/postgresql/data
     networks:
@@ -122,7 +122,7 @@ services:
   product-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51004:5432"
     volumes:
       - goodfood-product-volume:/var/lib/postgresql/data
     networks:
@@ -150,7 +150,7 @@ services:
   restaurant-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51005:5432"
     volumes:
       - goodfood-restaurant-volume:/var/lib/postgresql/data
     networks:
@@ -178,7 +178,7 @@ services:
   promotion-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51006:5432"
     volumes:
       - goodfood-promotion-volume:/var/lib/postgresql/data
     networks:
@@ -206,7 +206,7 @@ services:
   order-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51007:5432"
     volumes:
       - goodfood-order-volume:/var/lib/postgresql/data
     networks:
@@ -247,7 +247,7 @@ services:
   delivery-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51008:5432"
     volumes:
       - goodfood-delivery-volume:/var/lib/postgresql/data
     networks:
@@ -275,7 +275,7 @@ services:
   stock-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51009:5432"
     volumes:
       - goodfood-stock-volume:/var/lib/postgresql/data
     networks:
@@ -304,7 +304,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
-      - "5432"
+      - "51020:5432"
     volumes:
       - goodfood-reporting-volume:/var/lib/postgresql/data
     networks:
@@ -335,7 +335,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
-      - "5432"
+      - "51021:5432"
     volumes:
       - goodfood-log-volume:/var/lib/postgresql/data
     networks:
@@ -363,7 +363,7 @@ services:
         POSTGRES_DB: notification
         PGDATA: /var/lib/postgresql/data/pgdata
       ports:
-      - "5432"
+      - "51022:5432"
       volumes:
       - goodfood-notification-volume:/var/lib/postgresql/data
       networks:
