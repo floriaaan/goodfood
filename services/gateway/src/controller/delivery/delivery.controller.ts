@@ -96,7 +96,6 @@ deliveryRoutes.post("/api/delivery", async (req: Request, res: Response) => {
             schema: {
                 eta: "2022-01-01T00:00:00.000Z",
                 address: "10 Rue de la République, 75003 Paris, France",
-                status: {'$ref': '#/definitions/Status'},
                 deliveryPersonId: "cllcdmeci0000pm01su98mxtb",
                 restaurantId: "restaurant_id:1"
             }
@@ -115,9 +114,9 @@ deliveryRoutes.post("/api/delivery", async (req: Request, res: Response) => {
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   // ----------------------------
 
-  const { eta, address, status, deliveryPersonId, restaurantId } = req.body;
-  const deliveryStatus = Status[status] as unknown as Status;
-  if (!deliveryStatus) return res.status(400).send({ error: "Status not found" });
+  const { eta, address, deliveryPersonId, restaurantId } = req.body;
+  const deliveryStatus = Status.PENDING;
+  // if (!deliveryStatus) return res.status(400).send({ error: "Status not found" });
 
   const deliveryCreateInput = new DeliveryCreateInput()
     .setEta(eta)
