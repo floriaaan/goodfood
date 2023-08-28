@@ -38,7 +38,7 @@ export const stockRoutes = Router();
 
 stockRoutes.get(
   "/api/stock/supplier/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['id'] = {
         in: 'path',
@@ -60,7 +60,7 @@ stockRoutes.get(
   },
 );
 
-stockRoutes.get("/api/stock/supplier", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (_: Request, res: Response) => {
+stockRoutes.get("/api/stock/supplier", withCheck({ role: ["MANAGER", "ADMIN"] }), (_: Request, res: Response) => {
   /*    #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
@@ -75,7 +75,7 @@ stockRoutes.get("/api/stock/supplier", withCheck({ role: ["ACCOUNTANT", "ADMIN"]
 
 stockRoutes.get(
   "/api/stock/ingredient/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*    #swagger.parameters['id'] = {
            in: 'path',
@@ -98,7 +98,7 @@ stockRoutes.get(
   },
 );
 
-stockRoutes.get("/api/stock/ingredient", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (_: Request, res: Response) => {
+stockRoutes.get("/api/stock/ingredient", withCheck({ role: ["MANAGER", "ADMIN"] }), (_: Request, res: Response) => {
   /*    #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
@@ -113,7 +113,7 @@ stockRoutes.get("/api/stock/ingredient", withCheck({ role: ["ACCOUNTANT", "ADMIN
 
 stockRoutes.post(
   "/api/stock/ingredient",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*  #swagger.parameters['body'] = {
             in: 'body',
@@ -141,7 +141,7 @@ stockRoutes.post(
 
 stockRoutes.put(
   "/api/stock/ingredient/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -200,7 +200,7 @@ stockRoutes.delete("/api/stock/ingredient/:id", withCheck({ role: ["ADMIN"] }), 
 
 stockRoutes.get(
   "/api/stock/ingredient/restaurant/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -256,7 +256,7 @@ stockRoutes.get(
 
 stockRoutes.get(
   "/api/stock/ingredient/restaurant/by-restaurant/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['authorization'] = {
             in: 'header',
@@ -304,7 +304,7 @@ stockRoutes.get(
 
 stockRoutes.get(
   "/api/stock/ingredient/restaurant/by-product/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*  #swagger.parameters['authorization'] = {
             in: 'header',
@@ -324,7 +324,7 @@ stockRoutes.get(
 
 stockRoutes.post(
   "/api/stock/ingredient/restaurant",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['body'] = {
             in: 'body',
@@ -389,7 +389,7 @@ stockRoutes.post(
 
 stockRoutes.put(
   "/api/stock/ingredient/restaurant/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  
       #swagger.parameters['id'] = {
@@ -461,7 +461,7 @@ stockRoutes.put(
 
 stockRoutes.delete(
   "/api/stock/ingredient/restaurant/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -528,7 +528,7 @@ stockRoutes.delete(
 
 stockRoutes.get(
   "/api/stock/supplier/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -550,7 +550,7 @@ stockRoutes.get(
   },
 );
 
-stockRoutes.get("/api/stock/supplier", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+stockRoutes.get("/api/stock/supplier", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /*    #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
@@ -563,7 +563,7 @@ stockRoutes.get("/api/stock/supplier", withCheck({ role: ["ACCOUNTANT", "ADMIN"]
   });
 });
 
-stockRoutes.post("/api/stock/supplier", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+stockRoutes.post("/api/stock/supplier", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /*    #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -589,7 +589,7 @@ stockRoutes.post("/api/stock/supplier", withCheck({ role: ["ACCOUNTANT", "ADMIN"
 
 stockRoutes.put(
   "/api/stock/supplier/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -623,7 +623,7 @@ stockRoutes.put(
 
 stockRoutes.delete(
   "/api/stock/supplier/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -654,7 +654,7 @@ stockRoutes.delete(
 
 stockRoutes.get(
   "/api/stock/supply/order/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -720,7 +720,7 @@ stockRoutes.get(
 
 stockRoutes.get(
   "/api/stock/supply/order/by-restaurant/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -769,7 +769,7 @@ stockRoutes.get(
 
 stockRoutes.get(
   "/api/stock/supply/order/by-supplier/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -795,7 +795,7 @@ stockRoutes.get(
 
 stockRoutes.get(
   "/api/stock/supply/order/by-ingredient-restaurant/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -858,7 +858,7 @@ stockRoutes.get(
 
 stockRoutes.post(
   "/api/stock/supply/order",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['body'] = {
             in: 'body',
@@ -928,7 +928,7 @@ stockRoutes.post(
 
 stockRoutes.put(
   "/api/stock/supply/order/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /*  #swagger.parameters['id'] = {
            in: 'path',
@@ -1013,7 +1013,7 @@ stockRoutes.put(
 
 stockRoutes.delete(
   "/api/stock/supply/order/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   async (req: Request, res: Response) => {
     /* #swagger.parameters['id'] = {
            in: 'path',

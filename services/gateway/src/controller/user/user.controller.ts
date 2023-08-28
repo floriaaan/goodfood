@@ -6,7 +6,6 @@ import {
   DeleteInput,
   logInInput,
   MainAddress,
-  Role,
   RoleInput,
   UpdateUserInput,
   User,
@@ -15,6 +14,7 @@ import {
 } from "@gateway/proto/user_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
+import { createDeliveryPerson} from "@gateway/services/delivery.service";
 import { check, withCheck } from "@gateway/middleware/auth";
 
 export const userRoutes = Router();
@@ -288,17 +288,31 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: R
   if (Number(id) === userId) return res.status(403).json({ message: "Forbidden" });
   // ----------------------------
 
-  const updatePasswordInput = new changeRoleInput();
+  const roleInput = new changeRoleInput();
+
   try {
-    updatePasswordInput.setToken(token).setUserid(Number(id)).setRolecode(req.body.role);
+    roleInput.setToken(token).setUserid(Number(id)).setRolecode(req.body.role);
   } catch (e: any) {
     res.json({ error: e.message });
   }
-  userServiceClient.changeRole(updatePasswordInput, (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
+  let user: User.AsObject | undefined = undefined;
+  try {
+    user = await new Promise((resolve, reject) => {
+      userServiceClient.changeRole(roleInput, (error, response) => {
+        if (error) reject(error);
+        else resolve(response.toObject().user);
+      });
+    });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+
+  if (user && user.role?.code === "DELIVERY_PERSON") {
+    try {
+      await createDeliveryPerson(user.id, user.firstName, user.lastName, user.phone, []);
+    } catch (error) {
+      res.status(500).send({ error });
     }
-  });
+  }
+  res.json(user);
 });

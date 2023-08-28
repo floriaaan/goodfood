@@ -85,7 +85,7 @@ restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Req
 
 restaurantRoutes.put(
   "/api/restaurant/:id",
-  withCheck({ role: ["ADMIN", "ACCOUNTANT"] }),
+  withCheck({ role: ["ADMIN", "MANAGER"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['id'] = {
             in: 'path',

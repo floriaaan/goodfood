@@ -4,8 +4,8 @@ import { Request, Response, NextFunction } from "express";
 export const ROLES = {
   ADMIN: "ADMIN",
   USER: "USER",
-  ACCOUNTANT: "ACCOUNTANT",
-  DELIVERER: "DELIVERER",
+  MANAGER: "MANAGER",
+  DELIVERY_PERSON: "DELIVERY_PERSON",
 };
 
 export type Role = keyof typeof ROLES;

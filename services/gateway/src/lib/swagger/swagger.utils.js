@@ -31,8 +31,8 @@ const doc = {
       '@enum': [
         "ADMIN",
         "USER",
-        "ACCOUNTANT",
-        "DELIVERER"
+        "MANAGER",
+        "DELIVERY_PERSON"
       ]
     },
     ProductType: {
