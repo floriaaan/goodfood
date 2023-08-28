@@ -7,23 +7,6 @@ import { withCheck } from "@gateway/middleware/auth";
 
 export const deliveryPersonRoutes = Router();
 
-deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
-  // Auth check and :id check ---
-  const { authorization } = req.headers;
-  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
-  const token = authorization.split("Bearer ")[1];
-  const userId = await getUserIdFromToken(token);
-  if (!userId) return res.status(401).json({ message: "Unauthorized" });
-  // ----------------------------
-
-  const { id } = req.params;
-
-  deliveryPersonServiceClient.getDeliveryPerson(new DeliveryPersonId().setId(id), (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
-
 deliveryPersonRoutes.get("/api/delivery-person", withCheck({ role: "ADMIN" }), async (_, res) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
@@ -59,6 +42,23 @@ deliveryPersonRoutes.get("/api/delivery-person/near", async (req, res) => {
   const { lat, lng } = req.query as { lat: string; lng: string };
   const location = new Location().setLatitude(Number(lat)).setLongitude(Number(lng));
   deliveryPersonServiceClient.listNearDeliveryPersons(location, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
+
+deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  // ----------------------------
+
+  const { id } = req.params;
+
+  deliveryPersonServiceClient.getDeliveryPerson(new DeliveryPersonId().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
