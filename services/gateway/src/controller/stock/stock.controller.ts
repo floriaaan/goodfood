@@ -129,8 +129,8 @@ stockRoutes.post(
             type: 'string'
         }
      */
-    const { name, desciption } = req.body;
-    const ingredientRequest = new CreateIngredientRequest().setName(name).setDescription(desciption);
+    const { name, description } = req.body;
+    const ingredientRequest = new CreateIngredientRequest().setName(name).setDescription(description);
 
     stockServiceClient.createIngredient(ingredientRequest, (error, response) => {
       if (error) return res.status(500).send({ error });
@@ -163,8 +163,8 @@ stockRoutes.put(
         }
       */
     const { id } = req.params;
-    const { name, desciption } = req.body;
-    const ingredientRequest = new UpdateIngredientRequest().setId(Number(id)).setName(name).setDescription(desciption);
+    const { name, description } = req.body;
+    const ingredientRequest = new UpdateIngredientRequest().setId(Number(id)).setName(name).setDescription(description);
 
     stockServiceClient.updateIngredient(ingredientRequest, (error, response) => {
       if (error) return res.status(500).send({ error });
