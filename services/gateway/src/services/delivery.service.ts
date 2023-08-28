@@ -1,5 +1,5 @@
-import { deliveryServiceClient } from "@gateway/services/clients/delivery.client";
-import { Delivery, DeliveryCreateInput, Status } from "@gateway/proto/delivery_pb";
+import { deliveryPersonServiceClient, deliveryServiceClient } from "@gateway/services/clients/delivery.client";
+import { Delivery, DeliveryCreateInput, DeliveryPersonCreateInput, Status } from "@gateway/proto/delivery_pb";
 
 export const createDelivery = (
   address: string,
@@ -28,4 +28,28 @@ export const createDelivery = (
 // TODO: add google call
 const getEtaByUserAddress = (address: string) => {
   return new Date().toString();
+};
+
+export const createDeliveryPerson = (
+  idUser: number,
+  firstName: string,
+  lastName: string,
+  phone: string,
+  locationList: number[],
+) => {
+  const deliveryPerson = new DeliveryPersonCreateInput()
+    .setUserId(String(idUser))
+    .setFirstName(firstName)
+    .setLastName(lastName)
+    .setPhone(phone)
+    .setLocationList(locationList);
+  return new Promise((resolve, reject) => {
+    deliveryPersonServiceClient.createDeliveryPerson(deliveryPerson, (error, response) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    });
+  });
 };
