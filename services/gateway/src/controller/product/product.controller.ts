@@ -213,7 +213,8 @@ productRoutes.post(
             in: 'body',
             required: true,
             schema: {
-                input_file: Buffer
+                name: 'string',
+                input_file: 'string''
             }
         }
         #swagger.parameters['authorization'] = {
@@ -221,11 +222,11 @@ productRoutes.post(
             required: true,
             type: 'string'
         } */
-    const { input_file } = req.body;
+    const { name, input_file } = req.body;
     const bitmap = fs.readFileSync(input_file);
     const base64File = new Buffer(bitmap).toString("base64");
 
-    const file = new File().setName(input_file).setData(base64File);
+    const file = new File().setName(name).setData(base64File);
     productServiceClient.uploadImage(file, (error, response) => {
       if (error) return res.status(500).send({ error });
       else return res.status(200).json(response.toObject());
