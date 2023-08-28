@@ -243,7 +243,7 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
 
 orderRoutes.post(
   "/api/order/by-status",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['body'] = {
         in: 'body',

@@ -27,7 +27,7 @@ categoryRoutes.get("/api/category/:id", (req: Request, res: Response) => {
   });
 });
 
-categoryRoutes.post("/api/category", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+categoryRoutes.post("/api/category", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -50,7 +50,7 @@ categoryRoutes.post("/api/category", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }
   });
 });
 
-categoryRoutes.put("/api/category/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+categoryRoutes.put("/api/category/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -81,7 +81,7 @@ categoryRoutes.put("/api/category/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"
 
 categoryRoutes.delete(
   "/api/category/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['authorization'] = {
         in: 'header',
