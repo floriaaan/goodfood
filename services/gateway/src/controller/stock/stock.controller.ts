@@ -337,6 +337,7 @@ stockRoutes.post(
                 pricePerKilo: 1.5,
                 restaurantId: "restaurant_id:1",
                 ingredientId: 1,
+                supplierId: 1,
             }
         } 
         #swagger.parameters['authorization'] = {
@@ -353,7 +354,7 @@ stockRoutes.post(
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
     // ----------------------------
 
-    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId } = req.body;
+    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId, supplierId } = req.body;
     const ingredientRestaurant = new CreateIngredientRestaurantRequest()
       .setAlertThreshold(alertThreshold)
       .setQuantity(quantity)
@@ -361,7 +362,8 @@ stockRoutes.post(
       .setUnitPrice(unitPrice)
       .setPricePerKilo(pricePerKilo)
       .setRestaurantId(restaurantId)
-      .setIngredientId(ingredientId);
+      .setIngredientId(ingredientId)
+      .setSupplierId(Number(supplierId));
 
     try {
       // todo: refactor this into a getter
@@ -406,6 +408,7 @@ stockRoutes.put(
           pricePerKilo: 1.5,
           restaurantId: "restaurant_id:1",
           ingredientId: 1,
+          supplierId: 1,
         }
       }
       #swagger.parameters['authorization'] = {
@@ -422,7 +425,7 @@ stockRoutes.put(
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
     // ----------------------------
     const { id } = req.params;
-    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId } = req.body;
+    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId, supplierId } = req.body;
     const ingredientRestaurant = new UpdateIngredientRestaurantRequest()
       .setId(Number(id))
       .setAlertThreshold(alertThreshold)
@@ -431,7 +434,8 @@ stockRoutes.put(
       .setUnitPrice(unitPrice)
       .setPricePerKilo(pricePerKilo)
       .setRestaurantId(restaurantId)
-      .setIngredientId(ingredientId);
+      .setIngredientId(ingredientId)
+      .setSupplierId(Number(supplierId));
 
     try {
       // todo: refactor this into a getter
