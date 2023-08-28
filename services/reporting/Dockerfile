@@ -22,4 +22,5 @@ ENV PATH="${PATH}:/root/.dotnet/tools"
 
 # Expose port and specify startup command
 EXPOSE 50020
+EXPOSE 8080
 CMD ["sh", "script.sh"]
