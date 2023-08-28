@@ -78,7 +78,7 @@ productRoutes.post("/api/product", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
                 preparation: "preparation",
                 weight: "weight",
                 kilocalories: "0",
-                nutriscore: 0,
+                nutriscore: "A",
                 categories: [{
                         id: "category:id",
                     }],
@@ -146,7 +146,7 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] 
                 preparation: "preparation",
                 weight: "weight",
                 kilocalories: "0",
-                nutriscore: 0,
+                nutriscore: "A",
                 categories: [{
                         id: "category:id"
                     }],

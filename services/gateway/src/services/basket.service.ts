@@ -14,3 +14,17 @@ export const getBasketByUser = (id: string): Promise<Basket | undefined> => {
     });
   });
 };
+
+export const resetBasketByUser = (id: string): Promise<Basket | undefined> => {
+  const userId = new UserId();
+  userId.setId(Number(id));
+  return new Promise((resolve, reject) => {
+    basketServiceClient.reset(userId, (error, response) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+};
