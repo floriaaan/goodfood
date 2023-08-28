@@ -3647,6 +3647,10 @@
                 "ingredientId": {
                   "type": "number",
                   "example": 1
+                },
+                "supplierId": {
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -3810,6 +3814,10 @@
                   "example": "restaurant_id:1"
                 },
                 "ingredientId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "supplierId": {
                   "type": "number",
                   "example": 1
                 }
