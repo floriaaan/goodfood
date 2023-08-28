@@ -67,6 +67,70 @@ orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
   }
 });
 
+orderRoutes.post("/api/order", async (req: Request, res: Response) => {
+  /* #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                paymentId: "payment_id:1",
+                deliveryId: "delivery_id:1",
+                deliveryType :{'$ref': '#/definitions/DeliveryType'},
+                restaurantId :"restaurant_id:1"
+            }
+      }
+      #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+    } */
+
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  // ----------------------------
+
+  const { paymentId, deliveryId, deliveryType, restaurantId } = req.body;
+  let user: User | undefined = undefined;
+  try {
+    user = await getUser(userId);
+  } catch (error) {
+    return res.status(500).send({ error });
+  }
+
+  if (!user) return res.status(404).send({ error: "User not found" });
+
+  const miniUser = new UserMinimum()
+      .setId(String(user.getId()))
+      .setEmail(user.getEmail())
+      .setFirstName(user.getFirstName())
+      .setLastName(user.getLastName())
+      .setPhone(user.getPhone());
+
+  let orderBasket: BasketSnapshot | undefined = undefined;
+  try {
+    const basket = (await getBasketByUser(userId.toString()))?.toObject();
+    if (basket) orderBasket = new BasketSnapshot().setString(JSON.stringify(basket));
+  } catch (error) {
+    return res.status(500).send({ error });
+  }
+
+  const orderInput = new CreateOrderRequest()
+      .setUser(miniUser)
+      .setPaymentId(paymentId)
+      .setDeliveryId(deliveryId)
+      .setDeliveryType(deliveryType)
+      .setBasketSnapshot(orderBasket)
+      .setRestaurantId(restaurantId);
+
+  orderService.createOrder(orderInput, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
+
 //TODO: to test this route with the user and basket service
 orderRoutes.post("/api/order/tmp", async (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
