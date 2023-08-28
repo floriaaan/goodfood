@@ -113,14 +113,12 @@ userRoutes.put("/api/user", async (req: Request, res: Response) => {
              firstName: "John",
              lastName: "Doe",
              email: "johnDoe@mail.com",
-             password: "password",
              phone: "0642424242",
              country: "France",
              zipCode: "76000",
              street: "7 rue de la paix",
              lat: 49.443232,
-             lng: 1.099971,
-             roleCode: {'$ref': '#/definitions/RoleCode'},
+             lng: 1.099971
          }
    } */
 
@@ -131,21 +129,20 @@ userRoutes.put("/api/user", async (req: Request, res: Response) => {
   const userId = await getUserIdFromToken(token);
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-  const { firstName, lastName, email, phone, country, zipCode, street, lat, lng, roleCode } = req.body;
+  const { firstName, lastName, email, phone, country, zipCode, street, lat, lng } = req.body;
   const userInput = new UpdateUserInput();
 
   try {
     const address = new MainAddress().setCountry(country).setZipcode(zipCode).setStreet(street).setLat(lat).setLng(lng);
     const user = new User()
-      .setId(Number(req.params.id))
+      .setId(userId)
       .setFirstName(firstName)
       .setLastName(lastName)
       .setEmail(email)
       .setPhone(phone)
-      .setMainaddress(address)
-      .setRole(new Role().setCode(roleCode));
+      .setMainaddress(address);
 
-    userInput.setUser(user).setToken(authorization);
+    userInput.setUser(user).setToken(token);
   } catch (e: any) {
     res.json({ error: e.message });
   }
@@ -173,9 +170,10 @@ userRoutes.delete("/api/user/:id", (req: Request, res: Response) => {
   const { id } = req.params;
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
 
   // The delete route in the user service implement the user validation
-  userServiceClient.deleteUser(new DeleteInput().setUserid(Number(id)).setToken(authorization), (error, response) => {
+  userServiceClient.deleteUser(new DeleteInput().setUserid(Number(id)).setToken(token), (error, response) => {
     if (error) {
       res.status(500).send({ error: error.message });
     } else {
@@ -213,8 +211,9 @@ userRoutes.post("/api/user/validate", (req: Request, res: Response) => {
   } */
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
 
-  const validate = new validateInput().setToken(authorization);
+  const validate = new validateInput().setToken(token);
 
   userServiceClient.validate(validate, (error, response) => {
     if (error) {
@@ -242,11 +241,12 @@ userRoutes.put("/api/user/password", (req: Request, res: Response) => {
 
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
 
   const { oldpassword, password } = req.body;
   const updatePasswordInput = new changePasswordInput();
   try {
-    updatePasswordInput.setToken(authorization).setOldpassword(oldpassword).setNewpassword(password);
+    updatePasswordInput.setToken(token).setOldpassword(oldpassword).setNewpassword(password);
   } catch (e: any) {
     res.json({ error: e.message });
   }
@@ -260,7 +260,7 @@ userRoutes.put("/api/user/password", (req: Request, res: Response) => {
   });
 });
 
-userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
+userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
@@ -278,15 +278,19 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), (req: Request
              role: {'$ref': '#/definitions/RoleCode'},
          }
  } */
+
+  // Auth check and :id check ---
   const { authorization } = req.headers;
-  if (!authorization) {
-    res.json({ error: "Not authorized" });
-    return;
-  }
+  const token = authorization!.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
   const id = req.params.id;
+  if (Number(id) === userId) return res.status(403).json({ message: "Forbidden" });
+  // ----------------------------
+
   const updatePasswordInput = new changeRoleInput();
   try {
-    updatePasswordInput.setToken(authorization).setUserid(Number(id)).setRolecode(req.body.role);
+    updatePasswordInput.setToken(token).setUserid(Number(id)).setRolecode(req.body.role);
   } catch (e: any) {
     res.json({ error: e.message });
   }

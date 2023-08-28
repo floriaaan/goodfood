@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/golang/protobuf/ptypes/empty"
 	"goodfood-user/pkg/mapper"
 	"goodfood-user/pkg/models"
@@ -24,6 +25,7 @@ func (s *Server) GetUser(_ context.Context, req *pb.UserId) (*pb.UserOutput, err
 }
 
 func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.UserOutput, error) {
+	logger := utils.GetLogger()
 	if req.User == nil || req.Token == "" {
 		return &pb.UserOutput{
 			Error: "Invalid request",
@@ -32,6 +34,7 @@ func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.Use
 
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
+		logger.Fatalf("Error validating token: %v", err)
 		return &pb.UserOutput{
 			Error: "Invalid token",
 		}, nil
@@ -42,6 +45,7 @@ func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.Use
 			Error: "User not found",
 		}, nil
 	}
+
 	var user = mapper.UpdateInputToModelUser(req.User)
 
 	s.H.DB.Updates(&user)
