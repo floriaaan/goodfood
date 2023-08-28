@@ -152,7 +152,7 @@ func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.Cha
 
 	var connectedUser models.User
 
-	if result := s.H.DB.Where(&models.User{Id: claims.Id}).First(&connectedUser); result.Error != nil {
+	if result := s.H.DB.Where(&models.User{Id: claims.Id}).Preload("Role").First(&connectedUser); result.Error != nil {
 		return &pb.ChangeRoleOutput{
 			Error: "User not found",
 		}, nil
@@ -161,7 +161,7 @@ func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.Cha
 	var user models.User
 	var role models.Role
 
-	if result := s.H.DB.Where(&models.User{Id: req.UserId}).First(&user); result.Error != nil {
+	if result := s.H.DB.Where(&models.User{Id: req.UserId}).Preload("Role").First(&user); result.Error != nil {
 		return &pb.ChangeRoleOutput{
 			Error: "User not found",
 		}, nil
@@ -172,8 +172,8 @@ func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.Cha
 			Error: "User not found",
 		}, nil
 	}
-
-	if user.Role.Code == "ADMIN" {
+	utils.GetLogger().Fatalf("Role code", connectedUser.Role.Code)
+	if connectedUser.Role.Code == "ADMIN" {
 		user.Role = role
 		s.H.DB.Save(&user)
 
