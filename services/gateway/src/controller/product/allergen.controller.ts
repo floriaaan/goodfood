@@ -24,7 +24,7 @@ allergenRoutes.get("/api/allergen/:id", (req: Request, res: Response) => {
   });
 });
 
-allergenRoutes.post("/api/allergen", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+allergenRoutes.post("/api/allergen", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -45,7 +45,7 @@ allergenRoutes.post("/api/allergen", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }
   });
 });
 
-allergenRoutes.put("/api/allergen/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+allergenRoutes.put("/api/allergen/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -69,7 +69,7 @@ allergenRoutes.put("/api/allergen/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"
 
 allergenRoutes.delete(
   "/api/allergen/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['authorization'] = {
         in: 'header',
