@@ -11,7 +11,7 @@ import {
   GetMetricsByRestaurantRequest,
   GetRestaurantGroupRequest,
   GetRestaurantRequest,
-  Metric,
+  PushMetricRequest,
   UpdateRestaurantGroupRequest,
   UpdateRestaurantRequest,
 } from "@gateway/proto/metric_pb";
@@ -293,9 +293,8 @@ metricRoutes.post("/api/metric", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (
         required: true,
         schema: {
             restaurantId: "restaurant_id:1",
-            code: "income_1h",
+            code: "incomes_1h",
             value: "99.99",
-            key :"example_key"
         }
     }
     #swagger.parameters['authorization'] = {
@@ -303,8 +302,8 @@ metricRoutes.post("/api/metric", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (
         required: true,
         type: 'string'
     } */
-  const { restaurantId, code, value, key } = req.body;
-  const newMetric = new Metric().setKey(key).setRestaurantId(restaurantId).setCode(code).setValue(value);
+  const { restaurantId, code, value } = req.body;
+  const newMetric = new PushMetricRequest().setRestaurantId(restaurantId).setCode(code).setValue(value);
 
   metricService.pushMetric(newMetric, (error, response) => {
     if (error) return res.status(500).send({ error });
