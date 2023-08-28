@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/golang/protobuf/ptypes/empty"
 	"goodfood-user/pkg/mapper"
 	"goodfood-user/pkg/models"
