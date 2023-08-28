@@ -16,8 +16,12 @@ import {
 } from "@gateway/proto/order_pb";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { User } from "@gateway/proto/user_pb";
-import { getBasketByUser } from "@gateway/services/basket.service";
+import {getBasketByUser, resetBasketByUser} from "@gateway/services/basket.service";
 import { check, withCheck } from "@gateway/middleware/auth";
+import {Restaurant, RestaurantId} from "@gateway/proto/restaurant_pb";
+import {restaurantServiceClient} from "@gateway/services/clients/restaurant.client";
+import {createDelivery} from "@gateway/services/delivery.service";
+import {Delivery} from "@gateway/proto/delivery_pb";
 
 export const orderRoutes = Router();
 
@@ -64,15 +68,13 @@ orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
 });
 
 //TODO: to test this route with the user and basket service
-orderRoutes.post("/api/order", async (req: Request, res: Response) => {
+orderRoutes.post("/api/order/tmp", async (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
                 paymentId: "payment_id:1",
-                deliveryId: "delivery_id:1",
                 deliveryType :{'$ref': '#/definitions/DeliveryType'},
-                restaurantId :"restaurant_id:1"
             }
       }
       #swagger.parameters['authorization'] = {
@@ -89,7 +91,7 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   // ----------------------------
 
-  const { paymentId, deliveryId, deliveryType, restaurantId } = req.body;
+  const { paymentId, deliveryType } = req.body;
   let user: User | undefined = undefined;
   try {
     user = await getUser(userId);
@@ -98,18 +100,33 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
   }
 
   if (!user) return res.status(404).send({ error: "User not found" });
-
+  const userToObj = user.toObject();
   const miniUser = new UserMinimum()
-    .setId(String(user.getId()))
-    .setEmail(user.getEmail())
-    .setFirstName(user.getFirstName())
-    .setLastName(user.getLastName())
-    .setPhone(user.getPhone());
+    .setId(String(userToObj.id))
+    .setEmail(userToObj.email)
+    .setFirstName(userToObj.firstName)
+    .setLastName(userToObj.lastName)
+    .setPhone(userToObj.phone);
 
   let orderBasket: BasketSnapshot | undefined = undefined;
+  let restaurantId = "";
   try {
     const basket = (await getBasketByUser(userId.toString()))?.toObject();
-    if (basket) orderBasket = new BasketSnapshot().setString(JSON.stringify(basket));
+    if (basket) {
+      orderBasket = new BasketSnapshot().setString(JSON.stringify(basket));
+      restaurantId = basket.restaurantId;
+    } else {
+      return res.status(404).send({ error: "Basket not found" });
+    }
+  } catch (error) {
+    return res.status(500).send({ error });
+  }
+
+  let delivery: Delivery | undefined = undefined;
+  try {
+    const userAddress = `${userToObj.mainaddress?.street} ${userToObj.mainaddress?.zipcode} ${userToObj.mainaddress?.country}`;
+    delivery = await createDelivery(userAddress, deliveryType, userId, restaurantId);
+    if (!delivery?.getId()) throw delivery;
   } catch (error) {
     return res.status(500).send({ error });
   }
@@ -117,15 +134,22 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
   const orderInput = new CreateOrderRequest()
     .setUser(miniUser)
     .setPaymentId(paymentId)
-    .setDeliveryId(deliveryId)
+    .setDeliveryId(delivery.getId())
     .setDeliveryType(deliveryType)
     .setBasketSnapshot(orderBasket)
     .setRestaurantId(restaurantId);
-
-  orderService.createOrder(orderInput, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
+  try {
+    const order: Order.AsObject = await new Promise((resolve, reject) => {
+      orderService.createOrder(orderInput, (error, response) => {
+        if (error) reject(error);
+        else resolve(response.toObject());
+      });
+    });
+    await resetBasketByUser(userId.toString());
+    return res.status(200).json(order);
+  } catch (error) {
+    return res.status(500).send({ error });
+  }
 });
 
 orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response) => {
@@ -149,7 +173,7 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   const orderInput = new GetOrdersByUserRequest().setId(userId);
   orderService.getOrdersByUser(orderInput, (error, response) => {
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
+    else return res.status(201).json(response.toObject());
   });
 });
 
@@ -227,7 +251,7 @@ orderRoutes.get("/api/order/by-payment/:paymentId", async (req: Request, res: Re
   });
 });
 
-orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
+orderRoutes.put("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -242,11 +266,16 @@ orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Reque
         in: 'header',
         required: true,
         type: 'string'
-    }*/
-  const { orderId } = req.params;
+    }
+    #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'string'
+    } */
+  const { id } = req.params;
   const { status, deliveryId, paymentId, restaurantId } = req.body;
   const orderInput = new UpdateOrderRequest()
-    .setId(orderId)
+    .setId(id)
     .setStatus(status)
     .setDeliveryId(deliveryId)
     .setPaymentId(paymentId)
@@ -257,14 +286,19 @@ orderRoutes.put("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Reque
   });
 });
 
-orderRoutes.delete("/api/order/:orderId", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
+orderRoutes.delete("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
 )        in: 'header',
         required: true,
         type: 'string'
-    }*/
-  const { orderId } = req.params;
-  const orderInput = new DeleteOrderRequest().setId(orderId);
+    }
+    #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'string'
+    } */
+  const { id } = req.params;
+  const orderInput = new DeleteOrderRequest().setId(id);
   orderService.deleteOrder(orderInput, (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
