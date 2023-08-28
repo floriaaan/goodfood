@@ -19,7 +19,7 @@ import { withCheck } from "@gateway/middleware/auth";
 
 export const metricRoutes = Router();
 
-metricRoutes.get("/api/metric/:key", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
+metricRoutes.get("/api/metric/:key", withCheck({ role: ["MANAGER", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
@@ -38,7 +38,7 @@ metricRoutes.get("/api/metric/:key", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }
   });
 });
 
-metricRoutes.post("/api/metric/by-restaurant-and-date", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
+metricRoutes.post("/api/metric/by-restaurant-and-date", withCheck({ role: ["MANAGER", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -64,7 +64,7 @@ metricRoutes.post("/api/metric/by-restaurant-and-date", withCheck({ role: ["ACCO
 
 metricRoutes.get(
   "/api/metric/by-restaurant/:restaurantId",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req, res) => {
     /* #swagger.parameters['authorization'] = {
         in: 'header',
@@ -82,7 +82,7 @@ metricRoutes.get(
 
 metricRoutes.get(
   "/api/metric/by-restaurant-group/:restaurantGroupId",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req, res) => {
     /* #swagger.parameters['authorization'] = {
         in: 'header',
@@ -100,7 +100,7 @@ metricRoutes.get(
   },
 );
 
-metricRoutes.get("/api/metric/restaurant/:restaurantId", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
+metricRoutes.get("/api/metric/restaurant/:restaurantId", withCheck({ role: ["MANAGER", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
@@ -115,7 +115,7 @@ metricRoutes.get("/api/metric/restaurant/:restaurantId", withCheck({ role: ["ACC
 
 metricRoutes.get(
   "/api/metric/restaurant-group/:restaurantGroupId",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req, res) => {
     /* #swagger.parameters['restaurantGroupId'] = {
            in: 'path',
@@ -131,7 +131,7 @@ metricRoutes.get(
   },
 );
 
-metricRoutes.post("/api/metric/restaurant", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
+metricRoutes.post("/api/metric/restaurant", withCheck({ role: ["MANAGER", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -160,7 +160,7 @@ metricRoutes.post("/api/metric/restaurant", withCheck({ role: ["ACCOUNTANT", "AD
   });
 });
 
-metricRoutes.post("/api/metric/restaurant-group", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
+metricRoutes.post("/api/metric/restaurant-group", withCheck({ role: ["MANAGER", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -182,7 +182,7 @@ metricRoutes.post("/api/metric/restaurant-group", withCheck({ role: ["ACCOUNTANT
   });
 });
 
-metricRoutes.put("/api/metric/restaurant/:restaurantId", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
+metricRoutes.put("/api/metric/restaurant/:restaurantId", withCheck({ role: ["MANAGER", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
@@ -215,7 +215,7 @@ metricRoutes.put("/api/metric/restaurant/:restaurantId", withCheck({ role: ["ACC
 
 metricRoutes.put(
   "/api/metric/restaurant-group/:restaurantGroupId",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req, res) => {
     /* #swagger.parameters['restaurantGroupId'] = {
         in: 'path',
@@ -249,7 +249,7 @@ metricRoutes.put(
 
 metricRoutes.delete(
   "/api/metric/restaurant/:restaurantId",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req, res) => {
     /* #swagger.parameters['authorization'] = {
         in: 'header',
@@ -287,7 +287,7 @@ metricRoutes.delete("/api/metric/restaurant-group/:restaurantGroupId", (req, res
 });
 
 // route should not be accessible since other services publish metrics into reporting via AMQP
-metricRoutes.post("/api/metric", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req, res) => {
+metricRoutes.post("/api/metric", withCheck({ role: ["MANAGER", "ADMIN"] }), (req, res) => {
   /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,

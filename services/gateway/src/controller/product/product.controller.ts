@@ -43,7 +43,7 @@ productRoutes.get("/api/product/type", (_: Request, res: Response) => {
 
 productRoutes.delete(
   "/api/product/:id",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['authorization'] = {
             in: 'header',
@@ -64,7 +64,7 @@ productRoutes.delete(
   },
 );
 
-productRoutes.post("/api/product", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -132,7 +132,7 @@ productRoutes.post("/api/product", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
   });
 });
 
-productRoutes.put("/api/product/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] }), (req: Request, res: Response) => {
+productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -207,7 +207,7 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["ACCOUNTANT", "ADMIN"] 
 
 productRoutes.post(
   "/api/product/image",
-  withCheck({ role: ["ACCOUNTANT", "ADMIN"] }),
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
   (req: Request, res: Response) => {
     /* #swagger.parameters['body'] = {
             in: 'body',
