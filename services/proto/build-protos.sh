@@ -18,6 +18,6 @@ yarn run grpc_tools_node_protoc \
 # TypeScript code generation
 yarn run grpc_tools_node_protoc \
     --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \
-    --ts_out=${PROTO_DEST} \
+    --ts_out=grpc_js:${PROTO_DEST} \
     -I ./proto \
     proto/*.proto
