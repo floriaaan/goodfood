@@ -822,6 +822,78 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "$ref": "#/definitions/Status"
+                },
+                "deliveryId": {
+                  "type": "string",
+                  "example": "delivery_id:1"
+                },
+                "paymentId": {
+                  "type": "string",
+                  "example": "payment_id:1"
+                },
+                "restaurantId": {
+                  "type": "string",
+                  "example": "restaurant_id:1"
+                }
+              }
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/api/order": {
@@ -879,6 +951,53 @@
         }
       }
     },
+    "/api/order/tmp": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "paymentId": {
+                  "type": "string",
+                  "example": "payment_id:1"
+                },
+                "deliveryType": {
+                  "$ref": "#/definitions/DeliveryType"
+                }
+              }
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/order/by-user/{userId}": {
       "get": {
         "tags": [
@@ -900,8 +1019,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "401": {
             "description": "Unauthorized"
@@ -1016,80 +1135,6 @@
           },
           "500": {
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/order/{orderId}": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "$ref": "#/definitions/Status"
-                },
-                "deliveryId": {
-                  "type": "string",
-                  "example": "delivery_id:1"
-                },
-                "paymentId": {
-                  "type": "string",
-                  "example": "payment_id:1"
-                },
-                "restaurantId": {
-                  "type": "string",
-                  "example": "restaurant_id:1"
-                }
-              }
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Order"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
           }
         }
       }
@@ -1224,8 +1269,8 @@
                   "example": "0"
                 },
                 "nutriscore": {
-                  "type": "number",
-                  "example": 0
+                  "type": "string",
+                  "example": "A"
                 },
                 "categories": {
                   "type": "array",
@@ -1337,8 +1382,8 @@
                   "example": "0"
                 },
                 "nutriscore": {
-                  "type": "number",
-                  "example": 0
+                  "type": "string",
+                  "example": "A"
                 },
                 "categories": {
                   "type": "array",
@@ -1398,8 +1443,13 @@
             "schema": {
               "type": "object",
               "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "string"
+                },
                 "input_file": {
-                  "type": "function"
+                  "type": "string",
+                  "example": "string"
                 }
               }
             }
@@ -2244,6 +2294,122 @@
         }
       }
     },
+    "/api/delivery-person": {
+      "get": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "Doe"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "0612345678"
+                },
+                "locationList": {
+                  "type": "array",
+                  "example": [
+                    41.40338,
+                    2.17403
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/delivery-person/near": {
+      "get": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/delivery-person/{id}": {
       "get": {
         "tags": [
@@ -2357,122 +2523,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/delivery-person": {
-      "get": {
-        "tags": [
-          "Delivery"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Delivery"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "type": "string",
-                  "example": "John"
-                },
-                "lastName": {
-                  "type": "string",
-                  "example": "Doe"
-                },
-                "phone": {
-                  "type": "string",
-                  "example": "0612345678"
-                },
-                "locationList": {
-                  "type": "array",
-                  "example": [
-                    41.40338,
-                    2.17403
-                  ],
-                  "items": {
-                    "type": "number"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/delivery-person/near": {
-      "get": {
-        "tags": [
-          "Delivery"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "lat",
-            "in": "query",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "name": "lng",
-            "in": "query",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"

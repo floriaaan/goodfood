@@ -214,7 +214,7 @@ productRoutes.post(
             required: true,
             schema: {
                 name: 'string',
-                input_file: 'string''
+                input_file: 'string'
             }
         }
         #swagger.parameters['authorization'] = {
