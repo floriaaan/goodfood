@@ -8,7 +8,7 @@ RUN dotnet restore
 
 # Copy the rest of the application files and build
 COPY ./reporting/Server .
-COPY ./reporting/docker-entrypoint.sh .
+COPY ./reporting/script.sh ./script.sh
 COPY ./proto ./Protos
 
 RUN dotnet build -c Release -o out
@@ -22,4 +22,4 @@ ENV PATH="${PATH}:/root/.dotnet/tools"
 
 # Expose port and specify startup command
 EXPOSE 50020
-CMD ["bash", "/app/docker-entrypoint.sh"]
+CMD ["sh", "script.sh"]
