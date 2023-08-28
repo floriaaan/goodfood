@@ -78,7 +78,7 @@ mainAddressRoutes.put("/api/user/main-address/:id", async (req: Request, res: Re
     .setLat(lat)
     .setLng(lng);
 
-  const mainAddressUpdateInput = new MainAddressUpdateInput().setToken(authorization).setMainaddress(address);
+  const mainAddressUpdateInput = new MainAddressUpdateInput().setToken(token).setMainaddress(address);
   mainAddressServiceClient.updateMainAddress(mainAddressUpdateInput, (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());

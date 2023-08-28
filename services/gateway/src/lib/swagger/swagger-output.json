@@ -129,10 +129,6 @@
                   "type": "string",
                   "example": "johnDoe@mail.com"
                 },
-                "password": {
-                  "type": "string",
-                  "example": "password"
-                },
                 "phone": {
                   "type": "string",
                   "example": "0642424242"
@@ -156,9 +152,6 @@
                 "lng": {
                   "type": "number",
                   "example": 1.099971
-                },
-                "roleCode": {
-                  "$ref": "#/definitions/RoleCode"
                 }
               }
             }
@@ -392,6 +385,12 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "500": {
             "description": "Internal Server Error"
@@ -2257,9 +2256,6 @@
                   "type": "string",
                   "example": "10 Rue de la République, 75003 Paris, France"
                 },
-                "status": {
-                  "$ref": "#/definitions/Status"
-                },
                 "deliveryPersonId": {
                   "type": "string",
                   "example": "cllcdmeci0000pm01su98mxtb"
@@ -2281,9 +2277,6 @@
         "responses": {
           "201": {
             "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
