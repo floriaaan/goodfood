@@ -5,6 +5,7 @@ services:
 
   gateway:
     image: goodfood-gateway:1.0.0
+    restart: always
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
