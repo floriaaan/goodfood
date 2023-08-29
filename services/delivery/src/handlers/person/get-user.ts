@@ -11,9 +11,7 @@ export const GetDeliveryPersonByUser = async (
     const { id } = request;
     const deliveryPerson = await prisma.deliveryPerson.findUnique({
       where: { user_id: id },
-      include:{
-        deliveries: true,
-      }
+      include: { deliveries: true },
     });
     callback(null, deliveryPerson);
   } catch (error) {
