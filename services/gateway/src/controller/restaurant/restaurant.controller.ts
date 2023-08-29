@@ -2,7 +2,12 @@ import { Request, Response, Router } from "express";
 import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
 import { RestaurantId } from "@gateway/proto/product_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { ByLocationInput, Restaurant, RestaurantCreateInput } from "@gateway/proto/restaurant_pb";
+import {
+  ByLocationInput,
+  Restaurant,
+  RestaurantCreateInput,
+  RestaurantDeleteInput,
+} from "@gateway/proto/restaurant_pb";
 import { withCheck } from "@gateway/middleware/auth";
 
 export const restaurantRoutes = Router();
@@ -142,8 +147,10 @@ restaurantRoutes.delete("/api/restaurant/:id", withCheck({ role: "ADMIN" }), (re
      }
     */
   const { id } = req.params;
+  const restaurantId = new RestaurantDeleteInput().setId(id.toString());
 
-  restaurantServiceClient.deleteRestaurant(new RestaurantId().setId(id), (error, response) => {
+  restaurantServiceClient.deleteRestaurant(restaurantId, (error, response) => {
+    console.log({ error, response });
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
