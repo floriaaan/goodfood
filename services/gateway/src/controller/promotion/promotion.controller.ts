@@ -3,7 +3,6 @@ import { promotionServiceClient } from "@gateway/services/clients/promotion.clie
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import {
   Method,
-  Promotion,
   PromotionCode,
   PromotionCreateInput,
   PromotionId,
