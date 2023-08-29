@@ -5,7 +5,7 @@ services:
 
   gateway:
     image: goodfood-gateway:1.0.0
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
@@ -20,12 +20,12 @@ services:
 
   user-service:
     image: goodfood-user:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./user/Dockerfile
     depends_on:
       - user-postgres
-    restart: always
     env_file:
       - user/dev.env
     ports:
@@ -51,6 +51,7 @@ services:
 
   basket-service:
     image: goodfood-basket:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./basket/Dockerfile
@@ -78,12 +79,12 @@ services:
 
   payment-service:
     image: goodfood-payment:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./payment/Dockerfile
     depends_on:
       - payment-postgres
-    restart: always
     env_file:
       - payment/.env.docker
     ports:
@@ -110,6 +111,7 @@ services:
 
   product-service:
     image: goodfood-product:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./product/Dockerfile
@@ -138,6 +140,7 @@ services:
 
   restaurant-service:
     image: goodfood-restaurant:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./restaurant/Dockerfile
@@ -150,6 +153,7 @@ services:
 
   restaurant-postgres:
     image: postgres:latest
+    restart: unless-stopped
     ports:
       - "51005:5432"
     volumes:
@@ -166,6 +170,7 @@ services:
 
   promotion-service:
     image: goodfood-promotion:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./promotions/Dockerfile
@@ -194,6 +199,7 @@ services:
 
   order-service:
     image: goodfood-order:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./order/Dockerfile
@@ -222,6 +228,7 @@ services:
 
   delivery-service:
     image: goodfood-delivery:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./delivery/Dockerfile
@@ -263,6 +270,7 @@ services:
 
   stock-service:
     image: goodfood-stock:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./stock/Dockerfile
@@ -291,6 +299,7 @@ services:
 
   reporting-service:
     image: floriaaan/goodfood-reporting:latest
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./reporting/Dockerfile
@@ -317,8 +326,7 @@ services:
     depends_on:
       - log-postgres
       - event-broker
-    restart:
-      always
+    restart: unless-stopped
     image: floriaaan/goodfood-log:latest
     build:
       context: .
@@ -346,6 +354,7 @@ services:
 
   notification-service:
       image: goodfood-notification:1.0.0
+      restart: unless-stopped
       build:
         context: .
         dockerfile: ./notification/Dockerfile
