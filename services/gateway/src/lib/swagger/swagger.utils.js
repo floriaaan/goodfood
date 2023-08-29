@@ -31,8 +31,23 @@ const doc = {
       '@enum': [
         "ADMIN",
         "USER",
-        "ACCOUNTANT",
-        "DELIVERER"
+        "MANAGER",
+        "DELIVERY_PERSON"
+      ]
+    },
+    ProductType: {
+      '@enum': [
+        "ENTREES",
+        "PLATS",
+        "DESSERTS",
+        "BOISSONS",
+        "SNACKS"
+      ]
+    },
+    MessageType:{
+      '@enum': [
+        "USER_REQUEST",
+        "OUTPUT"
       ]
     }
   }

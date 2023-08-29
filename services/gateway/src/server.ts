@@ -1,21 +1,22 @@
-import {userRoutes} from "@gateway/controller/user/user.controller";
-import {orderRoutes} from "@gateway/controller/order/order.controller";
-import {productRoutes} from "@gateway/controller/product/product.controller";
-import {categoryRoutes} from "@gateway/controller/product/category.controller";
-import {allergenRoutes} from "@gateway/controller/product/allergen.controller";
-import {deliveryRoutes} from "@gateway/controller/delivery/delivery.controller";
-import {deliveryPersonRoutes} from "@gateway/controller/delivery/deliveryPerson.controller";
-import {promotionRoutes} from "@gateway/controller/promotion/promotion.controller";
-import {stockPersonRoutes} from "@gateway/controller/stock/stockPerson.controller";
-import {stockRoutes} from "@gateway/controller/stock/stock.controller";
-import {logRoutes} from "@gateway/controller/log/log.controller";
-import {metricRoutes} from "@gateway/controller/metric/metric.controller";
-import {basketRoutes} from "@gateway/controller/basket/basket.controller";
-import {log, utils} from "@gateway/lib/log/log";
-import {stripeRoutes} from "@gateway/controller/payment/stripe.controller";
-import {restaurantRoutes} from "@gateway/controller/restaurant/restaurant.controller";
-import {paymentRoutes} from "@gateway/controller/payment/payment.controller";
-import {mainAddressRoutes} from "@gateway/controller/user/mainAddress.controller";
+import { userRoutes } from "@gateway/controller/user/user.controller";
+import { orderRoutes } from "@gateway/controller/order/order.controller";
+import { productRoutes } from "@gateway/controller/product/product.controller";
+import { categoryRoutes } from "@gateway/controller/product/category.controller";
+import { allergenRoutes } from "@gateway/controller/product/allergen.controller";
+import { deliveryRoutes } from "@gateway/controller/delivery/delivery.controller";
+import { deliveryPersonRoutes } from "@gateway/controller/delivery/deliveryPerson.controller";
+import { promotionRoutes } from "@gateway/controller/promotion/promotion.controller";
+import { stockPersonRoutes } from "@gateway/controller/stock/stockPerson.controller";
+import { stockRoutes } from "@gateway/controller/stock/stock.controller";
+import { logRoutes } from "@gateway/controller/log/log.controller";
+import { metricRoutes } from "@gateway/controller/metric/metric.controller";
+import { basketRoutes } from "@gateway/controller/basket/basket.controller";
+import { log, utils } from "@gateway/lib/log/log";
+import { stripeRoutes } from "@gateway/controller/payment/stripe.controller";
+import { restaurantRoutes } from "@gateway/controller/restaurant/restaurant.controller";
+import { paymentRoutes } from "@gateway/controller/payment/payment.controller";
+import { mainAddressRoutes } from "@gateway/controller/user/mainAddress.controller";
+import { notificationRoutes } from "@gateway/controller/notification/notification.controller";
 import bodyParser from "body-parser";
 import express from "express";
 
@@ -42,13 +43,13 @@ app.use('/', stripeRoutes
 app.use('/', orderRoutes
 // #swagger.tags = ['Order']
 );
+app.use('/', productRoutes
+// #swagger.tags = ['Product']
+);
 app.use('/', categoryRoutes
-// #swagger.tags = ['Category']
+// #swagger.tags = ['Product']
 );
 app.use('/', allergenRoutes
-// #swagger.tags = ['Allergen']
-);
-app.use('/', productRoutes
 // #swagger.tags = ['Product']
 );
 app.use('/', restaurantRoutes
@@ -75,12 +76,13 @@ app.use('/', stockRoutes
 app.use('/', stockPersonRoutes
 // #swagger.tags = ['Stock']
 );
+app.use('/', notificationRoutes
+// #swagger.tags = ['Notification']
+);
 
 app.listen(PORT, () => {
-    const message = `---- ${utils.green("good")}${utils.yellow(
-        "food"
-    )} Gateway ----\nstarted on: ${utils.bold(`0.0.0.0:${PORT}`)} ${utils.green(
-        "✓"
-    )}\n`;
-    log.debug(message);
+  const message = `---- ${utils.green("good")}${utils.yellow("food")} Gateway ----\nstarted on: ${utils.bold(
+    `0.0.0.0:${PORT}`,
+  )} ${utils.green("✓")}\n`;
+  log.debug(message);
 });

@@ -4,4 +4,4 @@ bin/
 *.env*
 !*.env.example
 !*.env.docker
-/src/proto/
+src/proto/*

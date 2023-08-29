@@ -4,8 +4,8 @@ import "google/protobuf/empty.proto";
 package com.goodfood.notification;
 
 enum MessageType {
-  USER_REQUEST = 1;
-  OUTPUT = 2;
+  USER_REQUEST = 0;
+  OUTPUT = 1;
 }
 
 message MessageTypeInput {
