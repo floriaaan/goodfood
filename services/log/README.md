@@ -1,13 +1,13 @@
 # Log Microservice
 
-| Informations                       |
-| ---------------------------------- |
-| **Port:** 50021                    |
-| **Developer:** @floriaaan          |
-| **Status:** In progress            |
-| **Last update:** 2023-04-18        |
-| **Language:** Go                   |
-| **Dependencies:** gRPC, Gorm, AMQP |
+| Informations                                  |
+| --------------------------------------------- |
+| **Port:** 50021                               |
+| **Developer:** @floriaaan                     |
+| **Status:** Done (may have some improvements) |
+| **Last update:** 2023-04-18                   |
+| **Language:** Go                              |
+| **Dependencies:** gRPC, Gorm, AMQP            |
 
 ## gRPC Methods
 
@@ -33,8 +33,6 @@ You can use the following tools to help you with the setup:
   - `docker run --name rabbitmq -p 5672:5672 -p 15672:15672 -d rabbitmq:3-management`
 
 ## Getting started
-
-
 
 ### 1. Clone the repository and install dependencies
 

@@ -15,6 +15,8 @@ message Restaurant {
   repeated string openingHours = 6;
   optional string phone = 7;
 
+  repeated string userIds = 10;
+
   string createdAt = 8;
   string updatedAt = 9;
 }
@@ -28,6 +30,8 @@ message RestaurantCreateInput{
 
     repeated string openingHours = 5;
     optional string phone = 6;
+
+    repeated string userIds = 7;
 }
 
 message RestaurantList {
@@ -42,12 +46,16 @@ message RestaurantId {
   string id = 1;
 }
 
+message RestaurantDeleteInput {
+  string id = 1;
+}
+
 
 service RestaurantService {
   rpc CreateRestaurant (RestaurantCreateInput) returns (Restaurant) {}
   rpc GetRestaurant (RestaurantId) returns (Restaurant) {}
   rpc UpdateRestaurant (Restaurant) returns (Restaurant) {}
-  rpc DeleteRestaurant (RestaurantId) returns (google.protobuf.Empty) {}
+  rpc DeleteRestaurant (RestaurantDeleteInput) returns (google.protobuf.Empty) {}
   rpc GetRestaurants (google.protobuf.Empty) returns (RestaurantList) {}
   rpc GetRestaurantsByLocation (ByLocationInput) returns (RestaurantList) {}
 }

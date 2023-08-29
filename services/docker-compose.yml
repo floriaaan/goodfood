@@ -5,6 +5,7 @@ services:
 
   gateway:
     image: goodfood-gateway:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
@@ -19,12 +20,12 @@ services:
 
   user-service:
     image: goodfood-user:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./user/Dockerfile
     depends_on:
       - user-postgres
-    restart: always
     env_file:
       - user/dev.env
     ports:
@@ -35,7 +36,7 @@ services:
   user-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51001:5432"
     volumes:
       - goodfood-user-volume:/var/lib/postgresql/data
     networks:
@@ -50,6 +51,7 @@ services:
 
   basket-service:
     image: goodfood-basket:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./basket/Dockerfile
@@ -77,12 +79,12 @@ services:
 
   payment-service:
     image: goodfood-payment:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./payment/Dockerfile
     depends_on:
       - payment-postgres
-    restart: always
     env_file:
       - payment/.env.docker
     ports:
@@ -94,7 +96,7 @@ services:
   payment-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51003:5432"
     volumes:
       - goodfood-payment-volume:/var/lib/postgresql/data
     networks:
@@ -109,6 +111,7 @@ services:
 
   product-service:
     image: goodfood-product:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./product/Dockerfile
@@ -122,7 +125,7 @@ services:
   product-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51004:5432"
     volumes:
       - goodfood-product-volume:/var/lib/postgresql/data
     networks:
@@ -137,6 +140,7 @@ services:
 
   restaurant-service:
     image: goodfood-restaurant:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./restaurant/Dockerfile
@@ -149,8 +153,9 @@ services:
 
   restaurant-postgres:
     image: postgres:latest
+    restart: unless-stopped
     ports:
-      - "5432"
+      - "51005:5432"
     volumes:
       - goodfood-restaurant-volume:/var/lib/postgresql/data
     networks:
@@ -165,6 +170,7 @@ services:
 
   promotion-service:
     image: goodfood-promotion:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./promotions/Dockerfile
@@ -178,7 +184,7 @@ services:
   promotion-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51006:5432"
     volumes:
       - goodfood-promotion-volume:/var/lib/postgresql/data
     networks:
@@ -193,6 +199,7 @@ services:
 
   order-service:
     image: goodfood-order:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./order/Dockerfile
@@ -206,7 +213,7 @@ services:
   order-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51007:5432"
     volumes:
       - goodfood-order-volume:/var/lib/postgresql/data
     networks:
@@ -221,6 +228,7 @@ services:
 
   delivery-service:
     image: goodfood-delivery:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./delivery/Dockerfile
@@ -247,7 +255,7 @@ services:
   delivery-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51008:5432"
     volumes:
       - goodfood-delivery-volume:/var/lib/postgresql/data
     networks:
@@ -262,6 +270,7 @@ services:
 
   stock-service:
     image: goodfood-stock:1.0.0
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./stock/Dockerfile
@@ -275,7 +284,7 @@ services:
   stock-postgres:
     image: postgres:latest
     ports:
-      - "5432"
+      - "51009:5432"
     volumes:
       - goodfood-stock-volume:/var/lib/postgresql/data
     networks:
@@ -290,6 +299,7 @@ services:
 
   reporting-service:
     image: floriaaan/goodfood-reporting:latest
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./reporting/Dockerfile
@@ -304,7 +314,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
-      - "5432"
+      - "51020:5432"
     volumes:
       - goodfood-reporting-volume:/var/lib/postgresql/data
     networks:
@@ -315,9 +325,8 @@ services:
   log-service:
     depends_on:
       - log-postgres
-      - log-rabbitmq
-    restart:
-      always
+      - event-broker
+    restart: unless-stopped
     image: floriaaan/goodfood-log:latest
     build:
       context: .
@@ -329,26 +338,59 @@ services:
     networks:
       - goodfood-network
 
-  log-rabbitmq:
-    restart: always
-    image: rabbitmq:3-management
-    ports:
-      - "5672"
-      - "15672"
-    networks:
-      - goodfood-network
-
   log-postgres:
     image: postgres:15.2
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
-      - "5432"
+      - "51021:5432"
     volumes:
       - goodfood-log-volume:/var/lib/postgresql/data
     networks:
       - goodfood-network
+
+#  Notification service
+
+  notification-service:
+      image: goodfood-notification:1.0.0
+      restart: unless-stopped
+      build:
+        context: .
+        dockerfile: ./notification/Dockerfile
+      env_file:
+      - notification/.env.docker
+      ports:
+      - "50022"
+      networks:
+      - goodfood-network
+
+  notification-postgres:
+      image: postgres:15.2
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: notification
+        PGDATA: /var/lib/postgresql/data/pgdata
+      ports:
+      - "51022:5432"
+      volumes:
+      - goodfood-notification-volume:/var/lib/postgresql/data
+      networks:
+      - goodfood-network
+
+#  RabbitMQ
+
+  event-broker:
+    restart: always
+    image: rabbitmq:3-management
+    ports:
+      - "5672"
+      - "15672:15672"
+    networks:
+      - goodfood-network
+
+#  Volumes
 
 volumes:
   goodfood-user-volume:
@@ -362,6 +404,7 @@ volumes:
   goodfood-stock-volume:
   goodfood-reporting-volume:
   goodfood-log-volume:
+  goodfood-notification-volume:
 
 networks:
   goodfood-network:

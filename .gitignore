@@ -42,6 +42,9 @@ terraform.rc
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+### IDEA ###
+.idea
+
 # Local History for Visual Studio Code
 .history/
 
