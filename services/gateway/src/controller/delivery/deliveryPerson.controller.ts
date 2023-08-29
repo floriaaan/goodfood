@@ -1,9 +1,16 @@
 import { Router } from "express";
 import { deliveryPersonServiceClient } from "@gateway/services/clients/delivery.client";
-import { DeliveryPerson, DeliveryPersonCreateInput, DeliveryPersonId, Location } from "@gateway/proto/delivery_pb";
+import {
+  DeliveryPerson,
+  DeliveryPersonCreateInput,
+  DeliveryPersonId,
+  DeliveryPersonUserId,
+  Location
+} from "@gateway/proto/delivery_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { getUserIdFromToken } from "@gateway/services/user.service";
 import { withCheck } from "@gateway/middleware/auth";
+import {log} from "@gateway/lib/log/log";
 
 export const deliveryPersonRoutes = Router();
 
@@ -48,6 +55,12 @@ deliveryPersonRoutes.get("/api/delivery-person/near", async (req, res) => {
 });
 
 deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
+  /* #swagger.parameters['authorization'] = {
+      in: 'header',
+      required: true,
+      type: 'string'
+  } */
+
   // Auth check and :id check ---
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
@@ -59,6 +72,27 @@ deliveryPersonRoutes.get("/api/delivery-person/:id", async (req, res) => {
   const { id } = req.params;
 
   deliveryPersonServiceClient.getDeliveryPerson(new DeliveryPersonId().setId(id), (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
+
+deliveryPersonRoutes.get("/api/delivery-person/by-user", withCheck({ role: "MANAGER" }), async (req, res) => {
+  /* #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+    } */
+  log.error(req)
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  // ----------------------------
+
+  deliveryPersonServiceClient.getDeliveryPersonByUser(new DeliveryPersonUserId().setId(String(userId)), (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
@@ -88,6 +122,7 @@ deliveryPersonRoutes.post("/api/delivery-person", withCheck({ role: "ADMIN" }), 
     .setPhone(phone)
     .setLocationList(locationList);
   deliveryPersonServiceClient.createDeliveryPerson(deliveryPerson, (error, response) => {
+    log.error(error)
     if (error) return res.status(500).send({ error });
     else return res.status(201).json(response.toObject());
   });
@@ -109,6 +144,7 @@ deliveryPersonRoutes.put("/api/delivery-person/:id", withCheck({ role: "ADMIN" }
         required: true,
         type: 'string'
     } */
+
   const { id } = req.params;
   const { firstName, lastName, phone, locationList } = req.body;
   const deliveryPerson = new DeliveryPerson()
@@ -130,6 +166,7 @@ deliveryPersonRoutes.delete("/api/delivery-person/:id", withCheck({ role: "ADMIN
         required: true,
         type: 'string'
     } */
+
   const { id } = req.params;
 
   deliveryPersonServiceClient.deleteDeliveryPerson(new DeliveryPersonId().setId(id), (error, response) => {
