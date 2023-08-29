@@ -25,3 +25,4 @@ export type LocationInput = {
 };
 
 export type DeliveryPersonId = { id: DeliveryPerson["id"] };
+export type DeliveryPersonUserId = { id: DeliveryPerson["id"] };

@@ -48,6 +48,7 @@ service DeliveryService {
 service DeliveryPersonService {
   rpc CreateDeliveryPerson (DeliveryPersonCreateInput) returns (DeliveryPerson) {}
   rpc GetDeliveryPerson (DeliveryPersonId) returns (DeliveryPerson) {}
+  rpc GetDeliveryPersonByUser (DeliveryPersonUserId) returns (DeliveryPerson) {}
   rpc UpdateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
   rpc DeleteDeliveryPerson (DeliveryPersonId) returns (google.protobuf.Empty) {}
   rpc ListDeliveryPersons (google.protobuf.Empty) returns (DeliveryPersonList) {}
@@ -86,6 +87,10 @@ message DeliveryPersonList {
 }
 
 message DeliveryPersonId {
+  string id = 1;
+}
+
+message DeliveryPersonUserId {
   string id = 1;
 }
 message DeliveryPersonCreateInput {

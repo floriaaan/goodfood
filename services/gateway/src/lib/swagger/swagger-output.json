@@ -2419,6 +2419,7 @@
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           }
         ],
@@ -2516,6 +2517,33 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/delivery-person/by-user": {
+      "get": {
+        "tags": [
+          "Delivery"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -3028,15 +3056,11 @@
                 },
                 "code": {
                   "type": "string",
-                  "example": "income_1h"
+                  "example": "incomes_1h"
                 },
                 "value": {
                   "type": "string",
                   "example": "99.99"
-                },
-                "key": {
-                  "type": "string",
-                  "example": "example_key"
                 }
               }
             }
