@@ -14,7 +14,7 @@ import {
 } from "@gateway/proto/user_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
-import { createDeliveryPerson} from "@gateway/services/delivery.service";
+import { createDeliveryPerson } from "@gateway/services/delivery.service";
 import { check, withCheck } from "@gateway/middleware/auth";
 
 export const userRoutes = Router();
@@ -39,9 +39,9 @@ userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
 
   try {
     const user = await getUser(Number(id));
-    res.json(user?.toObject());
-  } catch (e: any) {
-    res.json({ error: e.message });
+    return res.status(200).json(user?.toObject());
+  } catch (error) {
+    return res.status(500).json({ error });
   }
 });
 
@@ -53,7 +53,7 @@ userRoutes.get("/api/user", withCheck({ role: "ADMIN" }), (req: Request, res: Re
   } */
   userServiceClient.listUser(new Empty(), (error, response) => {
     if (error) res.status(500).send({ error: error.message });
-    else res.json(response.toObject());
+    else return res.json(response.toObject());
   });
 });
 
@@ -87,16 +87,13 @@ userRoutes.post("/api/user/register", (req: Request, res: Response) => {
       .setPhone(phone)
       .setMainaddress(address)
       .setRole(new RoleInput().setCode(roleCode));
-  } catch (e: any) {
-    res.json({ error: e.message });
+  } catch (error) {
+    return res.status(500).json({ error });
   }
 
   userServiceClient.register(userInput, (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
-    }
+    if (error) return res.status(500).send({ error });
+    else return res.status(201).json(response.toObject());
   });
 });
 
@@ -143,16 +140,13 @@ userRoutes.put("/api/user", async (req: Request, res: Response) => {
       .setMainaddress(address);
 
     userInput.setUser(user).setToken(token);
-  } catch (e: any) {
-    res.json({ error: e.message });
+  } catch (error) {
+    res.status(200).json({ error });
   }
 
   userServiceClient.updateUser(userInput, (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
-    }
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
   });
 });
 
@@ -174,11 +168,8 @@ userRoutes.delete("/api/user/:id", (req: Request, res: Response) => {
 
   // The delete route in the user service implement the user validation
   userServiceClient.deleteUser(new DeleteInput().setUserid(Number(id)).setToken(token), (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
-    }
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
   });
 });
 
@@ -195,11 +186,8 @@ userRoutes.post("/api/user/login", (req: Request, res: Response) => {
   const inInput = new logInInput().setEmail(email).setPassword(password);
 
   userServiceClient.logIn(inInput, (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
-    }
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
   });
 });
 
@@ -216,11 +204,8 @@ userRoutes.post("/api/user/validate", (req: Request, res: Response) => {
   const validate = new validateInput().setToken(token);
 
   userServiceClient.validate(validate, (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
-    }
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
   });
 });
 
@@ -247,16 +232,13 @@ userRoutes.put("/api/user/password", (req: Request, res: Response) => {
   const updatePasswordInput = new changePasswordInput();
   try {
     updatePasswordInput.setToken(token).setOldpassword(oldpassword).setNewpassword(password);
-  } catch (e: any) {
-    res.json({ error: e.message });
+  } catch (error) {
+    return res.status(500).json({ error });
   }
 
   userServiceClient.changePassword(updatePasswordInput, (error, response) => {
-    if (error) {
-      res.status(500).send({ error: error.message });
-    } else {
-      res.json(response.toObject());
-    }
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
   });
 });
 
@@ -292,8 +274,8 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: R
 
   try {
     roleInput.setToken(token).setUserid(Number(id)).setRolecode(req.body.role);
-  } catch (e: any) {
-    res.json({ error: e.message });
+  } catch (error) {
+    return res.status(500).json({ error });
   }
   let user: User.AsObject | undefined = undefined;
   try {
@@ -304,15 +286,15 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: R
       });
     });
   } catch (error) {
-    res.status(500).send({ error });
+    return res.status(500).send({ error });
   }
 
   if (user && user.role?.code === "DELIVERY_PERSON") {
     try {
       await createDeliveryPerson(user.id, user.firstName, user.lastName, user.phone, []);
     } catch (error) {
-      res.status(500).send({ error });
+      return res.status(500).send({ error });
     }
   }
-  res.json(user);
+  return res.status(200).json(user);
 });
