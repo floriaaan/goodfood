@@ -2,6 +2,7 @@ import { Router } from "express";
 import { promotionServiceClient } from "@gateway/services/clients/promotion.client";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import {
+  Method,
   Promotion,
   PromotionCode,
   PromotionCreateInput,
@@ -96,7 +97,10 @@ promotionRoutes.post("/api/promotion", withCheck({ role: ["MANAGER", "ADMIN"] })
         required: true,
         type: 'string'
     } */
-  const { code, reduction, method, restaurantId } = req.body;
+  const { code, reduction, method: inputMethod, restaurantId } = req.body;
+  const method = Method[inputMethod] as unknown as Method;
+  if (!method) return res.status(400).json({ message: "Invalid method" });
+
   const promotionCreateInput = new PromotionCreateInput()
     .setCode(code)
     .setReduction(reduction)
@@ -130,7 +134,10 @@ promotionRoutes.put("/api/promotion/:id", withCheck({ role: ["MANAGER", "ADMIN"]
            type: 'string'
      } */
   const { id } = req.params;
-  const { code, reduction, method, restaurantId } = req.body;
+  const { code, reduction, method: inputMethod, restaurantId } = req.body;
+  const method = Method[inputMethod] as unknown as Method;
+  if (!method) return res.status(400).json({ message: "Invalid method" });
+
   const promotionUpdateInput = new Promotion()
     .setId(id)
     .setCode(code)
