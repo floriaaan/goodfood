@@ -7,6 +7,7 @@ import {
   PromotionCode,
   PromotionCreateInput,
   PromotionId,
+  PromotionUpdateInput,
   RestaurantId,
 } from "@gateway/proto/promotions_pb";
 import { getUserIdFromToken } from "@gateway/services/user.service";
@@ -138,7 +139,7 @@ promotionRoutes.put("/api/promotion/:id", withCheck({ role: ["MANAGER", "ADMIN"]
   const method = Method[inputMethod] as unknown as Method;
   if (!method) return res.status(400).json({ message: "Invalid method" });
 
-  const promotionUpdateInput = new Promotion()
+  const promotionUpdateInput = new PromotionUpdateInput()
     .setId(id)
     .setCode(code)
     .setReduction(reduction)
