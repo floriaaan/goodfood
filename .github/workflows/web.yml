@@ -1,10 +1,10 @@
-name: Next.js CI
+name: "Web App CI/CD"
 
 on:
   push:
-    branches: [main]
+    branches: [app/web]
   pull_request:
-    branches: [main]
+    branches: [dev, main]
 
 defaults:
   run:
