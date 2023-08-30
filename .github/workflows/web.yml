@@ -101,7 +101,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./services/
-          file: ./services/notification/Dockerfile
+          context: ./apps/web/.
+          file: ./apps/web/Dockerfile
           push: true
-          tags: pierrelbg/goodfood-notification:lates
+          tags: floriaaan/goodfood-web:latest
