@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .gf_shadow {
+        @apply transition-shadow duration-150 shadow-[3px_3px_0px_0px_#000000] active:shadow-[0px_0px_0px_0px_#000000]
+    }
+}
