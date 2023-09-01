@@ -1,8 +1,8 @@
-import Image from "next/image";
-import { Inria_Serif } from "next/font/google";
-import classNames from "classnames";
-import { MdOutlineStar, MdStar, MdStarOutline } from "react-icons/md";
 import { useAuth } from "@/hooks/useAuth";
+import { cn } from "@/lib/utils";
+import { Inria_Serif } from "next/font/google";
+import Image from "next/image";
+import { MdOutlineStar } from "react-icons/md";
 
 const inria_serif = Inria_Serif({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -10,8 +10,8 @@ export const RatingSection = () => {
   const { user } = useAuth();
   return (
     <section
-      className={classNames(
-        "relative flex h-80 w-screen items-center justify-center text-white",
+      className={cn(
+        "relative flex h-80 w-full items-center justify-center text-white",
         inria_serif.className,
       )}
     >
@@ -23,7 +23,7 @@ export const RatingSection = () => {
         height={1580}
         className="absolute inset-0 z-0 h-80 object-cover"
       />
-      <div className="absolute left-0 top-0 h-full w-screen bg-black/50"></div>
+      <div className="absolute left-0 top-0 h-full w-full bg-black/50"></div>
       <div className="relative z-10 flex flex-col items-center justify-center gap-y-2">
         <h1 className="text-5xl font-bold">{user.first_name}</h1>
         <h2 className="text-2xl font-normal">{"Comment s'est passé votre repas mardi ?"}</h2>
@@ -31,8 +31,8 @@ export const RatingSection = () => {
         <div className="inline-flex items-center gap-x-2">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="relative w-10">
-              <MdStar className="absolute hidden h-10 w-10 hover:block" />
-              <MdOutlineStar className="absolute block h-10 w-10 text-4xl hover:hidden" />
+              {/* <MdStar className="absolute hidden h-10 w-10 hover:block" /> */}
+              <MdOutlineStar className="absolute block h-10 w-10" />
             </div>
           ))}
         </div>
