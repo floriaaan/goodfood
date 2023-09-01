@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { cn } from "@/lib/utils";
 
 export const Logo = ({ className }: { className?: string }) => (
   <>
@@ -33,7 +33,7 @@ export const Logo = ({ className }: { className?: string }) => (
       height="72"
       viewBox="0 0 292 72"
       fill="none"
-      className={classNames(className, "hidden shrink-0 lg:block")}
+      className={cn(className, "hidden shrink-0 lg:block")}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
