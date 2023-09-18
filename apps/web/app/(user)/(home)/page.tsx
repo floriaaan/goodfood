@@ -1,5 +1,5 @@
 import { Catalog } from "@/components/catalog";
-import { RatingSection } from "@/app/(home)/rating";
+import { RatingSection } from "@/app/(user)/(home)/rating";
 import { BasketWrapper } from "@/components/basket";
 import { Navbar } from "@/components/ui/navbar";
 
