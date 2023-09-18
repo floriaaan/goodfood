@@ -39,7 +39,7 @@ export const ProductCatalogList = (product: Product) => {
           <span className="bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">
             {product.price.toFixed(2).replace(".", "€")}
           </span>
-          <Button className="w-fit bg-black text-white ring-black" type="solid">
+          <Button className="w-fit bg-black text-white ring-black" variant="solid">
             Je prends ça
           </Button>
         </div>
