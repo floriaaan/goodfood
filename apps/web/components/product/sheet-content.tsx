@@ -19,7 +19,7 @@ export const ProductSheetContent = (product: Product) => {
             height={400}
           />
           <SheetClose className="absolute right-4 top-4 z-50">
-            <Button type="solid" className="border border-black bg-white text-black">
+            <Button variant="solid" className="border border-black bg-white text-black">
               <MdClose className="h-4 w-4" />
             </Button>
           </SheetClose>
@@ -61,7 +61,7 @@ export const ProductSheetContent = (product: Product) => {
           <span className="h-fit bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">
             {product.price.toFixed(2).replace(".", "€")}
           </span>
-          <Button className="h-fit w-fit bg-black text-white ring-black" type="solid">
+          <Button className="h-fit w-fit bg-black text-white ring-black" variant="solid">
             Je prends ça
           </Button>
         </div>

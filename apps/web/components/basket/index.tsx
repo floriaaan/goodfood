@@ -46,7 +46,7 @@ export const BasketWrapper = () => {
         <div className="text-gf-green-600 bg-gf-green-200/60 px-2 py-1 font-extrabold">25€50</div>
       </GradientHeader>
       <div className="mt-2 w-full">
-        <Button type="solid" className="bg-black ring-black text-white">
+        <Button variant="solid" className="bg-black ring-black text-white">
           Étape suivante
           <MdArrowForward className="h-6 w-6" />
         </Button>

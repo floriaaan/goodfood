@@ -1,17 +1,160 @@
+"use client";
+
+import { Logo } from "@/components/ui/Logo";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
+import { restaurantList } from "@/constants/data";
+import { useBasket } from "@/hooks/useBasket";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { MdArrowForwardIos, MdOutlineLocationOn } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { MdArrowForwardIos, MdLocationOff, MdLocationOn, MdOutlineLocationOn } from "react-icons/md";
+import { getDistance } from "geolib";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Location = ({ className }: { className?: string }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { selectedRestaurantId, selectRestaurant } = useBasket();
+  const { user } = useAuth();
+  const {
+    mainAddress: { street, zip_code, city, country },
+  } = user || {};
+
+  // todo: might need to store restaurants in context to avoid re-fetching and have data 
+  const [restaurants, setRestaurants] = useState(restaurantList);
+  const [{ lat, lng }, setLocation] = useState({ lat: NaN, lng: NaN });
+  const [search, setSearch] = useState("");
+
+  const handleLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+      },
+      (error) => console.error(error),
+      { enableHighAccuracy: true },
+    );
+  };
+
+  useEffect(() => {
+    if (isNaN(lat) && isNaN(lng)) return;
+    // todo: fetch restaurants by near location
+  }, [lat, lng]);
+
+  useEffect(() => {
+    if (search.trim().length === 0) return;
+    const timeout = setTimeout(() => {
+      // todo: fetch restaurants by search
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [search]);
+
   return (
-    <div className={cn("items-center gap-x-3", className)}>
-      <MdOutlineLocationOn className="h-7 w-7 shrink-0" />
-      <div className="flex max-w-sm grow flex-col gap-y-0.5">
-        <span className="text-xs font-bold">23 rue Amiral Cécille - 76100 Rouen</span>
-        <span className="text-xs">{`${format(new Date(), "eeee d MMMM", { locale: fr })} - (12:15 - 12:35)`}</span>
-      </div>
-      <MdArrowForwardIos className="h-5 w-5 shrink-0 rotate-90" />
-    </div>
+    <Sheet open={isModalOpen} onOpenChange={setIsModalOpen} defaultOpen={selectedRestaurantId === null}>
+      <SheetTrigger asChild>
+        <div className={cn("cursor-pointer items-center gap-x-3", className)}>
+          <MdOutlineLocationOn className="h-7 w-7 shrink-0" />
+          {selectedRestaurantId ? (
+            <div className="flex max-w-sm grow flex-col gap-y-0.5">
+              <span className="text-xs font-bold">{`${street}, ${zip_code} ${city}, ${country}`}</span>
+              <span className="text-xs">{`${format(new Date(), "eeee d MMMM", {
+                locale: fr,
+              })} - (12:15 - 12:35)`}</span>
+            </div>
+          ) : (
+            <div className="flex max-w-sm grow flex-col gap-y-0.5">
+              <span className="text-xs font-bold">{`${street}, ${zip_code} ${city}, ${country}`}</span>
+              <span className="text-xs">Choisir un restaurant</span>
+            </div>
+          )}
+          <MdArrowForwardIos className="h-5 w-5 shrink-0 rotate-90" />
+        </div>
+      </SheetTrigger>
+      <SheetContent
+        side="bottom"
+        className="mx-auto flex min-h-[12rem] w-full max-w-xl flex-col gap-y-4 p-4 pb-8 2xl:max-w-2xl"
+      >
+        <SheetHeader className="flex items-center justify-between ">
+          <span className="text-sm font-bold">Choisir un restaurant</span>
+        </SheetHeader>
+        <Input
+          type="search"
+          aria-label="Rechercher un restaurant"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <div className="relative block">
+          <hr className="border-gray-100" />
+          <div className="absolute top-0 -mt-2 flex w-full items-center justify-center">
+            <span className="bg-white px-2 text-xs font-bold uppercase text-gray-500">ou</span>
+          </div>
+        </div>
+        <Button onClick={handleLocation} variant="solid" className="gap-x-1 p-2 text-xs ">
+          <MdLocationOn className="h-4 w-4 shrink-0" />
+          Utiliser ma position
+        </Button>
+        <hr className="border-gray-300" />
+        <div className="flex max-h-96 flex-col gap-y-1 overflow-y-auto">
+          {restaurants.map((restaurant) => (
+            <button
+              onClick={() => {
+                selectRestaurant(restaurant.id);
+                setIsModalOpen(false);
+              }}
+              key={restaurant.id}
+              className={cn(
+                "flex flex-col gap-y-2 border-2 p-3",
+                selectedRestaurantId === restaurant.id ? "border-gray-500 bg-gray-50" : "border-gray-200",
+              )}
+            >
+              <div className="inline-flex w-full items-start justify-between">
+                <div className="inline-flex items-center gap-x-2">
+                  <Logo className="h-6 w-fit" />
+                  <span className="text-sm font-bold">{restaurant.name}</span>
+                </div>
+                {!isNaN(lat) && !isNaN(lng) ? (
+                  <span className="inline-flex items-center gap-1 text-xs font-bold">
+                    <MdLocationOn className="h-4 w-4" />
+                    {`${(
+                      getDistance(
+                        { latitude: lat, longitude: lng },
+                        {
+                          latitude: restaurant.coordinates[0],
+                          longitude: restaurant.coordinates[1],
+                        },
+                      ) / 1000
+                    ).toFixed(1)} km`}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-xs font-bold">
+                    <MdLocationOff className="h-4 w-4" />
+                    Localisation indisponible
+                  </span>
+                )}
+              </div>
+              <div className="inline-flex items-center gap-x-1 text-xs font-light">
+                {
+                  // todo: opening hours
+                  true ? (
+                    <>
+                      <span className="h-2 w-2 rounded-full bg-green-600"></span> Ouvert
+                    </>
+                  ) : (
+                    <>
+                      <span className="h-2 w-2 rounded-full bg-red-600"></span> Fermé
+                    </>
+                  )
+                }
+                {` • `}
+                {restaurant.opening_hours}
+              </div>
+            </button>
+          ))}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
