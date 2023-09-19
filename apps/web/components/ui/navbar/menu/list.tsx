@@ -1,6 +1,6 @@
-import { BasketDropdown } from "@/components/ui/navbar/dropdown/basket";
-import { LocationDropdown } from "@/components/ui/navbar/dropdown/location";
-import { UserDropdown } from "@/components/ui/navbar/dropdown/user";
+import { BasketDropdown } from "@/components/ui/navbar/menu/basket";
+import { LocationDropdown } from "@/components/ui/navbar/menu/location";
+import { UserDropdown } from "@/components/ui/navbar/menu/user";
 import { cn } from "@/lib/utils";
 
 export const DropdownList = ({ className }: { className?: string }) => {
