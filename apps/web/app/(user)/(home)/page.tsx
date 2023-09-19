@@ -8,10 +8,12 @@ export default function Home() {
     <>
       <Navbar />
       <RatingSection />
-      <div className="relative p-2">
-        <main className="sticky mx-auto grid max-w-7xl gap-2 border border-gray-100 p-2 lg:grid-cols-3">
+      <div className="relative p-2 has-background-grid">
+        <main className="sticky mx-auto grid shadow-xl max-w-7xl gap-2 border bg-white border-gray-100 p-2 lg:grid-cols-3">
           <Catalog />
-          <BasketWrapper />
+          <div className="hidden lg:block">
+            <BasketWrapper />
+          </div>
         </main>
       </div>
     </>
