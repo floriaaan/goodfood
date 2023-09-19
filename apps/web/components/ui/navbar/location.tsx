@@ -1,6 +1,6 @@
 "use client";
 
-import { Logo } from "@/components/ui/Logo";
+import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
@@ -13,8 +13,10 @@ import { useEffect, useState } from "react";
 import { MdArrowForwardIos, MdLocationOff, MdLocationOn, MdOutlineLocationOn } from "react-icons/md";
 import { getDistance } from "geolib";
 import { useAuth } from "@/hooks/useAuth";
+import dynamic from "next/dynamic";
+import { SpinnerLoader } from "@/components/ui/loader/spinner";
 
-export const Location = ({ className }: { className?: string }) => {
+export const LocationComponent = ({ trigger }: { className?: string; trigger: React.ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { selectedRestaurantId, selectRestaurant } = useBasket();
@@ -54,33 +56,7 @@ export const Location = ({ className }: { className?: string }) => {
 
   return (
     <Sheet open={isModalOpen} onOpenChange={setIsModalOpen} defaultOpen={selectedRestaurantId === null}>
-      <SheetTrigger asChild>
-        <div className={cn("cursor-pointer items-center gap-x-3", className)}>
-          <span className="relative">
-            <MdOutlineLocationOn className="h-7 w-7 shrink-0" />
-            {!selectedRestaurantId && (
-              <>
-                <span className="absolute right-0 top-0 h-2 w-2 animate-ping rounded-full bg-red-600"></span>
-                <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-600"></span>
-              </>
-            )}
-          </span>
-          {selectedRestaurantId ? (
-            <div className="flex max-w-sm grow flex-col gap-y-0.5">
-              <span className="text-xs font-bold">{`${street}, ${zip_code} ${city}, ${country}`}</span>
-              <span className="text-xs">{`${format(new Date(), "eeee d MMMM", {
-                locale: fr,
-              })} - (12:15 - 12:35)`}</span>
-            </div>
-          ) : (
-            <div className="flex max-w-sm grow flex-col gap-y-0.5">
-              <span className="text-xs font-bold">{`${street}, ${zip_code} ${city}, ${country}`}</span>
-              <span className="text-xs">Choisir un restaurant</span>
-            </div>
-          )}
-          <MdArrowForwardIos className="h-5 w-5 shrink-0 rotate-90" />
-        </div>
-      </SheetTrigger>
+      <SheetTrigger>{trigger}</SheetTrigger>
       <SheetContent
         side="bottom"
         className="mx-auto flex min-h-[12rem] w-full max-w-xl flex-col gap-y-4 p-4 pb-8 2xl:max-w-2xl"
@@ -167,3 +143,50 @@ export const Location = ({ className }: { className?: string }) => {
     </Sheet>
   );
 };
+
+export const Trigger = ({ className }: { className?: string }) => {
+  const { selectedRestaurantId } = useBasket();
+  const { user } = useAuth();
+  const {
+    mainAddress: { street, zip_code, city, country },
+  } = user || {};
+
+  //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
+  const eta = "(12:15 - 12:35)";
+
+  return (
+    <div className={cn("cursor-pointer items-center gap-x-3", className)}>
+      <div className="relative">
+        <MdOutlineLocationOn className="h-7 w-7 shrink-0" />
+        {!selectedRestaurantId && (
+          <>
+            <span className="absolute right-0 top-0 h-2 w-2 animate-ping rounded-full bg-red-600"></span>
+            <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-600"></span>
+          </>
+        )}
+      </div>
+      {selectedRestaurantId ? (
+        <div className="flex max-w-sm grow flex-col gap-y-0.5">
+          <span className="text-xs font-bold">{`${street}, ${zip_code} ${city}, ${country}`}</span>
+          <span className="text-xs">{`${// todo: link to restaurant list store
+          restaurantList.find(({ id }) => id === selectedRestaurantId)?.name} - ${eta}`}</span>
+        </div>
+      ) : (
+        <div className="flex max-w-sm grow flex-col gap-y-0.5">
+          <span className="text-xs font-bold">{`${street}, ${zip_code} ${city}, ${country}`}</span>
+          <span className="text-xs">Choisir un restaurant</span>
+        </div>
+      )}
+      <MdArrowForwardIos className="h-5 w-5 shrink-0 rotate-90" />
+    </div>
+  );
+};
+
+export const Location = dynamic(() => Promise.resolve(LocationComponent), {
+  ssr: false,
+  loading: () => (
+    <div className="hidden lg:inline-flex">
+      <SpinnerLoader className="h-8 w-8" />
+    </div>
+  ),
+});
