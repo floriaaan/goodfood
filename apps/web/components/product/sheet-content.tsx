@@ -40,9 +40,9 @@ export const ProductSheetContent = (product: Product) => {
               <Image
                 src={getNutriscoreImageUrl(product)}
                 alt={`Score nutritionnel de ${product.name}`}
-                height={48}
+                height={56}
                 width={100}
-                className="h-8 w-auto object-contain"
+                className="h-12 w-auto object-contain"
               />
             </div>
           </div>
