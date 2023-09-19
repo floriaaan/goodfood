@@ -155,7 +155,7 @@ export const Trigger = ({ className }: { className?: string }) => {
   const eta = "(12:15 - 12:35)";
 
   return (
-    <div className={cn("cursor-pointer items-center gap-x-3", className)}>
+    <div className={cn("cursor-pointer items-center gap-x-3 p-3 hover:bg-gray-50 ease-in-out focus:appearance-none duration-200", className)}>
       <div className="relative">
         <MdOutlineLocationOn className="h-7 w-7 shrink-0" />
         {!selectedRestaurantId && (
