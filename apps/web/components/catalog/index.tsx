@@ -23,7 +23,7 @@ export const Catalog = () => {
         {productList
           .filter((p) => p.type === type)
           .map((product) => (
-            <ProductCatalogList {...product} />
+            <ProductCatalogList key={product.id} {...product} />
           ))}
       </section>
     </CatalogContext.Provider>
