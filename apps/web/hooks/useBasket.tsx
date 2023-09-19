@@ -1,65 +1,101 @@
 "use client";
 
-import { useState, createContext, useContext } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
-// genereated code
-// todo: check structure and update
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-}
+import { productList } from "@/constants/data";
+import { createPersistedState } from "@/lib/use-persisted-state";
+type Basket = Record<string, number>;
 
-interface Basket {
-  items: Item[];
-  addItem: (item: Item) => void;
-  removeItem: (id: number) => void;
-  clearBasket: () => void;
+type BasketContextData = {
+  // PRODUCT & BASKET
+  basket: Basket;
+  total: string;
+  setBasket: (basket: Basket) => void;
+  addProduct: (id: string, quantity: number) => void;
+  removeProduct: (id: string, quantity: number) => void;
 
-  selectedRestaurantId: string | null; // todo: link to Restaurant["id"] type
+  // RESTAURANT
+  selectedRestaurantId: string | null;
   selectRestaurant: (id: string) => void;
-}
 
-const useBasketHook = (): Basket => {
-  const [items, setItems] = useState<Item[]>([]);
-  const addItem = (item: Item) => {
-    // todo: post item to basket api endpoint
-    setItems([...items, item]);
-  };
-  const removeItem = (id: number) => {
-    // todo: delete item from basket api endpoint
-    setItems(items.filter((item) => item.id !== id));
-  };
-  const clearBasket = () => {
-    // todo: delete all items from basket api endpoint
-    setItems([]);
-  };
-
-  // todo: add default value from user context
-  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
-  const selectRestaurant = (id: string) => {
-    setSelectedRestaurantId(id);
-  };
-
-  return { items, addItem, removeItem, clearBasket, selectedRestaurantId, selectRestaurant };
+  // PROMOTION
+  promotion: any | null;
+  checkPromotionCode: (code: string) => void;
 };
 
-interface BasketProviderProps {
-  children: React.ReactNode;
-}
+const BasketContext = createContext({
+  basket: {},
+} as BasketContextData);
 
-const BasketContext = createContext<Basket | undefined>(undefined);
-
-export const useBasket = (): Basket => {
+export const useBasket = () => {
   const context = useContext(BasketContext);
-  if (!context) {
-    throw new Error("useBasketContext must be used within a BasketProvider");
-  }
+  if (context === null) throw new Error("useAuth must be used within an AuthProvider");
+
   return context;
 };
 
-export const BasketProvider = ({ children }: BasketProviderProps) => {
-  const basket = useBasketHook();
+const useBasketState = createPersistedState("gf/basket");
+const useRestaurantState = createPersistedState("gf/restaurant");
 
-  return <BasketContext.Provider value={basket}>{children}</BasketContext.Provider>;
+export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
+  const [basket, setBasket] = useBasketState<Basket>({});
+
+  const total = useMemo(() => {
+    return Object.entries(basket as Basket)
+      .reduce((acc, [id, quantity]) => {
+        const product = productList.find((p) => p.id === id);
+        if (!product) return acc;
+        return acc + product.price * quantity;
+      }, 0)
+      .toFixed(2)
+      .replace(".", "€");
+  }, [basket]);
+
+  const addProduct = (id: string, quantity: number) =>
+    setBasket((basket) => {
+      const newBasket = { ...basket };
+      if (newBasket[id]) newBasket[id] += quantity;
+      else newBasket[id] = quantity;
+      return newBasket;
+    });
+
+  const removeProduct = (id: string, quantity: number) =>
+    setBasket((basket) => {
+      const newBasket = { ...basket };
+      if (newBasket[id] <= quantity) delete newBasket[id];
+      else newBasket[id] -= quantity;
+      return newBasket;
+    });
+
+  const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
+  const selectRestaurant = (id: string) => setSelectedRestaurantId(id);
+
+  const [promotion, setPromotion] = useState<any>(null);
+
+  const checkPromotionCode = (code: string) => {
+    if (!code || code.trim().length === 0) return null;
+    // todo: call api to check code
+
+    setPromotion(null);
+  };
+
+  return (
+    <BasketContext.Provider
+      value={{
+        basket: basket as Basket,
+        total,
+        setBasket,
+        addProduct,
+        removeProduct,
+
+        selectedRestaurantId: selectedRestaurantId as string | null,
+        selectRestaurant,
+
+        promotion,
+        checkPromotionCode,
+      }}
+    >
+      {children}
+    </BasketContext.Provider>
+  );
 };
