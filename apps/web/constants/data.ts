@@ -58,6 +58,27 @@ export const productList: Product[] = [
     ],
     comment: ``,
   },
+  // TODO: how to handle extra products? (utensils, bread, etc.)
+  // {
+  //   id: "extra/bread",
+  //   name: "Pain",
+  //   price: 0.15,
+  //   preparation: "",
+  //   weight: "",
+  //   kilocalories: "",
+  //   allergens: [
+  //     {
+  //       id: "allergen-1",
+  //       libelle: "Gluten",
+  //     },
+  //   ],
+  //   nutriscore: -1,
+  //   restaurant_id: "",
+  //   type: ProductType.EXTRA,
+  //   image: "",
+  //   categories: [],
+  //   comment: ``,
+  // },
 ];
 
 export const restaurantList = [

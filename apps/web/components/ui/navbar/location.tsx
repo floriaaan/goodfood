@@ -23,7 +23,7 @@ export const Location = ({ className }: { className?: string }) => {
     mainAddress: { street, zip_code, city, country },
   } = user || {};
 
-  // todo: might need to store restaurants in context to avoid re-fetching and have data 
+  // todo: might need to store restaurants in context to avoid re-fetching and have data
   const [restaurants, setRestaurants] = useState(restaurantList);
   const [{ lat, lng }, setLocation] = useState({ lat: NaN, lng: NaN });
   const [search, setSearch] = useState("");
@@ -56,7 +56,15 @@ export const Location = ({ className }: { className?: string }) => {
     <Sheet open={isModalOpen} onOpenChange={setIsModalOpen} defaultOpen={selectedRestaurantId === null}>
       <SheetTrigger asChild>
         <div className={cn("cursor-pointer items-center gap-x-3", className)}>
-          <MdOutlineLocationOn className="h-7 w-7 shrink-0" />
+          <span className="relative">
+            <MdOutlineLocationOn className="h-7 w-7 shrink-0" />
+            {!selectedRestaurantId && (
+              <>
+                <span className="absolute right-0 top-0 h-2 w-2 animate-ping rounded-full bg-red-600"></span>
+                <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-600"></span>
+              </>
+            )}
+          </span>
           {selectedRestaurantId ? (
             <div className="flex max-w-sm grow flex-col gap-y-0.5">
               <span className="text-xs font-bold">{`${street}, ${zip_code} ${city}, ${country}`}</span>
@@ -83,6 +91,7 @@ export const Location = ({ className }: { className?: string }) => {
         <Input
           type="search"
           aria-label="Rechercher un restaurant"
+          placeholder="Rechercher un restaurant"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

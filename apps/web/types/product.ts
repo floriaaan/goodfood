@@ -20,6 +20,7 @@ export type Product = {
     DESSERTS = 2,
     BOISSONS = 3,
     SNACKS = 4,
+    EXTRA = 5,
   }
   
   export type Allergen = {
