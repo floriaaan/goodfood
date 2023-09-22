@@ -70,7 +70,7 @@ NB: If you want to run the microservice in development mode, you can run `npm ru
 Run the following command to create your Postgres database structure. This also creates the models tables that are
 defined in [`prisma/schema.prisma`](./prisma/schema.prisma):
 
-```
+```shell
 npx prisma migrate dev --name init
 ```
 
@@ -82,41 +82,18 @@ in [`prisma/seed.ts`](./prisma/seed.ts) will be executed and your database will 
 ### Build
 
 Connect to your azure acount.
-```
+```shell
 az login
 ```
 
-Go in the [terraform](./terraform) then plan and apply your terraform. When it's done export your output in the app's .env file.
-```
-terraform plan -out="tf.plan"
-terraform apply "tf.plan"
-terraform output | sed 's/ //g' > ../.env
-```
-
-Check if the AMQP_URL value is good. (Ip de florian pour l'instant)
-Then go to [terraform](./terraform) to migrate your table schema in your azure database.
-```
-npx prisma migrate dev --name init
-```
-
-Open an other terminal at the root folder (/service) and execute those
-```
+Open a terminal at the root folder (/service) and execute those command to export the docker
+```shell
 docker build -t goodfood-product:1.0.x -f ./product/Dockerfile .
 docker tag goodfood-product:1.0.x pierrelbg/goodfood-product:1.0.x
 docker push pierrelbg/goodfood-product:1.0.x
 ```
 
-Back to the first terminal and execute
+To deploy the service goes his folder (/service/product) and run
+```shell
+sh deploy.sh
 ```
-echo "$(terraform output kube_config)" > ./azurek8s
-export KUBECONFIG=./azurek8s
-```
-Remove la première et dernière ligne du fichier azurek8s puis execute 
-```
-kubectl apply -f ../k8s/
-```
-
-Puis tu peux crée de quoi monitorer dans l'onglet Monitoring/Insights
-
-ça ne fonctionne pas, le contenaire est en erreur. Ce qui n'est normalement pas possible si le conteneur fonctionne en local.
-Verifier que le contener fonctionne en local.
