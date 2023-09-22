@@ -40,7 +40,6 @@ export const ProductBasketItem = (product: Product) => {
               </button>
             </div>
             <div className="inline-flex items-center gap-x-1">
-            
               <span className="flex h-6 items-center justify-center border bg-gray-200 px-2 text-sm font-bold text-black">
                 {product.price.toFixed(2).replace(".", "€")}
               </span>
