@@ -1,4 +1,4 @@
-import { Location } from "@/components/ui/navbar/location";
+import { Location } from "@/components/location";
 import { MdOutlineLocationOn } from "react-icons/md";
 
 export const LocationDropdown = () => {

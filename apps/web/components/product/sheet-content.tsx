@@ -19,7 +19,7 @@ export const ProductSheetContent = (product: Product) => {
             height={400}
           />
           <SheetClose asChild className="absolute right-4 top-4 z-50">
-            <Button variant="solid" className="border border-black w-fit bg-white text-black">
+            <Button variant="solid" className="w-fit border border-black bg-white text-black">
               <MdClose className="h-4 w-4" />
             </Button>
           </SheetClose>
