@@ -1,4 +1,4 @@
-import { Logo } from "@/components/ui/logo";
+import { Logo } from "@/components/ui/icon/logo";
 import { DropdownList } from "@/components/ui/navbar/menu/list";
 import { MenuDropdown } from "@/components/ui/navbar/menu";
 import Link from "next/link";
