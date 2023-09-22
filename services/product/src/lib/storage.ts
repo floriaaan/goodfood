@@ -1,10 +1,15 @@
-import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
+import {BlobServiceClient, BlockBlobUploadHeaders, ContainerClient} from "@azure/storage-blob";
+import { AbortController } from "@azure/abort-controller";
 import { File } from "node:buffer";
+import * as console from "console";
+import * as fs from "fs";
 
 
 const containerName = 'image';
-const sasToken = process.env.AZURE_STORAGE_SAS_TOKEN;
-const storageAccountName = process.env.AZURE_STORAGE_RESOURCE_NAME;
+const {
+    AZURE_STORAGE_SAS_TOKEN: sasToken,
+    AZURE_STORAGE_RESOURCE_NAME: storageAccountName
+} = process.env;
 
 const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`;
 console.log(uploadUrl);
@@ -26,10 +31,14 @@ export const uploadFileToBlob = async (file: File | null): Promise<string | null
 const createBlobInContainer = async (file: File) => {
     // create blobClient for container
     const blobClient = containerClient.getBlockBlobClient(file.name);
-
+    console.log(containerClient.getBlobBatchClient())
     // set mimetype as determined from browser with file upload control
-    const options = { blobHTTPHeaders: { blobContentType: file.type } };
+    const options = {
+        blobHTTPHeaders: { blobContentType: file.type },
+        AbortSignal: AbortController.timeout(30 * 60 * 1000)
+    };
 
+    const buffer = file.arrayBuffer as unknown as ArrayBuffer;
     // upload file
-    return await blobClient.uploadData(((file.arrayBuffer) as unknown as Buffer), options);
+    return await blobClient.uploadData(buffer)
 };
