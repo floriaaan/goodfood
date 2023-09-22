@@ -9,7 +9,7 @@ export const CatalogFilters = () => {
       <button
         onClick={() => setType(ProductType.ENTREES)}
         className={cn(
-          "inline-flex h-12 w-24 sm:w-1/5 items-center justify-center gap-x-2 border-b-2 text-xs font-bold shrink-0 duration-200",
+          "inline-flex h-12 w-24 shrink-0 items-center justify-center gap-x-2 border-b-2 text-xs font-bold duration-200 sm:w-1/5",
           type === ProductType.ENTREES ? "border-gray-800" : "border-gray-300",
         )}
       >
@@ -26,7 +26,7 @@ export const CatalogFilters = () => {
       <button
         onClick={() => setType(ProductType.PLATS)}
         className={cn(
-          "inline-flex h-12 w-24 sm:w-1/5 items-center justify-center gap-x-2 border-b-2 text-xs font-bold shrink-0 duration-200",
+          "inline-flex h-12 w-24 shrink-0 items-center justify-center gap-x-2 border-b-2 text-xs font-bold duration-200 sm:w-1/5",
           type === ProductType.PLATS ? "border-gray-800" : "border-gray-300",
         )}
       >
@@ -44,7 +44,7 @@ export const CatalogFilters = () => {
       <button
         onClick={() => setType(ProductType.DESSERTS)}
         className={cn(
-          "inline-flex h-12 w-24 sm:w-1/5 items-center justify-center gap-x-2 border-b-2 text-xs font-bold shrink-0 duration-200",
+          "inline-flex h-12 w-24 shrink-0 items-center justify-center gap-x-2 border-b-2 text-xs font-bold duration-200 sm:w-1/5",
           type === ProductType.DESSERTS ? "border-gray-800" : "border-gray-300",
         )}
       >
@@ -67,7 +67,7 @@ export const CatalogFilters = () => {
       <button
         onClick={() => setType(ProductType.BOISSONS)}
         className={cn(
-          "inline-flex h-12 w-24 sm:w-1/5 items-center justify-center gap-x-2 border-b-2 text-xs font-bold shrink-0 duration-200",
+          "inline-flex h-12 w-24 shrink-0 items-center justify-center gap-x-2 border-b-2 text-xs font-bold duration-200 sm:w-1/5",
           type === ProductType.BOISSONS ? "border-gray-800" : "border-gray-300",
         )}
       >
@@ -84,7 +84,7 @@ export const CatalogFilters = () => {
       <button
         onClick={() => setType(ProductType.SNACKS)}
         className={cn(
-          "inline-flex h-12 w-24 sm:w-1/5 items-center justify-center gap-x-2 border-b-2 text-xs font-bold shrink-0 duration-200",
+          "inline-flex h-12 w-24 shrink-0 items-center justify-center gap-x-2 border-b-2 text-xs font-bold duration-200 sm:w-1/5",
           type === ProductType.SNACKS ? "border-gray-800" : "border-gray-300",
         )}
       >

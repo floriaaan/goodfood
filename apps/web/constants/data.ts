@@ -2,6 +2,8 @@ import { Status } from "@/types/global";
 import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
 import { Product, ProductType } from "@/types/product";
+import { Restaurant } from "@/types/restaurant";
+import { User } from "@/types/user";
 
 export const productList: Product[] = [
   {
@@ -81,20 +83,28 @@ export const productList: Product[] = [
   // },
 ];
 
-export const restaurantList = [
+export const restaurantList: Restaurant[] = [
   {
     id: "restaurant-1",
     name: "Rouen Gros Horloge",
     address: "1 Rue du Gros Horloge, 76000 Rouen",
-    coordinates: [49.440459, 1.094853],
-    opening_hours: "11h30 - 14h30 / 18h30 - 22h30",
+    locationList: [49.440459, 1.094853],
+    openinghoursList: ["11h30 - 14h30 / 18h30 - 22h30"],
+    phone: "02 35 71 00 00",
+    useridsList: [],
+    createdat: "Tue Aug 29 2023 07:28:41 GMT+0000 (Coordinated Universal Time)",
+    updatedat: "Tue Aug 29 2023 07:28:41 GMT+0000 (Coordinated Universal Time)",
   },
   {
     id: "restaurant-2",
     name: "Rouen Pierre Corneille",
     address: "76 Rue Pierre Corneille, 76000 Rouen",
-    coordinates: [49.442459, 1.094853],
-    opening_hours: "11h30 - 14h30 / 18h30 - 22h30",
+    locationList: [49.442459, 1.094853],
+    openinghoursList: ["11h30 - 14h30 / 18h30 - 22h30"],
+    phone: "02 35 71 00 00",
+    useridsList: [],
+    createdat: "Tue Aug 29 2023 07:28:41 GMT+0000 (Coordinated Universal Time)",
+    updatedat: "Tue Aug 29 2023 07:28:41 GMT+0000 (Coordinated Universal Time)",
   },
 ];
 
@@ -216,3 +226,27 @@ export const orderList: Order[] = [
     updated_at: new Date("2000-01-01T12:00:00.000Z"),
   },
 ];
+
+export const user: User = {
+  id: 5,
+  firstName: "John",
+  lastName: "Doe",
+  email: "user@mail.com",
+  phone: "0642424242",
+  mainaddressid: 0,
+  mainaddress: {
+    id: 5,
+    street: "7 rue de la paix",
+    zipcode: "76600",
+    country: "France",
+    city: "Le Havre",
+    lat: 49.443233489990234,
+    lng: 1.099971055984497,
+  },
+  roleid: 0,
+  role: {
+    id: 2,
+    code: "USER",
+    label: "User",
+  },
+};

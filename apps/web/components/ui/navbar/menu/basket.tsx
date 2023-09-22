@@ -6,7 +6,7 @@ export const BasketDropdown = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="gf_shadow lg:hidden flex h-10 w-10 shrink-0 items-center justify-center border border-black">
+        <button className="gf_shadow flex h-10 w-10 shrink-0 items-center justify-center border border-black lg:hidden">
           <MdOutlineShoppingBasket className="h-5 w-5" />
         </button>
       </SheetTrigger>
