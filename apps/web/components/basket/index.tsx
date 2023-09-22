@@ -8,14 +8,15 @@ import { Button } from "@/components/ui/button";
 import { GradientHeader } from "@/components/ui/header/gradient";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { productList } from "@/constants/data";
-import { useBasket } from "@/hooks/useBasket";
+import { useAuth, useBasket } from "@/hooks";
 import { Product } from "@/types/product";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Suspense } from "react";
 import { MdArrowForward, MdOutlineShoppingBasket } from "react-icons/md";
 
-const BasketWrapperComponent = () => {
+const BasketWrapperComponent = ({ showHeader = true }) => {
+  const { user } = useAuth();
   const { basket, total, selectedRestaurantId } = useBasket();
   const basketProductList = Object.keys(basket)
     .map((id) => productList.find((product) => product.id === id) as Product)
@@ -23,18 +24,21 @@ const BasketWrapperComponent = () => {
 
   const isBasketEmpty = Object.keys(basket).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
+  const isAuthenticated = user !== null;
 
   return (
     <Suspense>
       <div className="sticky top-2 flex h-fit flex-col border border-gray-200 p-1">
         <section>
-          <GradientHeader color="bg-gf-orange/50" wrapperClassName="h-16" className="justify-between px-4 uppercase">
-            <div className="inline-flex items-center gap-3">
-              <MdOutlineShoppingBasket className="h-8 w-8" />
-              <span className="text-2xl font-bold">Panier</span>
-            </div>
-            {/* <div className="text-gf-orange-900 bg-gf-orange/40 px-2 py-1 font-extrabold">25€50</div> */}
-          </GradientHeader>
+          {showHeader && (
+            <GradientHeader color="bg-gf-orange/50" wrapperClassName="h-16" className="justify-between px-4 uppercase">
+              <div className="inline-flex items-center gap-3">
+                <MdOutlineShoppingBasket className="h-8 w-8" />
+                <span className="text-2xl font-bold">Panier</span>
+              </div>
+              {/* <div className="text-gf-orange-900 bg-gf-orange/40 px-2 py-1 font-extrabold">25€50</div> */}
+            </GradientHeader>
+          )}
           <div className="relative w-full">
             <Image
               src="/images/gradient.png"
@@ -70,7 +74,7 @@ const BasketWrapperComponent = () => {
           <Button
             variant="solid"
             className="flex flex-col gap-1 bg-black text-white ring-black"
-            disabled={!isRestaurantSelected || isBasketEmpty}
+            disabled={!isRestaurantSelected || isBasketEmpty || !isAuthenticated}
           >
             {/* {!isRestaurantSelected && (
             <span className="inline-flex items-center gap-1">
@@ -91,6 +95,11 @@ const BasketWrapperComponent = () => {
             </span>
             {/* )} */}
           </Button>
+          <small className="m-2 flex flex-wrap gap-1">
+            {!isAuthenticated && "Vous devez être connecté pour passer commande"}
+            {!isRestaurantSelected && "Vous devez sélectionner un restaurant"}
+            {isBasketEmpty && "Votre panier doit contenir au moins un produit"}
+          </small>
         </div>
       </div>
     </Suspense>

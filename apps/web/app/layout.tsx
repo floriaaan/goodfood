@@ -1,3 +1,4 @@
+import { RootProviders } from "@/app/providers";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <RootProviders>{children}</RootProviders>
+      </body>
     </html>
   );
 }
