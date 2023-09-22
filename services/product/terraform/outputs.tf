@@ -11,7 +11,7 @@ output "AZURE_STORAGE_RESOURCE_NAME"{
 }
 
 output "PORT" {
-  value = 50004
+  value = "50004"
 }
 
 output "AMQP_URL"{
