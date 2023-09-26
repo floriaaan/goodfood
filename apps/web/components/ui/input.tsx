@@ -1,13 +1,15 @@
 import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  wrapperClassName?: string;
+}
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, ...props }, ref) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, wrapperClassName, ...props }, ref) => {
   const hasValue = props.value && props.value.toString().length > 0;
 
   return (
-    <label className="relative h-14 w-full">
+    <label className={cn("relative h-14 w-full", wrapperClassName)}>
       <span
         className={cn(
           "absolute z-10 transition-all duration-200 ease-in-out",
