@@ -9,7 +9,7 @@ const inria_serif = Inria_Serif({ subsets: ["latin"], weight: ["400", "700"] });
 
 export const RatingSection = () => {
   const { user } = useAuth();
-  if (!user) return null;
+  if (!user) return <NotAuthenticatedRatingSection />;
   return (
     <section className={cn("relative flex h-80 w-full items-center justify-center text-white", inria_serif.className)}>
       <Image
@@ -37,3 +37,15 @@ export const RatingSection = () => {
     </section>
   );
 };
+
+const NotAuthenticatedRatingSection = () => (
+  <section className="relative h-64 w-full ">
+    <img
+      src="https://www.refectory.fr/bassets/1920x360_BANNIERE_AUTOMNE_CHINCHILLA_DESKTOP_6afa2d9196/1920x360_BANNIERE_AUTOMNE_CHINCHILLA_DESKTOP_6afa2d9196.jpg"
+      alt="bg"
+      width={1920}
+      height={360}
+      className="absolute inset-0 z-0 h-64 object-cover"
+    />
+  </section>
+);
