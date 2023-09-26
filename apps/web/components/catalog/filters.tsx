@@ -5,7 +5,7 @@ import { ProductType } from "@/types/product";
 export const CatalogFilters = () => {
   const { type, setType } = useCatalogFilters();
   return (
-    <div className="inline-flex h-fit overflow-x-auto lg:col-span-3">
+    <div className="inline-flex h-fit overflow-x-auto sm:col-span-2 lg:col-span-3">
       <button
         onClick={() => setType(ProductType.ENTREES)}
         className={cn(

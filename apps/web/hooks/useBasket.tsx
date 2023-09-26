@@ -4,7 +4,11 @@ import { createContext, useContext, useMemo, useState } from "react";
 
 import { productList } from "@/constants/data";
 import { createPersistedState } from "@/lib/use-persisted-state";
+import { MainAddress } from "@/types/user";
+import { useAuth } from "@/hooks";
 type Basket = Record<string, number>;
+
+type Address = Omit<MainAddress, "id" | "lat" | "lng">;
 
 type BasketContextData = {
   // PRODUCT & BASKET
@@ -21,6 +25,10 @@ type BasketContextData = {
   // PROMOTION
   promotion: any | null;
   checkPromotionCode: (code: string) => void;
+
+  // ADDRESS
+  address: Address | null;
+  setAddress: (address: Address) => void;
 };
 
 const BasketContext = createContext({
@@ -36,8 +44,11 @@ export const useBasket = () => {
 
 const useBasketState = createPersistedState("gf/basket");
 const useRestaurantState = createPersistedState("gf/restaurant");
+const useAddressState = createPersistedState("gf/address");
 
 export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  const { mainaddress } = user || {};
   const [basket, setBasket] = useBasketState<Basket>({});
 
   const total = useMemo(() => {
@@ -79,6 +90,15 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     setPromotion(null);
   };
 
+  const [address, setAddress] = useAddressState<Address | null>(
+    mainaddress ?? {
+      street: "",
+      zipcode: "",
+      city: "",
+      country: "France",
+    },
+  );
+
   return (
     <BasketContext.Provider
       value={{
@@ -93,6 +113,9 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
         promotion,
         checkPromotionCode,
+
+        address: address as Address | null,
+        setAddress,
       }}
     >
       {children}

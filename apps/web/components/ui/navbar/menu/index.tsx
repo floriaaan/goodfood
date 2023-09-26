@@ -1,16 +1,27 @@
 "use client";
 
-import { MdAccountBox, MdDeliveryDining, MdMenu, MdPowerSettingsNew, MdShoppingBasket } from "react-icons/md";
+import {
+  MdAccountBox,
+  MdAppRegistration,
+  MdDeliveryDining,
+  MdInfoOutline,
+  MdLogin,
+  MdMenu,
+  MdPowerSettingsNew,
+  MdReceipt,
+  MdShoppingBasket,
+} from "react-icons/md";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useAuth } from "@/hooks/useAuth";
 import { BasketWrapper } from "@/components/basket";
 import { LocationSheetContent } from "@/components/location/sheet-content";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const MenuDropdown = () => {
   return (
-    <Sheet defaultOpen>
+    <Sheet>
       <SheetTrigger asChild>
         <button className="gf_shadow flex h-10 w-10 shrink-0 items-center justify-center border border-black">
           <MdMenu className="h-5 w-5" />
@@ -24,8 +35,8 @@ export const MenuDropdown = () => {
 };
 
 const MenuSheetContent = () => {
-  const { user, login, logout } = useAuth();
-  if (!user) return null;
+  const { user, logout } = useAuth();
+  if (!user) return <NotAuthenticatedMenuSheetContent />;
 
   return (
     <div className="flex h-full flex-col gap-y-2 px-4 py-8">
@@ -39,7 +50,18 @@ const MenuSheetContent = () => {
               Mon compte
             </button>
           </AccordionTrigger>
-          <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
+          <AccordionContent>
+            <div className="flex flex-col gap-y-1.5 py-3">
+              <Link href="/account" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+                <MdInfoOutline className="h-5 w-5 shrink-0" />
+                Mes informations
+              </Link>
+              <Link href="/orders" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+                <MdReceipt className="h-5 w-5 shrink-0" />
+                Mes commandes
+              </Link>
+            </div>
+          </AccordionContent>
         </AccordionItem>
         <AccordionItem value="basket">
           <AccordionTrigger>
@@ -64,10 +86,29 @@ const MenuSheetContent = () => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      <Button variant="solid" onClick={logout} className="justify-start normal-case">
+      <Button variant="solid" onClick={logout} className="justify-start normal-case hover:bg-muted">
         <MdPowerSettingsNew className="h-5 w-5" />
         Déconnexion
       </Button>
+    </div>
+  );
+};
+
+const NotAuthenticatedMenuSheetContent = () => {
+  return (
+    <div className="flex h-full flex-col gap-y-4 px-4 py-8">
+      <h2 className="text-xl font-bold">Bonjour</h2>
+      <p className="text-sm">Vous n'êtes pas connecté, veuillez vous connecter pour accéder à votre compte.</p>
+      <div className="flex flex-col gap-y-2">
+        <Link href={"/auth/login"} className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+          <MdLogin className="h-5 w-5" />
+          Connexion
+        </Link>
+        <Link href={"/auth/register"} className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+          <MdAppRegistration className="h-5 w-5" />
+          Inscription
+        </Link>
+      </div>
     </div>
   );
 };
