@@ -3,9 +3,10 @@ import { forwardRef } from "react";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   wrapperClassName?: string;
+  icon?: React.ReactNode;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, wrapperClassName, ...props }, ref) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, wrapperClassName, icon, ...props }, ref) => {
   const hasValue = props.value && props.value.toString().length > 0;
 
   return (
@@ -20,6 +21,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, wrapp
       >
         {props["aria-label"]}
       </span>
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 z-10">
+
+      {icon}
+      </div>
       <input
         type={type}
         className={cn(
