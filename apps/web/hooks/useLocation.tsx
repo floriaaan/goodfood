@@ -18,7 +18,7 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
   const [{ lat, lng }, setLocation] = useState({ lat: NaN, lng: NaN });
 
   const refreshLocation = () => {
-    console.log("refreshing location", { lat, lng });
+    // console.log("refreshing location", { lat, lng });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
