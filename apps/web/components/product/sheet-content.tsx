@@ -47,14 +47,16 @@ export const ProductSheetContent = (product: Product) => {
             </div>
           </div>
           <Tabs defaultValue="ingredients" className="w-full">
-            <TabsList className="w-full justify-between">
+            <TabsList className="w-full justify-between -mt-2">
               <TabsTrigger value="prep">Préparation</TabsTrigger>
               <TabsTrigger value="ingredients">Ingrédients</TabsTrigger>
               <TabsTrigger value="allergens">Allergènes</TabsTrigger>
             </TabsList>
-            <TabsContent value="prep">prep</TabsContent>
-            <TabsContent value="ingredients">ingredients</TabsContent>
-            <TabsContent value="allergens">allergens</TabsContent>
+            <div className="mt-2">
+              <TabsContent value="prep">prep</TabsContent>
+              <TabsContent value="ingredients">ingredients</TabsContent>
+              <TabsContent value="allergens">allergens</TabsContent>
+            </div>
           </Tabs>
         </div>
         <div className="item-center inline-flex h-16 items-center justify-between gap-4 bg-gray-50 p-4">
