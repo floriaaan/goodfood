@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={cn("min-h-screen h-full flex flex-col", inter.className)}>
+      <body className={cn("flex h-full min-h-screen flex-col", inter.className)}>
         <RootProviders>{children}</RootProviders>
       </body>
     </html>
