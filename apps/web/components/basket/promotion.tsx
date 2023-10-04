@@ -45,7 +45,7 @@ export const BasketPromotion = () => {
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          <Button variant="solid" className="h-14 w-14 shrink-0 border-2 border-gray-300 bg-white ring-black">
+          <Button className="h-14 w-14 shrink-0 border-2 border-gray-300 bg-white ring-black">
             <MdCheck className="h-6 w-6" />
           </Button>
         </form>

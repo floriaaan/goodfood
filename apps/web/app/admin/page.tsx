@@ -59,7 +59,7 @@ export default function AdminHome() {
               columns={products_columns}
               data={productList}
               create={
-                <Button className="w-fit bg-black px-6 text-white" variant="solid">
+                <Button className="w-fit bg-black px-6 text-white">
                   <MdAdd className="h-4 w-4 shrink-0" />
                   Créer un produit
                 </Button>
