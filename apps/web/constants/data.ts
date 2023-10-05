@@ -245,8 +245,8 @@ export const user: User = {
   },
   roleid: 0,
   role: {
-    id: 2,
-    code: "USER",
-    label: "User",
+    id: 0,
+    code: "ADMIN",
+    label: "Administrateur",
   },
 };
