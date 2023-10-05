@@ -123,3 +123,11 @@
   background-size: 1rem 1rem;
   background-size: var(--background-size) var(--background-size);
 }
+
+.mapboxgl-ctrl-attrib-inner {
+  @apply hidden;
+}
+
+a.mapboxgl-ctrl-logo {
+  display: none !important;
+}
