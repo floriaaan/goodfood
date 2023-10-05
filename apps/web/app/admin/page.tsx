@@ -1,36 +1,40 @@
 "use client";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-
-import Map, { Marker } from "react-map-gl";
-import mapStyle from "@/app/admin/map-style.json";
-import { useLocation } from "@/hooks";
-import { memo } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DataTable } from "@/components/ui/data-table";
-import { products_columns } from "@/components/admin/tables/product-columns";
-import { productList } from "@/constants/data";
-import { Button } from "@/components/ui/button";
 import { MdAdd } from "react-icons/md";
 
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DataTable } from "@/components/ui/data-table";
+import { Button } from "@/components/ui/button";
+import { Map, OrderPin, RestaurantPin } from "@/components/map";
+
+import { products_columns } from "@/components/admin/tables/product-columns";
+import { productList, restaurantList } from "@/constants/data";
+import { Marker } from "react-map-gl";
 
 export default function AdminHome() {
-  const { lat: latitude, lng: longitude } = useLocation();
   return (
     <div className="relative flex h-full w-full flex-col">
       <div className="h-[32rem]">
         <Map
-          initialViewState={{
-            latitude: latitude || 0,
-            longitude: longitude || 0,
-            zoom: 12,
+          center={{
+            latitude: restaurantList[0].locationList[0] || 0,
+            longitude: restaurantList[0].locationList[1] || 0,
           }}
-          mapStyle={mapStyle as any}
-          styleDiffing
-          mapboxAccessToken={MAPBOX_TOKEN}
         >
-          <Marker {...{ latitude, longitude }} anchor="bottom"></Marker>
+          {[
+            [49.441459, 1.094856],
+            [49.440859, 1.09486],
+          ].map((o, i) => (
+            <Marker key={i} latitude={o[0]} longitude={o[1]}>
+              <OrderPin />
+            </Marker>
+          ))}
+          {restaurantList.map((r) => (
+            <Marker key={r.id} latitude={r.locationList[0]} longitude={r.locationList[1]}>
+              <RestaurantPin />
+            </Marker>
+          ))}
         </Map>
       </div>
       <Tabs defaultValue="products" className="w-full">
@@ -73,23 +77,3 @@ export default function AdminHome() {
     </div>
   );
 }
-
-const ICON = `M20.2,15.7L20.2,15.7c1.1-1.6,1.8-3.6,1.8-5.7c0-5.6-4.5-10-10-10S2,4.5,2,10c0,2,0.6,3.9,1.6,5.4c0,0.1,0.1,0.2,0.2,0.3
-  c0,0,0.1,0.1,0.1,0.2c0.2,0.3,0.4,0.6,0.7,0.9c2.6,3.1,7.4,7.6,7.4,7.6s4.8-4.5,7.4-7.5c0.2-0.3,0.5-0.6,0.7-0.9
-  C20.1,15.8,20.2,15.8,20.2,15.7z`;
-
-const pinStyle = {
-  cursor: "pointer",
-  fill: "#d00",
-  stroke: "none",
-};
-
-const UnmemoizedPin = ({ size = 20 }) => {
-  return (
-    <svg height={size} viewBox="0 0 24 24" style={pinStyle}>
-      <path d={ICON} />
-    </svg>
-  );
-};
-
-const Pin = memo(UnmemoizedPin);
