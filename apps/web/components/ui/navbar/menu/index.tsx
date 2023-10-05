@@ -2,7 +2,9 @@
 
 import {
   MdAccountBox,
+  MdAdminPanelSettings,
   MdAppRegistration,
+  MdDashboard,
   MdDeliveryDining,
   MdInfoOutline,
   MdLogin,
@@ -85,8 +87,27 @@ const MenuSheetContent = () => {
             <LocationSheetContent />
           </AccordionContent>
         </AccordionItem>
+        {/* TODO: change "ADMIN" to enum */}
+        {user.role.code === "ADMIN" && (
+          <AccordionItem value="admin">
+            <AccordionTrigger>
+              <button className="inline-flex items-center gap-2 text-sm font-bold">
+                <MdAdminPanelSettings className="h-5 w-5" />
+                Administration
+              </button>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="flex flex-col gap-y-1.5 py-3">
+                <Link href="/admin" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+                  <MdDashboard className="h-5 w-5 shrink-0" />
+                  Tableau de bord
+                </Link>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        )}
       </Accordion>
-      <Button variant="solid" onClick={logout} className="justify-start normal-case hover:bg-muted">
+      <Button onClick={logout} className="justify-start normal-case">
         <MdPowerSettingsNew className="h-5 w-5" />
         Déconnexion
       </Button>
