@@ -28,8 +28,8 @@ export const Map = ({
         initialViewState={{
           latitude: latitude || 0,
           longitude: longitude || 0,
-          zoom: 14,
-          pitch: 20,
+          zoom: 15,
+          pitch: 40,
         }}
         mapStyle={mapStyle as any}
         // styleDiffing
