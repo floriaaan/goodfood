@@ -199,15 +199,15 @@ export function ProductCreateEditForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Type de produit</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue defaultValue={field.value} placeholder="Type de produit" />
+                        <SelectValue placeholder="Type de produit" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {Object.entries(ProductTypeLabels).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
+                        <SelectItem key={value.toString()} value={value.toString()}>
                           {label}
                         </SelectItem>
                       ))}
@@ -261,7 +261,7 @@ export function ProductCreateEditForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Nutriscore</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                             <FormControl>
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Nutriscore" />
@@ -312,7 +312,7 @@ export function ProductCreateEditForm({
         </div>
 
         <div className="item-center inline-flex h-24 shrink-0 items-center justify-between gap-4 bg-gray-50 p-6">
-          {!initialValues && (
+          {initialValues && (
             <>
               <AlertDialog>
                 <AlertDialogTrigger asChild>

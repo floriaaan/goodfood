@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-end gap-x-4 py-4">
         {create}
         <Button
-          variant="solid"
+          variant="outline"
           className="h-11 w-11 border-2"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
           {table.getPageCount()}
         </span>
         <Button
-          variant="solid"
+          variant="outline"
           className="h-11 w-11 border-2"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
