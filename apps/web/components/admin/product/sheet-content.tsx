@@ -3,6 +3,7 @@ import { SheetClose, SheetContent } from "@/components/ui/sheet";
 
 export const ProductFormSheetContent = ({ initialValues }: { initialValues?: ProductCreateEditFormValues }) => {
   const onSubmit = (values: ProductCreateEditFormValues) => {
+    // eslint-disable-next-line no-console
     console.log(values);
   };
 
