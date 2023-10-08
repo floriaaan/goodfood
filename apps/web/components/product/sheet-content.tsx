@@ -18,11 +18,7 @@ export const ProductSheetContent = (product: Product) => {
             width={600}
             height={400}
           />
-          <SheetClose asChild className="absolute right-4 top-4 z-50">
-            <Button className="w-fit border border-black bg-white text-black">
-              <MdClose className="h-4 w-4" />
-            </Button>
-          </SheetClose>
+          <SheetClose />
         </div>
         <div className="flex grow flex-col gap-4 overflow-y-auto p-4">
           <h3 className="text-2xl font-bold">{product.name}</h3>
@@ -47,7 +43,7 @@ export const ProductSheetContent = (product: Product) => {
             </div>
           </div>
           <Tabs defaultValue="ingredients" className="w-full">
-            <TabsList className="w-full justify-between -mt-2">
+            <TabsList className="-mt-2 w-full justify-between">
               <TabsTrigger value="prep">Préparation</TabsTrigger>
               <TabsTrigger value="ingredients">Ingrédients</TabsTrigger>
               <TabsTrigger value="allergens">Allergènes</TabsTrigger>
@@ -63,9 +59,7 @@ export const ProductSheetContent = (product: Product) => {
           <span className="h-fit bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">
             {product.price.toFixed(2).replace(".", "€")}
           </span>
-          <Button className="h-fit w-fit bg-black text-white ring-black">
-            Je prends ça
-          </Button>
+          <Button className="h-fit w-fit bg-black text-white ring-black">Je prends ça</Button>
         </div>
       </div>
     </SheetContent>

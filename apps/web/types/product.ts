@@ -8,8 +8,9 @@ export type Product = {
   weight: string;
   kilocalories: string;
   nutriscore: number;
-  restaurant_id: string;
   type: ProductType;
+  
+  restaurant_id: string;
   categories: Category[];
   allergens: Allergen[];
 };
@@ -22,6 +23,17 @@ export enum ProductType {
   SNACKS = 4,
   EXTRA = 5,
 }
+
+export const ProductTypeLabels = {
+  [ProductType.ENTREES]: "Entrées",
+  [ProductType.PLATS]: "Plats",
+  [ProductType.DESSERTS]: "Desserts",
+  [ProductType.BOISSONS]: "Boissons",
+  [ProductType.SNACKS]: "Snacks",
+  [ProductType.EXTRA]: "Extra",
+} as const;
+
+
 
 export type Allergen = {
   id: string;
@@ -39,4 +51,5 @@ export type ExtendedProduct = Product &
   Partial<{
     stock_quantity: string;
     additional_information: string[];
+    ingredients: any[]; // TODO: type
   }>;
