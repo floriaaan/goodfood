@@ -6,12 +6,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { MdClose } from "react-icons/md";
 
 const Sheet = SheetPrimitive.Root;
 
 const SheetTrigger = SheetPrimitive.Trigger;
 
-const SheetClose = SheetPrimitive.Close;
+export const SheetPrimitiveClose = SheetPrimitive.Close;
+
+const SheetClose = () => (
+  <SheetPrimitive.Close asChild className="absolute right-4 top-4 z-50">
+    <Button variant="ghost" className="gf_shadow w-fit border border-black bg-white p-2 text-black duration-300">
+      <MdClose className="h-4 w-4" />
+    </Button>
+  </SheetPrimitive.Close>
+);
 
 const SheetPortal = ({ className, ...props }: SheetPrimitive.DialogPortalProps) => (
   <SheetPrimitive.Portal className={cn(className)} {...props} />
