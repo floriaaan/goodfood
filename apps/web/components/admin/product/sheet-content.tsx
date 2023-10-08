@@ -1,7 +1,7 @@
 import { ProductCreateEditForm, ProductCreateEditFormValues } from "@/components/admin/product/form";
 import { SheetClose, SheetContent } from "@/components/ui/sheet";
 
-export const ProductFormSheetContent = () => {
+export const ProductFormSheetContent = ({ initialValues }: { initialValues?: ProductCreateEditFormValues }) => {
   const onSubmit = (values: ProductCreateEditFormValues) => {
     console.log(values);
   };
@@ -17,7 +17,7 @@ export const ProductFormSheetContent = () => {
   return (
     <SheetContent side="right" className="w-full border-l-0 sm:max-w-xl">
       <div className="flex h-full w-full">
-        <ProductCreateEditForm {...{ onSubmit, onImageChange }} />
+        <ProductCreateEditForm {...{ onSubmit, onImageChange, initialValues }} />
       </div>
       <SheetClose />
     </SheetContent>
