@@ -12,9 +12,11 @@ export const NotFound = ({ className = "" }) => {
           <p className="text-sm font-medium text-gf-green">
             Erreur <span className="text-gf-orange">404</span>
           </p>
-          <h1 className="font-enedis text-2xl font-bold text-gray-800 md:text-3xl">Oups, cette page n'existe pas</h1>
+          <h1 className="font-enedis text-2xl font-bold text-gray-800 md:text-3xl">
+            {"Oups, cette page n'existe pas"}
+          </h1>
           <p className="mt-2 text-sm text-gray-500">
-            La page que vous recherchez n'existe pas. Veuillez vérifier l'URL ou revenir à l'accueil.
+            {"La page que vous recherchez n'existe pas. Veuillez vérifier l'URL ou revenir à l'accueil."}
           </p>
           <div className="mt-6 flex items-center gap-x-3">
             <Link
