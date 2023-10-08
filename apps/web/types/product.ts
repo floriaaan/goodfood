@@ -7,9 +7,9 @@ export type Product = {
   preparation: string;
   weight: string;
   kilocalories: string;
-  nutriscore: number;
+  nutriscore: number | string;
   type: ProductType;
-  
+
   restaurant_id: string;
   categories: Category[];
   allergens: Allergen[];
@@ -32,8 +32,6 @@ export const ProductTypeLabels = {
   [ProductType.SNACKS]: "Snacks",
   [ProductType.EXTRA]: "Extra",
 } as const;
-
-
 
 export type Allergen = {
   id: string;

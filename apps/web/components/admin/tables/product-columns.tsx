@@ -1,5 +1,7 @@
 "use client";
 
+import { ProductCreateEditFormValues } from "@/components/admin/product/form";
+import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { ExtendedProduct } from "@/types/product";
 import { ColumnDef } from "@tanstack/react-table";
@@ -77,23 +80,28 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
       const product = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <>
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.id)}>
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Sheet>
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger>
+              <>
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="p-2">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.id)}>
+                Copier l'identifiant produit
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Rapprovisionner</DropdownMenuItem>
+              <DropdownMenuItem>
+                <SheetTrigger>Modifier/supprimer</SheetTrigger>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <ProductFormSheetContent initialValues={product as unknown as ProductCreateEditFormValues} />
+        </Sheet>
       );
     },
   },
