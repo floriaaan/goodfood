@@ -20,7 +20,7 @@ export const Map = ({
   };
 } & ComponentProps<typeof MapGL>) => {
   const { latitude, longitude } = center;
-  
+
   return (
     <>
       <MapGL

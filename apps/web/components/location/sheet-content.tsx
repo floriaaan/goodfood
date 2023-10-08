@@ -144,7 +144,7 @@ export const LocationSheetContent = ({ closeModal = () => {} }) => {
           <span className="bg-white px-2 text-xs font-bold uppercase text-gray-500">ou</span>
         </div>
       </div>
-      <Button variant="ghost" onClick={refreshLocation} >
+      <Button variant="ghost" onClick={refreshLocation}>
         <MdLocationOn className="h-4 w-4 shrink-0" />
         Utiliser ma position
       </Button>

@@ -91,6 +91,7 @@ export function ProductCreateEditForm({
 
   async function handler(values: ProductCreateEditFormValues) {
     form.setValue("name", "change");
+    // eslint-disable-next-line no-console
     console.log(values);
     onSubmit(values);
   }
