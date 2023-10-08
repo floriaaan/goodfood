@@ -11,11 +11,13 @@ import { Map, OrderPin, RestaurantPin } from "@/components/map";
 import { products_columns } from "@/components/admin/tables/product-columns";
 import { productList, restaurantList } from "@/constants/data";
 import { Marker } from "react-map-gl";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
 
 export default function AdminHome() {
   return (
     <div className="relative flex h-full w-full flex-col">
-      <div className="h-[32rem]">
+      <div className="h-96">
         <Map
           center={{
             latitude: restaurantList[0].locationList[0] || 0,
@@ -31,7 +33,7 @@ export default function AdminHome() {
             </Marker>
           ))}
           {restaurantList.map((r) => (
-            <Marker key={r.id} latitude={r.locationList[0]} longitude={r.locationList[1]}>
+            <Marker key={r.id} latitude={r.locationList[0]} longitude={r.locationList[1]} anchor="bottom">
               <RestaurantPin />
             </Marker>
           ))}
@@ -63,10 +65,15 @@ export default function AdminHome() {
               columns={products_columns}
               data={productList}
               create={
-                <Button className="w-fit bg-black px-6 text-white">
-                  <MdAdd className="h-4 w-4 shrink-0" />
-                  Créer un produit
-                </Button>
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button className="w-fit bg-black px-6 text-white">
+                      <MdAdd className="h-4 w-4 shrink-0" />
+                      Créer un produit
+                    </Button>
+                  </SheetTrigger>
+                  <ProductFormSheetContent />
+                </Sheet>
               }
             />
           </TabsContent>
