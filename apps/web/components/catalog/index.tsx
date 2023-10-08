@@ -8,7 +8,7 @@ import { createContext, useContext, useState } from "react";
 
 const CatalogContext = createContext({
   type: ProductType.PLATS,
-  setType: (type: ProductType) => {},
+  setType: (_type: ProductType) => {},
 });
 
 export const useCatalogFilters = () => useContext(CatalogContext);

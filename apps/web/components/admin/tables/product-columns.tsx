@@ -2,7 +2,6 @@
 
 import { ProductCreateEditFormValues } from "@/components/admin/product/form";
 import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -91,7 +90,7 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
             <DropdownMenuContent align="end" className="p-2">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.id)}>
-                Copier l'identifiant produit
+                {"Copier l'identifiant produit"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Rapprovisionner</DropdownMenuItem>

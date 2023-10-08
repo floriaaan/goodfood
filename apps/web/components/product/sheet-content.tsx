@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getNutriscoreImageUrl } from "@/lib/product/nutriscore";
 import { Product } from "@/types/product";
 import Image from "next/image";
-import { MdClose } from "react-icons/md";
 
 export const ProductSheetContent = (product: Product) => {
   return (

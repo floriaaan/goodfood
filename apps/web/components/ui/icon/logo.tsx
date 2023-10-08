@@ -44,7 +44,7 @@ export const Logo = ({
         height="72"
         viewBox="0 0 292 72"
         fill="none"
-        className={cn(className, "hidden shrink-0",display === "responsive" && "lg:block")}
+        className={cn(className, "hidden shrink-0", display === "responsive" && "lg:block")}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path

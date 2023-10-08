@@ -119,7 +119,7 @@ const NotAuthenticatedMenuSheetContent = () => {
   return (
     <div className="flex h-full flex-col gap-y-4 px-4 py-8">
       <h2 className="text-xl font-bold">Bonjour</h2>
-      <p className="text-sm">Vous n'êtes pas connecté, veuillez vous connecter pour accéder à votre compte.</p>
+      <p className="text-sm">{"Vous n'êtes pas connecté, veuillez vous connecter pour accéder à votre compte."}</p>
       <div className="flex flex-col gap-y-2">
         <Link href={"/auth/login"} className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
           <MdLogin className="h-5 w-5" />

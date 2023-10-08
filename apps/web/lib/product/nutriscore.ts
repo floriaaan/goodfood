@@ -31,4 +31,6 @@ export const getNutriscoreImageUrl = ({ nutriscore }: Product) => {
       default:
         return "";
     }
+
+  return "";
 };

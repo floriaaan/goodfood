@@ -21,10 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, wrapp
       >
         {props["aria-label"]}
       </span>
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 z-10">
-
-      {icon}
-      </div>
+      <div className="absolute right-3 top-1/2 z-10 -translate-y-1/2">{icon}</div>
       <input
         type={type}
         className={cn(
