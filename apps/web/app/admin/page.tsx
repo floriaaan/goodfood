@@ -67,12 +67,12 @@ export default function AdminHome() {
                 {
                   ...productList[0],
                   additional_information: ["Tout est ok ! ✅"],
-                  stock_quantity: "10"
+                  stock_quantity: "10",
                 },
                 {
                   ...productList[1],
                   additional_information: ["1 élément est manquant ⚠️", "(Nutriscore)"],
-                  stock_quantity: "2 ❌"
+                  stock_quantity: "2 ❌",
                 },
               ]}
               create={
