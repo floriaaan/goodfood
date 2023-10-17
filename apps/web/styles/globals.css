@@ -73,6 +73,17 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  @font-face {
+    font-family: "PP Neue Machina";
+    src: url(/fonts/PPNeueMachinaUltrabold.woff2) format("woff2");
+    weight: 800;
+  }
+
+  .font-ultrabold {
+    font-family: "PP Neue Machina", sans-serif;
+    font-weight: 800;
+  }
 }
 
 @layer components {
