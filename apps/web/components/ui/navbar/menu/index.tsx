@@ -24,10 +24,8 @@ import Link from "next/link";
 export const MenuDropdown = () => {
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <button className="gf_shadow flex h-10 w-10 shrink-0 items-center justify-center border border-black">
-          <MdMenu className="h-5 w-5" />
-        </button>
+      <SheetTrigger className="gf_shadow flex h-10 w-10 shrink-0 items-center justify-center border border-black">
+        <MdMenu className="h-5 w-5" />
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-md md:max-w-lg lg:max-w-xl">
         <MenuSheetContent />
