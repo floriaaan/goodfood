@@ -1,11 +1,14 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { productList } from "@/constants/data";
 import { createPersistedState } from "@/lib/use-persisted-state";
 import { MainAddress } from "@/types/user";
 import { useAuth } from "@/hooks";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction, ToastDescription, ToastTitle } from "@/components/ui/toast";
+import Image from "next/image";
 type Basket = Record<string, number>;
 
 type Address = Omit<MainAddress, "id" | "lat" | "lng">;
@@ -50,6 +53,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const { mainaddress } = user || {};
   const [basket, setBasket] = useBasketState<Basket>({});
+  const { toast } = useToast();
 
   const total = useMemo(() => {
     return Object.entries(basket as Basket)
@@ -62,21 +66,57 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
       .replace(".", "€");
   }, [basket]);
 
-  const addProduct = (id: string, quantity: number) =>
+  const addProduct = (id: string, quantity: number) => {
+    const p = productList.find((p) => p.id === id);
+    if (!p) return;
+
+    //todo: check if product is available (stock)
+
     setBasket((basket) => {
       const newBasket = { ...basket };
       if (newBasket[id]) newBasket[id] += quantity;
       else newBasket[id] = quantity;
       return newBasket;
     });
+    toast({
+      className: "p-3",
+      children: (
+        <div className="inline-flex w-full items-end justify-between gap-2">
+          <div className="inline-flex shrink-0 gap-2">
+            <Image
+              src={p.image as string}
+              width={60}
+              height={60}
+              alt={p.name}
+              className="aspect-square h-[60px] w-[60px] shrink-0 object-cover"
+            />
+            <div className="flex w-full grow flex-col">
+              <ToastTitle>Produit ajouté au panier</ToastTitle>
+              <small className="text-sm font-bold">{p.name}</small>
+              <ToastDescription className="text-xs">
+                Vous pouvez modifier la quantité dans votre panier
+              </ToastDescription>
+            </div>
+          </div>
 
-  const removeProduct = (id: string, quantity: number) =>
+          <div className="flex shrink-0 items-end justify-end">
+            <ToastAction altText="Undo" onClick={() => removeProduct(id, quantity)}>
+              Annuler
+            </ToastAction>
+          </div>
+        </div>
+      ),
+    });
+  };
+
+  const removeProduct = (id: string, quantity: number) => {
     setBasket((basket) => {
       const newBasket = { ...basket };
-      if (newBasket[id] <= quantity) delete newBasket[id];
+      if (newBasket[id] <= quantity || isNaN(newBasket[id]) || isNaN(quantity)) delete newBasket[id];
       else newBasket[id] -= quantity;
       return newBasket;
     });
+  };
 
   const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
   const selectRestaurant = (id: string) => setSelectedRestaurantId(id);
