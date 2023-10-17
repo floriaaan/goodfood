@@ -63,7 +63,18 @@ export default function AdminHome() {
           <TabsContent value="products">
             <DataTable
               columns={products_columns}
-              data={productList}
+              data={[
+                {
+                  ...productList[0],
+                  additional_information: ["Tout est ok ! ✅"],
+                  stock_quantity: "10"
+                },
+                {
+                  ...productList[1],
+                  additional_information: ["1 élément est manquant ⚠️", "(Nutriscore)"],
+                  stock_quantity: "2 ❌"
+                },
+              ]}
               create={
                 <Sheet>
                   <SheetTrigger asChild>

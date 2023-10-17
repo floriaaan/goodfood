@@ -40,7 +40,7 @@ import { ProductType, ProductTypeLabels } from "@/types/product";
 const formSchema = z.object({
   name: z.string().min(3).max(255),
   image: z.string().url(),
-  comment: z.string().max(255),
+  comment: z.string(),
   price: z.number().positive(),
   preparation: z.string().max(1024),
   weight: z.string().max(255),
