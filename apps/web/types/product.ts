@@ -48,6 +48,6 @@ export type Category = {
 export type ExtendedProduct = Product &
   Partial<{
     stock_quantity: string;
-    additional_information: string[];
+    additional_information: [string, string] | [string];
     ingredients: any[]; // TODO: type
   }>;
