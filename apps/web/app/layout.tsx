@@ -1,4 +1,5 @@
 import { RootProviders } from "@/app/providers";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={cn("flex h-full min-h-screen flex-col", inter.className)}>
         <RootProviders>{children}</RootProviders>
+        <Toaster />
       </body>
     </html>
   );
