@@ -2,7 +2,7 @@
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 import { Map as MapGL } from "react-map-gl";
-import mapStyle from "@/app/admin/map-style.json";
+import mapStyle from "@/components/map/map-style.json";
 import { ComponentProps } from "react";
 
 export * from "./order";
