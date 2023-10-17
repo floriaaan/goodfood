@@ -6,9 +6,9 @@ export const RatingBanner = () => {
   const { user } = useAuth();
   if (!user) return null;
   return (
-    <Alert className="px-9 text-sm bg-muted">
+    <Alert className="bg-muted px-9 text-sm">
       <AlertTitle className="inline-flex items-center gap-2">
-        <MdRateReview className="w-4 h-4 shrink-0" />
+        <MdRateReview className="h-4 w-4 shrink-0" />
         <span>
           <strong>{user?.firstName}</strong>
           {", comment s'est passé votre dernière commande ?"}
