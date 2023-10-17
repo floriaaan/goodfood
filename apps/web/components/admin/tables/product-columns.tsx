@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { ExtendedProduct } from "@/types/product";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { MdArrowDropUp } from "react-icons/md";
+import { MdArrowDropUp, MdCopyAll, MdEdit, MdShoppingCart } from "react-icons/md";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -58,7 +58,19 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
     },
     cell: (cell) => (cell.getValue() as number).toFixed(2).replace(".", "€"),
   },
-  { header: "Infos complémentaires", accessorKey: "additional_information" },
+  {
+    header: "Infos complémentaires",
+    accessorKey: "additional_information",
+    cell: (cell) => (
+      <div className="flex flex-col">
+        <p>{(cell.getValue() as ExtendedProduct["additional_information"])?.[0]}</p>
+        {(cell.getValue() as ExtendedProduct["additional_information"])?.[1] && (
+          <small>{(cell.getValue() as ExtendedProduct["additional_information"])?.[1]}</small>
+        )}
+      </div>
+      // <img src={cell.getValue() as string} alt={cell.row.original.name} className="h-12 w-12 shrink-0 object-cover" />
+    ),
+  },
   {
     header: ({ column }) => {
       return (
@@ -87,19 +99,28 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
                 <MoreHorizontal className="h-4 w-4" />
               </>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="p-2">
+            <DropdownMenuContent align="end" className="flex flex-col gap-y-1 p-2">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.id)}>
+                <MdCopyAll className="h-4 w-4 shrink-0" />
                 {"Copier l'identifiant produit"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Rapprovisionner</DropdownMenuItem>
+              <DropdownMenuItem disabled>
+                <MdShoppingCart className="h-4 w-4 shrink-0" />
+                Rapprovisionner
+              </DropdownMenuItem>
               <DropdownMenuItem>
-                <SheetTrigger>Modifier/supprimer</SheetTrigger>
+                <SheetTrigger className="inline-flex items-center gap-x-1">
+                  <MdEdit className="h-4 w-4 shrink-0" />
+                  Modifier/supprimer
+                </SheetTrigger>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <ProductFormSheetContent initialValues={product as unknown as ProductCreateEditFormValues} />
+          <ProductFormSheetContent
+            initialValues={{ ...product, type: product.type.toString() } as unknown as ProductCreateEditFormValues}
+          />
         </Sheet>
       );
     },
