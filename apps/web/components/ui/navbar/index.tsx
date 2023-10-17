@@ -7,7 +7,7 @@ import { Location, LocationFullTrigger } from "@/components/location";
 
 export const Navbar = () => {
   return (
-    <nav className="inline-flex w-full items-center justify-between border-b bg-white px-8 py-4">
+    <nav className="inline-flex w-full items-center justify-between bg-white px-8 py-3">
       <Link id="nav-logo" data-testid="nav-logo" className="lg:w-48" href={"/"}>
         <Logo className="h-10 w-fit" />
       </Link>
