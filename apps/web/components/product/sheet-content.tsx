@@ -32,13 +32,20 @@ export const ProductSheetContent = (product: Product) => {
               <span className="-mt-1 text-xs">pour 100g</span>
             </div>
             <div className="flex shrink-0 flex-col items-center justify-center px-6 py-4">
-              <Image
-                src={getNutriscoreImageUrl(product)}
-                alt={`Score nutritionnel de ${product.name}`}
-                height={56}
-                width={100}
-                className="h-12 w-auto object-contain"
-              />
+              {product.nutriscore !== -1 ? (
+                <Image
+                  src={getNutriscoreImageUrl(product)}
+                  alt={`Score nutritionnel de ${product.name}`}
+                  height={56}
+                  width={100}
+                  className="h-12 w-auto object-contain"
+                />
+              ) : (
+                <>
+                  <span className="text-lg font-bold text-black">N/A</span>
+                  <span className="-mt-1 text-xs">Nutriscore</span>
+                </>
+              )}
             </div>
           </div>
           <Tabs defaultValue="ingredients" className="w-full">
