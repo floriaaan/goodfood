@@ -1,0 +1,31 @@
+meta {
+  name: create ingredient restaurant
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/stock/ingredient/restaurant
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "alertThreshold": "<number>",
+    "quantity": "<number>",
+    "productList": [
+      "<string>",
+      "<string>"
+    ],
+    "unitPrice": "<number>",
+    "pricePerKilo": "<number>",
+    "restaurantId": "<string>",
+    "ingredientId": "<number>",
+    "supplierId": "<number>"
+  }
+}

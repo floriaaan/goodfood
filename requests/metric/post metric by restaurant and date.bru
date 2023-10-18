@@ -1,0 +1,22 @@
+meta {
+  name: create metric by restaurant and date
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/metric/by-restaurant-and-date
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "restaurantId": "<string>",
+    "date": "<string>"
+  }
+}
