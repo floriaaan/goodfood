@@ -56,18 +56,6 @@ If protos are updated, you will need to regenerate the gRPC code using the follo
 
 You can now access the microservice at `http://localhost:50001`.
 
-### 2. Create and seed the database
-
-Run the following command to create your Postgres database structure. This also creates the models tables that are
-defined in [`prisma/schema.prisma`](./prisma/schema.prisma):
-
-```
-npx prisma migrate dev --name init
-```
-
-When `npx prisma migrate dev` is executed against a newly created database, seeding is also triggered. The seed file
-in [`prisma/seed.ts`](./prisma/seed.ts) will be executed and your database will be populated with the sample data.
-
 ## Build and Run with Docker
 
 ### Build

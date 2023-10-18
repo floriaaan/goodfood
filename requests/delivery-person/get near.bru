@@ -1,0 +1,16 @@
+meta {
+  name: list near delivery persons
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/delivery-person/near?lat=<integer>&lng=<integer>
+  body: none
+  auth: none
+}
+
+query {
+  lat: <integer>
+  lng: <integer>
+}

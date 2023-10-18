@@ -6,6 +6,9 @@ WORKDIR /app
 # Copy the application code
 COPY ./restaurant/ .
 
+# Get permision
+RUN chmod +x ./script.sh
+
 # Install dependencies
 RUN npm install
 
@@ -28,11 +31,14 @@ WORKDIR /app
 # Copy the application package
 COPY --from=builder /app/dist .
 COPY --from=builder /app/prisma/ .
+COPY --from=builder /app/script.sh ./script.sh
 COPY --from=builder /app/proto/ /proto/
 COPY --from=builder /app/node_modules/.prisma /.prisma
+
+RUN chmod 755 ./script.sh
 
 # Expose the gRPC port
 EXPOSE 50005
 
 # Start the server
-CMD [ "node", "index.js"]
+CMD ["sh", "script.sh"]

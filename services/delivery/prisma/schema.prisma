@@ -31,6 +31,7 @@ model Delivery {
 
 model DeliveryPerson {
   id         String  @id @default(cuid())
+  user_id    String  @unique
   first_name String
   last_name  String
   phone      String  @unique

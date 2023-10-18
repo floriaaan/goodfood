@@ -1,0 +1,410 @@
+version: "3"
+services:
+
+  # Gateway
+
+  gateway:
+    image: goodfood-gateway:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+    env_file:
+      - ./gateway/.env
+    ports:
+      - "50000:50000"
+    networks:
+      - goodfood-network
+
+  #  User service
+
+  user-service:
+    image: goodfood-user:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./user/Dockerfile
+    depends_on:
+      - user-postgres
+    env_file:
+      - user/dev.env
+    ports:
+      - "50001"
+    networks:
+      - goodfood-network
+
+  user-postgres:
+    image: postgres:latest
+    ports:
+      - "51001:5432"
+    volumes:
+      - goodfood-user-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  # Basket service
+
+  basket-service:
+    image: goodfood-basket:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./basket/Dockerfile
+    env_file:
+      - basket/.env.docker
+    ports:
+      - "50002"
+    networks:
+      - goodfood-network
+
+  basket-redis:
+    image: redis:latest
+    ports:
+      - "6379"
+    volumes:
+      - goodfood-basket-volume:/data
+    networks:
+      - goodfood-network
+    command: redis-server --appendonly yes
+    environment:
+      REDIS_USERNAME: redis
+      REDIS_PASSWORD: password
+
+  #  Payment service
+
+  payment-service:
+    image: goodfood-payment:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./payment/Dockerfile
+    depends_on:
+      - payment-postgres
+    env_file:
+      - payment/.env.docker
+    ports:
+      - "50003"
+      - "4242:4242"
+    networks:
+      - goodfood-network
+
+  payment-postgres:
+    image: postgres:latest
+    ports:
+      - "51003:5432"
+    volumes:
+      - goodfood-payment-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  #  Product service
+
+  product-service:
+    image: goodfood-product:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./product/Dockerfile
+    env_file:
+      - product/.env.docker
+    ports:
+      - "50004"
+    networks:
+      - goodfood-network
+
+  product-postgres:
+    image: postgres:latest
+    ports:
+      - "51004:5432"
+    volumes:
+      - goodfood-product-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  #  Restaurant service
+
+  restaurant-service:
+    image: goodfood-restaurant:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./restaurant/Dockerfile
+    env_file:
+      - restaurant/.env.docker
+    ports:
+      - "50005"
+    networks:
+      - goodfood-network
+
+  restaurant-postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - "51005:5432"
+    volumes:
+      - goodfood-restaurant-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  #  Promotion service
+
+  promotion-service:
+    image: goodfood-promotion:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./promotions/Dockerfile
+    env_file:
+      - promotions/.env.docker
+    ports:
+      - "50006"
+    networks:
+      - goodfood-network
+
+  promotion-postgres:
+    image: postgres:latest
+    ports:
+      - "51006:5432"
+    volumes:
+      - goodfood-promotion-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  #  Order service
+
+  order-service:
+    image: goodfood-order:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./order/Dockerfile
+    env_file:
+      - order/.env.docker
+    ports:
+      - "50007"
+    networks:
+      - goodfood-network
+
+  order-postgres:
+    image: postgres:latest
+    ports:
+      - "51007:5432"
+    volumes:
+      - goodfood-order-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  #  Delivery service
+
+  delivery-service:
+    image: goodfood-delivery:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./delivery/Dockerfile
+    env_file:
+      - delivery/.env.docker
+    ports:
+      - "50008"
+    networks:
+      - goodfood-network
+
+  delivery-redis:
+    image: redis:latest
+    ports:
+      - "6379"
+    volumes:
+      - goodfood-delivery-volume:/data
+    networks:
+      - goodfood-network
+    command: redis-server --appendonly yes
+    environment:
+      REDIS_USERNAME: redis
+      REDIS_PASSWORD: password
+
+  delivery-postgres:
+    image: postgres:latest
+    ports:
+      - "51008:5432"
+    volumes:
+      - goodfood-delivery-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  #  Stock service
+
+  stock-service:
+    image: goodfood-stock:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./stock/Dockerfile
+    env_file:
+      - stock/.env.docker
+    ports:
+      - "50009"
+    networks:
+      - goodfood-network
+
+  stock-postgres:
+    image: postgres:latest
+    ports:
+      - "51009:5432"
+    volumes:
+      - goodfood-stock-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  # Reporting service
+
+  reporting-service:
+    image: floriaaan/goodfood-reporting:latest
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./reporting/Dockerfile
+    ports:
+      - "50020"
+    networks:
+      - goodfood-network
+
+  reporting-postgres:
+    image: postgres:15.2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "51020:5432"
+    volumes:
+      - goodfood-reporting-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+
+  # Log service
+
+  log-service:
+    depends_on:
+      - log-postgres
+      - event-broker
+    restart: unless-stopped
+    image: floriaaan/goodfood-log:latest
+    build:
+      context: .
+      dockerfile: ./log/Dockerfile
+    env_file:
+      - ./log/.env.docker
+    ports:
+      - "50021"
+    networks:
+      - goodfood-network
+
+  log-postgres:
+    image: postgres:15.2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "51021:5432"
+    volumes:
+      - goodfood-log-volume:/var/lib/postgresql/data
+    networks:
+      - goodfood-network
+
+#  Notification service
+
+  notification-service:
+      image: goodfood-notification:1.0.0
+      restart: unless-stopped
+      build:
+        context: .
+        dockerfile: ./notification/Dockerfile
+      env_file:
+      - notification/.env.docker
+      ports:
+      - "50022"
+      networks:
+      - goodfood-network
+
+  notification-postgres:
+      image: postgres:15.2
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: notification
+        PGDATA: /var/lib/postgresql/data/pgdata
+      ports:
+      - "51022:5432"
+      volumes:
+      - goodfood-notification-volume:/var/lib/postgresql/data
+      networks:
+      - goodfood-network
+
+#  RabbitMQ
+
+  event-broker:
+    restart: always
+    image: rabbitmq:3-management
+    ports:
+      - "5672"
+      - "15672:15672"
+    networks:
+      - goodfood-network
+
+#  Volumes
+
+volumes:
+  goodfood-user-volume:
+  goodfood-basket-volume:
+  goodfood-payment-volume:
+  goodfood-product-volume:
+  goodfood-restaurant-volume:
+  goodfood-promotion-volume:
+  goodfood-order-volume:
+  goodfood-delivery-volume:
+  goodfood-stock-volume:
+  goodfood-reporting-volume:
+  goodfood-log-volume:
+  goodfood-notification-volume:
+
+networks:
+  goodfood-network:

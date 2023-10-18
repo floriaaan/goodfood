@@ -1,0 +1,11 @@
+meta {
+  name: get supply orders by restaurant
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/stock/supply/order/by-restaurant/:id
+  body: none
+  auth: none
+}

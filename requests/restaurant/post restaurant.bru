@@ -1,0 +1,36 @@
+meta {
+  name: crate restaurant
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/restaurant
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "<string>",
+    "description": "<string>",
+    "locationList": [
+      "<number>",
+      "<number>"
+    ],
+    "address": "<string>",
+    "openingHoursList": [
+      "<string>",
+      "<string>"
+    ],
+    "phone": "<string>",
+    "userIds": [
+      "<string>",
+      "<string>"
+    ]
+  }
+}
