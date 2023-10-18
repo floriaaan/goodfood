@@ -86,3 +86,7 @@ terraform.rc
 
 # expo cache files
 /apps/mobile/.expo
+
+# next.js
+/apps/web/.next
+/apps/web/next-env.d.ts
