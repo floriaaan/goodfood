@@ -1,0 +1,11 @@
+meta {
+  name: list ingredients restaurant by restaurant
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/stock/ingredient/restaurant/by-restaurant/:id
+  body: none
+  auth: none
+}

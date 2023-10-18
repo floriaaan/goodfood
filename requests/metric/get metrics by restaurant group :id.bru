@@ -1,0 +1,11 @@
+meta {
+  name: list metrics by restaurant group
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/metric/by-restaurant-group/:restaurantGroupId
+  body: none
+  auth: none
+}

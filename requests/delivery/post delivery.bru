@@ -1,0 +1,24 @@
+meta {
+  name: create delivery
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/delivery
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "eta": "<string>",
+    "address": "<string>",
+    "deliveryPersonId": "<string>",
+    "restaurantId": "<string>"
+  }
+}
