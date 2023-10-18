@@ -73,6 +73,17 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  @font-face {
+    font-family: "PP Neue Machina";
+    src: url(/fonts/PPNeueMachinaUltrabold.woff2) format("woff2");
+    weight: 800;
+  }
+
+  .font-ultrabold {
+    font-family: "PP Neue Machina", sans-serif;
+    font-weight: 800;
+  }
 }
 
 @layer components {
@@ -90,4 +101,44 @@
     linear-gradient(to right, var(--fill-color) 0.0625rem, var(--background-color) 0.0625rem);
   background-size: 7.5rem 7.5rem;
   background-size: var(--background-size) var(--background-size);
+}
+
+.has-background-rectangle {
+  --background-color: #fff;
+  --fill-color: #111;
+  --background-size: 1rem;
+  background-image: repeating-linear-gradient(45deg, #111 25%, transparent 0, transparent 75%, #111 0, #111),
+    repeating-linear-gradient(45deg, #111 25%, #fff 0, #fff 75%, #111 0, #111);
+  background-image: repeating-linear-gradient(
+      45deg,
+      var(--fill-color) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--fill-color) 75%,
+      var(--fill-color)
+    ),
+    repeating-linear-gradient(
+      45deg,
+      var(--fill-color) 25%,
+      var(--background-color) 25%,
+      var(--background-color) 75%,
+      var(--fill-color) 75%,
+      var(--fill-color)
+    );
+  background-position:
+    0 0,
+    0.5rem 0.5rem;
+  background-position:
+    0 0,
+    calc(var(--background-size) / 2) calc(var(--background-size) / 2);
+  background-size: 1rem 1rem;
+  background-size: var(--background-size) var(--background-size);
+}
+
+.mapboxgl-ctrl-attrib-inner {
+  @apply hidden;
+}
+
+a.mapboxgl-ctrl-logo {
+  display: none !important;
 }

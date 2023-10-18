@@ -12,7 +12,7 @@ export const ProductBasketItem = (product: Product) => {
       <div className="inline-flex h-16 w-full p-1 xl:h-20">
         <SheetTrigger asChild>
           <Image
-            className="h-full w-12 shrink-0 cursor-pointer border border-black object-cover xl:w-24"
+            className="h-full w-16 shrink-0 cursor-pointer border border-black object-cover xl:w-24"
             width={256}
             height={192}
             src={product.image}
@@ -40,7 +40,6 @@ export const ProductBasketItem = (product: Product) => {
               </button>
             </div>
             <div className="inline-flex items-center gap-x-1">
-            
               <span className="flex h-6 items-center justify-center border bg-gray-200 px-2 text-sm font-bold text-black">
                 {product.price.toFixed(2).replace(".", "€")}
               </span>

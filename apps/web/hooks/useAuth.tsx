@@ -29,7 +29,10 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(user_tmp);
+  const [user, setUser] = useState<User | null>(
+    // null,
+    user_tmp
+  );
 
   const login = (email: string, password: string) => {
     // TODO: replace this with a real authentication system

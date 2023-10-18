@@ -1,13 +1,16 @@
 import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  wrapperClassName?: string;
+  icon?: React.ReactNode;
+}
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, ...props }, ref) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, wrapperClassName, icon, ...props }, ref) => {
   const hasValue = props.value && props.value.toString().length > 0;
 
   return (
-    <label className="relative h-14 w-full">
+    <label className={cn("relative h-14 w-full", wrapperClassName)}>
       <span
         className={cn(
           "absolute z-10 transition-all duration-200 ease-in-out",
@@ -18,6 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, ...pr
       >
         {props["aria-label"]}
       </span>
+      <div className="absolute right-3 top-1/2 z-10 -translate-y-1/2">{icon}</div>
       <input
         type={type}
         className={cn(

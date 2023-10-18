@@ -7,6 +7,7 @@ import { BasketTaxes } from "@/components/basket/taxes";
 import { Button } from "@/components/ui/button";
 import { GradientHeader } from "@/components/ui/header/gradient";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { productList } from "@/constants/data";
 import { useAuth, useBasket } from "@/hooks";
 import { Product } from "@/types/product";
@@ -22,7 +23,7 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
     .map((id) => productList.find((product) => product.id === id) as Product)
     .filter(Boolean);
 
-  const isBasketEmpty = Object.keys(basket).length === 0;
+  const isBasketEmpty = Object.values(basket).filter(Boolean).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
   const isAuthenticated = user !== null;
 
@@ -36,7 +37,6 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
                 <MdOutlineShoppingBasket className="h-8 w-8" />
                 <span className="text-2xl font-bold">Panier</span>
               </div>
-              {/* <div className="text-gf-orange-900 bg-gf-orange/40 px-2 py-1 font-extrabold">25€50</div> */}
             </GradientHeader>
           )}
           <div className="relative w-full">
@@ -61,46 +61,50 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
         </section>
         <hr className="mx-4 my-2 border border-gray-200" />
         <BasketExtra />
-        <BasketPromotion />
-        <BasketTaxes />
-        <GradientHeader color="bg-gf-green-100/50" wrapperClassName="h-16" className="justify-between px-4 uppercase">
-          <div className="inline-flex items-center gap-3">
-            <MdOutlineShoppingBasket className="h-8 w-8" />
-            <span className="text-2xl font-bold">Total</span>
-          </div>
-          <div className="bg-gf-green-200/60 px-2 py-1 font-extrabold text-gf-green-600">{total}</div>
-        </GradientHeader>
-        <div className="mt-2 w-full">
-          <Button
-            variant="solid"
-            className="flex flex-col gap-1 bg-black text-white ring-black"
-            disabled={!isRestaurantSelected || isBasketEmpty || !isAuthenticated}
-          >
-            {/* {!isRestaurantSelected && (
-            <span className="inline-flex items-center gap-1">
-              <MdRestaurant className="h-6 w-6" />
-              Sélectionnez un restaurant
-            </span>
-          )}
-          {isBasketEmpty && (
-            <span className="inline-flex items-center gap-1">
-              <MdShoppingBasket className="h-6 w-6" />
-              Merci de remplir votre panier
-            </span>
-          )} */}
-            {/* {!(!isRestaurantSelected || isBasketEmpty) && ( */}
-            <span className="inline-flex items-center gap-1">
-              Étape suivante
-              <MdArrowForward className="h-6 w-6" />
-            </span>
-            {/* )} */}
-          </Button>
-          <small className="flex flex-wrap gap-1 m-2">
-            {!isAuthenticated && "Vous devez être connecté pour passer commande"}
-            {!isRestaurantSelected && "Vous devez sélectionner un restaurant"}
-            {isBasketEmpty && "Votre panier doit contenir au moins un produit"}
-          </small>
-        </div>
+        {!isBasketEmpty && (
+          <>
+            <BasketPromotion />
+            <BasketTaxes />
+            <GradientHeader
+              color="bg-gf-green-100/50"
+              wrapperClassName="h-16"
+              className="justify-between px-4 uppercase"
+            >
+              <div className="inline-flex items-center gap-3">
+                <MdOutlineShoppingBasket className="h-8 w-8" />
+                <span className="text-2xl font-bold">Total</span>
+              </div>
+              <div className="bg-gf-green-200/60 px-2 py-1 font-extrabold text-gf-green-600">{total}</div>
+            </GradientHeader>
+            <div className="mt-2 w-full">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="w-full" asChild>
+                    <Button
+                      variant="default"
+                      className="flex flex-col gap-1 bg-black text-white ring-black"
+                      disabled={!isRestaurantSelected || isBasketEmpty || !isAuthenticated}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        Étape suivante
+                        <MdArrowForward className="h-6 w-6" />
+                      </span>
+                    </Button>
+                  </TooltipTrigger>
+                  {(!isRestaurantSelected || isBasketEmpty || !isAuthenticated) && (
+                    <TooltipContent className="w-full">
+                      <small className="m-2 flex flex-wrap gap-1">
+                        {!isAuthenticated && "Vous devez être connecté pour passer commande"}
+                        {!isRestaurantSelected && "Vous devez sélectionner un restaurant"}
+                        {isBasketEmpty && "Votre panier doit contenir au moins un produit"}
+                      </small>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </>
+        )}
       </div>
     </Suspense>
   );

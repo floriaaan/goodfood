@@ -1,4 +1,4 @@
-import { Logo } from "@/components/ui/logo";
+import { Logo } from "@/components/ui/icon/logo";
 import { restaurantList } from "@/constants/data";
 import { useBasket } from "@/hooks/useBasket";
 import { useLocation } from "@/hooks/useLocation";
