@@ -1,4 +1,6 @@
 import { RootProviders } from "@/app/providers";
+import { Toaster } from "@/components/ui/toaster";
+import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -16,8 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={inter.className}>
+      <body className={cn("flex h-full min-h-screen flex-col", inter.className)}>
         <RootProviders>{children}</RootProviders>
+        <Toaster />
       </body>
     </html>
   );

@@ -14,7 +14,7 @@ export const GradientHeader = ({
 }) => {
   return (
     <div className={cn("relative", wrapperClassName)}>
-      <Image src="/images/gradient.png" alt="Gradient" width={512} height={48} className="w-full object-cover h-full" />
+      <Image src="/images/gradient.png" alt="Gradient" width={512} height={48} className="h-full w-full object-cover" />
       <div className={cn("absolute left-0 top-0 inline-flex h-full w-full items-center gap-x-3", color, className)}>
         {children}
       </div>

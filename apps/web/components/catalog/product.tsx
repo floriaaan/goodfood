@@ -35,17 +35,13 @@ export const ProductCatalogList = (product: Product) => {
         </SheetTrigger>
         <div className="flex flex-col gap-y-2 border-y border-black p-4">
           <h3 className="text-sm font-bold">{product.name}</h3>
-          <p className="line-clamp-2 h-8 text-xs">{product.comment}</p>
+          <p className="line-clamp-3 h-12 text-justify text-xs">{product.comment}</p>
         </div>
         <div className="inline-flex w-full items-center justify-between gap-4 p-4">
           <span className="bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">
             {product.price.toFixed(2).replace(".", "€")}
           </span>
-          <Button
-            className="w-fit bg-black text-white ring-black"
-            variant="solid"
-            onClick={() => addProduct(product.id, 1)}
-          >
+          <Button className="w-fit bg-black text-white ring-black" onClick={() => addProduct(product.id, 1)}>
             Je prends ça
           </Button>
         </div>

@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getNutriscoreImageUrl } from "@/lib/product/nutriscore";
 import { Product } from "@/types/product";
 import Image from "next/image";
-import { MdClose } from "react-icons/md";
 
 export const ProductSheetContent = (product: Product) => {
   return (
@@ -18,11 +17,7 @@ export const ProductSheetContent = (product: Product) => {
             width={600}
             height={400}
           />
-          <SheetClose asChild className="absolute right-4 top-4 z-50">
-            <Button variant="solid" className="border border-black w-fit bg-white text-black">
-              <MdClose className="h-4 w-4" />
-            </Button>
-          </SheetClose>
+          <SheetClose />
         </div>
         <div className="flex grow flex-col gap-4 overflow-y-auto p-4">
           <h3 className="text-2xl font-bold">{product.name}</h3>
@@ -37,33 +32,40 @@ export const ProductSheetContent = (product: Product) => {
               <span className="-mt-1 text-xs">pour 100g</span>
             </div>
             <div className="flex shrink-0 flex-col items-center justify-center px-6 py-4">
-              <Image
-                src={getNutriscoreImageUrl(product)}
-                alt={`Score nutritionnel de ${product.name}`}
-                height={56}
-                width={100}
-                className="h-12 w-auto object-contain"
-              />
+              {product.nutriscore !== -1 ? (
+                <Image
+                  src={getNutriscoreImageUrl(product)}
+                  alt={`Score nutritionnel de ${product.name}`}
+                  height={56}
+                  width={100}
+                  className="h-12 w-auto object-contain"
+                />
+              ) : (
+                <>
+                  <span className="text-lg font-bold text-black">N/A</span>
+                  <span className="-mt-1 text-xs">Nutriscore</span>
+                </>
+              )}
             </div>
           </div>
           <Tabs defaultValue="ingredients" className="w-full">
-            <TabsList className="w-full justify-between">
+            <TabsList className="-mt-2 w-full justify-between">
               <TabsTrigger value="prep">Préparation</TabsTrigger>
               <TabsTrigger value="ingredients">Ingrédients</TabsTrigger>
               <TabsTrigger value="allergens">Allergènes</TabsTrigger>
             </TabsList>
-            <TabsContent value="prep">prep</TabsContent>
-            <TabsContent value="ingredients">ingredients</TabsContent>
-            <TabsContent value="allergens">allergens</TabsContent>
+            <div className="mt-2">
+              <TabsContent value="prep">prep</TabsContent>
+              <TabsContent value="ingredients">ingredients</TabsContent>
+              <TabsContent value="allergens">allergens</TabsContent>
+            </div>
           </Tabs>
         </div>
         <div className="item-center inline-flex h-16 items-center justify-between gap-4 bg-gray-50 p-4">
           <span className="h-fit bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">
             {product.price.toFixed(2).replace(".", "€")}
           </span>
-          <Button className="h-fit w-fit bg-black text-white ring-black" variant="solid">
-            Je prends ça
-          </Button>
+          <Button className="h-fit w-fit bg-black text-white ring-black">Je prends ça</Button>
         </div>
       </div>
     </SheetContent>
