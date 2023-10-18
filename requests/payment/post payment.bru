@@ -1,0 +1,23 @@
+meta {
+  name: create payment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/payment/stripe
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "<string>",
+    "email": "<string>",
+    "total": "<number>"
+  }
+}

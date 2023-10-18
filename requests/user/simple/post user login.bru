@@ -1,0 +1,22 @@
+meta {
+  name: log in as admin
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/user/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "user@mail.com",
+    "password": "password"
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: change role of user
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/api/user/:id/role
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "role": "DELIVERY_PERSON"
+  }
+}
