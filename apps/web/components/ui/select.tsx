@@ -1,29 +1,30 @@
 import { cn } from "@/lib/utils";
-import { forwardRef } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
-const Select = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
-  const hasValue = props.value && props.value.toString().length > 0;
-
+const Select = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }) => {
   return (
-    <label className="relative h-14 w-full">
-      <span
-        className={cn(
-          "absolute z-10 transition-all duration-200 ease-in-out",
-          hasValue
-            ? "left-2 top-1.5 text-[10px] text-black"
-            : "left-3 top-1/2 -translate-y-1/2 transform text-sm text-muted-foreground",
-        )}
-      >
+    <label htmlFor="select-input" className="pointer-events-auto relative z-0 h-14 w-full border-2 border-black">
+      <span className={cn("absolute top-1 w-full transform select-none pl-3 text-xs text-muted-foreground")}>
         {props["aria-label"]}
       </span>
+      <span
+        className={cn("pointer-events-none absolute bottom-2.5 right-2.5 z-10 transform text-xs text-muted-foreground")}
+      >
+        <MdKeyboardArrowDown className="h-5 w-5 shrink-0 text-black" />
+      </span>
       <select
+        id="select-input"
         className={cn(
-          "absolute z-[9] flex h-14 w-full border-2 border-gray-300 bg-white px-3 py-2 text-sm font-bold placeholder:text-white focus:border-black focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 appearance-none",
+          "absolute bottom-2.5 z-[9] flex w-full appearance-none bg-transparent px-3 align-text-bottom text-sm font-bold placeholder:text-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
-        )}>
-          <option>TEST</option>
+        )}
+      >
+        <option>TEST</option>
+        <option>TEST2</option>
+        <option>TEST3</option>
       </select>
     </label>
   );
