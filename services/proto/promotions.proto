@@ -42,10 +42,20 @@ enum Method {
   VALUE = 1;
 }
 
+message PromotionUpdateInput {
+  string id = 1;
+
+  string code = 2;
+  string reduction = 3;
+  Method method = 4;
+
+  string restaurant_id = 5;
+}
+
 service PromotionService {
   rpc CreatePromotion (PromotionCreateInput) returns (Promotion) {}
   rpc GetPromotion (PromotionCode) returns (Promotion) {}
-  rpc UpdatePromotion (Promotion) returns (Promotion) {}
+  rpc UpdatePromotion (PromotionUpdateInput) returns (Promotion) {}
   rpc DeletePromotion (PromotionId) returns (google.protobuf.Empty) {}
   rpc GetPromotions (google.protobuf.Empty) returns (PromotionList) {}
   rpc GetPromotionsByRestaurant (RestaurantId) returns (PromotionList) {}

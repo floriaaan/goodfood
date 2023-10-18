@@ -1,0 +1,22 @@
+meta {
+  name: create ingredient
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/stock/ingredient
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "<string>",
+    "description": "<string>"
+  }
+}
