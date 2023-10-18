@@ -35,12 +35,12 @@ message Product {
 	string name = 2;
 	string image = 3;
 	string comment = 4;
-	int32 price = 5;
+	float price = 5;
 	string preparation = 6;
 	string weight = 7;
 	string kilocalories = 8;
-	int32 nutriscore = 9;
-	int32 restaurant_id = 10;
+	string nutriscore = 9;
+	string restaurant_id = 10;
 	ProductType type = 11;
 	repeated Category categories = 12;
 	repeated Allergen allergens = 13;

@@ -8,6 +8,7 @@ import (
 	"goodfood-user/pkg/models"
 	"goodfood-user/pkg/utils"
 	pb "goodfood-user/proto"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -22,7 +23,7 @@ func (s *Server) Register(_ context.Context, req *pb.UserCreateInput) (*pb.UserO
 
 	result := s.H.DB.Where(&models.User{Email: req.Email}).First(&models.User{})
 
-	if result.RowsAffected > 0 {
+	if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return &pb.UserOutput{
 			Error: "User already exists",
 		}, nil

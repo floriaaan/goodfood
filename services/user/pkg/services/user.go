@@ -24,6 +24,7 @@ func (s *Server) GetUser(_ context.Context, req *pb.UserId) (*pb.UserOutput, err
 }
 
 func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.UserOutput, error) {
+	logger := utils.GetLogger()
 	if req.User == nil || req.Token == "" {
 		return &pb.UserOutput{
 			Error: "Invalid request",
@@ -32,6 +33,7 @@ func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.Use
 
 	claims, err := s.Jwt.ValidateToken(req.Token)
 	if err != nil {
+		logger.Fatalf("Error validating token: %v", err)
 		return &pb.UserOutput{
 			Error: "Invalid token",
 		}, nil
@@ -42,6 +44,7 @@ func (s *Server) UpdateUser(_ context.Context, req *pb.UpdateUserInput) (*pb.Use
 			Error: "User not found",
 		}, nil
 	}
+
 	var user = mapper.UpdateInputToModelUser(req.User)
 
 	s.H.DB.Updates(&user)
@@ -124,7 +127,7 @@ func (s *Server) DeleteUser(_ context.Context, req *pb.DeleteInput) (*pb.DeleteU
 		}, nil
 	}
 
-	if user.Role.Code == "ADMIN" || user.Id == connectedUser.Id {
+	if connectedUser.Role.Code == "ADMIN" || user.Id == connectedUser.Id {
 
 		s.H.DB.Delete(&user)
 		s.H.DB.Delete(&mainAddress)
@@ -149,7 +152,7 @@ func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.Cha
 
 	var connectedUser models.User
 
-	if result := s.H.DB.Where(&models.User{Id: claims.Id}).First(&connectedUser); result.Error != nil {
+	if result := s.H.DB.Where(&models.User{Id: claims.Id}).Preload("Role").First(&connectedUser); result.Error != nil {
 		return &pb.ChangeRoleOutput{
 			Error: "User not found",
 		}, nil
@@ -158,7 +161,7 @@ func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.Cha
 	var user models.User
 	var role models.Role
 
-	if result := s.H.DB.Where(&models.User{Id: req.UserId}).First(&user); result.Error != nil {
+	if result := s.H.DB.Where(&models.User{Id: req.UserId}).Preload("Role").First(&user); result.Error != nil {
 		return &pb.ChangeRoleOutput{
 			Error: "User not found",
 		}, nil
@@ -169,8 +172,8 @@ func (s *Server) ChangeRole(_ context.Context, req *pb.ChangeRoleInput) (*pb.Cha
 			Error: "User not found",
 		}, nil
 	}
-
-	if user.Role.Code == "ADMIN" {
+	utils.GetLogger().Fatalf("Role code", connectedUser.Role.Code)
+	if connectedUser.Role.Code == "ADMIN" {
 		user.Role = role
 		s.H.DB.Save(&user)
 

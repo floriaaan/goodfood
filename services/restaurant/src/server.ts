@@ -8,7 +8,7 @@ import { log, utils } from "@restaurant/lib/log";
 import { options } from "@restaurant/resources/protoloader-options";
 import { serverInsecure } from "@restaurant/resources/grpc-credentials";
 
-import promotionHandler from "@restaurant/handler";
+import restaurantHandler from "@restaurant/handler";
 import { createServerProxy } from "@restaurant/lib/proxy";
 import { logGRPC } from "@restaurant/middleware/log";
 
@@ -23,7 +23,7 @@ const {
 } = grpc.com.goodfood.restaurant;
 
 const server = createServerProxy(new Server());
-server.addService(rs, promotionHandler);
+server.addService(rs, restaurantHandler);
 server.use(logGRPC);
 
 server.bindAsync(ADDRESS, serverInsecure, () => {

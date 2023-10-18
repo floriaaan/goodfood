@@ -1,0 +1,11 @@
+meta {
+  name: list payments by user id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/payment/by-user/:userId
+  body: none
+  auth: none
+}

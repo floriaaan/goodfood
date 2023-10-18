@@ -3,4 +3,5 @@ dist/
 bin/
 *.env*
 !*.env.example
+!*.env.docker
 

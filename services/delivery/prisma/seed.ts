@@ -5,18 +5,21 @@ const prisma = new PrismaClient();
 const deliveryPerson: Prisma.DeliveryPersonCreateInput[] = [
   {
     // id: "random_id",
+    user_id: "random_id",
     first_name: "John",
     last_name: "Doe",
     phone: "0612345678",
     location: [4.123, 52.123],
   },
   {
+    user_id: "random_id",
     first_name: "Jane",
     last_name: "Doe",
     phone: "0612345679",
     location: [4.123, 52.124],
   },
   {
+    user_id: "random_id",
     first_name: "Jack",
     last_name: "Doe",
     phone: "0612345677",

@@ -10,6 +10,8 @@ export type Restaurant = {
   openingHours: string[];
   phone?: string;
 
+  userIds: string[];
+
   createdAt: Date | string;
   updatedAt: Date | string;
 };

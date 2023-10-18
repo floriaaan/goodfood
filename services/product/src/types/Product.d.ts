@@ -19,7 +19,7 @@ export interface Product {
 	preparation: string;
 	weight: string;
 	kilocalories: string;
-	nutriscore: number;
+	nutriscore: string;
 	restaurant_id: string;
 	type: ProductType;
 	categories: Category[];
