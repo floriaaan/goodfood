@@ -1,0 +1,11 @@
+meta {
+  name: list promotion codes by restaurant id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/promotion/by-restaurant/:restaurantId
+  body: none
+  auth: none
+}

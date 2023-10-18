@@ -1,0 +1,29 @@
+meta {
+  name: change user
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/user
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "firstName": "<string>",
+    "lastName": "<string>",
+    "email": "<string>",
+    "phone": "<string>",
+    "country": "<string>",
+    "zipCode": "<string>",
+    "street": "<string>",
+    "lat": "<number>",
+    "lng": "<number>"
+  }
+}
