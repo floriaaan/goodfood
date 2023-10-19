@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
   FormTextarea,
-} from "@/components/ui/form";
+} from "@/components/ui/form/form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,15 +28,21 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { MdAdd, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
+import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
 import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
-import { ProductType, ProductTypeLabels } from "@/types/product";
-import { Input } from "@/components/ui/input";
-import { ingredientList } from "@/constants/data";
+import { Product, ProductType, ProductTypeLabels } from "@/types/product";
+import { allergensList, categoriesList, ingredientList } from "@/constants/data";
+import { SelectQuantity } from "@/components/ui/form/select-quantity";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // todo: check with product create request
 const formSchema = z.object({
@@ -53,7 +59,7 @@ const formSchema = z.object({
 
   restaurant_id: z.string().uuid(),
   categories: z.array(z.string().uuid()),
-  allegens: z.array(z.string().uuid()),
+  allergens: z.array(z.string()),
 
   // ingredients: z.array(z.string().uuid()),
 });
@@ -71,7 +77,11 @@ export function ProductCreateEditForm({
 }) {
   const form = useForm<ProductCreateEditFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialValues || {
+    defaultValues: {
+      ...initialValues,
+      allergens: ((initialValues as unknown as Product).allergens || []).map((a) => a.id),
+      categories: ((initialValues as unknown as Product).categories || []).map((c) => c.id),
+    } || {
       name: "",
       image: "https://picsum.photos/200/300",
       comment: "",
@@ -85,7 +95,7 @@ export function ProductCreateEditForm({
 
       restaurant_id: "",
       categories: [],
-      allegens: [],
+      allergens: [],
 
       // ingredients: [],
     },
@@ -104,9 +114,7 @@ export function ProductCreateEditForm({
   const [image_error, setImage_error] = useState<string | null>(null);
 
   // ingredients are not included in the form
-  const [ingredients, setIngredients] = useState<{ id: number; quantity: number }[]>([]);
-  const [ingredient_select, setIngredient_select] = useState<string>("");
-  const [ingredient_quantity, setIngredient_quantity] = useState<number>(0);
+  const [ingredients, setIngredients] = useState<{ value: number; quantity: number }[]>([]);
 
   return (
     <Form {...form}>
@@ -307,7 +315,7 @@ export function ProductCreateEditForm({
                 <AccordionTrigger>
                   <div className="inline-flex items-center gap-x-2">
                     <GiCook className="h-5 w-5 shrink-0" />
-                    Préparation, allergènes
+                    Préparation, allergènes, catégories
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -325,6 +333,94 @@ export function ProductCreateEditForm({
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="allergens"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Allergènes</FormLabel>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <div className="relative inline-flex h-12 items-center gap-x-1 border p-2">
+                                {field.value.length === 0
+                                  ? "Aucun allergène sélectionné"
+                                  : field.value.map((a) => (
+                                      <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                        {allergensList.find((al) => al.id.toString() === a)?.libelle}
+                                      </div>
+                                    ))}
+                                <MdArrowDropDown className="absolute right-2 h-4 w-4" />
+                              </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-full">
+                              {allergensList.map((a) => (
+                                <DropdownMenuCheckboxItem
+                                  key={a.id.toString()}
+                                  checked={field.value.includes(a.id.toString())}
+                                  onCheckedChange={(checked) => {
+                                    form.setValue(
+                                      "allergens",
+                                      checked
+                                        ? [...field.value, a.id.toString()]
+                                        : field.value.filter((o) => o !== a.id.toString()),
+                                    );
+                                  }}
+                                >
+                                  {a.libelle}
+                                </DropdownMenuCheckboxItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="categories"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Catégories</FormLabel>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <div className="relative inline-flex h-12 items-center gap-x-1 border p-2">
+                                {field.value.length === 0
+                                  ? "Aucune catégorie sélectionné"
+                                  : field.value.map((a) => {
+                                      const category = categoriesList.find((al) => al.id.toString() === a);
+                                      if (!category) return null;
+                                      return (
+                                        <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                          {`${category.icon} ${category.libelle}`}
+                                        </div>
+                                      );
+                                    })}
+                                <MdArrowDropDown className="absolute right-2 h-4 w-4" />
+                              </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-full">
+                              {categoriesList.map((a) => (
+                                <DropdownMenuCheckboxItem
+                                  key={a.id.toString()}
+                                  checked={field.value.includes(a.id.toString())}
+                                  onCheckedChange={(checked) => {
+                                    form.setValue(
+                                      "allergens",
+                                      checked
+                                        ? [...field.value, a.id.toString()]
+                                        : field.value.filter((o) => o !== a.id.toString()),
+                                    );
+                                  }}
+                                >
+                                  {`${a.icon} ${a.libelle}`}
+                                </DropdownMenuCheckboxItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -337,66 +433,31 @@ export function ProductCreateEditForm({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-col gap-y-4">
-                    <div className="inline-flex items-center gap-x-4">
-                      <Select value={ingredient_select} onValueChange={(e) => setIngredient_select(e)}>
-                        <SelectTrigger className="h-12 w-full">
-                          <SelectValue placeholder="Ingrédient" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ingredientList.map((i) => (
-                            <SelectItem key={`ingredient-${i.id}`} value={i.id.toString()}>
-                              {i.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormInput
-                        placeholder="Quantité"
-                        value={ingredient_quantity}
-                        onChange={(e) => setIngredient_quantity(e.target.valueAsNumber)}
-                        type="number"
-                        className="h-12 w-24"
-                      />
-                      <Button
-                        type="button"
-                        className="h-12 w-12"
-                        onClick={() => {
-                          if (!(ingredients.findIndex((i) => i.id === Number(ingredient_select)) !== -1))
-                            setIngredients((old) => [
-                              ...old,
-                              {
-                                id: Number(ingredient_select),
-                                quantity: ingredient_quantity,
-                              },
-                            ]);
-                          else
-                            setIngredients((old) =>
-                              old.map((o) =>
-                                o.id === Number(ingredient_select) ? { ...o, quantity: ingredient_quantity } : o,
-                              ),
-                            );
-
-                          setIngredient_select("");
-                          setIngredient_quantity(0);
-                        }}
-                      >
-                        <MdAdd className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    <SelectQuantity
+                      options={ingredientList.map((i) => ({
+                        label: i.name,
+                        value: i.id,
+                      }))}
+                      placeholder="Ingrédient"
+                      state={ingredients}
+                      // @ts-ignore
+                      setState={setIngredients}
+                    />
                     <ul className="w-full">
                       {ingredients.map((i) => (
                         <li
                           className="mb-2 inline-flex w-full list-disc items-center justify-between last:mb-0"
-                          key={i.id}
+                          key={i.value}
                         >
                           <span className="inline-flex items-center gap-1">
                             &bull;
                             <strong>
-                              {ingredientList.find((il) => il.id === i.id)?.name} ({i.quantity})
+                              {ingredientList.find((il) => il.id.toString() === i.value.toString())?.name} ({i.quantity}
+                              )
                             </strong>
                           </span>
                           <button
-                            onClick={() => setIngredients((old) => old.filter((o) => o.id !== i.id))}
+                            onClick={() => setIngredients((old) => old.filter((o) => o.value !== i.value))}
                             className="text-red inline-flex w-fit items-center gap-1 normal-case text-red-600 hover:underline"
                           >
                             <MdDelete className="h-4 w-4" />
@@ -424,15 +485,14 @@ export function ProductCreateEditForm({
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce produit ?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete your account and remove your data from
-                      our servers.
+                      Cette action est irréversible. Le produit sera supprimé de la carte du restaurant.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Continue</AlertDialogAction>
+                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogAction>Continuer</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
