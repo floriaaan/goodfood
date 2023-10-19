@@ -32,9 +32,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { MdCloudUpload, MdDelete, MdDone } from "react-icons/md";
-import { GiCookingPot, GiWeight } from "react-icons/gi";
+import { MdAdd, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
+import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
 import { ProductType, ProductTypeLabels } from "@/types/product";
+import { Input } from "@/components/ui/input";
+import { ingredientList } from "@/constants/data";
 
 // todo: check with product create request
 const formSchema = z.object({
@@ -53,7 +55,7 @@ const formSchema = z.object({
   categories: z.array(z.string().uuid()),
   allegens: z.array(z.string().uuid()),
 
-  ingredients: z.array(z.string().uuid()),
+  // ingredients: z.array(z.string().uuid()),
 });
 
 export type ProductCreateEditFormValues = z.infer<typeof formSchema>;
@@ -85,7 +87,7 @@ export function ProductCreateEditForm({
       categories: [],
       allegens: [],
 
-      ingredients: [],
+      // ingredients: [],
     },
   });
 
@@ -101,10 +103,18 @@ export function ProductCreateEditForm({
   const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
   const [image_error, setImage_error] = useState<string | null>(null);
 
+  // ingredients are not included in the form
+  const [ingredients, setIngredients] = useState<{ id: number; quantity: number }[]>([]);
+  const [ingredient_select, setIngredient_select] = useState<string>("");
+  const [ingredient_quantity, setIngredient_quantity] = useState<number>(0);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handler)} className="flex w-full flex-col justify-between">
-        <div className="flex w-full flex-col gap-y-2 overflow-y-auto">
+      <form
+        onSubmit={form.handleSubmit(handler)}
+        className="flex h-full w-full flex-col justify-between placeholder:text-gray-200"
+      >
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
           <input
             accept=".png, .jpg, .jpeg, .gif"
             ref={image_inputRef}
@@ -149,76 +159,86 @@ export function ProductCreateEditForm({
             )}
           </button>
 
-          <div className="flex flex-col gap-y-2 p-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nom du produit</FormLabel>
-                  <FormControl>
-                    <FormInput placeholder="Egg-ocado Toast" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="comment"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <FormTextarea
-                      rows={4}
-                      {...field}
-                      placeholder="Le Egg-ocado Toast est comme un steak à cheval, sauf qu'il n'y a pas de steak, juste un œuf parfaitement cuit au plat perché sur un toast grillé garni d'avocat crémeux. C'est le petit déjeuner parfait pour les amateurs d'avocat et d'œufs qui aiment aussi faire des blagues aux végétariens."
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Prix du produit</FormLabel>
-                  <FormControl>
-                    <FormInput type="number" placeholder="7€50" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type de produit</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Type de produit" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {Object.entries(ProductTypeLabels).map(([value, label]) => (
-                        <SelectItem key={value.toString()} value={value.toString()}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <div className="h-full px-4">
             <Accordion type="single" collapsible>
+              <AccordionItem value="general">
+                <AccordionTrigger>
+                  <div className="inline-flex items-center gap-x-2">
+                    <MdInfoOutline className="h-5 w-5 shrink-0" />
+                    Général
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-y-2 ">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nom du produit</FormLabel>
+                        <FormControl>
+                          <FormInput placeholder="Egg-ocado Toast" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="comment"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <FormTextarea
+                            rows={4}
+                            {...field}
+                            placeholder="Le Egg-ocado Toast est comme un steak à cheval, sauf qu'il n'y a pas de steak, juste un œuf parfaitement cuit au plat perché sur un toast grillé garni d'avocat crémeux. C'est le petit déjeuner parfait pour les amateurs d'avocat et d'œufs qui aiment aussi faire des blagues aux végétariens."
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Prix du produit</FormLabel>
+                        <FormControl>
+                          <FormInput type="number" placeholder="7€50" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Type de produit</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Type de produit" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.entries(ProductTypeLabels).map(([value, label]) => (
+                              <SelectItem key={value.toString()} value={value.toString()}>
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </AccordionContent>
+              </AccordionItem>
               <AccordionItem value="meta-1">
                 <AccordionTrigger>
                   <div className="inline-flex items-center gap-x-2">
@@ -286,7 +306,7 @@ export function ProductCreateEditForm({
               <AccordionItem value="meta-2">
                 <AccordionTrigger>
                   <div className="inline-flex items-center gap-x-2">
-                    <GiCookingPot className="h-5 w-5 shrink-0" />
+                    <GiCook className="h-5 w-5 shrink-0" />
                     Préparation, allergènes
                   </div>
                 </AccordionTrigger>
@@ -305,6 +325,86 @@ export function ProductCreateEditForm({
                         </FormItem>
                       )}
                     />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="ingredients">
+                <AccordionTrigger>
+                  <div className="inline-flex items-center gap-x-2">
+                    <GiCookingPot className="h-5 w-5 shrink-0" />
+                    Ingrédients
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-y-4">
+                    <div className="inline-flex items-center gap-x-4">
+                      <Select value={ingredient_select} onValueChange={(e) => setIngredient_select(e)}>
+                        <SelectTrigger className="h-12 w-full">
+                          <SelectValue placeholder="Ingrédient" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ingredientList.map((i) => (
+                            <SelectItem key={`ingredient-${i.id}`} value={i.id.toString()}>
+                              {i.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormInput
+                        placeholder="Quantité"
+                        value={ingredient_quantity}
+                        onChange={(e) => setIngredient_quantity(e.target.valueAsNumber)}
+                        type="number"
+                        className="h-12 w-24"
+                      />
+                      <Button
+                        type="button"
+                        className="h-12 w-12"
+                        onClick={() => {
+                          if (!(ingredients.findIndex((i) => i.id === Number(ingredient_select)) !== -1))
+                            setIngredients((old) => [
+                              ...old,
+                              {
+                                id: Number(ingredient_select),
+                                quantity: ingredient_quantity,
+                              },
+                            ]);
+                          else
+                            setIngredients((old) =>
+                              old.map((o) =>
+                                o.id === Number(ingredient_select) ? { ...o, quantity: ingredient_quantity } : o,
+                              ),
+                            );
+
+                          setIngredient_select("");
+                          setIngredient_quantity(0);
+                        }}
+                      >
+                        <MdAdd className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <ul className="w-full">
+                      {ingredients.map((i) => (
+                        <li
+                          className="mb-2 inline-flex w-full list-disc items-center justify-between last:mb-0"
+                          key={i.id}
+                        >
+                          <span className="inline-flex items-center gap-1">
+                            &bull;
+                            <strong>
+                              {ingredientList.find((il) => il.id === i.id)?.name} ({i.quantity})
+                            </strong>
+                          </span>
+                          <button
+                            onClick={() => setIngredients((old) => old.filter((o) => o.id !== i.id))}
+                            className="text-red inline-flex w-fit items-center gap-1 normal-case text-red-600 hover:underline"
+                          >
+                            <MdDelete className="h-4 w-4" />
+                            Supprimer
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </AccordionContent>
               </AccordionItem>
