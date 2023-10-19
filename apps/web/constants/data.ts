@@ -3,6 +3,7 @@ import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
 import { Product, ProductType } from "@/types/product";
 import { Restaurant } from "@/types/restaurant";
+import { Ingredient } from "@/types/stock";
 import { User } from "@/types/user";
 
 export const productList: Product[] = [
@@ -265,3 +266,26 @@ export const user: User = {
     label: "Administrateur",
   },
 };
+
+export const ingredientList: Ingredient[] = [
+  {
+    id: 1,
+    name: "Poulet",
+    description: "Poulet de qualité supérieure",
+  },
+  {
+    id: 2,
+    name: "Salade",
+    description: "Salade laitue Iceberg",
+  },
+  {
+    id: 3,
+    name: "Tomate",
+    description: "Tomate coupée en dés",
+  },
+  {
+    id: 4,
+    name: "Oignon",
+    description: "Oignon rouge",
+  },
+];
