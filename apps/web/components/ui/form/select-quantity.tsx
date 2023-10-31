@@ -56,6 +56,9 @@ export const SelectQuantity = ({ options, state, setState, placeholder }: Select
         type="button"
         className="h-12 w-12"
         onClick={() => {
+          if (select === "") return;
+          if (quantity === 0) return;
+
           if (!(state.findIndex((o) => o.value === select) !== -1))
             setState((old) => [...old, { value: select, quantity: quantity }]);
           else setState((old) => old.map((o) => (o.value === select ? { ...o, quantity } : o)));

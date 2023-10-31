@@ -79,8 +79,8 @@ export function ProductCreateEditForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...initialValues,
-      allergens: ((initialValues as unknown as Product).allergens || []).map((a) => a.id),
-      categories: ((initialValues as unknown as Product).categories || []).map((c) => c.id),
+      allergens: ((initialValues as unknown as Product)?.allergens || []).map((a) => a.id),
+      categories: ((initialValues as unknown as Product)?.categories || []).map((c) => c.id),
     } || {
       name: "",
       image: "https://picsum.photos/200/300",
@@ -385,7 +385,7 @@ export function ProductCreateEditForm({
                             <DropdownMenuTrigger asChild>
                               <div className="relative inline-flex h-12 items-center gap-x-1 border p-2">
                                 {field.value.length === 0
-                                  ? "Aucune catégorie sélectionné"
+                                  ? "Aucune catégorie sélectionnée"
                                   : field.value.map((a) => {
                                       const category = categoriesList.find((al) => al.id.toString() === a);
                                       if (!category) return null;
@@ -405,7 +405,7 @@ export function ProductCreateEditForm({
                                   checked={field.value.includes(a.id.toString())}
                                   onCheckedChange={(checked) => {
                                     form.setValue(
-                                      "allergens",
+                                      "categories",
                                       checked
                                         ? [...field.value, a.id.toString()]
                                         : field.value.filter((o) => o !== a.id.toString()),
