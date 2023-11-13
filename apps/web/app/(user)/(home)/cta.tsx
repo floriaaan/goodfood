@@ -23,10 +23,10 @@ export const CTA = () => {
           Ouverture le 1 juillet 2024
         </div> */}
         <div className="w-fit rotate-2 border border-black bg-white px-2 py-1 text-3xl uppercase leading-none text-black">
-          Tu veux découvrir les
+          Tu veux déguster les
         </div>
         <div className="w-fit -rotate-1 border border-black bg-white px-2 py-1 text-3xl uppercase leading-none text-black">
-          meilleurs restaurants de ta ville ?
+          burgers les plus hot autour de toi ?
         </div>
         <div className="mt-2 w-fit rotate-[0.75deg] border border-white bg-black px-2 py-1 uppercase leading-none text-white">
           Envoie GOODFOOD au 3615
