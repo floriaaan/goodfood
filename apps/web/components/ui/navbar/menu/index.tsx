@@ -20,6 +20,7 @@ import { BasketWrapper } from "@/components/basket";
 import { LocationSheetContent } from "@/components/location/sheet-content";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { HiSparkles } from "react-icons/hi2";
 
 export const MenuDropdown = () => {
   return (
@@ -56,9 +57,13 @@ const MenuSheetContent = () => {
                 <MdInfoOutline className="h-5 w-5 shrink-0" />
                 Mes informations
               </Link>
-              <Link href="/orders" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+              <Link href="/account/orders" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
                 <MdReceipt className="h-5 w-5 shrink-0" />
                 Mes commandes
+              </Link>
+              <Link href="/account/orders" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+                <HiSparkles className="h-5 w-5 shrink-0" />
+                Good deals
               </Link>
             </div>
           </AccordionContent>

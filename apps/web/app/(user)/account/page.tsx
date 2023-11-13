@@ -1,7 +1,7 @@
 export default function UserAccount() {
   return (
     <>
-      <h1>Orders</h1>
+      <h1>Account</h1>
     </>
   );
 }
