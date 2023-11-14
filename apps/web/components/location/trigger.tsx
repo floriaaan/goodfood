@@ -7,14 +7,11 @@ import { cn } from "@/lib/utils";
 import { MdArrowForwardIos, MdOutlineLocationOn } from "react-icons/md";
 
 export const LocationFullTrigger = ({ className }: { className?: string }) => {
-  const { selectedRestaurantId, address } = useBasket();
+  const { selectedRestaurantId, address, eta } = useBasket();
   const { street, zipcode, city, country } = address || {};
 
   const isAddressDefined = street && zipcode && city && country;
   const address_displayed = isAddressDefined ? `${street}, ${zipcode} ${city}, ${country}` : "Ajouter une adresse";
-
-  //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
-  const eta = "(12:15 - 12:35)";
 
   return (
     <div

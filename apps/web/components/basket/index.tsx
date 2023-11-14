@@ -18,7 +18,7 @@ import { MdArrowForward, MdOutlineShoppingBasket } from "react-icons/md";
 
 const BasketWrapperComponent = ({ showHeader = true }) => {
   const { user } = useAuth();
-  const { basket, total, selectedRestaurantId } = useBasket();
+  const { basket, total, selectedRestaurantId, checkout } = useBasket();
   const basketProductList = Object.keys(basket)
     .map((id) => productList.find((product) => product.id === id) as Product)
     .filter(Boolean);
@@ -84,6 +84,7 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
                       variant="default"
                       className="flex flex-col gap-1 bg-black text-white ring-black"
                       disabled={!isRestaurantSelected || isBasketEmpty || !isAuthenticated}
+                      onClick={checkout}
                     >
                       <span className="inline-flex items-center gap-1">
                         Étape suivante
