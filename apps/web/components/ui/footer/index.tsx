@@ -24,7 +24,7 @@ export const Footer = () => {
             </a>
           </div>
         </div>
-        <hr className="border-white" />
+        <hr className="border-gray-800" />
         <span className="font-ultrabold mx-auto text-lg">©{new Date().getFullYear()} GoodFood</span>
         <div className="flex flex-col items-center justify-center gap-2 text-sm font-semibold md:flex-row md:divide-x">
           <Link className="pl-2" href="/about">
