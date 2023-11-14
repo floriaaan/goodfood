@@ -9,7 +9,7 @@ import { GradientHeader } from "@/components/ui/header/gradient";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { productList } from "@/constants/data";
-import { useAuth, useBasket } from "@/hooks";
+import { useBasket } from "@/hooks";
 import { Product } from "@/types/product";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -17,15 +17,10 @@ import { Suspense } from "react";
 import { MdArrowForward, MdOutlineShoppingBasket } from "react-icons/md";
 
 const BasketWrapperComponent = ({ showHeader = true }) => {
-  const { user } = useAuth();
-  const { basket, total, selectedRestaurantId, checkout } = useBasket();
+  const { basket, total, checkout, isBasketEmpty, isRestaurantSelected, isAuthenticated } = useBasket();
   const basketProductList = Object.keys(basket)
     .map((id) => productList.find((product) => product.id === id) as Product)
     .filter(Boolean);
-
-  const isBasketEmpty = Object.values(basket).filter(Boolean).length === 0;
-  const isRestaurantSelected = selectedRestaurantId !== null;
-  const isAuthenticated = user !== null;
 
   return (
     <Suspense>
