@@ -1,4 +1,4 @@
-import { Catalog } from "@/components/catalog";
+import { Catalog } from "@/app/(user)/(home)/catalog";
 import { CTA } from "@/app/(user)/(home)/cta";
 import { BasketWrapper } from "@/components/basket";
 import { RatingBanner } from "@/app/(user)/(home)/rating-banner";
