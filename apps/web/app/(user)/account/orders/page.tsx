@@ -5,7 +5,7 @@ import { orderList } from "@/constants/data";
 export default function UserOrders() {
   return (
     <>
-      <h2 className="font-ultrabold text-xl">Commandes passées</h2>
+      <h2 className="text-xl font-semibold">Commandes passées</h2>
       <DataTable columns={orders_columns} data={orderList} />
     </>
   );
