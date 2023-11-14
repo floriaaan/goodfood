@@ -45,6 +45,11 @@ type BasketContextData = {
   address: Address | null;
   setAddress: (address: Address) => void;
   eta: string;
+
+  // HELPERS
+  isBasketEmpty: boolean;
+  isRestaurantSelected: boolean;
+  isAuthenticated: boolean;
 };
 
 const BasketContext = createContext({
@@ -169,6 +174,10 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     },
   );
 
+  const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
+  const isRestaurantSelected = selectedRestaurantId !== null;
+  const isAuthenticated = user !== null;
+
   return (
     <BasketContext.Provider
       value={{
@@ -189,6 +198,10 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         address: address as Address | null,
         setAddress,
         eta,
+
+        isBasketEmpty,
+        isRestaurantSelected,
+        isAuthenticated,
       }}
     >
       {children}
