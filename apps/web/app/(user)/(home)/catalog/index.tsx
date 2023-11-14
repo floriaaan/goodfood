@@ -4,7 +4,6 @@ import { CatalogFilters } from "@/app/(user)/(home)/catalog/filters";
 import { ProductCatalogListItem } from "@/app/(user)/(home)/catalog/product";
 import { productList } from "@/constants/data";
 import { ProductType } from "@/types/product";
-import { Player } from "@lottiefiles/react-lottie-player";
 import { createContext, useContext, useState } from "react";
 import { MdClose } from "react-icons/md";
 
