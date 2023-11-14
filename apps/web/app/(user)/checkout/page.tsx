@@ -21,7 +21,6 @@ import { TiLocationArrow } from "react-icons/ti";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useBasket } from "@/hooks";
 import Link from "next/link";
-import { LocationFullTrigger } from "@/components/location";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
