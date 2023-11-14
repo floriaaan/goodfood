@@ -1,6 +1,20 @@
+"use client";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+const headlines = [
+  ["Tu veux déguster les", "burgers les plus hot autour de toi ?", "Envoie GOODFOOD au 3615"],
+  ["Healthy ou guilty pleasure ?", "On a tout ce qu'il te faut !", "Envoie PLEASURE au 3615"],
+  ["Dévores le délicieux", "fais toi plaisir avec le divin !", "Envoie CRAVING au 3615"],
+];
 
 export const CTA = () => {
+  const [headlineIndex, setHeadlineIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    setHeadlineIndex(Math.floor(Math.random() * headlines.length));
+  }, []);
+
   return (
     <section className="font-ultrabold relative flex h-64 w-full select-none items-center justify-center overflow-hidden text-white">
       <Image
@@ -12,26 +26,19 @@ export const CTA = () => {
         width={1920}
         height={256}
       />
-      <div className="absolute flex h-full w-full flex-col items-center justify-center gap-y-1">
-        {/* <div className="w-fit rotate-2 border border-black bg-white px-2 py-1 text-3xl uppercase text-black">
-          Découvre les meilleurs restaurants
+      {headlineIndex !== null && (
+        <div className="absolute flex h-full w-full flex-col items-center justify-center gap-y-1">
+          <div className="w-fit rotate-2 border border-black bg-white px-2 py-1 text-3xl uppercase leading-none text-black">
+            {headlines[headlineIndex][0]}
+          </div>
+          <div className="w-fit -rotate-1 border border-black bg-white px-2 py-1 text-3xl uppercase leading-none text-black">
+            {headlines[headlineIndex][1]}
+          </div>
+          <div className="mt-2 w-fit rotate-[0.75deg] border border-white bg-black px-2 py-1 uppercase leading-none text-white">
+            {headlines[headlineIndex][2]}
+          </div>
         </div>
-        <div className="w-fit -rotate-1 border border-black bg-white px-2 py-1 text-3xl uppercase text-black">
-          de ta ville
-        </div>
-        <div className="w-fit rotate-[0.5deg] border border-white bg-black px-2 py-1 uppercase text-white">
-          Ouverture le 1 juillet 2024
-        </div> */}
-        <div className="w-fit rotate-2 border border-black bg-white px-2 py-1 text-3xl uppercase leading-none text-black">
-          Tu veux déguster les
-        </div>
-        <div className="w-fit -rotate-1 border border-black bg-white px-2 py-1 text-3xl uppercase leading-none text-black">
-          burgers les plus hot autour de toi ?
-        </div>
-        <div className="mt-2 w-fit rotate-[0.75deg] border border-white bg-black px-2 py-1 uppercase leading-none text-white">
-          Envoie GOODFOOD au 3615
-        </div>
-      </div>
+      )}
     </section>
   );
 };
