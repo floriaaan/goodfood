@@ -1,6 +1,5 @@
 "use client";
 
-import "mapbox-gl/dist/mapbox-gl.css";
 import { MdAdd } from "react-icons/md";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
