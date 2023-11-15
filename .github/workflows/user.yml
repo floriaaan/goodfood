@@ -2,7 +2,7 @@ name: User Microservice CI/CD
 
 on:
   push:
-    branches: [user]
+    branches: [user, deploy-on-azure]
   pull_request:
     branches: [dev, main]
   workflow_dispatch:
