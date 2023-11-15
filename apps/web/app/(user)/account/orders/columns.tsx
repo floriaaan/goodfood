@@ -5,6 +5,8 @@ import { Order } from "@/types/order";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
+import Link from "next/link";
+import { MdLink } from "react-icons/md";
 
 export const orders_columns: ColumnDef<Order>[] = [
   {
@@ -13,10 +15,11 @@ export const orders_columns: ColumnDef<Order>[] = [
     header: "",
     cell(props) {
       const restaurant_id = props.getValue() as string;
+      const { id } = props.row.original;
       return (
-        <span>
-          Commande au <b>{restaurant_id}</b>
-        </span>
+        <Link href={`/account/orders/${id}`} className="inline-flex items-center gap-1 hover:underline">
+          Commande au <b>{restaurant_id}</b> <MdLink className="h-4 w-4 shrink-0" />
+        </Link>
       );
     },
   },
