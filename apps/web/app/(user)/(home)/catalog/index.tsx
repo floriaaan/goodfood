@@ -26,7 +26,7 @@ export const Catalog = () => {
           <ProductCatalogListItem key={product.id} {...product} />
         ))}
         {list.length === 0 && (
-          <div className="flex grow flex-col items-center justify-center gap-y-2 p-6 sm:col-span-2 lg:col-span-3">
+          <div className="flex grow flex-col items-center justify-center gap-y-2 p-6 pb-12 sm:col-span-2 lg:col-span-3">
             <MdClose className="h-8 w-8 shrink-0" />
             <p className="text-xl font-semibold">Aucun produit dans cette catégorie</p>
             <small className="text-sm">Veuillez sélectionner une autre catégorie ou revenir plus tard</small>

@@ -12,7 +12,7 @@ const Pin = () => (
     }}
   >
     <g filter="url(#filter0_d_324_333)">
-      <rect x={16} y={12} width={16} height={16} rx={8} fill="black" />
+      <rect x={16} y={12} width={16} height={16} rx={8} fill="#276EF1" />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -47,4 +47,4 @@ const Pin = () => (
   </svg>
 );
 
-export const OrderPin = memo(Pin);
+export const UserPin = memo(Pin);
