@@ -1,7 +1,7 @@
-import { Catalog } from "@/app/(user)/(home)/catalog";
-import { CTA } from "@/app/(user)/(home)/cta";
+import { Catalog } from "@/app/(normal)/(home)/catalog";
+import { CTA } from "@/app/(normal)/(home)/cta";
 import { BasketWrapper } from "@/components/basket";
-import { RatingBanner } from "@/app/(user)/(home)/rating-banner";
+import { RatingBanner } from "@/app/(normal)/(home)/rating-banner";
 
 export default function Home() {
   return (

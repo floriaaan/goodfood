@@ -1,4 +1,4 @@
-import { orders_columns } from "@/app/(user)/account/orders/columns";
+import { orders_columns } from "@/app/(normal)/account/orders/columns";
 import { DataTable } from "@/components/ui/data-table";
 import { orderList } from "@/constants/data";
 

@@ -1,5 +1,5 @@
-import { OrderStatusMap } from "@/app/(user)/account/orders/[id]/map";
-import { CheckoutReceipt } from "@/app/(user)/checkout/receipt";
+import { OrderStatusMap } from "@/app/(normal)/account/orders/[id]/map";
+import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { orderList } from "@/constants/data";
