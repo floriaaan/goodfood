@@ -22,14 +22,16 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { HiSparkles } from "react-icons/hi2";
 import { useState } from "react";
+import { Indicator } from "@/components/ui/navbar/indicator";
 
 export const MenuDropdown = () => {
   const [open, onOpenChange] = useState(false);
 
   return (
     <Sheet {...{ open, onOpenChange }}>
-      <SheetTrigger className="gf_shadow flex h-10 w-10 shrink-0 items-center justify-center border border-black">
+      <SheetTrigger className="gf_shadow relative flex h-10 w-10 shrink-0 items-center justify-center border border-black">
         <MdMenu className="h-5 w-5" />
+        <Indicator />
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-md md:max-w-lg lg:max-w-xl">
         <MenuSheetContent close={() => onOpenChange(false)} />
