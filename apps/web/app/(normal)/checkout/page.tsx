@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckoutRecap } from "@/app/(user)/checkout/recap";
+import { CheckoutRecap } from "@/app/(normal)/checkout/recap";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -13,7 +13,7 @@ import { MdCheck, MdLock, MdRestaurant, MdShoppingBasket } from "react-icons/md"
 import { loadStripe } from "@stripe/stripe-js";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
-import { CheckoutReceipt } from "@/app/(user)/checkout/receipt";
+import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
 import { orderList, restaurantList } from "@/constants/data";
 
 import { TiLocationArrow } from "react-icons/ti";

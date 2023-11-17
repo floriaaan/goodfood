@@ -1,4 +1,4 @@
-import { useCatalogFilters } from "@/app/(user)/(home)/catalog";
+import { useCatalogFilters } from "@/app/(normal)/(home)/catalog";
 import { cn } from "@/lib/utils";
 import { ProductType } from "@/types/product";
 

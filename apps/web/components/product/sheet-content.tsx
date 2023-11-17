@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { SheetClose, SheetContent } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getNutriscoreImageUrl } from "@/lib/product/nutriscore";
+import { toPrice } from "@/lib/product/toPrice";
 import { Product } from "@/types/product";
 import Image from "next/image";
 
@@ -55,6 +56,7 @@ export const ProductSheetContent = (product: Product) => {
               <TabsTrigger value="allergens">Allergènes</TabsTrigger>
             </TabsList>
             <div className="mt-2">
+              {/* TODO:  */}
               <TabsContent value="prep">prep</TabsContent>
               <TabsContent value="ingredients">ingredients</TabsContent>
               <TabsContent value="allergens">allergens</TabsContent>
@@ -62,9 +64,7 @@ export const ProductSheetContent = (product: Product) => {
           </Tabs>
         </div>
         <div className="item-center inline-flex h-16 items-center justify-between gap-4 bg-gray-50 p-4">
-          <span className="h-fit bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">
-            {product.price.toFixed(2).replace(".", "€")}
-          </span>
+          <span className="h-fit bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">{toPrice(product.price)}</span>
           <Button className="h-fit w-fit bg-black text-white ring-black">Je prends ça</Button>
         </div>
       </div>

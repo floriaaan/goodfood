@@ -21,21 +21,24 @@ import { LocationSheetContent } from "@/components/location/sheet-content";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { HiSparkles } from "react-icons/hi2";
+import { useState } from "react";
 
 export const MenuDropdown = () => {
+  const [open, onOpenChange] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet {...{ open, onOpenChange }}>
       <SheetTrigger className="gf_shadow flex h-10 w-10 shrink-0 items-center justify-center border border-black">
         <MdMenu className="h-5 w-5" />
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-md md:max-w-lg lg:max-w-xl">
-        <MenuSheetContent />
+        <MenuSheetContent close={() => onOpenChange(false)} />
       </SheetContent>
     </Sheet>
   );
 };
 
-const MenuSheetContent = () => {
+const MenuSheetContent = ({ close }: { close: () => void }) => {
   const { user, logout } = useAuth();
   if (!user) return <NotAuthenticatedMenuSheetContent />;
 
@@ -53,15 +56,27 @@ const MenuSheetContent = () => {
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-y-1.5 py-3">
-              <Link href="/account" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+              <Link
+                onClick={close}
+                href="/account"
+                className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted"
+              >
                 <MdInfoOutline className="h-5 w-5 shrink-0" />
                 Mes informations
               </Link>
-              <Link href="/account/orders" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+              <Link
+                onClick={close}
+                href="/account/orders"
+                className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted"
+              >
                 <MdReceipt className="h-5 w-5 shrink-0" />
                 Mes commandes
               </Link>
-              <Link href="/account/orders" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+              <Link
+                onClick={close}
+                href="/account/promos"
+                className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted"
+              >
                 <HiSparkles className="h-5 w-5 shrink-0" />
                 Good deals
               </Link>
@@ -75,7 +90,7 @@ const MenuSheetContent = () => {
               Panier
             </button>
           </AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className="max-h-96 overflow-y-scroll sm:max-h-max">
             <BasketWrapper showHeader={false} />
           </AccordionContent>
         </AccordionItem>
@@ -86,7 +101,7 @@ const MenuSheetContent = () => {
               Livraison
             </button>
           </AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className="max-h-96 overflow-y-scroll sm:max-h-max">
             <LocationSheetContent />
           </AccordionContent>
         </AccordionItem>
@@ -101,7 +116,11 @@ const MenuSheetContent = () => {
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex flex-col gap-y-1.5 py-3">
-                <Link href="/admin" className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted">
+                <Link
+                  href="/admin"
+                  onClick={close}
+                  className="inline-flex gap-2 p-3 text-sm duration-75 hover:bg-muted"
+                >
                   <MdDashboard className="h-5 w-5 shrink-0" />
                   Tableau de bord
                 </Link>
