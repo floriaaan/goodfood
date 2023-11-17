@@ -99,6 +99,93 @@ export const productList: Product[] = [
   },
 ];
 
+export const extendedProductList: ExtendedProduct[] = [
+  {
+    id: "product-1",
+    name: "Pork qué prik thaï",
+    price: 8.5,
+    preparation: "15 min",
+    weight: "420g",
+    kilocalories: "182 kcal",
+    allergens: [
+      {
+        id: "allergen-1",
+        libelle: "Gluten",
+      },
+    ],
+    nutriscore: "C",
+    restaurant_id: "restaurant-1",
+    type: ProductType.PLATS,
+    image: "/images/tmp/pork.png",
+    categories: [
+      {
+        id: "category-1",
+        libelle: "Épicé",
+        hexa_color: "#FBEAEF",
+        icon: "🌶️",
+      },
+    ],
+    comment: `Un sauté de porc épicé avec poivrons colorés, edamames et riz pour pimenter votre journée. Rassurez-vous, aucun porc épic n'a été blessé dans sa préparation !`,
+    stock_quantity: "25",
+    additional_information: undefined,
+    ingredients: [],
+  },
+  {
+    id: "product-2",
+    name: "Goodwich au pesto verde",
+    price: 7.5,
+    preparation: "10 min",
+    weight: "300g",
+    kilocalories: "150 kcal",
+    allergens: [
+      {
+        id: "allergen-1",
+        libelle: "Gluten",
+      },
+    ],
+    nutriscore: "B",
+    restaurant_id: "restaurant-1",
+    type: ProductType.PLATS,
+    image: "/images/tmp/wich.png",
+    categories: [
+      {
+        id: "category-2",
+        libelle: "Frais",
+        hexa_color: "#EAFBF5",
+        icon: "🥗",
+      },
+    ],
+    comment: `Le Goodwich au pesto verde combine le goût riche du pesto basilic avec la douceur de la mozzarella, le tout enveloppé dans un pain savoureux. Une expérience de saveurs simple et satisfaisante, idéale pour les amateurs de pesto`,
+    stock_quantity: "17",
+    additional_information: undefined,
+    ingredients: [],
+  },
+  // TODO: how to handle extra products? (utensils, bread, etc.)
+  {
+    id: "extra/bread",
+    name: "Pain",
+    price: 0.15,
+    preparation: "",
+    weight: "",
+    kilocalories: "",
+    allergens: [
+      {
+        id: "allergen-1",
+        libelle: "Gluten",
+      },
+    ],
+    nutriscore: -1,
+    restaurant_id: "",
+    type: ProductType.SNACKS,
+    image: "/images/tmp/bread.jpeg",
+    categories: [],
+    comment: `La preuve que les bonnes choses viennent en petites bouchées.`,
+    stock_quantity: "74",
+    additional_information: undefined,
+    ingredients: [],
+  },
+];
+
 export const restaurantList: Restaurant[] = [
   {
     id: "restaurant_id:1",
