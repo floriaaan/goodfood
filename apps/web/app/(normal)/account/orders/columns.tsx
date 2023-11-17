@@ -56,7 +56,7 @@ export const orders_columns: ColumnDef<Order>[] = [
     header: "Commande passée le",
     cell(props) {
       return (
-        <span>
+        <span className="text-right">
           Passée le{" "}
           {format(new Date((props.getValue() as string).toString()), "eeee d MMMM yyyy à HH:mm", { locale: fr })}
         </span>

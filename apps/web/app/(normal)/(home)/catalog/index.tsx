@@ -1,7 +1,7 @@
 "use client";
 
-import { CatalogFilters } from "@/app/(user)/(home)/catalog/filters";
-import { ProductCatalogListItem } from "@/app/(user)/(home)/catalog/product";
+import { CatalogFilters } from "@/app/(normal)/(home)/catalog/filters";
+import { ProductCatalogListItem } from "@/app/(normal)/(home)/catalog/product";
 import { productList } from "@/constants/data";
 import { ProductType } from "@/types/product";
 import { createContext, useContext, useState } from "react";
