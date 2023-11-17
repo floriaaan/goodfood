@@ -38,11 +38,10 @@
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "eslint": "8.48.0",
-    "eslint-config-next": "13.4.19",
     "geolib": "^3.3.4",
     "lucide-react": "^0.274.0",
     "mapbox-gl": "^2.15.0",
-    "next": "13.5.2",
+    "next": "14.0.3",
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -56,8 +55,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@vitejs/plugin-react": "^4.0.4",
+    "eslint-config-next": "14.0.3",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jsdom": "^22.1.0",
