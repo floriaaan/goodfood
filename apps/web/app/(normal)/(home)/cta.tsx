@@ -27,7 +27,7 @@ export const CTA = () => {
         height={256}
       />
       {headlineIndex !== null && (
-        <div className="absolute flex h-full w-full flex-col items-center justify-center gap-y-1">
+        <div className="absolute flex h-full w-full flex-col items-center justify-center gap-y-1 text-center">
           <div className="w-fit rotate-2 border border-black bg-white px-2 py-1 text-3xl uppercase leading-none text-black">
             {headlines[headlineIndex][0]}
           </div>
