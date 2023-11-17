@@ -28,6 +28,7 @@ WORKDIR /app
 # Copy the application package
 COPY --from=builder /app/dist .
 COPY --from=builder /app/prisma/ .
+COPY --from=builder /app/script.sh ./script.sh
 COPY --from=builder /app/proto/ /proto/
 COPY --from=builder /app/node_modules/.prisma /.prisma
 
@@ -35,4 +36,4 @@ COPY --from=builder /app/node_modules/.prisma /.prisma
 EXPOSE 50004
 
 # Start the server
-CMD [ "node", "index.js"]
+CMD ["sh", "script.sh"]

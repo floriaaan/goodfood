@@ -6,7 +6,7 @@ import {
   Restaurant,
   RestaurantList,
 } from "@restaurant/types/restaurant";
-import geolib from "geolib";
+import { getDistance } from 'geolib';
 
 interface RestaurantWithDistance extends Restaurant {
   distance: number;
@@ -19,7 +19,7 @@ export const sortRestaurantsByDistance = (
   return restaurants
     .map((restaurant) => ({
       ...restaurant,
-      distance: geolib.getDistance(location, restaurant.location),
+      distance: getDistance(location, restaurant.location),
     }))
     .sort((a, b) => a.distance - b.distance);
 };

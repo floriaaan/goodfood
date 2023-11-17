@@ -21,7 +21,7 @@ export const NotFound = ({ className = "" }) => {
           <div className="mt-6 flex items-center gap-x-3">
             <Link
               href="/"
-              className="inline-flex w-1/2 items-center justify-center gap-x-2 bg-black  p-3 text-sm font-bold uppercase text-white duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center gap-x-2 bg-black  p-3 text-sm font-bold uppercase text-white duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <MdHome className="h-4 w-4 shrink-0" />
               <span>Accueil</span>

@@ -1,0 +1,11 @@
+meta {
+  name: list orders by user
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/order/by-user/:userId
+  body: none
+  auth: none
+}
