@@ -1,8 +1,9 @@
 import { Status } from "@/types/global";
 import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
-import { ExtendedProduct, Product, ProductType } from "@/types/product";
+import { ExtendedProduct,Allergen, Category, Product, ProductType } from "@/types/product";
 import { Restaurant } from "@/types/restaurant";
+import { Ingredient } from "@/types/stock";
 import { User } from "@/types/user";
 
 export const productList: Product[] = [
@@ -352,6 +353,63 @@ export const user: User = {
     label: "Administrateur",
   },
 };
+
+export const ingredientList: Ingredient[] = [
+  {
+    id: 1,
+    name: "Poulet",
+    description: "Poulet de qualité supérieure",
+  },
+  {
+    id: 2,
+    name: "Salade",
+    description: "Salade laitue Iceberg",
+  },
+  {
+    id: 3,
+    name: "Tomate",
+    description: "Tomate coupée en dés",
+  },
+  {
+    id: 4,
+    name: "Oignon",
+    description: "Oignon rouge",
+  },
+];
+
+export const allergensList: Allergen[] = [
+  { id: "allergen-1", libelle: "Gluten" },
+  { id: "allergen-2", libelle: "Lactose" },
+  { id: "allergen-3", libelle: "Oeuf" },
+  { id: "allergen-4", libelle: "Arachide" },
+];
+
+export const categoriesList: Category[] = [
+  {
+    id: "category-1",
+    libelle: "Épicé",
+    hexa_color: "#FBEAEF",
+    icon: "🌶️",
+  },
+  {
+    id: "category-2",
+    libelle: "Frais",
+    hexa_color: "#EAFBF5",
+    icon: "🥗",
+  },
+  {
+    id: "category-3",
+    libelle: "Sucré",
+    hexa_color: "#FBEAEF",
+    icon: "🍩",
+  },
+  {
+    id: "category-4",
+    libelle: "Salé",
+    hexa_color: "#EAFBF5",
+    icon: "🍟",
+  },
+];
 
 export const stats = [
   {

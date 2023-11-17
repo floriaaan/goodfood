@@ -1,13 +1,11 @@
-import { resolve as resolvePath } from "path";
+import {loadSync} from "@grpc/proto-loader";
+import {loadPackageDefinition, Server, ServerCredentials} from "@grpc/grpc-js";
 
-import { loadSync } from "@grpc/proto-loader";
-import { ServerCredentials, loadPackageDefinition, Server } from "@grpc/grpc-js";
+import {log, utils} from "./lib/log";
 
-import { log, utils } from "./lib/log";
+import {logGRPC} from "@product/middleware/log";
 
-import { logGRPC } from "@product/middleware/log";
-
-import { createServerProxy } from "@product/lib/proxy";
+import {createServerProxy} from "@product/lib/proxy";
 
 import AllergenHandler from "@product/handler/Allergen/index";
 import CategoryHandler from "@product/handler/Category/index";
@@ -24,7 +22,7 @@ const options = {
 const serverInsecure = ServerCredentials.createInsecure();
 
 const PORT = process.env.PORT || 50004;
-const ADDRESS = `localhost:${PORT}`;
+const ADDRESS = `0.0.0.0:${PORT}`;
 const PROTO_PATH = "../proto/product.proto";
 
 const packageDefinition = loadSync(PROTO_PATH, options);

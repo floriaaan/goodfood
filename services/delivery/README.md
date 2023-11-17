@@ -1,10 +1,10 @@
 # Delivery Microservice
 
 | Informations                                                       |
-|--------------------------------------------------------------------|
+| ------------------------------------------------------------------ |
 | **Port:** 50008                                                    |
 | **Developer:** @floriaaan                                          |
-| **Status:** In progress                                            |
+| **Status:** Done (may have some improvements)                      |
 | **Last update:** 2023-04-09                                        |
 | **Language:** NodeJS                                               |
 | **Dependencies:** TypeScript, Prisma, gRPC, Postgres               |
@@ -14,20 +14,20 @@
 
 - Delivery model:
 
-    - `CreateDelivery`: Creates a new delivery in the system.
-    - `GetDelivery`: Retrieves a delivery by its ID.
-    - `UpdateDelivery`: Updates the status of an existing delivery.
-    - `DeleteDelivery`: Deletes a delivery by its ID.
-    - `ListDeliveriesByUser`: Retrieves all deliveries for a given user.
-    - `ListDeliveriesByRestaurant`: Retrieves all deliveries for a given restaurant.
+  - `CreateDelivery`: Creates a new delivery in the system.
+  - `GetDelivery`: Retrieves a delivery by its ID.
+  - `UpdateDelivery`: Updates the status of an existing delivery.
+  - `DeleteDelivery`: Deletes a delivery by its ID.
+  - `ListDeliveriesByUser`: Retrieves all deliveries for a given user.
+  - `ListDeliveriesByRestaurant`: Retrieves all deliveries for a given restaurant.
 
 - Delivery person model:
-    - `CreateDeliveryPerson`: Creates a new delivery person in the system.
-    - `GetDeliveryPerson`: Retrieves a delivery person by its ID.
-    - `UpdateDeliveryPerson`: Updates an existing delivery person.
-    - `DeleteDeliveryPerson`: Deletes a delivery person by its ID.
-    - `ListDeliveryPersons`: Retrieves all delivery persons.
-    - `ListNearDeliveryPersons`: Retrieves all delivery persons near a given location.
+  - `CreateDeliveryPerson`: Creates a new delivery person in the system.
+  - `GetDeliveryPerson`: Retrieves a delivery person by its ID.
+  - `UpdateDeliveryPerson`: Updates an existing delivery person.
+  - `DeleteDeliveryPerson`: Deletes a delivery person by its ID.
+  - `ListDeliveryPersons`: Retrieves all delivery persons.
+  - `ListNearDeliveryPersons`: Retrieves all delivery persons near a given location.
 
 ## Requirements
 
@@ -39,9 +39,9 @@ To run this microservice, you will need to have the following installed on your 
 You can use the following tools to help you with the setup:
 
 - You can use nvm to set your Node version using:
-    - `nvm use`.
+  - `nvm use`.
 - You can use docker to run your Postgres database using:
-    - `docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres`
+  - `docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres`
 
 ## Getting started
 
@@ -86,5 +86,5 @@ docker build -t goodfood-delivery:1.0.0 -f ./delivery/Dockerfile .
 Create the .env base on the .env.example. Then run the following command:
 
 ```
-docker run --env-file=.env goodfood-delivery:1.0.0 
+docker run --env-file=.env goodfood-delivery:1.0.0
 ```

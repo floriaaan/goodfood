@@ -13,9 +13,17 @@ type Context = {
 
 const parseContext = (ctx: Context) => {
 	const {
-		call: { request },
-		service: { path },
-	} = ctx;
+		call,
+		service,
+	} = ctx || {};
+
+	const {
+		request
+	} = call || {};
+	const {
+		path
+	} = service || { path: "" };
+
 	return { request, path };
 };
 

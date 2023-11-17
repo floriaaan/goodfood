@@ -1,0 +1,11 @@
+meta {
+  name: get list of supply orders by supplier
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/stock/supply/order/by-supplier/:id
+  body: none
+  auth: none
+}

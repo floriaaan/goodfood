@@ -1,11 +1,11 @@
 # Delivery Microservice
 
 | Informations                                                       |
-|--------------------------------------------------------------------|
+| ------------------------------------------------------------------ |
 | **Port:** 50006                                                    |
 | **Developer:** @PierreLgb                                          |
 | **Status:** In progress                                            |
-| **Last update:** 2023-07-20                                       |
+| **Last update:** 2023-07-20                                        |
 | **Language:** NodeJS                                               |
 | **Dependencies:** TypeScript, Prisma, gRPC, Postgres               |
 | **Models:** (see [`prisma/schema.prisma`](./prisma/schema.prisma)) |
@@ -14,12 +14,12 @@
 
 - Promotions model:
 
-    - `CreatePromotion`: Creates a new promotion in the system.
-    - `GetPromotion`: Retrieves a promotion by its ID.
-    - `UpdatePromotion`: Updates an existing promotion.
-    - `DeletePromotion`: Deletes a promotion by its ID.
-    - `GetPromotions`: Retrieves all promotions.
-    - `ListPromotionsByRestaurant`: Retrieves all promotion for a given restaurant.
+  - `CreatePromotion`: Creates a new promotion in the system.
+  - `GetPromotion`: Retrieves a promotion by its ID.
+  - `UpdatePromotion`: Updates an existing promotion.
+  - `DeletePromotion`: Deletes a promotion by its ID.
+  - `GetPromotions`: Retrieves all promotions.
+  - `ListPromotionsByRestaurant`: Retrieves all promotion for a given restaurant.
 
 ## Requirements
 
@@ -31,9 +31,9 @@ To run this microservice, you will need to have the following installed on your 
 You can use the following tools to help you with the setup:
 
 - You can use nvm to set your Node version using:
-    - `nvm use`.
+  - `nvm use`.
 - You can use docker to run your Postgres database using:
-    - `docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres`
+  - `docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres`
 
 ## Getting started
 
@@ -80,5 +80,5 @@ docker push pierrelbg/goodfood-promotions:1.0.0
 Create the .env base on the .env.example. Then run the following command:
 
 ```
-docker run --env-file=.env goodfood-delivery:1.0.0 
+docker run --env-file=.env goodfood-delivery:1.0.0
 ```

@@ -1,14 +1,14 @@
 # Order Microservice
 
-| Informations                                       |
-| -------------------------------------------------- |
-| **Port:** 50007                                    |
-| **Developer:** @floriaaan                          |
-| **Status:** In progress                            |
-| **Last update:** 2023-05-10                        |
-| **Language:** NodeJS                               |
-| **Dependencies:** TypeScript, gRPC, Postgres, AMQP |
-| **Models:**                                        |
+| Informations                                                       |
+| ------------------------------------------------------------------ |
+| **Port:** 50007                                                    |
+| **Developer:** @floriaaan                                          |
+| **Status:** Done (may have some improvements)                      |
+| **Last update:** 2023-05-10                                        |
+| **Language:** NodeJS                                               |
+| **Dependencies:** TypeScript, gRPC, Postgres, AMQP                 |
+| **Models:** (see [`prisma/schema.prisma`](./prisma/schema.prisma)) |
 
 ## gRPC Methods
 

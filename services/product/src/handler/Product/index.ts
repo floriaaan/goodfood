@@ -2,7 +2,7 @@ import { CreateProduct } from "./create";
 import { ReadProduct } from "./read";
 import { UpdateProduct } from "./update";
 import { DeleteProduct } from "./delete";
-import { ListProduct } from "./list";
+import { getProductList } from "./list";
 import { GetProductTypeList } from "./listType";
 import { UploadImage } from "../Image/upload";
 
@@ -11,7 +11,7 @@ export default {
 	ReadProduct,
 	UpdateProduct,
 	DeleteProduct,
-	ListProduct,
+	getProductList,
 	GetProductTypeList,
 	UploadImage,
 };

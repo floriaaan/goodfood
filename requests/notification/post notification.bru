@@ -1,0 +1,23 @@
+meta {
+  name: create notification
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/notification
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "<string>",
+    "message": "<string>",
+    "messageType": "USER_REQUEST"
+  }
+}

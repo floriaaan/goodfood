@@ -2,6 +2,7 @@ import { Delivery } from "@delivery/types/delivery";
 
 export type DeliveryPerson = {
   id: string;
+  user_id: string;
   first_name: string;
   last_name: string;
   phone: string;
@@ -11,6 +12,7 @@ export type DeliveryPerson = {
 };
 
 export type DeliveryPersonCreateInput = {
+  user_id: string,
   first_name: string;
   last_name: string;
   phone: string;
@@ -23,3 +25,4 @@ export type LocationInput = {
 };
 
 export type DeliveryPersonId = { id: DeliveryPerson["id"] };
+export type DeliveryPersonUserId = { id: DeliveryPerson["id"] };

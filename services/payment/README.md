@@ -1,13 +1,14 @@
 # Payment Microservice
 
-| Informations                                       |
-| -------------------------------------------------- |
-| **Port:** 50003                                    |
-| **Developer:** @Anatole-Godard & @floriaaan        |
-| **Status:** In progress                            |
-| **Last update:** 2023-08-04                        |
-| **Language:** NodeJS                               |
-| **Dependencies:** TypeScript, gRPC, Postgres, AMQP |
+| Informations                                                       |
+| ------------------------------------------------------------------ |
+| **Port:** 50003                                                    |
+| **Developer:** @Anatole-Godard & @floriaaan                        |
+| **Status:** Done (may have some improvements)                      |
+| **Last update:** 2023-08-04                                        |
+| **Language:** NodeJS                                               |
+| **Dependencies:** TypeScript, gRPC, Postgres, AMQP                 |
+| **Models:** (see [`prisma/schema.prisma`](./prisma/schema.prisma)) |
 
 ## gRPC Methods
 
