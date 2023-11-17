@@ -238,8 +238,8 @@ export const orderList: Order[] = [
     },
     status: Status.FULFILLED,
     restaurant_id: "restaurant_id:2",
-    created_at: new Date("2023-11-15T12:00:00.000Z"),
-    updated_at: new Date("2000-01-01T12:00:00.000Z"),
+    created_at: new Date("2023-11-17T12:00:00.000Z"),
+    updated_at: new Date("2023-11-17T12:00:00.000Z"),
   },
 ];
 
