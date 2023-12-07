@@ -34,6 +34,7 @@ export default function CheckoutPage() {
 
   const [takeaway_isModalOpen, setTakeaway_isModalOpen] = useState(false);
 
+  const [hasCreatedOrder, setHasCreatedOrder] = useState(false);
   const [order, setOrder] = useState<Order | null>(orderList[0]);
 
   return (
@@ -44,6 +45,7 @@ export default function CheckoutPage() {
             <h2 className="text-xl font-semibold">Paiement</h2>
             <small>Sélectionnez votre mode de paiement</small>
             <RadioGroup
+              disabled={hasCreatedOrder}
               onValueChange={(e) => {
                 setDeliveryType(e as DeliveryType);
               }}
@@ -81,13 +83,14 @@ export default function CheckoutPage() {
                     className="h-16 w-full"
                     onClick={() => {
                       // TODO: stripe
+                      setHasCreatedOrder(true);
                       setDelivery_isModalOpen(true);
                     }}
                   >
                     <MdShoppingBasket className="h-4 w-4 shrink-0" />
                     Payer
                   </Button>
-                  <Dialog onOpenChange={setDelivery_isModalOpen} open={delivery_isModalOpen}>
+                  <Dialog onOpenChange={setDelivery_isModalOpen} open={delivery_isModalOpen || hasCreatedOrder}>
                     <DialogContent className="flex aspect-video h-auto max-w-4xl items-center justify-center">
                       <div id="checkout">
                         {delivery_checkoutSessionSecret ? (
@@ -114,14 +117,15 @@ export default function CheckoutPage() {
                     className="h-16 w-full"
                     onClick={() => {
                       // TODO: create order
+                      setHasCreatedOrder(true);
                       setTakeaway_isModalOpen(true);
                     }}
                   >
                     <MdCheck className="h-4 w-4 shrink-0" />
                     Finaliser et payer sur place
                   </Button>
-                  <Dialog onOpenChange={setTakeaway_isModalOpen} open={takeaway_isModalOpen}>
-                    <DialogContent className="grid aspect-video h-auto max-w-4xl grid-cols-2 gap-2 ">
+                  <Dialog onOpenChange={setTakeaway_isModalOpen} open={takeaway_isModalOpen || hasCreatedOrder}>
+                    <DialogContent className="grid aspect-video h-auto max-w-4xl justify-center gap-2 md:grid-cols-2">
                       {order &&
                         (() => {
                           const restaurant = restaurantList.find((r) => r.id === order.restaurant_id);
