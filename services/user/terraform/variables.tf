@@ -6,9 +6,5 @@ variable "environnment_suffix" {
 variable "project_name" {
   type        = string
   description = "The name of the project"
-}
-
-variable "service-name" {
-  type        = string
-  description = "The name of the service"
+  default     = "gf-paf"
 }

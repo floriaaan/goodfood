@@ -4,39 +4,20 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.48.0"
     }
+    azapi = {
+      source  = "azure/azapi"
+      version = "~>1.5"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~>3.0"
+    }
   }
   backend "azurerm" {}
 }
 
 provider "azurerm" {
   features {}
-}
-
-resource "azurerm_key_vault" "kv-goodfood" {
-  name                       = "kv-goodfood-delivery"
-  location                   = data.azurerm_resource_group.rg-goodfood.location
-  resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
-  tenant_id                  = data.azurerm_client_config.current.tenant_id
-  sku_name                   = "standard"
-  soft_delete_retention_days = 7
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "Create",
-      "Get",
-    ]
-
-    secret_permissions = [
-      "Set",
-      "Get",
-      "Delete",
-      "Purge",
-      "Recover"
-    ]
-  }
 }
 
 resource "azurerm_service_plan" "sp-goodfood" {
@@ -64,6 +45,169 @@ resource "azurerm_linux_web_app" "web-goodfood" {
   }
 }
 
+resource "random_pet" "ssh_key_name-goodfood" {
+  prefix    = "ssh"
+  separator = ""
+}
+
+resource "azapi_resource" "ssh_public_key-goodfood" {
+  type      = "Microsoft.Compute/sshPublicKeys@2022-11-01"
+  name      = random_pet.ssh_key_name-goodfood.id
+  location  = "westus3"
+  parent_id = data.azurerm_resource_group.rg-goodfood.id
+}
+
+resource "azapi_resource_action" "ssh_public_key_gen-goodfood" {
+  type        = "Microsoft.Compute/sshPublicKeys@2022-11-01"
+  resource_id = azapi_resource.ssh_public_key-goodfood.id
+  action      = "generateKeyPair"
+  method      = "POST"
+
+  response_export_values = ["publicKey"]
+}
+
+resource "azurerm_kubernetes_cluster" "aks-goodfood" {
+  name                = "aks-${var.project_name}${var.environnment_suffix}"
+  location            = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  dns_prefix          = "goodfood"
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  default_node_pool {
+    name       = "agentpool"
+    vm_size    = "Standard_D2_v2"
+    node_count = 1
+  }
+  linux_profile {
+    admin_username = "ubuntu"
+
+    ssh_key {
+      key_data = jsondecode(azapi_resource_action.ssh_public_key_gen-goodfood.output).publicKey
+    }
+  }
+  network_profile {
+    network_plugin    = "kubenet"
+    load_balancer_sku = "standard"
+  }
+}
+/*
+resource "azurerm_container_group" "ci-goodfood" {
+  name                = "ci-${var.project_name}${var.environnment_suffix}"
+  location            = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  ip_address_type     = "Public"
+  dns_name_label      = "aci-label"
+  os_type             = "Linux"
+
+  container {
+    name   = "rabbitmq-${var.project_name}${var.environnment_suffix}"
+    image  = "rabbitmq:latest"
+    cpu    = "0.5"
+    memory = "1.5"
+
+    ports {
+      port     = 15672
+      protocol = "TCP"
+    }
+  }
+
+  tags = {
+    environment = "testing"
+  }
+}*/
+
+//Ressources lié aux services
+
+
+resource "azurerm_key_vault" "kv-goodfood-user" {
+  name                       = "kv-${var.project_name}${var.environnment_suffix}-user"
+  location                   = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
+  tenant_id                  = data.azurerm_client_config.current.tenant_id
+  sku_name                   = "standard"
+  soft_delete_retention_days = 7
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    key_permissions = [
+      "Create",
+      "Get",
+    ]
+
+    secret_permissions = [
+      "Set",
+      "Get",
+      "List",
+      "Delete",
+      "Purge",
+      "Recover"
+    ]
+  }
+}
+
+resource "azurerm_key_vault" "kv-goodfood-product" {
+  name                       = "kv-${var.project_name}${var.environnment_suffix}-product"
+  location                   = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
+  tenant_id                  = data.azurerm_client_config.current.tenant_id
+  sku_name                   = "standard"
+  soft_delete_retention_days = 7
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    key_permissions = [
+      "Create",
+      "Get",
+    ]
+
+    secret_permissions = [
+      "Set",
+      "Get",
+      "List",
+      "Delete",
+      "Purge",
+      "Recover"
+    ]
+  }
+}
+
+
+resource "azurerm_key_vault" "kv-goodfood-log" {
+  name                       = "kv-${var.project_name}${var.environnment_suffix}-log"
+  location                   = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
+  tenant_id                  = data.azurerm_client_config.current.tenant_id
+  sku_name                   = "standard"
+  soft_delete_retention_days = 7
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+
+    key_permissions = [
+      "Create",
+      "Get",
+    ]
+
+    secret_permissions = [
+      "Set",
+      "Get",
+      "List",
+      "Delete",
+      "Purge",
+      "Recover"
+    ]
+  }
+}
+
+/*
 resource "azurerm_postgresql_server" "pgsql-goodfood" {
   name                = "postgres-server-${var.project_name}${var.environnment_suffix}"
   location            = data.azurerm_resource_group.rg-goodfood.location
@@ -123,4 +267,4 @@ resource "azurerm_container_group" "container_group" {
       "PORT"         = 50008
     }
   }
-}
+}*/

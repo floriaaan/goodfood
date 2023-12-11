@@ -24,38 +24,33 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_postgresql_server" "pg-goodfood-product" {
-  name                = "pg-${var.project_name}${var.environnment_suffix}-product"
-  location            = data.azurerm_resource_group.rg-gf-paf.location
-  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
+resource "azurerm_redis_enterprise_cluster" "redis-goodfood-basket" {
+  name                = "rec-${var.project_name}-${var.environnment_suffix}-${var.service-name}"
+  location            = data.azurerm_resource_group.rg-goodfood.location
+  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
 
-  sku_name = "B_Gen5_2"
-
-  storage_mb                   = 5120
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = false
-  auto_grow_enabled            = true
-
-  administrator_login          = data.azurerm_key_vault_secret.db-login.value
-  administrator_login_password = data.azurerm_key_vault_secret.db-password.value
-  version                      = "11"
-
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2" 
-
+  sku_name = "EnterpriseFlash_F300-3"
 }
 
-resource "azurerm_postgresql_database" "db-goodfood-product" {
-  name                = "db-${var.project_name}${var.environnment_suffix}-product"
-  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
-  server_name         = azurerm_postgresql_server.pg-goodfood-product.name
-  charset             = "UTF8"
-  collation           = "English_United States.1252"
+resource "azurerm_redis_enterprise_database" "db-goodfood-basket" {
+  name                = "rec-${var.project_name}-${var.environnment_suffix}-${var.service-name}"
+
+  cluster_id        = azurerm_redis_enterprise_cluster.redis-goodfood-basket.id
+  client_protocol   = "Encrypted"
+  clustering_policy = "EnterpriseCluster"
+  eviction_policy   = "NoEviction"
+  port              = 10000
+
+  linked_database_id = [
+    "${azurerm_redis_enterprise_cluster.redis-goodfood-basket.id}/databases/default"
+  ]
+
+  linked_database_group_nickname = "tftestGeoGroup"
 }
 
 resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-product" {
   name                = "allow-azure-resources"
-  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
+  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
   server_name         = azurerm_postgresql_server.pg-goodfood-product.name
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
@@ -63,8 +58,8 @@ resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-product" {
 
 resource "azurerm_storage_account" "stac-goodfood-product" {
   name                     = "stacgoodfoodproductdev"
-  resource_group_name      = data.azurerm_resource_group.rg-gf-paf.name
-  location                 = data.azurerm_resource_group.rg-gf-paf.location
+  resource_group_name      = data.azurerm_resource_group.rg-goodfood.name
+  location                 = data.azurerm_resource_group.rg-goodfood.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
 
@@ -99,7 +94,7 @@ resource "azapi_resource" "ssh_public_key-goodfood-product" {
   type      = "Microsoft.Compute/sshPublicKeys@2022-11-01"
   name      = random_pet.ssh_key_name-goodfood-product.id
   location  = "westus3"
-  parent_id = data.azurerm_resource_group.rg-gf-paf.id
+  parent_id = data.azurerm_resource_group.rg-goodfood.id
 }
 
 resource "azapi_resource_action" "ssh_public_key_gen-goodfood-product" {
