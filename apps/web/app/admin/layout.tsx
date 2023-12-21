@@ -7,7 +7,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <AdminProvider>
       <div className="inline-flex w-full overflow-hidden">
         <Sidebar />
-        <div className="max-h-screen grow overflow-y-auto">{children}</div>
+        <div className="max-h-screen flex-1 grow overflow-y-auto">{children}</div>
       </div>
     </AdminProvider>
   );
