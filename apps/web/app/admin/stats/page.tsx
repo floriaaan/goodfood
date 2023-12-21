@@ -18,8 +18,9 @@ export default function AdminStats() {
       <div className="flex flex-wrap gap-16">
         {stats
           .filter((e, index) => [0, 1, 2].includes(index))
-          .map((stat) => (
+          .map((stat, index) => (
             <AmountStat
+              key={index}
               title={stat.name}
               amount={Number.parseInt(stat.value)}
               percent={Number.parseInt(stat.changeValue)}
@@ -44,19 +45,16 @@ export default function AdminStats() {
       <div className="flex flex-wrap gap-16">
         {stats
           .filter((e, index) => [3, 4, 5].includes(index))
-          .map((stat) => {
-            return (
-              <>
-                <AmountStat
-                  title={stat.name}
-                  amount={Number.parseInt(stat.value)}
-                  percent={Number.parseInt(stat.changeValue)}
-                  reverseColor={true}
-                  lastUpdate={stat.date}
-                />
-              </>
-            );
-          })}
+          .map((stat, index) => (
+            <AmountStat
+              key={index}
+              title={stat.name}
+              amount={Number.parseInt(stat.value)}
+              percent={Number.parseInt(stat.changeValue)}
+              reverseColor={true}
+              lastUpdate={stat.date}
+            />
+          ))}
       </div>
     </div>
   );
