@@ -8,7 +8,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   selected: string;
 }
 
-const Select = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }) => {
+const Select = forwardRef<HTMLSelectElement, InputProps>(({ className, ...props }, ref) => {
   useEffect(() => {
     props.setSelected(props.options[0].value);
   }, []);
@@ -25,6 +25,7 @@ const Select = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }
         <MdKeyboardArrowDown className="h-5 w-5 shrink-0 text-black" />
       </span>
       <select
+        ref={ref}
         defaultValue={props.options[0].value}
         onChange={(event) => {
           props.setSelected(event.target.value);
@@ -44,6 +45,6 @@ const Select = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }
     </label>
   );
 });
-Select.displayName = "Input";
+Select.displayName = "Select";
 
 export { Select };
