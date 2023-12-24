@@ -21,6 +21,7 @@ import { TiLocationArrow } from "react-icons/ti";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useBasket } from "@/hooks";
 import Link from "next/link";
+import { HomeIcon } from "lucide-react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
@@ -139,23 +140,26 @@ export default function CheckoutPage() {
                                   <p className="text-sm">Vous pouvez venir la chercher dès maintenant au restaurant.</p>
                                 </div>
                                 <div className="grow">
-                                  <Player
-                                    autoplay
-                                    src={"https://lottie.host/a4822d55-540f-4efa-8d47-b87b633e1e64/qDllUOhZG4.json"}
-                                    loop
-                                    speed={1}
-                                  />
+                                  <Player autoplay src={"/assets/lottie/checkout-preparation.json"} loop speed={1} />
                                 </div>
-                                <Button asChild>
-                                  <a
-                                    href={`https://www.google.com/maps?q=${restaurant.locationList[0]},${restaurant.locationList[1]}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <TiLocationArrow className="-mt-0.5 h-6 w-6 shrink-0" />
-                                    {"J'y vais"}
-                                  </a>
-                                </Button>
+                                <div className="flex w-full gap-y-1 flex-col">
+                                  <Button variant={"ghost"} asChild>
+                                    <Link href="/">
+                                      <HomeIcon className="-mt-0.5 h-6 w-6 shrink-0" />
+                                      Retour à la maison
+                                    </Link>
+                                  </Button>
+                                  <Button asChild>
+                                    <a
+                                      href={`https://www.google.com/maps?q=${restaurant.locationList[0]},${restaurant.locationList[1]}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <TiLocationArrow className="-mt-0.5 h-6 w-6 shrink-0" />
+                                      {"J'y vais"}
+                                    </a>
+                                  </Button>
+                                </div>
                               </div>
                             </>
                           );
