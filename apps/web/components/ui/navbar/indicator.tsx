@@ -15,7 +15,10 @@ export const BasketIndicator = () => {
   if (count === 0) return null;
 
   return (
-    <div className="absolute right-0 top-0 z-10  inline-flex h-4 w-8 items-center justify-center gap-x-1 bg-gf-orange">
+    <div
+      suppressHydrationWarning
+      className="absolute right-0 top-0 z-10  inline-flex h-4 w-8 items-center justify-center gap-x-1 bg-gf-orange"
+    >
       {count.toString().length < 3 && <MdShoppingBasket className="h-3 w-3 shrink-0" />}
       {count}
     </div>
