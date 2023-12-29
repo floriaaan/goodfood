@@ -227,7 +227,7 @@ export function ProductCreateEditForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Type de produit</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
+                        <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Type de produit" />
@@ -290,7 +290,7 @@ export function ProductCreateEditForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Nutriscore</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
+                          <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                             <FormControl>
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Nutriscore" />

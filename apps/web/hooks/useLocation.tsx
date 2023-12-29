@@ -6,6 +6,10 @@ const LocationContext = createContext({
   lat: NaN,
   lng: NaN,
   refreshLocation: () => {},
+} as {
+  lat: number;
+  lng: number;
+  refreshLocation: () => void;
 });
 
 export const useLocation = () => {
@@ -23,6 +27,7 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
       (position) => {
         setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
       },
+      // eslint-disable-next-line no-console
       (error) => console.error(error),
       { enableHighAccuracy: true },
     );
