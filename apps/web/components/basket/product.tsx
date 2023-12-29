@@ -23,6 +23,14 @@ export const ProductBasketItem = (product: Product) => {
           <span className="line-clamp-2 h-full grow text-sm ">{product.name}</span>
           <div className="inline-flex w-full items-end justify-between">
             <div className="inline-flex items-center">
+              {basket[product.id] > 1 && (
+                <button
+                  className="flex h-6 w-6 items-center justify-center border bg-gray-100"
+                  onClick={() => removeProduct(product.id, basket[product.id])}
+                >
+                  <MdDelete className="h-4 w-4" />
+                </button>
+              )}
               <button
                 className="flex h-6 w-6 items-center justify-center border bg-gray-100"
                 onClick={() => removeProduct(product.id, 1)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 import { productList } from "@/constants/data";
 import { createPersistedState } from "@/lib/use-persisted-state";
@@ -9,17 +9,29 @@ import { useAuth } from "@/hooks";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction, ToastDescription, ToastTitle } from "@/components/ui/toast";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toPrice } from "@/lib/product/toPrice";
 type Basket = Record<string, number>;
 
 type Address = Omit<MainAddress, "id" | "lat" | "lng">;
+
+type Taxes = {
+  delivery: number;
+  service: number;
+};
 
 type BasketContextData = {
   // PRODUCT & BASKET
   basket: Basket;
   total: string;
+
+  taxes: Taxes;
+
   setBasket: (basket: Basket) => void;
   addProduct: (id: string, quantity: number) => void;
   removeProduct: (id: string, quantity: number) => void;
+
+  checkout: () => void;
 
   // RESTAURANT
   selectedRestaurantId: string | null;
@@ -32,6 +44,12 @@ type BasketContextData = {
   // ADDRESS
   address: Address | null;
   setAddress: (address: Address) => void;
+  eta: string;
+
+  // HELPERS
+  isBasketEmpty: boolean;
+  isRestaurantSelected: boolean;
+  isAuthenticated: boolean;
 };
 
 const BasketContext = createContext({
@@ -52,19 +70,29 @@ const useAddressState = createPersistedState("gf/address");
 export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const { mainaddress } = user || {};
+
+  //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
+  const [eta, setEta] = useState<string>("12:15 - 12:35");
+
   const [basket, setBasket] = useBasketState<Basket>({});
+  const [taxes, setTaxes] = useState<Taxes>({
+    delivery: 0,
+    service: 0.5,
+  });
   const { toast } = useToast();
+  const { push } = useRouter();
 
   const total = useMemo(() => {
-    return Object.entries(basket as Basket)
-      .reduce((acc, [id, quantity]) => {
+    return toPrice(
+      Object.entries(basket as Basket).reduce((acc, [id, quantity]) => {
         const product = productList.find((p) => p.id === id);
         if (!product) return acc;
         return acc + product.price * quantity;
-      }, 0)
-      .toFixed(2)
-      .replace(".", "€");
-  }, [basket]);
+      }, 0) +
+        taxes.delivery +
+        taxes.service,
+    );
+  }, [basket, taxes]);
 
   const addProduct = (id: string, quantity: number) => {
     const p = productList.find((p) => p.id === id);
@@ -118,6 +146,13 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const checkout = () => {
+    if (!user) return push("/login");
+    if (!address || !selectedRestaurantId || Object.values(basket as Basket).filter(Boolean).length === 0) return;
+
+    push("/checkout");
+  };
+
   const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
   const selectRestaurant = (id: string) => setSelectedRestaurantId(id);
 
@@ -139,14 +174,20 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     },
   );
 
+  const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
+  const isRestaurantSelected = selectedRestaurantId !== null;
+  const isAuthenticated = user !== null;
+
   return (
     <BasketContext.Provider
       value={{
         basket: basket as Basket,
         total,
+        taxes,
         setBasket,
         addProduct,
         removeProduct,
+        checkout,
 
         selectedRestaurantId: selectedRestaurantId as string | null,
         selectRestaurant,
@@ -156,6 +197,11 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
         address: address as Address | null,
         setAddress,
+        eta,
+
+        isBasketEmpty,
+        isRestaurantSelected,
+        isAuthenticated,
       }}
     >
       {children}

@@ -24,13 +24,21 @@ export const Footer = () => {
             </a>
           </div>
         </div>
-        <hr className="border-white" />
-        <span className="mx-auto text-lg font-semibold">©{new Date().getFullYear()} GoodFood</span>
-        <div className="flex flex-col md:flex-row gap-2 items-center justify-center md:divide-x text-sm font-semibold">
-          <Link className="pl-2" href="/about">À propos</Link>
-          <Link className="pl-2" href="/contact">Contact</Link>
-          <Link className="pl-2" href="/terms">Conditions d'utilisation</Link>
-          <Link className="pl-2" href="/privacy">Politique de confidentialité</Link>
+        <hr className="border-gray-800" />
+        <span className="font-ultrabold mx-auto text-lg">©{new Date().getFullYear()} GoodFood</span>
+        <div className="flex flex-col items-center justify-center gap-2 divide-gray-800 text-sm font-semibold md:flex-row md:divide-x">
+          <Link className="pl-2" href="/about">
+            À propos
+          </Link>
+          <Link className="pl-2" href="/contact">
+            Contact
+          </Link>
+          <Link className="pl-2" href="/terms">
+            {"Conditions d'utilisation"}
+          </Link>
+          <Link className="pl-2" href="/privacy">
+            Politique de confidentialité
+          </Link>
         </div>
       </div>
     </div>

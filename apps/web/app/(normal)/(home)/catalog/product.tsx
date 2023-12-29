@@ -5,7 +5,7 @@ import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
 import Image from "next/image";
 
-export const ProductCatalogList = (product: Product) => {
+export const ProductCatalogListItem = (product: Product) => {
   const { addProduct } = useBasket();
   return (
     <Sheet key={product.id}>

@@ -1,4 +1,4 @@
-import { useCatalogFilters } from "@/components/catalog";
+import { useCatalogFilters } from "@/app/(normal)/(home)/catalog";
 import { cn } from "@/lib/utils";
 import { ProductType } from "@/types/product";
 

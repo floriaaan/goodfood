@@ -8,7 +8,7 @@ import { User } from "@/types/user";
 
 export const productList: Product[] = [
   {
-    id: "product-1",
+    id: "product_id:1",
     name: "Pork qué prik thaï",
     price: 8.5,
     preparation: "15 min",
@@ -16,17 +16,17 @@ export const productList: Product[] = [
     kilocalories: "182 kcal",
     allergens: [
       {
-        id: "allergen-1",
+        id: "allergen_id:1",
         libelle: "Gluten",
       },
     ],
     nutriscore: "C",
-    restaurant_id: "restaurant-1",
+    restaurant_id: "restaurant_id:1",
     type: ProductType.PLATS,
     image: "/images/tmp/pork.png",
     categories: [
       {
-        id: "category-1",
+        id: "category_id:1",
         libelle: "Épicé",
         hexa_color: "#FBEAEF",
         icon: "🌶️",
@@ -35,7 +35,7 @@ export const productList: Product[] = [
     comment: `Un sauté de porc épicé avec poivrons colorés, edamames et riz pour pimenter votre journée. Rassurez-vous, aucun porc épic n'a été blessé dans sa préparation !`,
   },
   {
-    id: "product-2",
+    id: "product_id:2",
     name: "Goodwich au pesto verde",
     price: 7.5,
     preparation: "10 min",
@@ -43,17 +43,17 @@ export const productList: Product[] = [
     kilocalories: "150 kcal",
     allergens: [
       {
-        id: "allergen-1",
+        id: "allergen_id:1",
         libelle: "Gluten",
       },
     ],
     nutriscore: "B",
-    restaurant_id: "restaurant-1",
+    restaurant_id: "restaurant_id:1",
     type: ProductType.PLATS,
     image: "/images/tmp/wich.png",
     categories: [
       {
-        id: "category-2",
+        id: "category_id:2",
         libelle: "Frais",
         hexa_color: "#EAFBF5",
         icon: "🥗",
@@ -71,7 +71,7 @@ export const productList: Product[] = [
     kilocalories: "",
     allergens: [
       {
-        id: "allergen-1",
+        id: "allergen_id:1",
         libelle: "Gluten",
       },
     ],
@@ -188,7 +188,7 @@ export const extendedProductList: ExtendedProduct[] = [
 
 export const restaurantList: Restaurant[] = [
   {
-    id: "restaurant-1",
+    id: "restaurant_id:1",
     name: "Rouen Gros Horloge",
     address: "1 Rue du Gros Horloge, 76000 Rouen",
     locationList: [49.440459, 1.094853],
@@ -199,7 +199,7 @@ export const restaurantList: Restaurant[] = [
     updatedat: "Tue Aug 29 2023 07:28:41 GMT+0000 (Coordinated Universal Time)",
   },
   {
-    id: "restaurant-2",
+    id: "restaurant_id:2",
     name: "Rouen Pierre Corneille",
     address: "76 Rue Pierre Corneille, 76000 Rouen",
     locationList: [49.442459, 1.094853],
@@ -325,13 +325,13 @@ export const orderList: Order[] = [
     },
     status: Status.FULFILLED,
     restaurant_id: "restaurant_id:2",
-    created_at: new Date("2000-01-01T12:00:00.000Z"),
-    updated_at: new Date("2000-01-01T12:00:00.000Z"),
+    created_at: new Date("2023-11-17T12:00:00.000Z"),
+    updated_at: new Date("2023-11-17T12:00:00.000Z"),
   },
 ];
 
 export const user: User = {
-  id: 5,
+  id: "user_id:1",
   firstName: "John",
   lastName: "Doe",
   email: "user@mail.com",
@@ -378,33 +378,33 @@ export const ingredientList: Ingredient[] = [
 ];
 
 export const allergensList: Allergen[] = [
-  { id: "allergen-1", libelle: "Gluten" },
-  { id: "allergen-2", libelle: "Lactose" },
-  { id: "allergen-3", libelle: "Oeuf" },
-  { id: "allergen-4", libelle: "Arachide" },
+  { id: "allergen_id:1", libelle: "Gluten" },
+  { id: "allergen_id:2", libelle: "Lactose" },
+  { id: "allergen_id:3", libelle: "Oeuf" },
+  { id: "allergen_id:4", libelle: "Arachide" },
 ];
 
 export const categoriesList: Category[] = [
   {
-    id: "category-1",
+    id: "category_id:1",
     libelle: "Épicé",
     hexa_color: "#FBEAEF",
     icon: "🌶️",
   },
   {
-    id: "category-2",
+    id: "category_id:2",
     libelle: "Frais",
     hexa_color: "#EAFBF5",
     icon: "🥗",
   },
   {
-    id: "category-3",
+    id: "category_id:3",
     libelle: "Sucré",
     hexa_color: "#FBEAEF",
     icon: "🍩",
   },
   {
-    id: "category-4",
+    id: "category_id:4",
     libelle: "Salé",
     hexa_color: "#EAFBF5",
     icon: "🍟",

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["localhost", "images.unsplash.com"],
+    remotePatterns: [{ hostname: "images.unsplash.com" }, { hostname: "localhost" }],
   },
   headers: () => [
     // HSTS
