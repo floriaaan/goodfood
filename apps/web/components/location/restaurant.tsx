@@ -29,7 +29,7 @@ export const LocationRestaurant = ({
     >
       <div className="inline-flex w-full items-start justify-between">
         <div className="inline-flex gap-x-2 md:items-center">
-          <Logo className="h-4 w-fit sm:h-6" />
+          <Logo className="h-4 w-min sm:h-6" />
           <span className="text-sm font-bold">{restaurant.name}</span>
         </div>
         {!isNaN(lat) && !isNaN(lng) ? (

@@ -19,15 +19,19 @@ export const useCatalogFilters = () => useContext(CatalogContext);
 
 export const Catalog = () => {
   const { selectedRestaurantId } = useBasket();
-  const { data: productList } = useQuery<Product[]>({
-    queryKey: [`${selectedRestaurantId}/products`],
-    queryFn: async () => await (await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`)).json(),
+  const { data: products } = useQuery<Product[]>({
+    queryKey: ["product", selectedRestaurantId],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, undefined);
+      const body = await res.json();
+      return body.productsList;
+    },
     enabled: !!selectedRestaurantId,
     placeholderData: [],
   });
 
   const [type, setType] = useState(ProductType.PLATS);
-  const list = productList?.filter((p) => p.type === type) || [];
+  const list = products?.filter((p) => p.type === type) || [];
 
   return (
     <CatalogContext.Provider value={{ type, setType }}>

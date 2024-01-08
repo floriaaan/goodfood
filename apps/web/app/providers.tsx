@@ -3,6 +3,7 @@ import { AuthProvider } from "@/hooks";
 import { LocationProvider } from "@/hooks/useLocation";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const RootProviders = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(
@@ -24,6 +25,7 @@ export const RootProviders = ({ children }: { children: React.ReactNode }) => {
         <LocationProvider>
           <AuthProvider>{children}</AuthProvider>
         </LocationProvider>
+        <ReactQueryDevtools initialIsOpen={false} position="right" />
       </QueryClientProvider>
     </>
   );
