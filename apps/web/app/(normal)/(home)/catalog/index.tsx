@@ -3,10 +3,7 @@
 import { CatalogFilters } from "@/app/(normal)/(home)/catalog/filters";
 import { ProductCatalogListItem } from "@/app/(normal)/(home)/catalog/product";
 import { useBasket } from "@/hooks";
-import { fetchAPI } from "@/lib/fetchAPI";
-// import { productList } from "@/constants/data";
-import { Product, ProductType } from "@/types/product";
-import { useQuery } from "@tanstack/react-query";
+import { ProductType } from "@/types/product";
 import { createContext, useContext, useState } from "react";
 import { MdClose } from "react-icons/md";
 
@@ -18,17 +15,7 @@ const CatalogContext = createContext({
 export const useCatalogFilters = () => useContext(CatalogContext);
 
 export const Catalog = () => {
-  const { selectedRestaurantId } = useBasket();
-  const { data: products } = useQuery<Product[]>({
-    queryKey: ["product", selectedRestaurantId],
-    queryFn: async () => {
-      const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, undefined);
-      const body = await res.json();
-      return body.productsList;
-    },
-    enabled: !!selectedRestaurantId,
-    placeholderData: [],
-  });
+  const { products } = useBasket();
 
   const [type, setType] = useState(ProductType.PLATS);
   const list = products?.filter((p) => p.type === type) || [];

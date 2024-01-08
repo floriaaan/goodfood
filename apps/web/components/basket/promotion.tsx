@@ -39,13 +39,14 @@ export const BasketPromotion = () => {
           }}
         >
           <Input
-            className="grow"
+            className="grow font-mono text-xs"
             placeholder="Code de promotion / parrainage"
             aria-label="Code de promotion / parrainage"
+            wrapperClassName="text-sm"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          <Button className="h-14 w-14 shrink-0 border-2 border-gray-300 bg-white ring-black">
+          <Button className="h-14 w-14 shrink-0 border-2 border-gray-300 bg-white text-black ring-black hover:text-white">
             <MdCheck className="h-6 w-6" />
           </Button>
         </form>

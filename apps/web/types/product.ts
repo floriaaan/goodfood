@@ -11,8 +11,8 @@ export type Product = {
   type: ProductType;
 
   restaurant_id: string;
-  categories: Category[];
-  allergens: Allergen[];
+  categoriesList: Category[];
+  allergensList: Allergen[];
 };
 
 export enum ProductType {
@@ -41,7 +41,7 @@ export type Allergen = {
 export type Category = {
   id: string;
   libelle: string;
-  hexa_color: string;
+  hexaColor: string;
   icon: string;
 };
 
