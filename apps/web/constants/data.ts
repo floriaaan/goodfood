@@ -1,7 +1,7 @@
 import { Status } from "@/types/global";
 import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
-import { ExtendedProduct,Allergen, Category, Product, ProductType } from "@/types/product";
+import { ExtendedProduct, Allergen, Category, Product, ProductType } from "@/types/product";
 import { Restaurant } from "@/types/restaurant";
 import { Ingredient } from "@/types/stock";
 import { User } from "@/types/user";
@@ -14,7 +14,7 @@ export const productList: Product[] = [
     preparation: "15 min",
     weight: "420g",
     kilocalories: "182 kcal",
-    allergens: [
+    allergensList: [
       {
         id: "allergen_id:1",
         libelle: "Gluten",
@@ -24,11 +24,11 @@ export const productList: Product[] = [
     restaurant_id: "restaurant_id:1",
     type: ProductType.PLATS,
     image: "/images/tmp/pork.png",
-    categories: [
+    categoriesList: [
       {
         id: "category_id:1",
         libelle: "Épicé",
-        hexa_color: "#FBEAEF",
+        hexaColor: "#FBEAEF",
         icon: "🌶️",
       },
     ],
@@ -41,7 +41,7 @@ export const productList: Product[] = [
     preparation: "10 min",
     weight: "300g",
     kilocalories: "150 kcal",
-    allergens: [
+    allergensList: [
       {
         id: "allergen_id:1",
         libelle: "Gluten",
@@ -51,11 +51,11 @@ export const productList: Product[] = [
     restaurant_id: "restaurant_id:1",
     type: ProductType.PLATS,
     image: "/images/tmp/wich.png",
-    categories: [
+    categoriesList: [
       {
         id: "category_id:2",
         libelle: "Frais",
-        hexa_color: "#EAFBF5",
+        hexaColor: "#EAFBF5",
         icon: "🥗",
       },
     ],
@@ -69,7 +69,7 @@ export const productList: Product[] = [
     preparation: "",
     weight: "",
     kilocalories: "",
-    allergens: [
+    allergensList: [
       {
         id: "allergen_id:1",
         libelle: "Gluten",
@@ -79,7 +79,7 @@ export const productList: Product[] = [
     restaurant_id: "",
     type: ProductType.SNACKS,
     image: "/images/tmp/bread.jpeg",
-    categories: [],
+    categoriesList: [],
     comment: `La preuve que les bonnes choses viennent en petites bouchées.`,
   },
   {
@@ -89,12 +89,12 @@ export const productList: Product[] = [
     preparation: "N/A",
     weight: "N/A",
     kilocalories: "N/A",
-    allergens: [],
+    allergensList: [],
     nutriscore: -1,
     restaurant_id: "",
     type: ProductType.SNACKS,
     image: "/images/tmp/utensils.jpeg",
-    categories: [],
+    categoriesList: [],
     comment: `Ces couverts en bois : l'option la plus branchée.`,
   },
 ];
@@ -107,7 +107,7 @@ export const extendedProductList: ExtendedProduct[] = [
     preparation: "15 min",
     weight: "420g",
     kilocalories: "182 kcal",
-    allergens: [
+    allergensList: [
       {
         id: "allergen-1",
         libelle: "Gluten",
@@ -117,11 +117,11 @@ export const extendedProductList: ExtendedProduct[] = [
     restaurant_id: "restaurant-1",
     type: ProductType.PLATS,
     image: "/images/tmp/pork.png",
-    categories: [
+    categoriesList: [
       {
         id: "category-1",
         libelle: "Épicé",
-        hexa_color: "#FBEAEF",
+        hexaColor: "#FBEAEF",
         icon: "🌶️",
       },
     ],
@@ -137,7 +137,7 @@ export const extendedProductList: ExtendedProduct[] = [
     preparation: "10 min",
     weight: "300g",
     kilocalories: "150 kcal",
-    allergens: [
+    allergensList: [
       {
         id: "allergen-1",
         libelle: "Gluten",
@@ -147,11 +147,11 @@ export const extendedProductList: ExtendedProduct[] = [
     restaurant_id: "restaurant-1",
     type: ProductType.PLATS,
     image: "/images/tmp/wich.png",
-    categories: [
+    categoriesList: [
       {
         id: "category-2",
         libelle: "Frais",
-        hexa_color: "#EAFBF5",
+        hexaColor: "#EAFBF5",
         icon: "🥗",
       },
     ],
@@ -168,7 +168,7 @@ export const extendedProductList: ExtendedProduct[] = [
     preparation: "",
     weight: "",
     kilocalories: "",
-    allergens: [
+    allergensList: [
       {
         id: "allergen-1",
         libelle: "Gluten",
@@ -178,7 +178,7 @@ export const extendedProductList: ExtendedProduct[] = [
     restaurant_id: "",
     type: ProductType.SNACKS,
     image: "/images/tmp/bread.jpeg",
-    categories: [],
+    categoriesList: [],
     comment: `La preuve que les bonnes choses viennent en petites bouchées.`,
     stock_quantity: "74",
     additional_information: undefined,
@@ -388,25 +388,25 @@ export const categoriesList: Category[] = [
   {
     id: "category_id:1",
     libelle: "Épicé",
-    hexa_color: "#FBEAEF",
+    hexaColor: "#FBEAEF",
     icon: "🌶️",
   },
   {
     id: "category_id:2",
     libelle: "Frais",
-    hexa_color: "#EAFBF5",
+    hexaColor: "#EAFBF5",
     icon: "🥗",
   },
   {
     id: "category_id:3",
     libelle: "Sucré",
-    hexa_color: "#FBEAEF",
+    hexaColor: "#FBEAEF",
     icon: "🍩",
   },
   {
     id: "category_id:4",
     libelle: "Salé",
-    hexa_color: "#EAFBF5",
+    hexaColor: "#EAFBF5",
     icon: "🍟",
   },
 ];

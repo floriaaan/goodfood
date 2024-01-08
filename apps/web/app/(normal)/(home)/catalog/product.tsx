@@ -20,11 +20,11 @@ export const ProductCatalogListItem = (product: Product) => {
               className="h-full w-full shrink-0 object-cover"
             />
             <div className="absolute bottom-2 left-2 inline-flex items-center">
-              {product.categories.map((category, i) => (
+              {product.categoriesList.map((category, i) => (
                 <span
                   key={`${category.id}-${i}`}
                   className="inline-flex items-center gap-x-2 px-2 py-1 text-xs text-black"
-                  style={{ backgroundColor: category.hexa_color }}
+                  style={{ backgroundColor: category.hexaColor }}
                 >
                   <span>{category.icon}</span>
                   {category.libelle}

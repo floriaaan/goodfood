@@ -11,6 +11,9 @@ import { ToastAction, ToastDescription, ToastTitle } from "@/components/ui/toast
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toPrice } from "@/lib/product/toPrice";
+import { useQuery } from "@tanstack/react-query";
+import { Product } from "@/types/product";
+import { fetchAPI } from "@/lib/fetchAPI";
 type Basket = Record<string, number>;
 
 type Address = Omit<MainAddress, "id" | "lat" | "lng">;
@@ -22,6 +25,7 @@ type Taxes = {
 
 type BasketContextData = {
   // PRODUCT & BASKET
+  products: Product[];
   basket: Basket;
   total: string;
 
@@ -82,6 +86,21 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const { push } = useRouter();
 
+  const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
+  const selectRestaurant = (id: string) => setSelectedRestaurantId(id);
+
+  // products catalog
+  const { data: products } = useQuery<Product[]>({
+    queryKey: ["product", "restaurant", selectedRestaurantId],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, undefined);
+      const body = await res.json();
+      return body.productsList;
+    },
+    enabled: !!selectedRestaurantId,
+    placeholderData: [],
+  });
+
   const total = useMemo(() => {
     return toPrice(
       Object.entries(basket as Basket).reduce((acc, [id, quantity]) => {
@@ -95,7 +114,8 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [basket, taxes]);
 
   const addProduct = (id: string, quantity: number) => {
-    const p = productList.find((p) => p.id === id);
+    if (!products || products.length === 0) return;
+    const p = products.find((p) => p.id === id);
     if (!p) return;
 
     //todo: check if product is available (stock)
@@ -153,9 +173,6 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     push("/checkout");
   };
 
-  const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
-  const selectRestaurant = (id: string) => setSelectedRestaurantId(id);
-
   const [promotion, setPromotion] = useState<any>(null);
 
   const checkPromotionCode = (code: string) => {
@@ -188,6 +205,8 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         addProduct,
         removeProduct,
         checkout,
+
+        products: products ?? [],
 
         selectedRestaurantId: selectedRestaurantId as string | null,
         selectRestaurant,

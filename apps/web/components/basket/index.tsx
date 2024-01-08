@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { GradientHeader } from "@/components/ui/header/gradient";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { productList } from "@/constants/data";
 import { useBasket } from "@/hooks";
 import { Product } from "@/types/product";
 import dynamic from "next/dynamic";
@@ -17,9 +16,9 @@ import { Suspense } from "react";
 import { MdArrowForward, MdOutlineShoppingBasket } from "react-icons/md";
 
 const BasketWrapperComponent = ({ showHeader = true }) => {
-  const { basket, total, checkout, isBasketEmpty, isRestaurantSelected, isAuthenticated } = useBasket();
+  const { basket, total, checkout, isBasketEmpty, isRestaurantSelected, isAuthenticated, products } = useBasket();
   const basketProductList = Object.keys(basket)
-    .map((id) => productList.find((product) => product.id === id) as Product)
+    .map((id) => products.find((product) => product.id === id) as Product)
     .filter(Boolean);
 
   return (

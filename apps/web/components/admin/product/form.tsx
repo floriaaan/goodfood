@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
   FormTextarea,
-} from "@/components/ui/form/form";
+} from "@/components/ui/form";
 import {
   AlertDialog,
   AlertDialogAction,
