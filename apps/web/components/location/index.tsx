@@ -16,7 +16,7 @@ export const LocationComponent = ({ trigger }: { className?: string; trigger: Re
       <SheetTrigger>{trigger}</SheetTrigger>
       <SheetContent
         side="bottom"
-        className="mx-auto flex min-h-[12rem] w-full max-w-xl flex-col gap-y-4 px-3 pb-8 pt-4 2xl:max-w-2xl"
+        className="mx-auto flex min-h-[12rem] w-full max-w-2xl flex-col gap-y-4 px-3 pb-8 pt-4 2xl:max-w-3xl"
       >
         <LocationSheetContent closeModal={() => setIsModalOpen(false)} />
       </SheetContent>

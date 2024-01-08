@@ -4,7 +4,6 @@ import { LocationRestaurant } from "@/components/location/restaurant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SpinnerLoader } from "@/components/ui/loader/spinner";
-import { restaurantList } from "@/constants/data";
 import { useBasket, useLocation } from "@/hooks";
 import { searchAddress } from "@/lib/fetchers/externals/api-gouv";
 import { Suggestion } from "@/types/externals/api-gouv";
@@ -12,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { MdLocationOn } from "react-icons/md";
 
 export const LocationSheetContent = ({ closeModal = () => {} }) => {
-  const { lat, lng, refreshLocation } = useLocation();
+  const { lat, lng, refreshLocation, restaurants } = useLocation();
 
   /// ADDRESS RELATED  ----------------------------
   const { address, setAddress } = useBasket();
@@ -73,8 +72,7 @@ export const LocationSheetContent = ({ closeModal = () => {} }) => {
   };
 
   /// RESTAURANT RELATED  -------------------------
-  // todo: might need to store restaurants in context (or a store like redux) to avoid re-fetching and have data
-  const [restaurants, setRestaurants] = useState(restaurantList);
+  
 
   const [search, setSearch] = useState("");
 
