@@ -18,9 +18,11 @@ import { paymentRoutes } from "@gateway/controller/payment/payment.controller";
 import { mainAddressRoutes } from "@gateway/controller/user/mainAddress.controller";
 import { notificationRoutes } from "@gateway/controller/notification/notification.controller";
 import bodyParser from "body-parser";
+import cors from 'cors';
 import express from "express";
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
 const PORT = process.env.GATEWAY_PORT || 50000;
