@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FormInput } from "@/components/ui/form/form";
+import { FormInput } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
