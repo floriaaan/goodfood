@@ -13,3 +13,7 @@ get {
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQxNDk5MjksImlzcyI6ImdvLWdycGMtYXV0aC1zdmMiLCJJZCI6MiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.hk3p30gxjhe4eUc3BrxBsBwVCAAoMHBLo4by5mChaKk
 }
+
+script:pre-request {
+  req.setHeader("authorization", "Bearer " + bru.getEnvVar("token"))
+}

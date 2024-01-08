@@ -7,18 +7,22 @@ meta {
 post {
   url: {{baseUrl}}/api/restaurant/by-location
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
     "locationList": [
-      "<number>",
-      "<number>"
+      "40",
+      "20"
     ]
   }
 }
