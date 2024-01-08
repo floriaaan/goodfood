@@ -15,23 +15,16 @@ export const fetchAPI = async (url: string, token: Session["token"] = "", option
   // Throw an error if the API URL is not defined
   if (!API_URL) throw new Error("API URL is not provided");
 
-  // Throw an error if the user is not defined
-  if (!token) throw new Error("Token is not provided");
+  // // Throw an error if the user is not defined
+  // if (!token) throw new Error("Token is not provided");
 
   // Send the request to the specified URL with the provided options and user credentials
   return fetch(API_URL + url, {
     headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token !== "" ? { Authorization: `Bearer ${token}` } : {}),
       "Content-Type": "application/json",
       ...options?.headers,
     },
     ...options,
-  })
-    .then((res) => {
-      // If the response is successful, resolve the promise with the response
-      if (res.ok) return Promise.resolve(res);
-      // Otherwise, reject the promise with the response
-      else return Promise.reject(res);
-    })
-    .catch(Promise.reject);
+  });
 };
