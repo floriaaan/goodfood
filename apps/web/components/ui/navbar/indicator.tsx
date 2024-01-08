@@ -3,9 +3,10 @@
 import { orderList } from "@/constants/data";
 import { useAuth, useBasket } from "@/hooks";
 import { Status } from "@/types/global";
+import dynamic from "next/dynamic";
 import { MdReceipt, MdShoppingBasket } from "react-icons/md";
 
-export const BasketIndicator = () => {
+const BasketIndicator = () => {
   const { basket } = useBasket();
   const count =
     Object.values(basket)
@@ -15,17 +16,17 @@ export const BasketIndicator = () => {
   if (count === 0) return null;
 
   return (
-    <div
+    <span
       suppressHydrationWarning
       className="absolute right-0 top-0 z-10  inline-flex h-4 w-8 items-center justify-center gap-x-1 bg-gf-orange"
     >
       {count.toString().length < 3 && <MdShoppingBasket className="h-3 w-3 shrink-0" />}
       {count}
-    </div>
+    </span>
   );
 };
 
-export const OrderIndicator = () => {
+const OrderIndicator = () => {
   const { user } = useAuth();
   if (!user) return null;
   const orders = orderList.filter((order) => order.user.id === user.id && order.status === Status.PENDING);
@@ -39,13 +40,17 @@ export const OrderIndicator = () => {
   );
 };
 
-export const Indicator = () => {
+const IndicatorComponent = () => {
   return (
-    <div className="absolute -right-2 -top-2 text-[0.6rem] font-extrabold text-white">
-      <div className="relative">
+    <span className="absolute -right-2 -top-2 text-[0.6rem] font-extrabold text-white">
+      <span className="relative">
         <BasketIndicator />
         <OrderIndicator />
-      </div>
-    </div>
+      </span>
+    </span>
   );
 };
+
+export const Indicator = dynamic(() => Promise.resolve(IndicatorComponent), {
+  ssr: false,
+});

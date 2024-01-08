@@ -108,5 +108,5 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
 
 export const BasketWrapper = dynamic(() => Promise.resolve(BasketWrapperComponent), {
   ssr: false,
-  loading: LargeComponentLoader,
+  loading: () => <LargeComponentLoader />,
 });
