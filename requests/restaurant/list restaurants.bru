@@ -1,11 +1,11 @@
 meta {
-  name: delete restaurant by id
+  name: list restaurants
   type: http
-  seq: 3
+  seq: 4
 }
 
-delete {
-  url: {{baseUrl}}/api/restaurant/:id
+get {
+  url: {{baseUrl}}/api/restaurant
   body: none
   auth: bearer
 }
