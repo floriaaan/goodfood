@@ -1,0 +1,39 @@
+meta {
+  name: create restaurant
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/restaurant
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "petite bouffe",
+    "description": "restau",
+    "locationList": [
+      "40",
+      "24"
+    ],
+    "address": "3 rue des petites eaux de robec",
+    "openingHoursList": [
+      "12H",
+      "23H"
+    ],
+    "phone": "0642424242",
+    "userIds": [
+      "1"
+    ]
+  }
+}

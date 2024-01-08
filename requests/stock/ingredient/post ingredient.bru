@@ -16,7 +16,11 @@ headers {
 
 body:json {
   {
-    "name": "<string>",
-    "description": "<string>"
+    "name": "tomate",
+    "description": "un légume ou un fruit ?"
   }
+}
+
+script:pre-request {
+  req.setHeader("authorization", "Bearer " + bru.getEnvVar("token"))
 }
