@@ -3,7 +3,6 @@
 import { AmountStat } from "@/components/admin/stats/amountStat";
 import { ProductCard } from "@/components/admin/stats/productCard";
 import { extendedProductList, restaurantList, stats } from "@/constants/data";
-import {} from "@/constants/data";
 import { useAdmin } from "@/hooks/useAdmin";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 

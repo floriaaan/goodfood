@@ -1,8 +1,8 @@
 import { Logo } from "@/components/ui/icon/logo";
-import { restaurantList } from "@/constants/data";
 import { useBasket } from "@/hooks/useBasket";
 import { useLocation } from "@/hooks/useLocation";
 import { cn } from "@/lib/utils";
+import { Restaurant } from "@/types/restaurant";
 import { getDistance } from "geolib";
 import { MdLocationOff, MdLocationOn } from "react-icons/md";
 
@@ -11,7 +11,7 @@ export const LocationRestaurant = ({
   ...restaurant
 }: {
   onClick: () => void;
-} & (typeof restaurantList)[0]) => {
+} & Restaurant) => {
   const { selectedRestaurantId, selectRestaurant } = useBasket();
   const { lat, lng } = useLocation();
 
