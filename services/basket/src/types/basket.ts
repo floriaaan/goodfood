@@ -1,20 +1,32 @@
-export type ProductRequest = {
-    user_id: number;
-    product_id: string;
-    restaurant_id: string;
+export type BasketItem = {
+  id: string;
+  quantity: number;
 };
 
-export type UserId = {
-    id: number;
-};
-// todo: change to product minimum ({count: number, id: string, price: number}}})
 export type Basket = {
-    user_id: number;
-    products_ids: string[];
-    restaurant_id: string;
+  restaurant_id: string;
+  products: BasketItem[];
 };
 
-export type RestaurantRequest = {
-    user_id: number;
-    restaurant_id: string;
+export type UserIdRequest = {
+  user_id: string;
+};
+
+export type AddProductRequest = {
+  user_id: string;
+  product_id: string;
+  quantity: number;
+
+  restaurant_id?: string;
+};
+
+export type RemoveProductRequest = {
+  user_id: string;
+  product_id: string;
+  quantity: number;
+};
+
+export type UpdateRestaurantRequest = {
+  user_id: string;
+  restaurant_id: string;
 };
