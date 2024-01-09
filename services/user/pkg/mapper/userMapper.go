@@ -1,25 +1,22 @@
 package mapper
 
 import (
+	"github.com/gofrs/uuid"
 	"goodfood-user/pkg/models"
-	"goodfood-user/pkg/utils"
 	pb "goodfood-user/proto"
 )
 
 func ToProtoUsers(userList []*models.User) []*pb.User {
 	var users []*pb.User
 	for _, u := range userList {
-		utils.GetLogger().Infof("ToProtoUsers", u.Email)
-
 		users = append(users, ToProtoUser(u))
 	}
-
 	return users
 }
 
 func ToProtoUser(user *models.User) *pb.User {
 	return &pb.User{
-		Id:          user.Id,
+		Id:          user.Id.String(),
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,
 		Email:       user.Email,
@@ -31,7 +28,7 @@ func ToProtoUser(user *models.User) *pb.User {
 
 func ToProtoMainAddress(address models.MainAddress) *pb.MainAddress {
 	return &pb.MainAddress{
-		Id:      address.Id,
+		Id:      address.Id.String(),
 		Street:  address.Street,
 		ZipCode: address.ZipCode,
 		Country: address.Country,
@@ -42,7 +39,7 @@ func ToProtoMainAddress(address models.MainAddress) *pb.MainAddress {
 
 func ToProtoRole(role models.Role) *pb.Role {
 	return &pb.Role{
-		Id:    role.Id,
+		Id:    role.Id.String(),
 		Label: role.Label,
 		Code:  role.Code,
 	}
@@ -50,12 +47,12 @@ func ToProtoRole(role models.Role) *pb.Role {
 
 func UpdateInputToModelUser(user *pb.User) *models.User {
 	return &models.User{
-		Id:        user.Id,
+		Id:        uuid.FromStringOrNil(user.Id),
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
 		Email:     user.Email,
 		Phone:     user.Phone,
-		RoleId:    user.RoleId,
+		RoleId:    uuid.FromStringOrNil(user.RoleId),
 	}
 }
 
@@ -81,7 +78,7 @@ func InputToModelMainAddress(address *pb.MainAddressInput) *models.MainAddress {
 
 func UpdateInputToModelMainAddress(address *pb.MainAddress) *models.MainAddress {
 	return &models.MainAddress{
-		Id:      address.Id,
+		Id:      uuid.FromStringOrNil(address.Id),
 		Street:  address.Street,
 		ZipCode: address.ZipCode,
 		Country: address.Country,

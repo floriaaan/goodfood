@@ -10,7 +10,7 @@ mainAddressRoutes.get("/api/user/main-address/:id", async (req: Request, res: Re
   /*  #swagger.parameters['id'] = {
         in: 'path',
         required: true,
-        type: 'integer'
+        type: 'string'
       }
       #swagger.parameters['authorization'] = {
         in: 'header',
@@ -29,7 +29,7 @@ mainAddressRoutes.get("/api/user/main-address/:id", async (req: Request, res: Re
   // ----------------------------
 
   const { id } = req.params;
-  mainAddressServiceClient.getMainAddress(new MainAddressId().setId(Number(id)), (error, response) => {
+  mainAddressServiceClient.getMainAddress(new MainAddressId().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
@@ -71,7 +71,7 @@ mainAddressRoutes.put("/api/user/main-address/:id", async (req: Request, res: Re
   const { id } = req.params;
   const { country, zipCode, street, lat, lng } = req.body;
   const address = new MainAddress()
-    .setId(Number(id))
+    .setId(id)
     .setCountry(country)
     .setZipcode(zipCode)
     .setStreet(street)
