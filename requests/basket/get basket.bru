@@ -7,5 +7,9 @@ meta {
 get {
   url: {{baseUrl}}/api/basket/
   body: none
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
 }
