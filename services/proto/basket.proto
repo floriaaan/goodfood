@@ -9,6 +9,7 @@ service BasketService {
   rpc RemoveProduct (RemoveProductRequest) returns (Basket);
   rpc Reset (UserIdRequest) returns (Basket);
   rpc UpdateRestaurant (UpdateRestaurantRequest) returns (Basket);
+  rpc SaveBasket (BasketRequest) returns (Basket);
 }
 
 message BasketItem {
@@ -44,4 +45,7 @@ message UpdateRestaurantRequest {
   string restaurant_id = 2;
 }
 
-
+message BasketRequest {
+  string user_id = 1;
+  Basket basket = 2;
+}
