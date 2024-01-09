@@ -30,3 +30,8 @@ export type UpdateRestaurantRequest = {
   user_id: string;
   restaurant_id: string;
 };
+
+export type BasketRequest = {
+  user_id: string;
+  basket: Basket;
+};
