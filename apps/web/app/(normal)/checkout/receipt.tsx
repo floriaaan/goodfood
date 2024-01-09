@@ -1,11 +1,13 @@
-import { productList, restaurantList } from "@/constants/data";
+import { useBasket, useLocation } from "@/hooks";
 import { toPrice } from "@/lib/product/toPrice";
 import { Order } from "@/types/order";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
 
 export const CheckoutReceipt = (order: Order) => {
-  const restaurant = restaurantList.find((r) => r.id === order.restaurant_id);
+  const { products } = useBasket();
+  const { restaurants } = useLocation();
+  const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
   if (!restaurant) return null;
 
   const basket = order.basket_snapshot.json ?? JSON.parse(order.basket_snapshot.string);
@@ -34,7 +36,7 @@ export const CheckoutReceipt = (order: Order) => {
         </div>
         <div className="flex grow flex-col overflow-y-auto">
           {Object.entries(basket).map(([key, value]) => {
-            const product = productList.find((p) => p.id === key);
+            const product = products.find((p) => p.id === key);
             const { count, price } = value as { count: number; price: number };
             if (!product || !count || !price) return null;
 

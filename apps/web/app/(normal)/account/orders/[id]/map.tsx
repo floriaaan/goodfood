@@ -1,18 +1,19 @@
 "use client";
-import { restaurantList } from "@/constants/data";
 import { Order } from "@/types/order";
 import { useEffect, useState } from "react";
 import { Map, OrderPin, Marker, UserPin, RestaurantPin, Bow } from "@/components/map";
 import { searchAddress } from "@/lib/fetchers/externals/api-gouv";
 import { DeliveryType } from "@/types/order";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import { useLocation } from "@/hooks";
 
 export const OrderStatusMap = (order: Order) => {
   const delivery_person = order.delivery.person;
   const { location: d_location } = delivery_person;
   const [d_lat, d_lng] = d_location;
 
-  const restaurant = restaurantList.find((r) => r.id === order.restaurant_id);
+  const { restaurants } = useLocation();
+  const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
   const { locationList: r_location } = restaurant || {};
   const [r_lat, r_lng] = r_location || [0, 0];
 

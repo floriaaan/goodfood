@@ -1,12 +1,11 @@
 "use client";
 import { BasketTaxes } from "@/components/basket/taxes";
 import { GradientHeader } from "@/components/ui/header/gradient";
-import { productList } from "@/constants/data";
 import { useBasket } from "@/hooks";
 import { MdDirectionsWalk, MdOutlineShoppingBasket, MdShoppingBasket } from "react-icons/md";
 
 export const CheckoutRecap = () => {
-  const { address, total, eta, basket } = useBasket();
+  const { address, total, eta, basket, products } = useBasket();
   const { street, city } = address || {};
 
   const address_displayed = `${street}, ${city}`;
@@ -37,7 +36,7 @@ export const CheckoutRecap = () => {
           <div className="mb-5 flex h-fit w-full flex-col justify-between gap-3">
             <div className="text-xl font-bold">Détails de la commande</div>
             {Object.entries(basket).map(([key, value]) => {
-              const product = productList.find((p) => p.id === key);
+              const product = products.find((p) => p.id === key);
               if (!product || !value) return null;
               return (
                 <div key={key} className="inline-flex justify-between">

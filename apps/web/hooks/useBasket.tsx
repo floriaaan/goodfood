@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useMemo, useState } from "react";
 
-import { productList } from "@/constants/data";
 import { createPersistedState } from "@/lib/use-persisted-state";
 import { MainAddress } from "@/types/user";
 import { useAuth } from "@/hooks";
@@ -31,7 +30,7 @@ type BasketContextData = {
 
   taxes: Taxes;
 
-  setBasket: (basket: Basket) => void;
+  // setBasket: (basket: Basket) => void;
   addProduct: (id: string, quantity: number) => void;
   removeProduct: (id: string, quantity: number) => void;
 
@@ -67,18 +66,28 @@ export const useBasket = () => {
   return context;
 };
 
-const useBasketState = createPersistedState("gf/basket");
+// const useBasketState = createPersistedState("gf/basket");
 const useRestaurantState = createPersistedState("gf/restaurant");
 const useAddressState = createPersistedState("gf/address");
 
 export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const { mainaddress } = user || {};
 
   //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
   const [eta, setEta] = useState<string>("12:15 - 12:35");
 
-  const [basket, setBasket] = useBasketState<Basket>({});
+  const { data: api_basket } = useQuery({
+    queryKey: ["basket"],
+    queryFn: async () => {
+      const res = await fetchAPI("/api/basket", session?.token);
+      const body = await res.json();
+      return body;
+    },
+    placeholderData: {},
+  });
+  const basket = api_basket ?? {};
+
   const [taxes, setTaxes] = useState<Taxes>({
     delivery: 0,
     service: 0.5,
@@ -87,10 +96,17 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { push } = useRouter();
 
   const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
-  const selectRestaurant = (id: string) => setSelectedRestaurantId(id);
+  const selectRestaurant = async (id: string) => {
+    const res = await fetchAPI("/api/basket/restaurant", session?.token, {
+      method: "PUT",
+      body: JSON.stringify({ restaurantId: id }),
+    });
+    if(!res.ok) return;
+    setSelectedRestaurantId(id);
+  };
 
   // products catalog
-  const { data: products } = useQuery<Product[]>({
+  const { data: api_products } = useQuery<Product[]>({
     queryKey: ["product", "restaurant", selectedRestaurantId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, undefined);
@@ -100,70 +116,77 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     enabled: !!selectedRestaurantId,
     placeholderData: [],
   });
-
+  const products = api_products ?? [];
   const total = useMemo(() => {
     return toPrice(
       Object.entries(basket as Basket).reduce((acc, [id, quantity]) => {
-        const product = productList.find((p) => p.id === id);
+        const product = products.find((p) => p.id === id);
         if (!product) return acc;
         return acc + product.price * quantity;
       }, 0) +
         taxes.delivery +
         taxes.service,
     );
-  }, [basket, taxes]);
+  }, [basket, taxes, products]);
 
-  const addProduct = (id: string, quantity: number) => {
+  const addProduct = async (id: string, quantity: number) => {
     if (!products || products.length === 0) return;
     const p = products.find((p) => p.id === id);
     if (!p) return;
 
     //todo: check if product is available (stock)
 
-    setBasket((basket) => {
-      const newBasket = { ...basket };
-      if (newBasket[id]) newBasket[id] += quantity;
-      else newBasket[id] = quantity;
-      return newBasket;
+    // setBasket((basket) => {
+    //   const newBasket = { ...basket };
+    //   if (newBasket[id]) newBasket[id] += quantity;
+    //   else newBasket[id] = quantity;
+    //   return newBasket;
+    // });
+
+    const res = await fetchAPI("/api/basket", session?.token, {
+      method: "POST",
+      body: JSON.stringify({ id, quantity }),
     });
-    toast({
-      className: "p-3",
-      children: (
-        <div className="inline-flex w-full items-end justify-between gap-2">
-          <div className="inline-flex shrink-0 gap-2">
-            <Image
-              src={p.image as string}
-              width={60}
-              height={60}
-              alt={p.name}
-              className="aspect-square h-[60px] w-[60px] shrink-0 object-cover"
-            />
-            <div className="flex w-full grow flex-col">
-              <ToastTitle>Produit ajouté au panier</ToastTitle>
-              <small className="text-sm font-bold">{p.name}</small>
-              <ToastDescription className="text-xs">
-                Vous pouvez modifier la quantité dans votre panier
-              </ToastDescription>
+
+    if (res.ok)
+      toast({
+        className: "p-3",
+        children: (
+          <div className="inline-flex w-full items-end justify-between gap-2">
+            <div className="inline-flex shrink-0 gap-2">
+              <Image
+                src={p.image as string}
+                width={60}
+                height={60}
+                alt={p.name}
+                className="aspect-square h-[60px] w-[60px] shrink-0 object-cover"
+              />
+              <div className="flex w-full grow flex-col">
+                <ToastTitle>Produit ajouté au panier</ToastTitle>
+                <small className="text-sm font-bold">{p.name}</small>
+                <ToastDescription className="text-xs">
+                  Vous pouvez modifier la quantité dans votre panier
+                </ToastDescription>
+              </div>
+            </div>
+
+            <div className="flex shrink-0 items-end justify-end">
+              <ToastAction altText="Undo" onClick={() => removeProduct(id, quantity)}>
+                Annuler
+              </ToastAction>
             </div>
           </div>
-
-          <div className="flex shrink-0 items-end justify-end">
-            <ToastAction altText="Undo" onClick={() => removeProduct(id, quantity)}>
-              Annuler
-            </ToastAction>
-          </div>
-        </div>
-      ),
-    });
+        ),
+      });
   };
 
   const removeProduct = (id: string, quantity: number) => {
-    setBasket((basket) => {
-      const newBasket = { ...basket };
-      if (newBasket[id] <= quantity || isNaN(newBasket[id]) || isNaN(quantity)) delete newBasket[id];
-      else newBasket[id] -= quantity;
-      return newBasket;
-    });
+    // setBasket((basket) => {
+    //   const newBasket = { ...basket };
+    //   if (newBasket[id] <= quantity || isNaN(newBasket[id]) || isNaN(quantity)) delete newBasket[id];
+    //   else newBasket[id] -= quantity;
+    //   return newBasket;
+    // });
   };
 
   const checkout = () => {
@@ -201,7 +224,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         basket: basket as Basket,
         total,
         taxes,
-        setBasket,
+        // setBasket,
         addProduct,
         removeProduct,
         checkout,

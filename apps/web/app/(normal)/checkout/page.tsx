@@ -14,18 +14,20 @@ import { loadStripe } from "@stripe/stripe-js";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
-import { orderList, restaurantList } from "@/constants/data";
+import { orderList } from "@/constants/data";
 
 import { TiLocationArrow } from "react-icons/ti";
 
 import { Player } from "@lottiefiles/react-lottie-player";
-import { useBasket } from "@/hooks";
+import { useBasket, useLocation } from "@/hooks";
 import Link from "next/link";
 import { HomeIcon } from "lucide-react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 export default function CheckoutPage() {
+  const { restaurants } = useLocation();
+
   const { isAuthenticated, isBasketEmpty, isRestaurantSelected } = useBasket();
 
   const [deliveryType, setDeliveryType] = useState(DeliveryType.DELIVERY);
@@ -84,7 +86,7 @@ export default function CheckoutPage() {
                     className="h-16 w-full"
                     onClick={() => {
                       // TODO: stripe
-                      setHasCreatedOrder(true);
+                      // setHasCreatedOrder(true);
                       setDelivery_isModalOpen(true);
                     }}
                   >
@@ -118,7 +120,7 @@ export default function CheckoutPage() {
                     className="h-16 w-full"
                     onClick={() => {
                       // TODO: create order
-                      setHasCreatedOrder(true);
+                      // setHasCreatedOrder(true);
                       setTakeaway_isModalOpen(true);
                     }}
                   >
@@ -129,7 +131,7 @@ export default function CheckoutPage() {
                     <DialogContent className="grid aspect-video h-auto max-w-4xl justify-center gap-2 md:grid-cols-2">
                       {order &&
                         (() => {
-                          const restaurant = restaurantList.find((r) => r.id === order.restaurant_id);
+                          const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
                           if (!restaurant) return null;
                           return (
                             <>
@@ -142,7 +144,7 @@ export default function CheckoutPage() {
                                 <div className="grow">
                                   <Player autoplay src={"/assets/lottie/checkout-preparation.json"} loop speed={1} />
                                 </div>
-                                <div className="flex w-full gap-y-1 flex-col">
+                                <div className="flex w-full flex-col gap-y-1">
                                   <Button variant={"ghost"} asChild>
                                     <Link href="/">
                                       <HomeIcon className="-mt-0.5 h-6 w-6 shrink-0" />

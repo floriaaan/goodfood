@@ -10,7 +10,11 @@ import { Session } from "@/types/session";
  *
  * @returns {Promise<Response>} - A promise that resolves with the response if the request is successful, or rejects with the response if the request fails
  */
-export const fetchAPI = async (url: string, token: Session["token"] = "", options?: RequestInit): Promise<Response> => {
+export const fetchAPI = async (
+  url: string,
+  token: Session["token"] | null | undefined = "",
+  options?: RequestInit,
+): Promise<Response> => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
   // Throw an error if the API URL is not defined
   if (!API_URL) throw new Error("API URL is not provided");

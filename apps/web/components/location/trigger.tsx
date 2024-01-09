@@ -1,12 +1,13 @@
 "use client";
 
 import { Logo } from "@/components/ui/icon/logo";
-import { restaurantList } from "@/constants/data";
+import { useLocation } from "@/hooks";
 import { useBasket } from "@/hooks/useBasket";
 import { cn } from "@/lib/utils";
 import { MdArrowForwardIos, MdOutlineLocationOn } from "react-icons/md";
 
 export const LocationFullTrigger = ({ className }: { className?: string }) => {
+  const { restaurants } = useLocation();
   const { selectedRestaurantId, address, eta } = useBasket();
   const { street, zipcode, city, country } = address || {};
 
@@ -37,7 +38,7 @@ export const LocationFullTrigger = ({ className }: { className?: string }) => {
             <>
               {/* todo: link to restaurant list store*/}
               <Logo className="h-4 w-fit" color="text-gray-400" />
-              {`${restaurantList.find(({ id }) => id === selectedRestaurantId)?.name} - ${eta}`}
+              {`${restaurants.find(({ id }) => id === selectedRestaurantId)?.name} - ${eta}`}
             </>
           ) : (
             "Choisir un restaurant"
