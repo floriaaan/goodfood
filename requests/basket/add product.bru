@@ -1,0 +1,27 @@
+meta {
+  name: add product
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/basket
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "productId": "product_id:1",
+    "restaurantId": "restaurant_id:1",
+    "quantity": 1
+  }
+}

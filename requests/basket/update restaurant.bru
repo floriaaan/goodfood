@@ -7,15 +7,19 @@ meta {
 put {
   url: {{baseUrl}}/api/basket/restaurant
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "restaurantId": "<string>"
+    "restaurantId": "restaurant_id:1"
   }
 }
