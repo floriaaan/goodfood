@@ -16,7 +16,17 @@ export const UpdateRestaurant = async (
       data: {
         name,
         openingHours,
-        address: { update: address },
+        address: {
+          update: {
+            lat: address.lat,
+            lng: address.lng,
+
+            street: address.street,
+            city: address.city,
+            zipcode: address.zipcode,
+            country: address.country,
+          },
+        },
         description,
         phone,
         userIds,

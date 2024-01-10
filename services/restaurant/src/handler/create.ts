@@ -18,7 +18,17 @@ export const CreateRestaurant = async (
       data: {
         name,
         openingHours,
-        address: { create: address },
+        address: {
+          create: {
+            lat: address.lat,
+            lng: address.lng,
+
+            street: address.street,
+            city: address.city,
+            zipcode: address.zipcode,
+            country: address.country,
+          },
+        },
         description,
         phone,
         userIds,

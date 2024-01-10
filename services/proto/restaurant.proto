@@ -21,7 +21,7 @@ message Restaurant {
 }
 
 message Address {
-  string id = 1;
+  optional string id = 1;
 
   float lat = 2;
   float lng = 3;
@@ -31,7 +31,7 @@ message Address {
   optional string zipcode = 6;
   optional string country = 7;
 
-  string restaurantId = 8;
+  optional string restaurantId = 8;
 }
 
 message RestaurantCreateInput{
