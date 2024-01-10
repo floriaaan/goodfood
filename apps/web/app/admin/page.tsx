@@ -19,8 +19,8 @@ export default function AdminHome() {
       <div className="h-96">
         <Map
           center={{
-            latitude: restaurantList[0].locationList[0] || 0,
-            longitude: restaurantList[0].locationList[1] || 0,
+            latitude: restaurantList[0].address.lat || 0,
+            longitude: restaurantList[0].address.lng || 0,
           }}
         >
           {[
@@ -32,7 +32,7 @@ export default function AdminHome() {
             </Marker>
           ))}
           {restaurantList.map((r) => (
-            <Marker key={r.id} latitude={r.locationList[0]} longitude={r.locationList[1]} anchor="bottom">
+            <Marker key={r.id} latitude={r.address.lat} longitude={r.address.lng} anchor="bottom">
               <RestaurantPin />
             </Marker>
           ))}

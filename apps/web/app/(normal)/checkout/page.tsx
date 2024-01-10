@@ -153,7 +153,7 @@ export default function CheckoutPage() {
                                   </Button>
                                   <Button asChild>
                                     <a
-                                      href={`https://www.google.com/maps?q=${restaurant.locationList[0]},${restaurant.locationList[1]}`}
+                                      href={`https://www.google.com/maps?q=${restaurant.address.lat},${restaurant.address.lng}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
