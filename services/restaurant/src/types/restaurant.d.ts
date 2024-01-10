@@ -26,7 +26,7 @@ export type Address = {
   zipcode?: string;
   country?: string;
 
-  restaurantId: string;
+  restaurantId?: string;
 };
 
 export type RestaurantCreateInput = Omit<
