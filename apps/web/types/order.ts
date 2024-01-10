@@ -1,6 +1,7 @@
 import { Status } from "@/types/global";
 import { Delivery } from "@/types/delivery";
 import { Payment } from "@/types/payment";
+import { Basket, BasketItem } from "@/types/basket";
 
 export type UserMinimum = {
   id: string;
@@ -8,12 +9,6 @@ export type UserMinimum = {
   last_name: string;
   email: string;
   phone: string;
-};
-
-export type Basket = {
-  string: string;
-  json?: string | object | any;
-  total: number;
 };
 
 export enum DeliveryType {
@@ -26,7 +21,11 @@ export type Order = {
   delivery_type: DeliveryType;
   restaurant_id: string;
   user: UserMinimum;
-  basket_snapshot: Basket;
+  basket_snapshot: {
+    string: string;
+    json?: string | object | any;
+    total: number;
+  };
   status: Status;
 
   payment_id: string;
@@ -37,4 +36,11 @@ export type Order = {
 
   created_at: Date | string;
   updated_at: Date | string;
+};
+
+export type BasketSnapshot = Omit<Basket, "products"> & {
+  products: (BasketItem & {
+    price: number;
+    name: string;
+  })[];
 };

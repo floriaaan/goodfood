@@ -1,6 +1,6 @@
 {
-  "extends": ["next", "prettier"],
-  "plugins": ["@typescript-eslint", "prettier", "plugin:@tanstack/eslint-plugin-query/recommended"],
+  "extends": ["next", "prettier", "plugin:@tanstack/eslint-plugin-query/recommended"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "root": true,
   "rules": {
     "no-console": "error",
@@ -11,7 +11,8 @@
       {
         "endOfLine": "auto"
       }
-    ]
+    ],
+    "@tanstack/query/exhaustive-deps": "warn"
   },
   "globals": {
     "JSX": "readonly"
