@@ -348,7 +348,7 @@ export const user: User = {
   lastName: "Doe",
   email: "user@mail.com",
   phone: "0642424242",
-  mainaddressid: 0,
+  mainaddressid: "mainaddress_id:1",
   mainaddress: {
     id: 5,
     street: "7 rue de la paix",
@@ -443,19 +443,19 @@ export const stats = [
     date: new Date(),
   },
   {
-    name: "Dépences de la journée",
+    name: "Dépenses de la journée",
     value: "4686",
     changeValue: "25",
     date: new Date(),
   },
   {
-    name: "Dépences de la semaine",
+    name: "Dépenses de la semaine",
     value: "15656",
     changeValue: "-6",
     date: new Date(),
   },
   {
-    name: "Dépences du mois",
+    name: "Dépenses du mois",
     value: "64658",
     changeValue: "15",
     date: new Date(),
