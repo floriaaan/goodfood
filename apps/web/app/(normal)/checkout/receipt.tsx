@@ -34,7 +34,7 @@ export const CheckoutReceipt = (order: Order) => {
           <span className="w-12 text-right">AMT</span>
         </div>
         <div className="flex grow flex-col overflow-y-auto">
-          {basket.products.map(({ id, quantity, price, name }) => (
+          {basket.productsList.map(({ id, quantity, price, name }) => (
             <div key={id} className="inline-flex items-center gap-x-2.5">
               <span className="w-8">{quantity}</span>
               <span className="grow">{name}</span>
@@ -45,12 +45,12 @@ export const CheckoutReceipt = (order: Order) => {
         <div className="flex flex-col">
           <div className="inline-flex items-center justify-between gap-x-2.5 border-t border-dashed border-black">
             <span className="begin">NOMBRE DE PRODUIT:</span>
-            <span className="length">{basket.products.reduce((acc, cur) => acc + cur.quantity, 0)}</span>
+            <span className="length">{basket.productsList.reduce((acc, cur) => acc + cur.quantity, 0)}</span>
           </div>
           <div className="inline-flex items-center justify-between gap-x-2.5 border-b border-dashed border-black">
             <span className="begin">TOTAL:</span>
             <span className="length">
-              {toPrice(basket.products.reduce((acc, { quantity, price }) => acc + quantity * price, 0))}
+              {toPrice(basket.productsList.reduce((acc, { quantity, price }) => acc + quantity * price, 0))}
             </span>
           </div>
         </div>

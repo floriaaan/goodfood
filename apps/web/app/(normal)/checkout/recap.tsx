@@ -35,7 +35,7 @@ export const CheckoutRecap = () => {
         <div className="inline-flex items-start justify-between">
           <div className="mb-5 flex h-fit w-full flex-col justify-between gap-3">
             <div className="text-xl font-bold">Détails de la commande</div>
-            {basket.products.map(({ id, quantity }) => {
+            {basket.productsList.map(({ id, quantity }) => {
               const product = products.find((p) => p.id === id);
               if (!product || !quantity) return null;
               return (
