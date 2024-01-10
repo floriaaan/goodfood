@@ -121,7 +121,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const total = useMemo(() => {
     return toPrice(
-      basket.products.reduce((acc, { id, quantity }) => {
+      basket.productsList.reduce((acc, { id, quantity }) => {
         const product = products.find((p) => p.id === id);
         if (!product) return acc;
         return acc + product.price * quantity;
