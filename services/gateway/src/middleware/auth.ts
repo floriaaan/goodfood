@@ -1,5 +1,5 @@
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export const ROLES = {
   ADMIN: "ADMIN",

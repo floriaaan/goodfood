@@ -18,8 +18,6 @@ import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { User } from "@gateway/proto/user_pb";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { check, withCheck } from "@gateway/middleware/auth";
-import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
-import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
 import { createDelivery } from "@gateway/services/delivery.service";
 import { Delivery } from "@gateway/proto/delivery_pb";
 

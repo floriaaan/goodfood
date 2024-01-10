@@ -2,7 +2,6 @@ import { Request, Response, Router } from "express";
 import { productServiceClient } from "../../services/clients/product.client";
 import { Allergen, Category, File, Product, ProductId, ProductType, RestaurantId } from "../../proto/product_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import * as fs from "fs";
 import { withCheck } from "@gateway/middleware/auth";
 
 export const productRoutes = Router();
@@ -41,11 +40,8 @@ productRoutes.get("/api/product/type", (_: Request, res: Response) => {
   });
 });
 
-productRoutes.delete(
-  "/api/product/:id",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /* #swagger.parameters['authorization'] = {
+productRoutes.delete("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
             in: 'header',
             required: true,
             type: 'string'
@@ -55,14 +51,13 @@ productRoutes.delete(
                required: true,
                type: 'string'
          } */
-    const { id } = req.params;
-    const productId = new ProductId().setId(id);
-    productServiceClient.deleteProduct(productId, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  const { id } = req.params;
+  const productId = new ProductId().setId(id);
+  productServiceClient.deleteProduct(productId, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
 
 productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
@@ -205,11 +200,8 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
   });
 });
 
-productRoutes.post(
-  "/api/product/image",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /* #swagger.parameters['body'] = {
+productRoutes.post("/api/product/image", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /* #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -222,12 +214,11 @@ productRoutes.post(
             required: true,
             type: 'string'
         } */
-    const { name, input_file } = req.body;
+  const { name, input_file } = req.body;
 
-    const file = new File().setName(name).setData(input_file);
-    productServiceClient.uploadImage(file, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  const file = new File().setName(name).setData(input_file);
+  productServiceClient.uploadImage(file, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
