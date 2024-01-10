@@ -1,13 +1,13 @@
 meta {
   name: get category
   type: http
-  seq: 3
+  seq: 2
 }
 
-post {
+get {
   url: {{baseUrl}}/api/category
   body: json
-  auth: bearer
+  auth: none
 }
 
 headers {
@@ -16,12 +16,4 @@ headers {
 
 auth:bearer {
   token: {{token}}
-}
-
-body:json {
-  {
-    "label": "Frais",
-    "icon": "🥗",
-    "hexaColor": "#EAFBF5"
-  }
 }

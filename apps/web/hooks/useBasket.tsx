@@ -71,7 +71,7 @@ const useRestaurantState = createPersistedState("gf/restaurant");
 const useAddressState = createPersistedState("gf/address");
 
 export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user, session } = useAuth();
+  const { user, session, isAuthenticated } = useAuth();
   const { mainaddress } = user || {};
 
   const [taxes, setTaxes] = useState<Taxes>({
@@ -84,7 +84,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
   const [eta, setEta] = useState<string>("12:15 - 12:35");
 
-  const { data: api_basket } = useQuery<Basket>({
+  const { data: api_basket, refetch } = useQuery<Basket>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["basket"],
     queryFn: async () => {
@@ -93,17 +93,24 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
       return body;
     },
     placeholderData: DEFAULT_BASKET,
+    enabled: isAuthenticated,
   });
-  const basket: Basket = api_basket ?? DEFAULT_BASKET;
+  const [local_basket, setLocalBasket] = useState<Basket>(DEFAULT_BASKET);
+  const basket: Basket = useMemo(
+    () => (isAuthenticated ? (api_basket && api_basket.productsList ? api_basket : DEFAULT_BASKET) : local_basket),
+    [api_basket, local_basket, isAuthenticated],
+  );
 
   const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
   const selectRestaurant = async (id: string) => {
+    setSelectedRestaurantId(id);
+    if (!isAuthenticated) return;
     const res = await fetchAPI("/api/basket/restaurant", session?.token, {
       method: "PUT",
       body: JSON.stringify({ restaurantId: id }),
     });
     if (!res.ok) return;
-    setSelectedRestaurantId(id);
+    refetch();
   };
 
   // products catalog
@@ -138,19 +145,28 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
     //todo: check if product is available (stock)
 
-    // setBasket((basket) => {
-    //   const newBasket = { ...basket };
-    //   if (newBasket[id]) newBasket[id] += quantity;
-    //   else newBasket[id] = quantity;
-    //   return newBasket;
-    // });
+    let ok = !isAuthenticated; // if not authenticated, add product to basket without calling api
+    if (isAuthenticated) {
+      const res = await fetchAPI("/api/basket", session?.token, {
+        method: "POST",
+        body: JSON.stringify({ productId: id, quantity }),
+      });
+      ok = res.ok;
+      refetch();
+      // No need to update basket, it will be updated by the query
+    } else {
+      // We are not authenticated, so we update the basket locally
+      setLocalBasket((prev) => {
+        // TODO: fix react strict mode issue
+        const productsList = Object.values(prev.productsList);
+        const p_index = productsList.findIndex((p) => p.id === id);
+        if (p_index !== -1) productsList[p_index].quantity += quantity;
+        else productsList.push({ id, quantity });
+        return { ...prev, productsList } as Basket;
+      });
+    }
 
-    const res = await fetchAPI("/api/basket", session?.token, {
-      method: "POST",
-      body: JSON.stringify({ productId: id, quantity }),
-    });
-
-    if (res.ok)
+    if (ok)
       toast({
         className: "p-3",
         children: (
@@ -182,13 +198,28 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
       });
   };
 
-  const removeProduct = (id: string, quantity: number) => {
-    // setBasket((basket) => {
-    //   const newBasket = { ...basket };
-    //   if (newBasket[id] <= quantity || isNaN(newBasket[id]) || isNaN(quantity)) delete newBasket[id];
-    //   else newBasket[id] -= quantity;
-    //   return newBasket;
-    // });
+  const removeProduct = async (id: string, quantity: number) => {
+    if (isAuthenticated) {
+      // todo: call api to remove product
+      await fetchAPI("/api/basket/remove", session?.token, {
+        method: "PUT",
+        body: JSON.stringify({ productId: id, quantity }),
+      });
+      refetch();
+    } else {
+      // We are not authenticated, so we update the basket locally
+      setLocalBasket((prev) => {
+        // TODO: fix react strict mode issue
+        const productsList = [...prev.productsList];
+        const p_index = productsList.findIndex((p) => p.id === id);
+        if (p_index === -1) return basket;
+        const { quantity: q } = productsList[p_index];
+        if (q > quantity) productsList[p_index].quantity -= quantity;
+        else productsList.splice(p_index, 1);
+
+        return { ...prev, productsList } as Basket;
+      });
+    }
   };
 
   const checkout = () => {
@@ -218,7 +249,6 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
-  const isAuthenticated = user !== null;
 
   return (
     <BasketContext.Provider

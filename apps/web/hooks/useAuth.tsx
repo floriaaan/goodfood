@@ -26,7 +26,7 @@ export type Session =
 type AuthContextType = {
   session: Session | null;
   user: User | null;
-  isAuthentified: boolean;
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 };
@@ -34,7 +34,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   session: null,
   user: null,
-  isAuthentified: false,
+  isAuthenticated: false,
   login: (() => {}) as unknown as AuthContextType["login"],
   logout: () => {},
 });
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ session, login, logout, user: session?.user ?? null, isAuthentified: session?.user !== null }}
+      value={{ session, login, logout, user: session?.user ?? null, isAuthenticated: !!session?.token }}
     >
       {children}
     </AuthContext.Provider>
