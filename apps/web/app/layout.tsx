@@ -6,8 +6,7 @@ import { RootProviders } from "@/app/providers";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
-import NextTopLoader from 'nextjs-toploader';
-
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
