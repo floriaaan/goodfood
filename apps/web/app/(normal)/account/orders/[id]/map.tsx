@@ -14,8 +14,8 @@ export const OrderStatusMap = (order: Order) => {
 
   const { restaurants } = useLocation();
   const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
-  const { locationList: r_location } = restaurant || {};
-  const [r_lat, r_lng] = r_location || [0, 0];
+  const { address: r_location } = restaurant || {};
+  const [r_lat, r_lng] = [r_location?.lat, r_location?.lng] || [0, 0];
 
   // todo: move getting gps coordinates of address to service instead of client
   const { address } = order.delivery;
