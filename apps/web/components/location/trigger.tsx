@@ -43,7 +43,7 @@ export const LocationFullTrigger = ({ className }: { className?: string }) => {
             <>
               {/* todo: link to restaurant list store*/}
               <Logo className="h-4 w-fit" color="text-gray-400" />
-              {`${restaurants.find(({ id }) => id === selectedRestaurantId)?.name} - ${eta}`}
+              {`${restaurants.find(({ id }) => id === selectedRestaurantId)?.name} - arrivée prévue entre ${eta}`}
             </>
           ) : (
             "Choisir un restaurant"
