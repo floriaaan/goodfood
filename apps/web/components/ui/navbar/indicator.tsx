@@ -9,7 +9,8 @@ import { MdReceipt, MdShoppingBasket } from "react-icons/md";
 const BasketIndicator = () => {
   const { basket } = useBasket();
   const count =
-    Object.values(basket)
+    basket.products
+      .map(({ quantity }) => quantity)
       .filter(Boolean)
       .reduce((acc, cur) => acc + cur, 0) ?? 0;
 
