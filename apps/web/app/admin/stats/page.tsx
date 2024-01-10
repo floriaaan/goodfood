@@ -11,9 +11,10 @@ export default function AdminStats() {
   if (!selectedRestaurantId) return null;
   const restaurant = restaurantList.find((restaurant) => restaurant.id === selectedRestaurantId);
   if (!restaurant) return <LargeComponentLoader />;
+
   return (
     <div className="relative flex flex-col gap-20 p-16">
-      <h1 className="text-5xl font-extrabold">{restaurant?.name}</h1>
+      <h1 className="text-5xl font-extrabold">{restaurant.name}</h1>
       <div className="flex flex-wrap gap-16">
         {stats
           .filter((e, index) => [0, 1, 2].includes(index))

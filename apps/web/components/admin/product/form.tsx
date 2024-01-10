@@ -58,8 +58,8 @@ const formSchema = z.object({
   type: z.enum(Object.keys(ProductTypeLabels) as any),
 
   restaurant_id: z.string().uuid(),
-  categories: z.array(z.string().uuid()),
-  allergens: z.array(z.string()),
+  categoriesList: z.array(z.string().uuid()),
+  allergensList: z.array(z.string()),
 
   // ingredients: z.array(z.string().uuid()),
 });
@@ -79,8 +79,8 @@ export function ProductCreateEditForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...initialValues,
-      allergens: ((initialValues as unknown as Product)?.allergens || []).map((a) => a.id),
-      categories: ((initialValues as unknown as Product)?.categories || []).map((c) => c.id),
+      allergensList: ((initialValues as unknown as Product)?.allergensList || []).map((a) => a.id),
+      categoriesList: ((initialValues as unknown as Product)?.categoriesList || []).map((c) => c.id),
     } || {
       name: "",
       image: "https://picsum.photos/200/300",
@@ -335,7 +335,7 @@ export function ProductCreateEditForm({
                     />
                     <FormField
                       control={form.control}
-                      name="allergens"
+                      name="allergensList"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel>Allergènes</FormLabel>
@@ -359,7 +359,7 @@ export function ProductCreateEditForm({
                                   checked={field.value.includes(a.id.toString())}
                                   onCheckedChange={(checked) => {
                                     form.setValue(
-                                      "allergens",
+                                      "allergensList",
                                       checked
                                         ? [...field.value, a.id.toString()]
                                         : field.value.filter((o) => o !== a.id.toString()),
@@ -377,7 +377,7 @@ export function ProductCreateEditForm({
                     />
                     <FormField
                       control={form.control}
-                      name="categories"
+                      name="categoriesList"
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel>Catégories</FormLabel>
@@ -405,7 +405,7 @@ export function ProductCreateEditForm({
                                   checked={field.value.includes(a.id.toString())}
                                   onCheckedChange={(checked) => {
                                     form.setValue(
-                                      "categories",
+                                      "categoriesList",
                                       checked
                                         ? [...field.value, a.id.toString()]
                                         : field.value.filter((o) => o !== a.id.toString()),

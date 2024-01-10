@@ -23,7 +23,7 @@ export type Order = {
   user: UserMinimum;
   basket_snapshot: {
     string: string;
-    json?: string | object | any;
+    json?: string | object | BasketSnapshot;
     total: number;
   };
   status: Status;

@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type, wrapp
           "absolute z-10 transition-all duration-200 ease-in-out",
           hasValue
             ? "left-2 top-1.5 text-[10px] text-black"
-            : "left-3 top-1/2 -translate-y-1/2 transform text-xs truncate 2xl:text-sm text-muted-foreground",
+            : "left-3 top-1/2 -translate-y-1/2 transform truncate text-xs text-muted-foreground 2xl:text-sm",
         )}
       >
         {props["aria-label"]}
