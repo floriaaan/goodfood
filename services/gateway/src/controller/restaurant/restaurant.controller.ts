@@ -1,12 +1,14 @@
 import { Request, Response, Router } from "express";
 import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
-import { RestaurantId } from "@gateway/proto/product_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
+
 import {
   ByLocationInput,
   Restaurant,
+  RestaurantId,
   RestaurantCreateInput,
   RestaurantDeleteInput,
+  Address,
 } from "@gateway/proto/restaurant_pb";
 import { withCheck } from "@gateway/middleware/auth";
 
@@ -38,19 +40,17 @@ restaurantRoutes.post("/api/restaurant/by-location", async (req: Request, res: R
         in: 'body',
         required: true,
         schema: {
-            locationList: [1.099, 49.443]
+            lat: 49.443,
+            lng: 1.099
         }
     }
     */
 
-  const { locationList } = req.body;
-  restaurantServiceClient.getRestaurantsByLocation(
-    new ByLocationInput().setLocationList(locationList),
-    (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    },
-  );
+  const { lat, lng } = req.body;
+  restaurantServiceClient.getRestaurantsByLocation(new ByLocationInput().setLat(lat).setLng(lng), (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
 });
 
 restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
@@ -60,8 +60,14 @@ restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Req
         schema: {
             name: "restaurant-name",
             description: "restaurant-desc",
-            locationList: [1.099, 49.443],
-            address: "restaurant-address",
+            address: {
+                street: "restaurant-street",
+                city: "restaurant-city",
+                zipCode: "restaurant-postalCode",
+                country: "restaurant-country",
+                lat: 49.443,
+                lng: 1.099
+            },
             openingHoursList:  ["12h-14h", "19h-22h"],
             phone: "restaurant-phone",
             userIds: ["user-id-1", "user-id-2"]
@@ -72,12 +78,20 @@ restaurantRoutes.post("/api/restaurant", withCheck({ role: "ADMIN" }), (req: Req
         required: true,
         type: 'string'
     } */
-  const { name, description, locationList, address, openingHoursList, phone, userIds } = req.body;
+  const { name, description, address, openingHoursList, phone, userIds } = req.body;
+
   const restaurantCreateInput = new RestaurantCreateInput()
     .setName(name)
     .setDescription(description)
-    .setLocationList(locationList)
-    .setAddress(address)
+    .setAddress(
+      new Address()
+        .setStreet(address.street)
+        .setCity(address.city)
+        .setZipcode(address.zipCode)
+        .setCountry(address.country)
+        .setLat(address.lat)
+        .setLng(address.lng),
+    )
     .setOpeninghoursList(openingHoursList)
     .setPhone(phone)
     .setUseridsList(userIds);
@@ -103,8 +117,14 @@ restaurantRoutes.put(
             schema: {
                 name: "restaurant-name",
                 description: "restaurant-desc",
-                locationList: [1.099, 49.443],
-                address: "restaurant-address",
+                address: {
+                    street: "restaurant-street",
+                    city: "restaurant-city",
+                    zipCode: "restaurant-postalCode",
+                    country: "restaurant-country",
+                    lat: 49.443,
+                    lng: 1.099
+                },
                 openingHoursList:  ["12h-14h", "19h-22h"],
                 phone: "restaurant-phone",
                 userIds: ["user-id-1", "user-id-2"]
@@ -116,13 +136,20 @@ restaurantRoutes.put(
             type: 'string'
         } */
     const { id } = req.params;
-    const { name, description, locationList, address, openingHoursList, phone, userIds } = req.body;
+    const { name, description, address, openingHoursList, phone, userIds } = req.body;
     const restaurantInput = new Restaurant()
       .setId(id)
       .setName(name)
       .setDescription(description)
-      .setLocationList(locationList)
-      .setAddress(address)
+      .setAddress(
+        new Address()
+          .setStreet(address.street)
+          .setCity(address.city)
+          .setZipcode(address.zipCode)
+          .setCountry(address.country)
+          .setLat(address.lat)
+          .setLng(address.lng),
+      )
       .setOpeninghoursList(openingHoursList)
       .setPhone(phone)
       .setUseridsList(userIds);

@@ -1,11 +1,11 @@
 meta {
-  name: create restaurant
+  name: update restaurant
   type: http
-  seq: 2
+  seq: 4
 }
 
-post {
-  url: {{baseUrl}}/api/restaurant
+put {
+  url: {{baseUrl}}/api/restaurant/clr7ocdea00006tc1c5pc1gcn
   body: json
   auth: bearer
 }
@@ -20,16 +20,15 @@ auth:bearer {
 
 body:json {
   {
-
-    "name": "restaurant-name",
+    "name": "restaurant-name-updated",
     "description": "restaurant-desc",
     "address": {
-      "street": "restaurant-street",
+      "street": "restaurant-street-updated",
       "city": "restaurant-city",
       "zipCode": "restaurant-postalCode",
       "country": "restaurant-country",
-      "lat": 49.443,
-      "lng": 1.099
+      "lat": 59.445,
+      "lng": 2.099
     },
     "openingHoursList": [
       "12h-14h",

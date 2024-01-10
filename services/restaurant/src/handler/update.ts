@@ -8,28 +8,30 @@ export const UpdateRestaurant = async (
   callback: (err: any, response: Restaurant | null) => void
 ) => {
   try {
-    const {
-      id,
-      location,
-      name,
-      openingHours,
-      address,
-      description,
-      phone,
-      userIds,
-    } = request;
+    const { id, name, openingHours, address, description, phone, userIds } =
+      request;
 
     const restaurant = (await prisma.restaurant.update({
       where: { id },
       data: {
-        location,
         name,
         openingHours,
-        address,
+        address: {
+          update: {
+            lat: address.lat,
+            lng: address.lng,
+
+            street: address.street,
+            city: address.city,
+            zipcode: address.zipcode,
+            country: address.country,
+          },
+        },
         description,
         phone,
         userIds,
       },
+      include: { address: true },
     })) as unknown as Restaurant;
 
     callback(null, restaurant);
