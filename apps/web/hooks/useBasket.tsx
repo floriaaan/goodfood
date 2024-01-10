@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  // useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { createPersistedState } from "@/lib/use-persisted-state";
 import { MainAddress } from "@/types/user";
@@ -74,7 +80,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, session, isAuthenticated } = useAuth();
   const { mainaddress } = user || {};
 
-  const [taxes, setTaxes] = useState<Taxes>({
+  const [taxes] = useState<Taxes>({
     delivery: 0,
     service: 0.5,
   });
@@ -249,6 +255,19 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
+
+  // disabled because we don't want to save on reload if user is already authenticated (because basket is probably loading from api and we don't want to overwrite it)
+  // useEffect(() => {
+  //   // save the basket when the user authenticate
+  //   if (!isAuthenticated) return;
+  //   fetchAPI("/api/basket/save", session?.token, {
+  //     method: "POST",
+  //     body: JSON.stringify({ basket }),
+  //   });
+  //   refetch();
+  //   // disable react-hooks/exhaustive-deps because we don't want to save the basket when the basket change
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isAuthenticated, session?.token]);
 
   return (
     <BasketContext.Provider
