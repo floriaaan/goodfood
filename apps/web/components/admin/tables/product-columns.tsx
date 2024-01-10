@@ -25,6 +25,8 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
     accessorKey: "image",
     header: "Image",
     cell: (cell) => (
+      // can't use next/image here because image wont be available at build time
+      // eslint-disable-next-line @next/next/no-img-element
       <img src={cell.getValue() as string} alt={cell.row.original.name} className="h-12 w-12 shrink-0 object-cover" />
     ),
     size: 24,

@@ -1,12 +1,12 @@
-import { useLocation } from "@/hooks";
+import { fetchAPI } from "@/lib/fetchAPI";
 import { toPrice } from "@/lib/product/toPrice";
 import { Order, BasketSnapshot } from "@/types/order";
+import { Restaurant } from "@/types/restaurant";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
 
-export const CheckoutReceipt = (order: Order) => {
-  const { restaurants } = useLocation();
-  const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
+export const CheckoutReceipt = async (order: Order) => {
+  const restaurant = (await (await fetchAPI(`/api/restaurant/${order.restaurant_id}`)).json()) as Restaurant;
   if (!restaurant) return null;
 
   const basket: BasketSnapshot = order.basket_snapshot.json ?? JSON.parse(order.basket_snapshot.string);
@@ -58,7 +58,7 @@ export const CheckoutReceipt = (order: Order) => {
 
       <p className="">MODE DE PAIEMENT: sur place</p>
       <p className="">RESTAURANT: {restaurant.name}</p>
-      <u className="text-xs">{restaurant.address}</u>
+      <u className="text-xs">{`${restaurant.address.street} ${restaurant.address.zipcode} ${restaurant.address.city}`}</u>
     </div>
   );
 };
