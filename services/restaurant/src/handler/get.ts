@@ -12,6 +12,7 @@ export const GetRestaurant = async (
 
     const restaurant = (await prisma.restaurant.findFirstOrThrow({
       where: { id },
+      include: { address: true },
     })) as unknown as Restaurant;
 
     callback(null, restaurant);
