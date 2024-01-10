@@ -207,7 +207,7 @@ deliveryRoutes.delete("/api/delivery/:id", async (req: Request, res: Response) =
       });
     });
 
-    if (Number(delivery.userId) !== userId || !(await check(token, { role: "ADMIN" })))
+    if (delivery.userId !== userId || !(await check(token, { role: "ADMIN" })))
       return res.status(401).json({ message: "Unauthorized" });
 
     deliveryServiceClient.deleteDelivery(new DeliveryId().setId(id), (error, response) => {

@@ -7,15 +7,19 @@ meta {
 post {
   url: {{baseUrl}}/api/allergen
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "label": "<string>"
+    "label": "Gluten"
   }
 }

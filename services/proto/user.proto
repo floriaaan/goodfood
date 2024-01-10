@@ -7,13 +7,13 @@ import "google/protobuf/empty.proto";
 option go_package = ".";
 
 message Role {
-  uint64 id = 1;
+  string id = 1;
   string code = 2;
   string label = 3;
 }
 
 message MainAddress {
-  uint64 id = 1;
+  string id = 1;
   string street = 2;
   string zipCode = 3;
   string country = 4;
@@ -22,30 +22,28 @@ message MainAddress {
 }
 
 message User {
-  uint64 id = 1;
+  string id = 1;
   string first_name = 2;
   string last_name = 3;
   string email = 4;
   string phone = 5;
-  uint64 MainAddressId = 6;
+  string MainAddressId = 6;
   MainAddress mainAddress = 7;
-  uint64 RoleId = 8;
+  string RoleId = 8;
   Role role = 9;
 }
 
 message UpdateUserInput {
   User user = 1;
-  string token = 8;
+  string token = 2;
 }
 
 message UserOutput {
   User user = 1;
-  string error = 2;
 }
 
 message MainAddressOutput {
   MainAddress mainAddress = 1;
-  string error = 2;
 }
 
 service UserService {
@@ -88,17 +86,16 @@ message RoleInput {
 }
 
 message UserId {
-  uint64 id = 1;
+  string id = 1;
 }
 
 message UserList {
-  string error = 1;
-  repeated User users = 2;
+  repeated User users = 1;
 }
 
 message logInInput {
-  string email = 2;
-  string password = 3;
+  string email = 1;
+  string password = 2;
 }
 
 message validateInput {
@@ -107,18 +104,16 @@ message validateInput {
 
 message DeleteInput {
   string token = 1;
-  uint64 userId = 2;
+  string id = 2;
 }
 
 message validateResponse {
-  string error = 1;
-  uint64 userId = 2;
+  string id = 1;
 }
 
 message logInResponse {
   User user = 1;
   string token = 2;
-  string error = 3;
 }
 
 
@@ -130,27 +125,24 @@ message changePasswordInput {
 
 message changePasswordOutput{
   User user = 1;
-  string error = 2;
 }
 
 message changeRoleInput {
   string token = 1;
-  uint64 userId = 2;
+  string userId = 2;
   string roleCode = 3;
 }
 
 message DeleteUserOutput {
   User user = 1;
-  string error = 2;
 }
 
 message changeRoleOutput{
   User user = 1;
-  string error = 2;
 }
 
 message MainAddressId {
-  uint64 id = 1;
+  string id = 1;
 }
 
 message MainAddressUpdateInput {
@@ -158,8 +150,6 @@ message MainAddressUpdateInput {
   MainAddress mainAddress = 2;
 }
 
-
 message UpdateMainAddressOutput {
   MainAddress mainAddress = 1;
-  string error = 2;
 }
