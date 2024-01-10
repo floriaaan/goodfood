@@ -4,8 +4,7 @@ export type Restaurant = {
   name: string;
   description?: string;
 
-  location: [number, number];
-  address?: string;
+  address: Address;
 
   openingHours: string[];
   phone?: string;
@@ -14,6 +13,20 @@ export type Restaurant = {
 
   createdAt: Date | string;
   updatedAt: Date | string;
+};
+
+export type Address = {
+  id: string;
+
+  lat: number;
+  lng: number;
+
+  street?: string;
+  city?: string;
+  zipcode?: string;
+  country?: string;
+
+  restaurantId: string;
 };
 
 export type RestaurantCreateInput = Omit<
@@ -26,7 +39,8 @@ export type RestaurantId = {
 };
 
 export type ByLocationInput = {
-  location: Restaurant["location"];
+  lat: number;
+  lng: number;
 };
 
 export type RestaurantList = {

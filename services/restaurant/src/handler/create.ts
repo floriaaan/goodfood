@@ -11,26 +11,19 @@ export const CreateRestaurant = async (
   callback: (err: any, response: Restaurant | null) => void
 ) => {
   try {
-    const {
-      location,
-      name,
-      openingHours,
-      address,
-      description,
-      phone,
-      userIds,
-    } = request;
+    const { name, openingHours, address, description, phone, userIds } =
+      request;
 
     const restaurant = (await prisma.restaurant.create({
       data: {
-        location,
         name,
         openingHours,
-        address,
+        address: { create: address },
         description,
         phone,
         userIds,
       },
+      include: { address: true },
     })) as unknown as Restaurant;
 
     callback(null, restaurant);
