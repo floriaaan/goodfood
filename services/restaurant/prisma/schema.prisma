@@ -12,8 +12,9 @@ model Restaurant {
   name        String
   description String?
 
-  location Float[]
-  address  String?
+  location  Float[]
+  address   Address?
+  addressId String?  @unique
 
   openingHours String[]
 
@@ -23,4 +24,19 @@ model Restaurant {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Address {
+  id String @id @default(cuid())
+
+  lat Float
+  lng Float
+
+  street  String?
+  city    String?
+  zipcode String?
+  country String?
+
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String     @unique
 }

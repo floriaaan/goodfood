@@ -1,0 +1,43 @@
+meta {
+  name: update restaurant
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/restaurant/clr7ocdea00006tc1c5pc1gcn
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "restaurant-name-updated",
+    "description": "restaurant-desc",
+    "address": {
+      "street": "restaurant-street-updated",
+      "city": "restaurant-city",
+      "zipCode": "restaurant-postalCode",
+      "country": "restaurant-country",
+      "lat": 59.445,
+      "lng": 2.099
+    },
+    "openingHoursList": [
+      "12h-14h",
+      "19h-22h"
+    ],
+    "phone": "restaurant-phone",
+    "userIds": [
+      "user-id-1",
+      "user-id-2"
+    ]
+  }
+}
