@@ -35,16 +35,16 @@ export const CheckoutRecap = () => {
         <div className="inline-flex items-start justify-between">
           <div className="mb-5 flex h-fit w-full flex-col justify-between gap-3">
             <div className="text-xl font-bold">Détails de la commande</div>
-            {Object.entries(basket).map(([key, value]) => {
-              const product = products.find((p) => p.id === key);
-              if (!product || !value) return null;
+            {basket.products.map(({ id, quantity }) => {
+              const product = products.find((p) => p.id === id);
+              if (!product || !quantity) return null;
               return (
-                <div key={key} className="inline-flex justify-between">
+                <div key={id} className="inline-flex justify-between">
                   <div className="inline-flex items-start gap-2">
-                    <div className="text-sm">{value}x</div>
+                    <div className="text-sm">{quantity}x</div>
                     <div className="text-sm font-semibold">{product.name}</div>
                   </div>
-                  <div className="text-sm">{(product.price * value).toFixed(2).replace(".", "€")}</div>
+                  <div className="text-sm">{(product.price * quantity).toFixed(2).replace(".", "€")}</div>
                 </div>
               );
             })}

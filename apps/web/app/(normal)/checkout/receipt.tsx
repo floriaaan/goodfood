@@ -1,16 +1,15 @@
-import { useBasket, useLocation } from "@/hooks";
+import { useLocation } from "@/hooks";
 import { toPrice } from "@/lib/product/toPrice";
-import { Order } from "@/types/order";
+import { Order, BasketSnapshot } from "@/types/order";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
 
 export const CheckoutReceipt = (order: Order) => {
-  const { products } = useBasket();
   const { restaurants } = useLocation();
   const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
   if (!restaurant) return null;
 
-  const basket = order.basket_snapshot.json ?? JSON.parse(order.basket_snapshot.string);
+  const basket: BasketSnapshot = order.basket_snapshot.json ?? JSON.parse(order.basket_snapshot.string);
 
   return (
     <div className="flex w-96 flex-col bg-[url(/images/wrinkled-paper.jpg)] bg-center p-5 font-mono text-sm uppercase">
@@ -35,39 +34,23 @@ export const CheckoutReceipt = (order: Order) => {
           <span className="w-12 text-right">AMT</span>
         </div>
         <div className="flex grow flex-col overflow-y-auto">
-          {Object.entries(basket).map(([key, value]) => {
-            const product = products.find((p) => p.id === key);
-            const { count, price } = value as { count: number; price: number };
-            if (!product || !count || !price) return null;
-
-            return (
-              <div key={key} className="inline-flex items-center gap-x-2.5">
-                <span className="w-8">{count}</span>
-                <span className="grow">{product.name}</span>
-                <span className="w-12 text-right">{toPrice(price * count)}</span>
-              </div>
-            );
-          })}
+          {basket.products.map(({ id, quantity, price, name }) => (
+            <div key={id} className="inline-flex items-center gap-x-2.5">
+              <span className="w-8">{quantity}</span>
+              <span className="grow">{name}</span>
+              <span className="w-12 text-right">{toPrice(price * quantity)}</span>
+            </div>
+          ))}
         </div>
         <div className="flex flex-col">
           <div className="inline-flex items-center justify-between gap-x-2.5 border-t border-dashed border-black">
             <span className="begin">NOMBRE DE PRODUIT:</span>
-            <span className="length">
-              {Object.entries(basket).reduce((acc, cur) => {
-                const { count } = cur[1] as { count: number };
-                return acc + count;
-              }, 0)}
-            </span>
+            <span className="length">{basket.products.reduce((acc, cur) => acc + cur.quantity, 0)}</span>
           </div>
           <div className="inline-flex items-center justify-between gap-x-2.5 border-b border-dashed border-black">
             <span className="begin">TOTAL:</span>
             <span className="length">
-              {toPrice(
-                Object.entries(basket).reduce((acc, cur) => {
-                  const { count, price } = cur[1] as { count: number; price: number };
-                  return acc + count * price;
-                }, 0),
-              )}
+              {toPrice(basket.products.reduce((acc, { quantity, price }) => acc + quantity * price, 0))}
             </span>
           </div>
         </div>

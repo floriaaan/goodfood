@@ -13,7 +13,7 @@ import { toPrice } from "@/lib/product/toPrice";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@/types/product";
 import { fetchAPI } from "@/lib/fetchAPI";
-type Basket = Record<string, number>;
+import { Basket, DEFAULT_BASKET } from "@/types/basket";
 
 type Address = Omit<MainAddress, "id" | "lat" | "lng">;
 
@@ -74,20 +74,6 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, session } = useAuth();
   const { mainaddress } = user || {};
 
-  //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
-  const [eta, setEta] = useState<string>("12:15 - 12:35");
-
-  const { data: api_basket } = useQuery({
-    queryKey: ["basket"],
-    queryFn: async () => {
-      const res = await fetchAPI("/api/basket", session?.token);
-      const body = await res.json();
-      return body;
-    },
-    placeholderData: {},
-  });
-  const basket = api_basket ?? {};
-
   const [taxes, setTaxes] = useState<Taxes>({
     delivery: 0,
     service: 0.5,
@@ -95,13 +81,28 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const { push } = useRouter();
 
+  //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
+  const [eta, setEta] = useState<string>("12:15 - 12:35");
+
+  const { data: api_basket } = useQuery<Basket>({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["basket"],
+    queryFn: async () => {
+      const res = await fetchAPI("/api/basket", session?.token);
+      const body = await res.json();
+      return body;
+    },
+    placeholderData: DEFAULT_BASKET,
+  });
+  const basket: Basket = api_basket ?? DEFAULT_BASKET;
+
   const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
   const selectRestaurant = async (id: string) => {
     const res = await fetchAPI("/api/basket/restaurant", session?.token, {
       method: "PUT",
       body: JSON.stringify({ restaurantId: id }),
     });
-    if(!res.ok) return;
+    if (!res.ok) return;
     setSelectedRestaurantId(id);
   };
 
@@ -116,10 +117,11 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     enabled: !!selectedRestaurantId,
     placeholderData: [],
   });
-  const products = api_products ?? [];
+  const products = useMemo(() => api_products ?? [], [api_products]);
+
   const total = useMemo(() => {
     return toPrice(
-      Object.entries(basket as Basket).reduce((acc, [id, quantity]) => {
+      basket.products.reduce((acc, { id, quantity }) => {
         const product = products.find((p) => p.id === id);
         if (!product) return acc;
         return acc + product.price * quantity;
@@ -145,7 +147,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
     const res = await fetchAPI("/api/basket", session?.token, {
       method: "POST",
-      body: JSON.stringify({ id, quantity }),
+      body: JSON.stringify({ productId: id, quantity }),
     });
 
     if (res.ok)
