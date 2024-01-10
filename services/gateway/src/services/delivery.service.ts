@@ -4,7 +4,7 @@ import { Delivery, DeliveryCreateInput, DeliveryPersonCreateInput, Status } from
 export const createDelivery = (
   address: string,
   deliveryPersonId: string,
-  userId: number,
+  userId: string,
   restaurantId: string,
 ): Promise<Delivery | undefined> => {
   const deliveryCreateInput = new DeliveryCreateInput()
