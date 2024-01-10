@@ -3,6 +3,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   // useEffect,
   useMemo,
   useState,
@@ -20,6 +21,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Product } from "@/types/product";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Basket, DEFAULT_BASKET } from "@/types/basket";
+import { Restaurant } from "@/types/restaurant";
+import { getDirections } from "@/lib/fetchers/externals/mapbox";
+import { formatEta } from "@/lib/eta";
 
 type Address = Omit<MainAddress, "id" | "lat" | "lng">;
 
@@ -87,9 +91,6 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const { push } = useRouter();
 
-  //todo: calc time to deliver between restaurant and user (use geolib ? or gmaps api ?)
-  const [eta, setEta] = useState<string>("12:15 - 12:35");
-
   const { data: api_basket, refetch } = useQuery<Basket>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["basket"],
@@ -108,6 +109,18 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const [selectedRestaurantId, setSelectedRestaurantId] = useRestaurantState<string | null>(null);
+
+  const { data: api_restaurant } = useQuery<Restaurant>({
+    queryKey: ["restaurant", selectedRestaurantId],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/restaurant/${selectedRestaurantId}`, undefined);
+      const body = await res.json();
+      return body;
+    },
+    enabled: !!selectedRestaurantId,
+  });
+  const selectedRestaurant = useMemo(() => api_restaurant ?? null, [api_restaurant]);
+
   const selectRestaurant = async (id: string) => {
     setSelectedRestaurantId(id);
     if (!isAuthenticated) return;
@@ -252,6 +265,22 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
       country: "France",
     },
   );
+
+  const [eta, setEta] = useState<string>("calcul en cours");
+
+  useEffect(() => {
+    if (!mainaddress || !mainaddress.lat || !mainaddress.lng || !selectedRestaurant) return;
+    (async () => {
+      const directions = await getDirections(
+        { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },
+        { lat: mainaddress.lat, lng: mainaddress.lng },
+      );
+      if (!directions) return;
+      const duration_in_seconds = directions.routes[0].duration;
+      const eta = formatEta(duration_in_seconds);
+      setEta(eta);
+    })();
+  }, [selectedRestaurantId, mainaddress, selectedRestaurant]);
 
   const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
