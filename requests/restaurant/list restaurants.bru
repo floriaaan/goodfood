@@ -1,15 +1,17 @@
 meta {
   name: list restaurants
   type: http
-  seq: 4
+
+  seq: 5
 }
 
 get {
-  url: {{baseUrl}}/api/restaurant
+  url: {{baseUrl}}/api/restaurant/
   body: none
-  auth: bearer
+  auth: none
 }
 
-auth:bearer {
-  token: {{token}}
+headers {
+  Content-Type: application/json
 }
+
