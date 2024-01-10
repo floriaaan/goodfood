@@ -5,8 +5,8 @@ export type User = {
   email: string;
   phone: string;
 
-  mainaddressid?: number;
-  mainaddress?: MainAddress;
+  mainaddressid: string;
+  mainaddress: MainAddress;
 
   roleid: number;
   role: Role;
