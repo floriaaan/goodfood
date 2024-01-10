@@ -72,7 +72,6 @@ export const LocationSheetContent = ({ closeModal = () => {} }) => {
   };
 
   /// RESTAURANT RELATED  -------------------------
-  
 
   const [search, setSearch] = useState("");
 
