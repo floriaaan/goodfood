@@ -3,7 +3,7 @@ import { CreateCheckoutSessionRequest } from "@gateway/proto/payment_pb";
 import { stripeServiceClient } from "@gateway/services/clients/payment.client";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { basketServiceClient } from "@gateway/services/clients/basket.client";
-import { Basket, UserId } from "@gateway/proto/basket_pb";
+import { Basket, UserIdRequest } from "@gateway/proto/basket_pb";
 import { productServiceClient } from "@gateway/services/clients/product.client";
 import { Product, ProductId } from "@gateway/proto/product_pb";
 
@@ -42,16 +42,16 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
   const email = user.getEmail();
 
   const basket: Basket.AsObject = await new Promise((resolve, reject) => {
-    basketServiceClient.getBasket(new UserId().setId(userId), (error, response) => {
+    basketServiceClient.getBasket(new UserIdRequest().setUserId(userId), (error, response) => {
       if (error) reject(error);
       else resolve(response.toObject());
     });
   });
 
   const products = await Promise.all(
-    basket.productsIdsList.map(async (product) => {
+    basket.productsList.map(async (product) => {
       return (await new Promise((resolve, reject) => {
-        productServiceClient.readProduct(new ProductId().setId(product), (error, response) => {
+        productServiceClient.readProduct(new ProductId().setId(product.id), (error, response) => {
           if (error) reject(error);
           else resolve(response.toObject());
         });
