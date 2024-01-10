@@ -32,7 +32,7 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
     queryFn: async () => {
       const res = await fetchAPI(`/api/restaurant/by-location`, undefined, {
         method: "POST",
-        body: JSON.stringify({ locationList: [lat, lng] }),
+        body: JSON.stringify({ lat, lng }),
       });
       const body = await res.json();
       return body.restaurantsList;

@@ -190,8 +190,14 @@ export const restaurantList: Restaurant[] = [
   {
     id: "restaurant_id:1",
     name: "Rouen Gros Horloge",
-    address: "1 Rue du Gros Horloge, 76000 Rouen",
-    locationList: [49.440459, 1.094853],
+    address: {
+      lat: 49.440459,
+      lng: 1.094853,
+      street: "1 Rue du Gros Horloge",
+      city: "Rouen",
+      zipcode: "76000",
+      country: "France",
+    },
     openinghoursList: ["11h30 - 14h30 / 18h30 - 22h30"],
     phone: "02 35 71 00 00",
     useridsList: [],
@@ -201,8 +207,14 @@ export const restaurantList: Restaurant[] = [
   {
     id: "restaurant_id:2",
     name: "Rouen Pierre Corneille",
-    address: "76 Rue Pierre Corneille, 76000 Rouen",
-    locationList: [49.442459, 1.094853],
+    address: {
+      lat: 49.442459,
+      lng: 1.094853,
+      street: "76 Rue Pierre Corneille",
+      city: "Rouen",
+      zipcode: "76000",
+      country: "France",
+    },
     openinghoursList: ["11h30 - 14h30 / 18h30 - 22h30"],
     phone: "02 35 71 00 00",
     useridsList: [],
