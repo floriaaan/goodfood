@@ -7,7 +7,7 @@ import { MdAdd, MdDelete, MdRemove } from "react-icons/md";
 
 export const ProductBasketItem = (product: Product) => {
   const { addProduct, removeProduct, basket } = useBasket();
-  const basketProduct = basket.products.find((p) => p.id === product.id);
+  const basketProduct = basket.productsList.find((p) => p.id === product.id);
   if (!basketProduct) return null;
 
   return (
@@ -26,7 +26,7 @@ export const ProductBasketItem = (product: Product) => {
           <span className="line-clamp-2 h-full grow text-sm ">{product.name}</span>
           <div className="inline-flex w-full items-end justify-between">
             <div className="inline-flex items-center">
-              {basket.products.some((p) => p.id === product.id && p.quantity > 1) && (
+              {basket.productsList.some((p) => p.id === product.id && p.quantity > 1) && (
                 <button
                   className="flex h-6 w-6 items-center justify-center border bg-gray-100"
                   onClick={() => removeProduct(product.id, basketProduct.quantity)}
