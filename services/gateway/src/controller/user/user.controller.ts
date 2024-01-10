@@ -16,6 +16,7 @@ import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { createDeliveryPerson } from "@gateway/services/delivery.service";
 import { check, withCheck } from "@gateway/middleware/auth";
+import { log } from "@gateway/lib/log/log";
 
 export const userRoutes = Router();
 userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
@@ -27,7 +28,7 @@ userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
     #swagger.parameters['id'] = {
              in: 'path',
              required: true,
-             type: 'integer'
+             type: 'string'
        }*/
   const { id } = req.params;
 
@@ -35,10 +36,10 @@ userRoutes.get("/api/user/:id", async (req: Request, res: Response) => {
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).json({ message: "Unauthorized" });
   const token = authorization.split("Bearer ")[1];
-  if (!(await check(token, { id: Number(id) }))) return res.status(403).json({ message: "Forbidden" });
+  if (!(await check(token, { id }))) return res.status(403).json({ message: "Forbidden" });
 
   try {
-    const user = await getUser(Number(id));
+    const user = await getUser(id);
     return res.status(200).json(user?.toObject());
   } catch (error) {
     return res.status(500).json({ error });
@@ -159,7 +160,7 @@ userRoutes.delete("/api/user/:id", (req: Request, res: Response) => {
    #swagger.parameters['id'] = {
            in: 'path',
            required: true,
-           type: 'integer'
+           type: 'string'
    } */
   const { id } = req.params;
   const { authorization } = req.headers;
@@ -167,7 +168,7 @@ userRoutes.delete("/api/user/:id", (req: Request, res: Response) => {
   const token = authorization.split("Bearer ")[1];
 
   // The delete route in the user service implement the user validation
-  userServiceClient.deleteUser(new DeleteInput().setUserid(Number(id)).setToken(token), (error, response) => {
+  userServiceClient.deleteUser(new DeleteInput().setId(id).setToken(token), (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
@@ -186,6 +187,7 @@ userRoutes.post("/api/user/login", (req: Request, res: Response) => {
   const inInput = new logInInput().setEmail(email).setPassword(password);
 
   userServiceClient.logIn(inInput, (error, response) => {
+    log.debug("logIn", { error, response });
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
@@ -251,7 +253,7 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: R
      #swagger.parameters['id'] = {
            in: 'path',
            required: true,
-           type: 'integer'
+           type: 'string'
      }
      #swagger.parameters['body'] = {
          in: 'body',
@@ -267,13 +269,13 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: R
   const userId = await getUserIdFromToken(token);
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   const id = req.params.id;
-  if (Number(id) === userId) return res.status(403).json({ message: "Forbidden" });
+  if (id === userId) return res.status(403).json({ message: "Forbidden" });
   // ----------------------------
 
   const roleInput = new changeRoleInput();
 
   try {
-    roleInput.setToken(token).setUserid(Number(id)).setRolecode(req.body.role);
+    roleInput.setToken(token).setUserid(id).setRolecode(req.body.role);
   } catch (error) {
     return res.status(500).json({ error });
   }

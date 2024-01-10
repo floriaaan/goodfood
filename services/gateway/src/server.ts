@@ -18,66 +18,104 @@ import { paymentRoutes } from "@gateway/controller/payment/payment.controller";
 import { mainAddressRoutes } from "@gateway/controller/user/mainAddress.controller";
 import { notificationRoutes } from "@gateway/controller/notification/notification.controller";
 import bodyParser from "body-parser";
+import cors from "cors";
 import express from "express";
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
 const PORT = process.env.GATEWAY_PORT || 50000;
 
-app.use('/', userRoutes
-// #swagger.tags = ['User']
+app.use(
+  "/",
+  userRoutes,
+  // #swagger.tags = ['User']
 );
-app.use('/', mainAddressRoutes
-// #swagger.tags = ['User']
+app.use(
+  "/",
+  mainAddressRoutes,
+  // #swagger.tags = ['User']
 );
-app.use('/', basketRoutes
-// #swagger.tags = ['Basket']
+app.use(
+  "/",
+  basketRoutes,
+  // #swagger.tags = ['Basket']
 );
-app.use('/', paymentRoutes
-// #swagger.tags = ['Payment']
+app.use(
+  "/",
+  paymentRoutes,
+  // #swagger.tags = ['Payment']
 );
-app.use('/', stripeRoutes
-// #swagger.tags = ['Payment']
+app.use(
+  "/",
+  stripeRoutes,
+  // #swagger.tags = ['Payment']
 );
-app.use('/', orderRoutes
-// #swagger.tags = ['Order']
+app.use(
+  "/",
+  orderRoutes,
+  // #swagger.tags = ['Order']
 );
-app.use('/', productRoutes
-// #swagger.tags = ['Product']
+app.use(
+  "/",
+  productRoutes,
+  // #swagger.tags = ['Product']
 );
-app.use('/', categoryRoutes
-// #swagger.tags = ['Product']
+app.use(
+  "/",
+  categoryRoutes,
+  // #swagger.tags = ['Product']
 );
-app.use('/', allergenRoutes
-// #swagger.tags = ['Product']
+app.use(
+  "/",
+  allergenRoutes,
+  // #swagger.tags = ['Product']
 );
-app.use('/', restaurantRoutes
-// #swagger.tags = ['Restaurant']
+app.use(
+  "/",
+  restaurantRoutes,
+  // #swagger.tags = ['Restaurant']
 );
-app.use('/', deliveryRoutes
-// #swagger.tags = ['Delivery']
+app.use(
+  "/",
+  deliveryRoutes,
+  // #swagger.tags = ['Delivery']
 );
-app.use('/', deliveryPersonRoutes
-// #swagger.tags = ['Delivery']
+app.use(
+  "/",
+  deliveryPersonRoutes,
+  // #swagger.tags = ['Delivery']
 );
-app.use('/', logRoutes
-// #swagger.tags = ['Log']
+app.use(
+  "/",
+  logRoutes,
+  // #swagger.tags = ['Log']
 );
-app.use('/', metricRoutes
-// #swagger.tags = ['Metric']
+app.use(
+  "/",
+  metricRoutes,
+  // #swagger.tags = ['Metric']
 );
-app.use('/', promotionRoutes
-// #swagger.tags = ['Promotion']
+app.use(
+  "/",
+  promotionRoutes,
+  // #swagger.tags = ['Promotion']
 );
-app.use('/', stockRoutes
-// #swagger.tags = ['Stock']
+app.use(
+  "/",
+  stockRoutes,
+  // #swagger.tags = ['Stock']
 );
-app.use('/', stockPersonRoutes
-// #swagger.tags = ['Stock']
+app.use(
+  "/",
+  stockPersonRoutes,
+  // #swagger.tags = ['Stock']
 );
-app.use('/', notificationRoutes
-// #swagger.tags = ['Notification']
+app.use(
+  "/",
+  notificationRoutes,
+  // #swagger.tags = ['Notification']
 );
 
 app.listen(PORT, () => {

@@ -4,7 +4,7 @@ meta {
   seq: 2
 }
 
-post {
+get {
   url: {{baseUrl}}/api/category
   body: json
   auth: none
@@ -14,10 +14,6 @@ headers {
   Content-Type: application/json
 }
 
-body:json {
-  {
-    "label": "<string>",
-    "icon": "<string>",
-    "hexaColor": "<string>"
-  }
+auth:bearer {
+  token: {{token}}
 }

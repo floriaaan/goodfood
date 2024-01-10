@@ -15,7 +15,7 @@ type JwtWrapper struct {
 
 type JwtClaims struct {
 	jwt.StandardClaims
-	Id    uint64
+	Id    string
 	Email string
 }
 
@@ -31,7 +31,7 @@ func (w *JwtWrapper) ParseToken(signedToken string) (token *jwt.Token, err error
 
 func (w *JwtWrapper) GenerateToken(user models.User) (signedToken string, err error) {
 	claims := &JwtClaims{
-		Id:    user.Id,
+		Id:    user.Id.String(),
 		Email: user.Email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(w.ExpirationHours)).Unix(),

@@ -1,0 +1,19 @@
+meta {
+  name: get all users
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/user
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQxNDk5MjksImlzcyI6ImdvLWdycGMtYXV0aC1zdmMiLCJJZCI6MiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.hk3p30gxjhe4eUc3BrxBsBwVCAAoMHBLo4by5mChaKk
+}
+
+script:pre-request {
+  req.setHeader("authorization", "Bearer " + bru.getEnvVar("token"))
+}
