@@ -1,12 +1,12 @@
-import { useLocation } from "@/hooks";
+import { fetchAPI } from "@/lib/fetchAPI";
 import { toPrice } from "@/lib/product/toPrice";
 import { Order, BasketSnapshot } from "@/types/order";
+import { Restaurant } from "@/types/restaurant";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
 
-export const CheckoutReceipt = (order: Order) => {
-  const { restaurants } = useLocation();
-  const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
+export const CheckoutReceipt = async (order: Order) => {
+  const restaurant = (await (await fetchAPI(`/api/restaurant/${order.restaurant_id}`)).json()) as Restaurant;
   if (!restaurant) return null;
 
   const basket: BasketSnapshot = order.basket_snapshot.json ?? JSON.parse(order.basket_snapshot.string);
@@ -34,7 +34,7 @@ export const CheckoutReceipt = (order: Order) => {
           <span className="w-12 text-right">AMT</span>
         </div>
         <div className="flex grow flex-col overflow-y-auto">
-          {basket.products.map(({ id, quantity, price, name }) => (
+          {basket.productsList.map(({ id, quantity, price, name }) => (
             <div key={id} className="inline-flex items-center gap-x-2.5">
               <span className="w-8">{quantity}</span>
               <span className="grow">{name}</span>
@@ -45,12 +45,12 @@ export const CheckoutReceipt = (order: Order) => {
         <div className="flex flex-col">
           <div className="inline-flex items-center justify-between gap-x-2.5 border-t border-dashed border-black">
             <span className="begin">NOMBRE DE PRODUIT:</span>
-            <span className="length">{basket.products.reduce((acc, cur) => acc + cur.quantity, 0)}</span>
+            <span className="length">{basket.productsList.reduce((acc, cur) => acc + cur.quantity, 0)}</span>
           </div>
           <div className="inline-flex items-center justify-between gap-x-2.5 border-b border-dashed border-black">
             <span className="begin">TOTAL:</span>
             <span className="length">
-              {toPrice(basket.products.reduce((acc, { quantity, price }) => acc + quantity * price, 0))}
+              {toPrice(basket.productsList.reduce((acc, { quantity, price }) => acc + quantity * price, 0))}
             </span>
           </div>
         </div>
@@ -58,7 +58,7 @@ export const CheckoutReceipt = (order: Order) => {
 
       <p className="">MODE DE PAIEMENT: sur place</p>
       <p className="">RESTAURANT: {restaurant.name}</p>
-      <u className="text-xs">{restaurant.address}</u>
+      <u className="text-xs">{`${restaurant.address.street} ${restaurant.address.zipcode} ${restaurant.address.city}`}</u>
     </div>
   );
 };

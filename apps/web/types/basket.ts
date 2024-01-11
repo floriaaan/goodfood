@@ -1,5 +1,5 @@
 export type Basket = {
-  products: BasketItem[];
+  productsList: BasketItem[];
   restaurantId: string;
 };
 
@@ -8,4 +8,4 @@ export type BasketItem = {
   quantity: number;
 };
 
-export const DEFAULT_BASKET: Basket = { products: [], restaurantId: "" };
+export const DEFAULT_BASKET: Basket = { productsList: [], restaurantId: "" };

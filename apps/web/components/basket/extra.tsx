@@ -5,8 +5,8 @@ import { MdAdd, MdDelete } from "react-icons/md";
 export const BasketExtra = () => {
   const { addProduct, removeProduct, basket } = useBasket();
 
-  const hasBread = basket.products.some((product) => product.id === "extra/bread" && product.quantity > 0);
-  const hasUtensils = basket.products.some((product) => product.id === "extra/utensils" && product.quantity > 0);
+  const hasBread = basket.productsList.some((product) => product.id === "extra/bread" && product.quantity > 0);
+  const hasUtensils = basket.productsList.some((product) => product.id === "extra/utensils" && product.quantity > 0);
 
   return (
     <section className="flex flex-col gap-y-1">

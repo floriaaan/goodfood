@@ -11,6 +11,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Select = forwardRef<HTMLSelectElement, InputProps>(({ className, ...props }, ref) => {
   useEffect(() => {
     props.setSelected(props.options[0].value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <label htmlFor="select-input" className="pointer-events-auto relative z-0 h-14 w-full border-2 border-black">
