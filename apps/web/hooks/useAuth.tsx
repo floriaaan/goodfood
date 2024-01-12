@@ -64,9 +64,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["user", "me"],
     queryFn: async () => {
-      const res = await fetchAPI(`/api/user/${session?.user?.id}`, session?.token);
-      const body = await res.json();
-      return body;
+      try {
+        const res = await fetchAPI(`/api/user/${session?.user?.id}`, session?.token);
+        const body = await res.json();
+        return body;
+      } catch {
+        // TODO: revalidate token
+        // const revalidate = await fetchAPI("/api/user/revalidate", session?.token);
+        setSession(null);
+        setCookie("gf-token", null, { maxAge: -1 });
+        setCookie("gf-user", null, { maxAge: -1 });
+        return null;
+      }
     },
     enabled: !!session?.token && !!session?.user?.id,
   });
