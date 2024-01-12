@@ -7,11 +7,15 @@ meta {
 post {
   url: {{baseUrl}}/api/promotion
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
 }
 
 body:json {
@@ -19,6 +23,6 @@ body:json {
     "code": "SUMMER",
     "reduction": "-5.00",
     "method": "VALUE",
-    "restaurantId": "cllvzh9q60001un2bb1kytyja"
+    "restaurantId": "clr7vjrof0000rf2xvitq6c2t"
   }
 }

@@ -79,11 +79,8 @@ categoryRoutes.put("/api/category/:id", withCheck({ role: ["MANAGER", "ADMIN"] }
   });
 });
 
-categoryRoutes.delete(
-  "/api/category/:id",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /* #swagger.parameters['authorization'] = {
+categoryRoutes.delete("/api/category/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
@@ -93,10 +90,9 @@ categoryRoutes.delete(
            required: true,
            type: 'string'
      } */
-    const { id } = req.params;
-    categoryServiceClient.deleteCategory(new CategoryId().setId(id), (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  const { id } = req.params;
+  categoryServiceClient.deleteCategory(new CategoryId().setId(id), (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});

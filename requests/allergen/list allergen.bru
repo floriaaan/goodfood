@@ -1,11 +1,11 @@
 meta {
-  name: create supplier
+  name: list allergen
   type: http
-  seq: 2
+  seq: 3
 }
 
 post {
-  url: {{baseUrl}}/api/stock/supplier
+  url: {{baseUrl}}/api/allergen
   body: json
   auth: bearer
 }
@@ -20,7 +20,6 @@ auth:bearer {
 
 body:json {
   {
-    "name": "Jean Fourne",
-    "contact": "+33 6 12 34 56 78"
+    "label": "Gluten"
   }
 }
