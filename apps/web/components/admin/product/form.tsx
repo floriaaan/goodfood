@@ -1,3 +1,4 @@
+/* eslint-disable @tanstack/query/exhaustive-deps */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,13 +30,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
 import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
 import { Product, ProductType, ProductTypeLabels } from "@/types/product";
-import { allergensList, categoriesList, ingredientList } from "@/constants/data";
 import { SelectQuantity } from "@/components/ui/form/select-quantity";
 import {
   DropdownMenu,
@@ -43,13 +43,18 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useQuery } from "@tanstack/react-query";
+import { useAdmin } from "@/hooks/useAdmin";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { useAuth } from "@/hooks";
+import { IngredientRestaurant } from "@/types/stock";
 
 // todo: check with product create request
 const formSchema = z.object({
   name: z.string().min(3).max(255),
   image: z.string().url(),
   comment: z.string(),
-  price: z.number().positive(),
+  price: z.string().regex(/^\d+(\.\d{1,2})?$/),
   preparation: z.string().max(1024),
   weight: z.string().max(255),
   kilocalories: z.string().max(255),
@@ -58,7 +63,7 @@ const formSchema = z.object({
   type: z.enum(Object.keys(ProductTypeLabels) as any),
 
   restaurant_id: z.string().uuid(),
-  categoriesList: z.array(z.string().uuid()),
+  categoriesList: z.array(z.string()),
   allergensList: z.array(z.string()),
 
   // ingredients: z.array(z.string().uuid()),
@@ -70,11 +75,16 @@ export function ProductCreateEditForm({
   initialValues,
   onSubmit,
   onImageChange,
+  id,
 }: {
   initialValues?: ProductCreateEditFormValues;
   onSubmit: (values: ProductCreateEditFormValues) => void;
   onImageChange: (file: File) => Promise<string>;
+  id?: Product["id"];
 }) {
+  const { session } = useAuth();
+  const { restaurant, categories, allergens } = useAdmin();
+
   const form = useForm<ProductCreateEditFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -85,7 +95,7 @@ export function ProductCreateEditForm({
       name: "",
       image: "https://picsum.photos/200/300",
       comment: "",
-      price: undefined,
+      price: 0.0,
       preparation: "",
       weight: "",
       kilocalories: "",
@@ -102,9 +112,8 @@ export function ProductCreateEditForm({
   });
 
   async function handler(values: ProductCreateEditFormValues) {
-    form.setValue("name", "change");
     // eslint-disable-next-line no-console
-    console.log(values);
+    console.log("pass", values);
     onSubmit(values);
   }
 
@@ -113,8 +122,32 @@ export function ProductCreateEditForm({
   const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
   const [image_error, setImage_error] = useState<string | null>(null);
 
+  const { data: api_ingredients_options } = useQuery<IngredientRestaurant[]>({
+    queryKey: ["admin", "ingredient", "restaurant", restaurant?.id],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/stock/ingredient/restaurant/by-restaurant/${restaurant?.id}`, session?.token);
+      const body = await res.json();
+      return body.ingredientRestaurantsList;
+    },
+    enabled: !!restaurant?.id && !!session?.token,
+    placeholderData: [],
+  });
+  const ingredients_options = useMemo(() => api_ingredients_options || [], [api_ingredients_options]);
+
+  const { data: api_ingredients } = useQuery<IngredientRestaurant[]>({
+    queryKey: ["admin", "ingredient", "product", id],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/stock/ingredient/restaurant/by-product/${id}`, session?.token);
+      const body = await res.json();
+      return body.ingredientRestaurantsList;
+    },
+    enabled: !!id && !!session?.token,
+    placeholderData: [],
+  });
   // ingredients are not included in the form
-  const [ingredients, setIngredients] = useState<{ value: number; quantity: number }[]>([]);
+  const [ingredients, setIngredients] = useState<{ value: number; quantity: number }[]>(
+    api_ingredients ? api_ingredients.map((i) => ({ value: i.id, quantity: i.quantity })) : [],
+  );
 
   return (
     <Form {...form}>
@@ -346,14 +379,14 @@ export function ProductCreateEditForm({
                                   ? "Aucun allergène sélectionné"
                                   : field.value.map((a) => (
                                       <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
-                                        {allergensList.find((al) => al.id.toString() === a)?.libelle}
+                                        {allergens.find((al) => al.id.toString() === a)?.libelle}
                                       </div>
                                     ))}
                                 <MdArrowDropDown className="absolute right-2 h-4 w-4" />
                               </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-full">
-                              {allergensList.map((a) => (
+                              {allergens.map((a) => (
                                 <DropdownMenuCheckboxItem
                                   key={a.id.toString()}
                                   checked={field.value.includes(a.id.toString())}
@@ -387,7 +420,7 @@ export function ProductCreateEditForm({
                                 {field.value.length === 0
                                   ? "Aucune catégorie sélectionnée"
                                   : field.value.map((a) => {
-                                      const category = categoriesList.find((al) => al.id.toString() === a);
+                                      const category = categories.find((al) => al.id.toString() === a);
                                       if (!category) return null;
                                       return (
                                         <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
@@ -399,7 +432,7 @@ export function ProductCreateEditForm({
                               </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-full">
-                              {categoriesList.map((a) => (
+                              {categories.map((a) => (
                                 <DropdownMenuCheckboxItem
                                   key={a.id.toString()}
                                   checked={field.value.includes(a.id.toString())}
@@ -434,8 +467,8 @@ export function ProductCreateEditForm({
                 <AccordionContent>
                   <div className="flex flex-col gap-y-4">
                     <SelectQuantity
-                      options={ingredientList.map((i) => ({
-                        label: i.name,
+                      options={ingredients_options.map((i) => ({
+                        label: i.ingredient.name,
                         value: i.id,
                       }))}
                       placeholder="Ingrédient"
@@ -452,8 +485,11 @@ export function ProductCreateEditForm({
                           <span className="inline-flex items-center gap-1">
                             &bull;
                             <strong>
-                              {ingredientList.find((il) => il.id.toString() === i.value.toString())?.name} ({i.quantity}
-                              )
+                              {
+                                ingredients_options.find((il) => il.id.toString() === i.value.toString())?.ingredient
+                                  .name
+                              }{" "}
+                              ({i.quantity})
                             </strong>
                           </span>
                           <button
@@ -500,7 +536,7 @@ export function ProductCreateEditForm({
           )}
           <Button type="submit">
             <MdDone className="h-4 w-4" />
-            Créer
+            {id ? "Modifier" : "Créer"}
           </Button>
         </div>
       </form>
