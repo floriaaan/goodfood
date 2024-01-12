@@ -122,6 +122,7 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
           </DropdownMenu>
           <ProductFormSheetContent
             initialValues={{ ...product, type: product.type.toString() } as unknown as ProductCreateEditFormValues}
+            id={product.id}
           />
         </Sheet>
       );
