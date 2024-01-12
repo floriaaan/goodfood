@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { Logo } from "@/components/ui/icon/logo";
 import { Select } from "@/components/ui/select";
@@ -20,11 +21,10 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAdmin } from "@/hooks/useAdmin";
-import { restaurantList } from "@/constants/data";
 
 export const Sidebar = () => {
   const [displayMode, setDisplayMode] = useState("Default");
-  const { selectRestaurant, selectedRestaurantId } = useAdmin();
+  const { selectRestaurant, restaurant, restaurants } = useAdmin();
   const path = usePathname();
 
   return (
@@ -37,16 +37,14 @@ export const Sidebar = () => {
           <MdKeyboardBackspace /> Retour au catalogue
         </Link>
       </div>
-      <Select
-        aria-label="Restaurant séléctionné"
-        options={restaurantList.map((e) => {
-          return { label: e.name, value: e.id };
-        })}
-        selected={selectedRestaurantId ? selectedRestaurantId : restaurantList[0].id}
-        setSelected={(restaurant) => {
-          selectRestaurant(restaurant);
-        }}
-      />
+      {restaurants.length > 0 && (
+        <Select
+          aria-label="Restaurant / Groupe séléctionné"
+          options={restaurants.map((e) => ({ label: e.name, value: e.id }))}
+          selected={restaurant?.id || restaurants[0]?.id}
+          setSelected={selectRestaurant}
+        />
+      )}
       <div className="my-10 flex flex-col gap-2">
         <Link
           href="/admin"

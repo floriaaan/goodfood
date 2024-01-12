@@ -2,14 +2,13 @@
 
 import { AmountStat } from "@/components/admin/stats/amountStat";
 import { ProductCard } from "@/components/admin/stats/productCard";
-import { extendedProductList, restaurantList, stats } from "@/constants/data";
+import { extendedProductList, stats } from "@/constants/data";
 import { useAdmin } from "@/hooks/useAdmin";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 
 export default function AdminStats() {
-  const { selectedRestaurantId } = useAdmin();
-  if (!selectedRestaurantId) return null;
-  const restaurant = restaurantList.find((restaurant) => restaurant.id === selectedRestaurantId);
+  const { restaurant } = useAdmin();
+
   if (!restaurant) return <LargeComponentLoader />;
 
   return (
