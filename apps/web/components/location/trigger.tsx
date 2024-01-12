@@ -1,15 +1,14 @@
 "use client";
 
 import { Logo } from "@/components/ui/icon/logo";
-import { useAuth, useLocation } from "@/hooks";
+import { useAuth } from "@/hooks";
 import { useBasket } from "@/hooks/useBasket";
 import { cn } from "@/lib/utils";
 import { MdArrowForwardIos, MdOutlineLocationOn } from "react-icons/md";
 
 export const LocationFullTrigger = ({ className }: { className?: string }) => {
   const { isAuthenticated } = useAuth();
-  const { restaurants } = useLocation();
-  const { selectedRestaurantId, address, eta } = useBasket();
+  const { selectedRestaurantId, address, eta, selectedRestaurant } = useBasket();
   const { street, zipcode, city, country } = address || {};
 
   const isAddressDefined = street && zipcode && city && country;
@@ -39,11 +38,13 @@ export const LocationFullTrigger = ({ className }: { className?: string }) => {
       <div className="flex max-w-sm grow flex-col gap-y-0.5">
         <span className="text-xs font-bold">{address_displayed}</span>
         <span className="inline-flex items-center text-xs">
-          {selectedRestaurantId ? (
+          {selectedRestaurantId && selectedRestaurant ? (
             <>
               {/* todo: link to restaurant list store*/}
               <Logo className="h-4 w-fit" color="text-gray-400" />
-              {`${restaurants.find(({ id }) => id === selectedRestaurantId)?.name} - arrivée prévue entre ${eta}`}
+              {`${selectedRestaurant?.name} -  ${
+                eta !== undefined ? "arrivée prévue entre " + eta : "calcul en cours"
+              }`}
             </>
           ) : (
             "Choisir un restaurant"

@@ -66,6 +66,8 @@ export const LocationSheetContent = ({ closeModal = () => {} }) => {
       zipcode: s.properties.postcode,
       city: s.properties.city,
       country: "France",
+      lat: s.geometry.coordinates[1],
+      lng: s.geometry.coordinates[0],
     });
 
     const str = `${s.properties.name} ${s.properties.postcode} ${s.properties.city} France`;
