@@ -1,3 +1,5 @@
+"use client";
+
 import { Sidebar } from "@/components/ui/admin/sidebar";
 import { ReactNode } from "react";
 import { AdminProvider } from "@/hooks/useAdmin";

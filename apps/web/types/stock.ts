@@ -8,22 +8,22 @@ export type IngredientRestaurant = {
   id: number;
   key: string;
 
-  alert_threshold: number;
+  alertThreshold: number;
   quantity: number;
-  in_product_list: string[];
+  inProductListList: string[];
 
-  unit_price: number;
-  price_per_kilo: number;
+  unitPrice: number;
+  pricePerKilo: number;
 
-  restaurant_id: string;
+  restaurantId: string;
 
-  ingredient_id: number;
+  ingredientId: number;
   ingredient: Ingredient;
 
-  supplier_id: number;
+  supplierId: number;
   supplier: Supplier;
 
-  updated_at: string | Date;
+  updatedAt: string | Date;
 };
 
 export type Supplier = {
