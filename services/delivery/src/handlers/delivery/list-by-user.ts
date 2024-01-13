@@ -4,16 +4,15 @@ import { UserId } from "@delivery/types/delivery";
 import { Data } from "@delivery/types";
 
 export const ListDeliveriesByUser = async (
-  data: Data<UserId>,
+  { request }: Data<UserId>,
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { request } = data;
     const { id } = request;
 
     const deliveries = await prisma.delivery.findMany({
       where: { user_id: id },
-      include: { delivery_person: true },
+      include: { delivery_person: true, address: true },
     });
     callback(null, { deliveries });
   } catch (error) {

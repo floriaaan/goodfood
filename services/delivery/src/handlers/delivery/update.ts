@@ -4,27 +4,21 @@ import { Delivery } from "@delivery/types/delivery";
 import { Data } from "@delivery/types";
 
 export const UpdateDelivery = async (
-  data: Data<Delivery>,
+  { request }: Data<Delivery>,
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { eta, address, status, delivery_person_id, id } = data.request;
+    const { eta, address, status, delivery_person_id, id } = request;
 
     const delivery = await prisma.delivery.update({
       where: { id },
       data: {
         eta: new Date(eta),
-        address,
+        address: { update: { ...address } },
         status,
-        delivery_person: {
-          connect: {
-            id: delivery_person_id,
-          },
-        },
+        delivery_person: { connect: { id: delivery_person_id } },
       },
-      include: {
-        delivery_person: true,
-      },
+      include: { delivery_person: true, address: true },
     });
     callback(null, delivery);
   } catch (error) {

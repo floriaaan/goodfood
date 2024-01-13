@@ -4,11 +4,10 @@ import { DeliveryId } from "@delivery/types/delivery";
 import { Data } from "@delivery/types";
 
 export const DeleteDelivery = async (
-  data: Data<DeliveryId>,
+  { request }: Data<DeliveryId>,
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { request } = data;
     const { id } = request;
 
     const delivery = await prisma.delivery.delete({ where: { id } });
