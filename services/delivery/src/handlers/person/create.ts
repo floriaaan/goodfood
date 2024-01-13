@@ -8,7 +8,7 @@ export const CreateDeliveryPerson = async (
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { user_id, first_name, last_name, phone, location } = request;
+    const { user_id, first_name, last_name, phone, address } = request;
 
     const deliveryPerson = await prisma.deliveryPerson.create({
       data: {
@@ -16,10 +16,9 @@ export const CreateDeliveryPerson = async (
         first_name,
         last_name,
         phone,
-        location: {
-          set: location,
-        },
+        address: { create: { ...address } },
       },
+      include: { address: true },
     });
     callback(null, deliveryPerson);
   } catch (error) {

@@ -8,7 +8,7 @@ export const UpdateDeliveryPerson = async (
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { id, first_name, last_name, location, phone } = request;
+    const { id, first_name, last_name, address, phone } = request;
 
     const deliveryPerson = await prisma.deliveryPerson.update({
       where: { id },
@@ -16,10 +16,9 @@ export const UpdateDeliveryPerson = async (
         first_name,
         last_name,
         phone,
-        location: {
-          set: location,
-        },
+        address: { update: { ...address } },
       },
+      include: { address: true, deliveries: { include: { address: true } } },
     });
     callback(null, deliveryPerson);
   } catch (error) {

@@ -14,19 +14,13 @@ export const CreateDelivery = async (
     const delivery = await prisma.delivery.create({
       data: {
         eta: new Date(eta),
-        address,
+        address: { create: { ...address } },
         status,
-        delivery_person: {
-          connect: {
-            id: delivery_person_id,
-          },
-        },
+        delivery_person: { connect: { id: delivery_person_id } },
         restaurant_id,
         user_id,
       },
-      include: {
-        delivery_person: true,
-      },
+      include: { delivery_person: true, address: true },
     });
     callback(null, delivery);
   } catch (error) {

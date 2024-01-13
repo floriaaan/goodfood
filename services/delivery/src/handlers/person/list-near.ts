@@ -1,21 +1,26 @@
 import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
 import { Data } from "@delivery/types";
-import { LocationInput } from "@delivery/types/delivery-person";
+import {
+  DeliveryPersonAddress,
+  LocationInput,
+} from "@delivery/types/delivery-person";
 
 export const ListNearDeliveryPersons = async (
   { request }: Data<LocationInput>,
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { latitude, longitude } = request;
-    const maxDistance = 10; // in km //TODO: make this a parameter
+    const { latitude, longitude, radius_in_km } = request;
 
-    const query = await prisma.deliveryPerson.findMany();
-    const delivery_persons = query.filter(deliveryPerson => {
-        const distance = calculateDistance(latitude, longitude, deliveryPerson.location[0], deliveryPerson.location[1]);
-        return distance <= maxDistance;
-      });;
+    const query = await prisma.deliveryPerson.findMany({
+      include: { address: true, deliveries: { include: { address: true } } },
+    });
+    const delivery_persons = query.filter((deliveryPerson) => {
+      const { lat, lng } = deliveryPerson.address as DeliveryPersonAddress;
+      const distance = calculateDistance(latitude, longitude, lat, lng);
+      return distance <= radius_in_km;
+    });
 
     callback(null, { delivery_persons });
   } catch (error) {
