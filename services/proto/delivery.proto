@@ -67,6 +67,8 @@ service DeliveryPersonService {
   rpc DeleteDeliveryPerson (DeliveryPersonId) returns (google.protobuf.Empty) {}
   rpc ListDeliveryPersons (google.protobuf.Empty) returns (DeliveryPersonList) {}
   rpc ListNearDeliveryPersons (Location) returns (DeliveryPersonList) {}
+
+  rpc UpdateDeliveryPersonLocation (DeliveryPersonUpdateLocationInput) returns (DeliveryPerson) {}
 }
 
 
@@ -121,4 +123,10 @@ message Location {
   float longitude = 2;
 
   float radius_in_km = 3;
+}
+
+message DeliveryPersonUpdateLocationInput {
+  string delivery_person_id = 1;
+  float latitude = 2;
+  float longitude = 3;
 }
