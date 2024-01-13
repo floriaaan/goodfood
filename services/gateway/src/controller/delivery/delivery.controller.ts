@@ -1,6 +1,14 @@
 import { Request, Response, Router } from "express";
 import { deliveryServiceClient } from "@gateway/services/clients/delivery.client";
-import { Delivery, DeliveryCreateInput, DeliveryId, RestaurantId, Status, UserId } from "@gateway/proto/delivery_pb";
+import {
+  Address,
+  Delivery,
+  DeliveryCreateInput,
+  DeliveryId,
+  RestaurantId,
+  Status,
+  UserId,
+} from "@gateway/proto/delivery_pb";
 import { getUserIdFromToken } from "@gateway/services/user.service";
 import { check, withCheck } from "@gateway/middleware/auth";
 
@@ -120,7 +128,15 @@ deliveryRoutes.post("/api/delivery", async (req: Request, res: Response) => {
 
   const deliveryCreateInput = new DeliveryCreateInput()
     .setEta(eta)
-    .setAddress(address)
+    .setAddress(
+      new Address()
+        .setStreet(address.street)
+        .setCity(address.city)
+        .setZipcode(address.zipCode)
+        .setCountry(address.country)
+        .setLat(address.lat)
+        .setLng(address.lng),
+    )
     .setStatus(deliveryStatus)
     .setDeliveryPersonId(deliveryPersonId)
     .setUserId(userId.toString())
@@ -171,7 +187,15 @@ deliveryRoutes.put("/api/delivery/:id", async (req: Request, res: Response) => {
   const delivery = new Delivery()
     .setId(id)
     .setEta(eta)
-    .setAddress(address)
+    .setAddress(
+      new Address()
+        .setStreet(address.street)
+        .setCity(address.city)
+        .setZipcode(address.zipCode)
+        .setCountry(address.country)
+        .setLat(address.lat)
+        .setLng(address.lng),
+    )
     .setStatus(deliveryStatus)
     .setDeliveryPersonId(deliveryPersonId)
     .setUserId(userId)
