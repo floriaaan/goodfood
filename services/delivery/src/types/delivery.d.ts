@@ -6,15 +6,18 @@ export type DeliveryAddress = Address & {
   delivery_id: string;
 };
 
+export type RestaurantAddress = Omit<
+  Address & {
+    restaurant_id: string;
+  },
+  "id"
+>;
+
 export type DeliveryCreateInput = {
-  eta: string;
   address: Omit<DeliveryAddress, "id" | "delivery_id">;
-
-  status: Status;
-  delivery_person_id: string;
-
   user_id: string;
   restaurant_id: string;
+  restaurant_address: RestaurantAddress;
 };
 
 export type DeliveryId = {
@@ -33,6 +36,7 @@ export type Delivery = {
 
   user_id: string;
   restaurant_id: string;
+  restaurant_address: RestaurantAddress;
 };
 
 export type UserId = {
