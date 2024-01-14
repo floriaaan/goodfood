@@ -1,6 +1,5 @@
 version: "3"
 services:
-
   # Gateway
 
   gateway:
@@ -233,11 +232,15 @@ services:
       context: .
       dockerfile: ./delivery/Dockerfile
     env_file:
+      - delivery/.env
       - delivery/.env.docker
     ports:
       - "50008"
     networks:
       - goodfood-network
+    depends_on:
+      - delivery-redis
+      - delivery-postgres
 
   delivery-redis:
     image: redis:latest
@@ -299,7 +302,7 @@ services:
 
   reporting-service:
     image: floriaaan/goodfood-reporting:latest
-    restart: unless-stopped
+    # restart: unless-stopped
     build:
       context: .
       dockerfile: ./reporting/Dockerfile
@@ -350,36 +353,36 @@ services:
     networks:
       - goodfood-network
 
-#  Notification service
+  #  Notification service
 
   notification-service:
-      image: goodfood-notification:1.0.0
-      restart: unless-stopped
-      build:
-        context: .
-        dockerfile: ./notification/Dockerfile
-      env_file:
+    image: goodfood-notification:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./notification/Dockerfile
+    env_file:
       - notification/.env.docker
-      ports:
+    ports:
       - "50022"
-      networks:
+    networks:
       - goodfood-network
 
   notification-postgres:
-      image: postgres:15.2
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: notification
-        PGDATA: /var/lib/postgresql/data/pgdata
-      ports:
+    image: postgres:15.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: notification
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
       - "51022:5432"
-      volumes:
+    volumes:
       - goodfood-notification-volume:/var/lib/postgresql/data
-      networks:
+    networks:
       - goodfood-network
 
-#  RabbitMQ
+  #  RabbitMQ
 
   event-broker:
     restart: always
