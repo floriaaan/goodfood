@@ -38,6 +38,5 @@ export type DeliveryPersonUserId = { id: DeliveryPerson["id"] };
 
 export type DeliveryPersonUpdateLocationInput = {
   delivery_person_id: string;
-  latitude: number;
-  longitude: number;
+  address: Omit<DeliveryPersonAddress, "id" | "delivery_person_id">;
 };
