@@ -10,7 +10,7 @@ import {
   Location,
 } from "@gateway/proto/delivery_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { getUserIdFromToken } from "@gateway/services/user.service";
+import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { withCheck } from "@gateway/middleware/auth";
 import { log } from "@gateway/lib/log/log";
 
@@ -56,6 +56,27 @@ deliveryPersonRoutes.get("/api/delivery-person/near", async (req, res) => {
 
   const { lat, lng, radius } = req.query as { lat: string; lng: string; radius: string };
   const location = new Location().setLatitude(Number(lat)).setLongitude(Number(lng)).setRadiusInKm(Number(radius));
+  deliveryPersonServiceClient.listNearDeliveryPersons(location, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
+
+deliveryPersonRoutes.get("/api/delivery-person/near/user", async (req, res) => {
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  // ----------------------------
+
+  const user = await getUser(userId);
+  if (!user) return res.status(401).json({ message: "Unauthorized" });
+  const lat = user.getMainaddress()?.getLat();
+  const lng = user.getMainaddress()?.getLng();
+
+  const location = new Location().setLatitude(Number(lat)).setLongitude(Number(lng)).setRadiusInKm(10);
   deliveryPersonServiceClient.listNearDeliveryPersons(location, (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
@@ -208,8 +229,11 @@ deliveryPersonRoutes.put("/api/delivery-person/:id", withCheck({ role: "ADMIN" }
   });
 });
 
-deliveryPersonRoutes.put("/api/delivery-person/:id/location", withCheck({ role: "ADMIN" }), (req, res) => {
-  /* 
+deliveryPersonRoutes.put(
+  "/api/delivery-person/:id/location",
+  withCheck({ role: ["DELIVERY_PERSON", "ADMIN"] }),
+  (req, res) => {
+    /* 
   #swagger.parameters['id'] = {
         in: 'query',
         required: true,
@@ -219,8 +243,14 @@ deliveryPersonRoutes.put("/api/delivery-person/:id/location", withCheck({ role: 
         in: 'body',
         required: true,
         schema: {
-            latitude: 0,
-            longitude: 0
+            address: {
+                street: "street",
+                city: "city",
+                zipcode: "zipcode",
+                country: "country",
+                lat: 0,
+                lng: 0
+            }
         }
     }
     #swagger.parameters['authorization'] = {
@@ -229,18 +259,26 @@ deliveryPersonRoutes.put("/api/delivery-person/:id/location", withCheck({ role: 
         type: 'string'
     } */
 
-  const { id } = req.params;
-  const { latitude, longitude } = req.body;
-  const request = new DeliveryPersonUpdateLocationInput()
-    .setDeliveryPersonId(id)
-    .setLatitude(Number(latitude))
-    .setLongitude(Number(longitude));
+    const { id } = req.params;
+    const { address } = req.body;
+    const request = new DeliveryPersonUpdateLocationInput()
+      .setDeliveryPersonId(id)
+      .setAddress(
+        new Address()
+          .setStreet(address.street)
+          .setCity(address.city)
+          .setZipcode(address.zipcode)
+          .setCountry(address.country)
+          .setLat(address.lat)
+          .setLng(address.lng),
+      );
 
-  deliveryPersonServiceClient.updateDeliveryPersonLocation(request, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    deliveryPersonServiceClient.updateDeliveryPersonLocation(request, (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);
 
 deliveryPersonRoutes.delete("/api/delivery-person/:id", withCheck({ role: "ADMIN" }), (req, res) => {
   /* #swagger.parameters['authorization'] = {
