@@ -1,11 +1,11 @@
 meta {
-  name: create delivery person
+  name: update delivery person
   type: http
-  seq: 2
+  seq: 6
 }
 
-post {
-  url: {{baseUrl}}/api/delivery-person
+put {
+  url: {{baseUrl}}/api/delivery-person/clrc6hpa9000011x5sm1tj94y
   body: json
   auth: bearer
 }
@@ -20,9 +20,9 @@ auth:bearer {
 
 body:json {
   {
-    "firstName": "John",
+    "firstName": "Jane",
     "lastName": "Doe",
-    "phone": "0622345679",
+    "phone": "0612345678",
     "address": {
       "street": "street",
       "city": "city",
