@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
-    "@types/node": "18.15.9",
+    "@types/node": "20.11.0",
     "esbuild": "^0.17.14",
     "nodemon": "^2.0.22",
     "pkg": "^5.8.1",
