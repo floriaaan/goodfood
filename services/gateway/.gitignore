@@ -5,3 +5,6 @@ bin/
 !*.env.example
 !*.env.docker
 src/proto/*
+
+.nyc_output/
+coverage/
