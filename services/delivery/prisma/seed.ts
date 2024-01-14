@@ -2,6 +2,27 @@ import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const restaurantAddress: Prisma.RestaurantAddressCreateInput[] = [
+  {
+    id: "restaurant_id:1",
+    lat: 41.56,
+    lng: 2.12,
+    street: "9 rue de la paix",
+    city: "Paris",
+    country: "France",
+    zipcode: "75000",
+  },
+  {
+    id: "restaurant_id:2",
+    lat: 41.56,
+    lng: 2.12,
+    street: "10 rue de la paix",
+    city: "Paris",
+    country: "France",
+    zipcode: "75000",
+  },
+];
+
 const deliveryPerson: Prisma.DeliveryPersonCreateInput[] = [
   {
     // id: "random_id",
@@ -65,7 +86,12 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
       },
     },
 
-    restaurant_id: "restaurant_id:1",
+    restaurant_address: {
+      connectOrCreate: {
+        where: { id: restaurantAddress[0].id },
+        create: restaurantAddress[0],
+      },
+    },
     user_id: "user_id:1",
     address: {
       create: {
@@ -87,7 +113,12 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
       },
     },
 
-    restaurant_id: "restaurant_id:2",
+    restaurant_address: {
+      connectOrCreate: {
+        where: { id: restaurantAddress[1].id },
+        create: restaurantAddress[1],
+      },
+    },
     user_id: "user_id:1",
     address: {
       create: {
@@ -109,7 +140,12 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
       },
     },
 
-    restaurant_id: "restaurant_id:1",
+    restaurant_address: {
+      connectOrCreate: {
+        where: { id: restaurantAddress[0].id },
+        create: restaurantAddress[0],
+      },
+    },
     user_id: "user_id:2",
     address: {
       create: {
@@ -131,7 +167,12 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
       },
     },
 
-    restaurant_id: "restaurant_id:1",
+    restaurant_address: {
+      connectOrCreate: {
+        where: { id: restaurantAddress[0].id },
+        create: restaurantAddress[0],
+      },
+    },
     user_id: "user_id:3",
     address: {
       create: {
@@ -148,6 +189,7 @@ const deliveries: Prisma.DeliveryCreateInput[] = [
 
 async function main() {
   console.log(`Delete existing data ...`);
+  await prisma.restaurantAddress.deleteMany();
   await prisma.address.deleteMany();
   await prisma.deliveryPersonAddress.deleteMany();
   await prisma.delivery.deleteMany();
