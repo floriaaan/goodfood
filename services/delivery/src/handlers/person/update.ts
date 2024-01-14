@@ -16,7 +16,16 @@ export const UpdateDeliveryPerson = async (
         first_name,
         last_name,
         phone,
-        address: { update: { ...address } },
+        address: {
+          update: {
+            street: address.street,
+            city: address.city,
+            zipcode: address.zipcode,
+            country: address.country,
+            lat: address.lat,
+            lng: address.lng,
+          },
+        },
       },
       include: { address: true, deliveries: { include: { address: true } } },
     });

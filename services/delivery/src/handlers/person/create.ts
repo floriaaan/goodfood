@@ -16,7 +16,16 @@ export const CreateDeliveryPerson = async (
         first_name,
         last_name,
         phone,
-        address: { create: { ...address } },
+        address: {
+          create: {
+            street: address.street,
+            city: address.city,
+            zipcode: address.zipcode,
+            country: address.country,
+            lat: address.lat,
+            lng: address.lng,
+          },
+        },
       },
       include: { address: true },
     });

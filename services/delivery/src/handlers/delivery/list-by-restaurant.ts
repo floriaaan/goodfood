@@ -12,7 +12,13 @@ export const ListDeliveriesByRestaurant = async (
 
     const deliveries = await prisma.delivery.findMany({
       where: { restaurant_id: id },
-      include: { delivery_person: true, address: true },
+      include: {
+        delivery_person: {
+          include: { address: true },
+        },
+        address: true,
+        restaurant_address: true,
+      },
     });
     callback(null, { deliveries });
   } catch (error) {

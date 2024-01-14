@@ -12,7 +12,13 @@ export const GetDelivery = async (
 
     const delivery = await prisma.delivery.findFirstOrThrow({
       where: { id },
-      include: { delivery_person: true, address: true },
+      include: {
+        delivery_person: {
+          include: { address: true },
+        },
+        address: true,
+        restaurant_address: true,
+      },
     });
     callback(null, delivery);
   } catch (error) {
