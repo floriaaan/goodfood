@@ -5,12 +5,17 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/delivery-person/near?lat=<integer>&lng=<integer>
+  url: {{baseUrl}}/api/delivery-person/near?lat=40&lng=1&radius=10
   body: none
-  auth: none
+  auth: bearer
 }
 
 query {
-  lat: <integer>
-  lng: <integer>
+  lat: 40
+  lng: 1
+  radius: 10
+}
+
+auth:bearer {
+  token: {{token}}
 }
