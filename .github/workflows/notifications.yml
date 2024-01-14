@@ -79,4 +79,4 @@ jobs:
           context: ./services/
           file: ./services/notification/Dockerfile
           push: true
-          tags: pierrelbg/goodfood-notification:latest
+          tags: floriaaan/goodfood-notification:latest
