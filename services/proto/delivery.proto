@@ -14,7 +14,9 @@ message Delivery {
   string delivery_person_id = 6;
 
   string user_id = 7;
+
   string restaurant_id = 8;
+  Address restaurant_address = 9;
 }
 
 message Address {
@@ -77,13 +79,12 @@ message DeliveryId {
 }
 
 message DeliveryCreateInput {
-  string eta = 1;
-  Address address = 2;
-  Status status = 3;
-  string delivery_person_id = 4;
+  Address address = 1;
 
-  string user_id = 5;
-  string restaurant_id = 6;
+  string user_id = 3;
+
+  string restaurant_id = 4;
+  Address restaurant_address = 5;
 }
 
 message UserId {
@@ -127,6 +128,5 @@ message Location {
 
 message DeliveryPersonUpdateLocationInput {
   string delivery_person_id = 1;
-  float latitude = 2;
-  float longitude = 3;
+  Address address = 2;
 }
