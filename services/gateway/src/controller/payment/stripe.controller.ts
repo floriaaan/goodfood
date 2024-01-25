@@ -60,6 +60,11 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
   const total = products.reduce((acc, product) => {
     return acc + product.price;
   }, 0);
+  console.log(
+    total,
+    products.length,
+    products.map((product) => product.price),
+  );
 
   const createCheckoutSessionRequest = new CreateCheckoutSessionRequest()
     .setUserId(userId.toString())
