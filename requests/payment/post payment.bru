@@ -7,17 +7,17 @@ meta {
 post {
   url: {{baseUrl}}/api/payment/stripe
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
-  {
-    "name": "<string>",
-    "email": "<string>",
-    "total": "<number>"
-  }
+  {"return_url_base": "http://localhost:50000"}
 }
