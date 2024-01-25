@@ -30,8 +30,8 @@ dependencies:
     specifier: 7.2.2
     version: 7.2.2
   stripe:
-    specifier: ^12.17.0
-    version: 12.17.0
+    specifier: 14.11.0
+    version: 14.11.0
 
 devDependencies:
   '@types/amqplib':
@@ -2311,8 +2311,8 @@ packages:
       acorn: 8.8.2
     dev: true
 
-  /stripe@12.17.0:
-    resolution: {integrity: sha512-f8GhS2LQlGCDZ1Akyu57txgSWyLUEYf0yZYS7x2aTKJXVua5lLmmgfJFFYHfTgEdS5P6rurf0Ghcf/HVLggv5g==}
+  /stripe@14.11.0:
+    resolution: {integrity: sha512-NmFEkDC0PldP7CQtdPgKs5dVZA/pF+IepldbmB+Kk9B4d7EBkWnbANp0y+/zJcbRGul48s8hmQzeqNWUlWW0wg==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 18.15.9

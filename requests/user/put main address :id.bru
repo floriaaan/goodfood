@@ -5,21 +5,25 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/api/user/main-address/:id
+  url: {{baseUrl}}/api/user/main-address/cbac06b1-6703-4f1a-b7ef-56d3d777e4ef
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "country": "<string>",
-    "zipCode": "<string>",
-    "street": "<string>",
-    "lat": "<number>",
-    "lng": "<number>"
+    "country": "FRANCE",
+    "zipCode": "973",
+    "street": "rue de la paix",
+    "lat": 40,
+    "lng": 20
   }
 }

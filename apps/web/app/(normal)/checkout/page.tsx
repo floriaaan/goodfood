@@ -19,13 +19,22 @@ import { orderList } from "@/constants/data";
 import { TiLocationArrow } from "react-icons/ti";
 
 import { Player } from "@lottiefiles/react-lottie-player";
-import { useBasket, useLocation } from "@/hooks";
+import { useAuth, useBasket, useLocation } from "@/hooks";
 import Link from "next/link";
 import { HomeIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { Payment } from "@/types/payment";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
-export default function CheckoutPage() {
+type PageProps = { params: { id: string } };
+
+export default function CheckoutPage({ params }: PageProps) {
+  // decode url encoded params.id
+  const paymentId = decodeURIComponent(params.id);
+  const { user, session } = useAuth();
+
   const { restaurants } = useLocation();
 
   const { isAuthenticated, isBasketEmpty, isRestaurantSelected } = useBasket();
@@ -39,6 +48,21 @@ export default function CheckoutPage() {
 
   const [hasCreatedOrder, setHasCreatedOrder] = useState(false);
   const [order, setOrder] = useState<Order | null>(orderList[0]);
+
+  const { data: payment } = useQuery<{ Payment: Payment; clientSecret: string }>({
+    queryKey: ["payment", "stripe"],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/payment/stripe`, session?.token, {
+        method: "POST",
+        body: JSON.stringify({
+          return_url_base: "http://localhost:3000",
+        }),
+      });
+      const body = await res.json();
+      setDelivery_checkoutSessionSecret(body.clientsecret);
+      return body;
+    },
+  });
 
   return (
     <div className="flex h-full grow p-4 pb-12">
@@ -94,14 +118,16 @@ export default function CheckoutPage() {
                     Payer
                   </Button>
                   <Dialog onOpenChange={setDelivery_isModalOpen} open={delivery_isModalOpen || hasCreatedOrder}>
-                    <DialogContent className="flex aspect-video h-auto max-w-4xl items-center justify-center">
-                      <div id="checkout">
+                    <DialogContent className="flex aspect-video max-h-screen w-screen items-center justify-center">
+                      <div id="checkout" className="w-full">
                         {delivery_checkoutSessionSecret ? (
                           <EmbeddedCheckoutProvider
                             stripe={stripePromise}
-                            options={{ clientSecret: delivery_checkoutSessionSecret }}
+                            options={{
+                              clientSecret: delivery_checkoutSessionSecret,
+                            }}
                           >
-                            <EmbeddedCheckout />
+                            <EmbeddedCheckout className="max-h-screen w-full " />
                           </EmbeddedCheckoutProvider>
                         ) : (
                           <div className="h-64 w-64">

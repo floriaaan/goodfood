@@ -15,9 +15,7 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
             in: 'body',
             required: true,
             schema: {
-                name: "John",
-                email: "mail",
-                total: 12
+                return_url_base: "http://localhost:3000",
             }
     } 
     #swagger.parameters['authorization'] = {
@@ -62,12 +60,18 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
   const total = products.reduce((acc, product) => {
     return acc + product.price;
   }, 0);
+  console.log(
+    total,
+    products.length,
+    products.map((product) => product.price),
+  );
 
   const createCheckoutSessionRequest = new CreateCheckoutSessionRequest()
     .setUserId(userId.toString())
     .setName(name)
     .setEmail(email)
-    .setTotal(total);
+    .setTotal(total)
+    .setReturnUrlBase(req.body.return_url_base);
   stripeServiceClient.createCheckoutSession(createCheckoutSessionRequest, (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
