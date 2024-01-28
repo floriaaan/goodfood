@@ -13,6 +13,8 @@ import { restaurantServiceClient } from "@gateway/services/clients/restaurant.cl
 import { getUserIdFromToken } from "@gateway/services/user.service";
 import { Router } from "express";
 
+const MESSAGE_TYPES = ["USER_CLAIM", "USER_PUSH", "RESTAURANT_CLAIM", "RESTAURANT_PUSH", "RESTAURANT_EMAIL"];
+
 export const notificationRoutes = Router();
 
 notificationRoutes.post("/api/notification", async (req, res) => {
@@ -46,11 +48,12 @@ notificationRoutes.post("/api/notification", async (req, res) => {
   // ----------------------------
 
   const { title, description, icon, image, callback_url, user_id, restaurant_id } = req.body;
-  const type = req.body.type as keyof typeof MessageType;
+  const type = MESSAGE_TYPES.findIndex((t) => t === req.body.type);
+  if (type === -1) return res.status(400).json({ message: "Invalid message type" });
 
   // if type is not USER_CLAIM, only a manager or admin can create the notification
   // if type is USER_CLAIM, only the user can create the notification
-  if (type !== "USER_CLAIM" && (await check(token, { role: ["MANAGER", "ADMIN"] })))
+  if (type !== 0 && (await check(token, { role: ["MANAGER", "ADMIN"] })))
     return res.status(403).json({ message: "Forbidden" });
 
   const request = new CreateNotificationRequest()
@@ -65,7 +68,10 @@ notificationRoutes.post("/api/notification", async (req, res) => {
 
   notificationServiceClient.createNotification(request, (error, response) => {
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
+    else {
+      const result = response.toObject();
+      return res.status(200).json({ ...result, type: MESSAGE_TYPES[result.type] });
+    }
   });
 });
 
@@ -98,7 +104,13 @@ notificationRoutes.get("/api/notification/user/:id", async (req, res) => {
     new GetNotificationsByUserIdRequest().setUserId(id),
     (error, response) => {
       if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
+      else {
+        const result = response.toObject();
+
+        return res
+          .status(200)
+          .json({ notificationsList: result.notificationsList.map((n) => ({ ...n, type: MESSAGE_TYPES[n.type] })) });
+      }
     },
   );
 });
@@ -142,7 +154,13 @@ notificationRoutes.get(
       new GetNotificationsByRestaurantIdRequest().setRestaurantId(id),
       (error, response) => {
         if (error) return res.status(500).send({ error });
-        else return res.status(200).json(response.toObject());
+        else {
+          const result = response.toObject();
+
+          return res
+            .status(200)
+            .json({ notificationsList: result.notificationsList.map((n) => ({ ...n, type: MESSAGE_TYPES[n.type] })) });
+        }
       },
     );
   },
@@ -172,7 +190,10 @@ notificationRoutes.get("/api/notification/:id", async (req, res) => {
 
   notificationServiceClient.getNotification(new NotificationIdRequest().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
+    else {
+      const result = response.toObject();
+      return res.status(200).json({ ...result, type: MESSAGE_TYPES[result.type] });
+    }
   });
 });
 
@@ -191,7 +212,10 @@ notificationRoutes.put("/api/notification/:id/read", (req, res) => {
   const { id } = req.params;
   notificationServiceClient.readNotification(new NotificationIdRequest().setId(id), (error, response) => {
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
+    else {
+      const result = response.toObject();
+      return res.status(200).json({ ...result, type: MESSAGE_TYPES[result.type] });
+    }
   });
 });
 
@@ -234,7 +258,10 @@ notificationRoutes.put("/api/notification/:id", withCheck({ role: ["ADMIN", "MAN
 
   notificationServiceClient.updateNotification(request, (error, response) => {
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
+    else {
+      const result = response.toObject();
+      return res.status(200).json({ ...result, type: MESSAGE_TYPES[result.type] });
+    }
   });
 });
 
