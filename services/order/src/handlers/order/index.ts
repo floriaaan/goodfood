@@ -9,6 +9,7 @@ import { GetOrdersByUser } from "@order/handlers/order/get-user";
 import { GetOrderByDelivery } from "@order/handlers/order/get-delivery";
 import { GetOrderByPayment } from "@order/handlers/order/get-payment";
 import { GetOrdersByStatus } from "@order/handlers/order/get-status";
+import { GetOrdersByRestaurant } from "@order/handlers/order/get-restaurant";
 
 
 const orderHandlers: UntypedServiceImplementation = {
@@ -21,7 +22,7 @@ const orderHandlers: UntypedServiceImplementation = {
   GetOrderByDelivery,
   GetOrderByPayment,
   GetOrdersByStatus,
-
+  GetOrdersByRestaurant,
 };
 
 export default orderHandlers;
