@@ -11,7 +11,7 @@ export const GetOrdersByRestaurant = async (
   try {
     const { id } = request;
     const orders = (await prisma.order.findMany({
-      where: { restaurant_id: id },
+      where: { restaurant_id : id },
       include: { basket_snapshot: true, user: true },
     })) as ExtendedOrder[];
     callback(null, { orders: orders.map(toGrpc) as ExtendedOrder[] });
