@@ -1,25 +1,25 @@
+using Com.Goodfood.Reporting;
 using Grpc.Core;
-using MetricModel = reporting.Models.Metric;
-using RestaurantModel = reporting.Models.Restaurant;
-using RestaurantGroupModel = reporting.Models.RestaurantGroup;
-using MetricGrpc = reporting.Metric;
-using ReportingServiceAMQP = reporting.Services.RabbitMQ.ReportingService;
-using System;
-
+using Microsoft.Extensions.Options;
+using reporting.Models;
+using reporting.Libraries.RabbitMQ;
 
 namespace reporting.Services.GRPC;
 
-
-public class ReportingService : reporting.ReportingService.ReportingServiceBase
+public class ReportingService : Com.Goodfood.Reporting.ReportingService.ReportingServiceBase
 {
     private readonly ILogger<ReportingService> _logger;
     private readonly ReportingContext _db;
-    private readonly ReportingServiceAMQP _amqp;
-    public ReportingService(ILogger<ReportingService> logger)
+    private readonly RabbitMQClient _amqp;
+    public ReportingService(ILogger<ReportingService> logger, IOptions<Config> config)
     {
         _logger = logger;
-        _db = new ReportingContext();
-        _amqp = new ReportingServiceAMQP(logger);
+        _db = new ReportingContext(config);
+        _amqp = new RabbitMQClient("log");
+        
+        MetricObject._config = config;
+        RestaurantObject._config = config;
+        RestaurantGroupObject._config = config;
     }
 
     private void LogRequest<T>(T Request, ServerCallContext Context)
@@ -29,16 +29,15 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
         string RequestBody = Request?.ToString() ?? "null";
 
         _logger.LogInformation("\x1b[35m{Date}\x1b[0m | \x1b[36mGRPC\x1b[0m | \x1b[33m{Message}\x1b[0m\n", Date, Method + " with: " + RequestBody);
-        _amqp.LogRequest(Method, Request);
+        _amqp.Publish(Method, Request);
     }
 
     #region Metric
-    public override Task<MetricGrpc> GetMetric(GetMetricRequest request, ServerCallContext context)
+    public override Task<Metric> GetMetric(GetMetricRequest request, ServerCallContext context)
     {
-
         try
         {
-            MetricModel? metric = MetricModel.GetMetricByKey(request.Key);
+            MetricObject? metric = MetricObject.GetMetricByKey(request.Key);
             if (metric == null)
                 throw new RpcException(new Status(StatusCode.NotFound, "Metric not found"));
 
@@ -57,8 +56,8 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
         try
         {
 
-            List<MetricModel> metrics = MetricModel.GetMetricsByRestaurant(request.RestaurantId);
-            List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
+            List<MetricObject> metrics = MetricObject.GetMetricsByRestaurant(request.RestaurantId);
+            List<Metric> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
 
             LogRequest(request, context);
             // WARNING: this returns an empty object if no metrics are found
@@ -75,8 +74,8 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     {
         try
         {
-            List<MetricModel> metrics = MetricModel.GetMetricsByRestaurantAndDate(request.RestaurantId, request.Date);
-            List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
+            List<MetricObject> metrics = MetricObject.GetMetricsByRestaurantAndDate(request.RestaurantId, request.Date);
+            List<Metric> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
 
             LogRequest(request, context);
             // WARNING: this returns an empty object if no metrics are found
@@ -93,8 +92,8 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     {
         try
         {
-            List<MetricModel> metrics = MetricModel.GetMetricsByRestaurantGroup(request.RestaurantGroupId);
-            List<MetricGrpc> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
+            List<MetricObject> metrics = MetricObject.GetMetricsByRestaurantGroup(request.RestaurantGroupId);
+            List<Metric> response = metrics.Select(m => m.ToGrpcMetric()).ToList();
 
             LogRequest(request, context);
             // WARNING: this returns an empty object if no metrics are found
@@ -112,10 +111,10 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
 
         try
         {
-            MetricModel metric = MetricModel.FromGrpcPushMetric(request).Save();
+            MetricObject metricObject = MetricObject.FromGrpcPushMetric(request).Save();
 
             LogRequest(request, context);
-            return Task.FromResult(new PushMetricResponse { Key = metric.Key });
+            return Task.FromResult(new PushMetricResponse { Key = metricObject.Key });
         }
         catch (Exception e)
         {
@@ -131,12 +130,12 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     {
         try
         {
-            RestaurantModel? restaurant = RestaurantModel.GetRestaurant(request.Id);
+            RestaurantObject? restaurant = RestaurantObject.GetRestaurant(request.Id);
             if (restaurant == null)
                 throw new RpcException(new Status(StatusCode.NotFound, "Restaurant not found"));
 
             LogRequest(request, context);
-            return Task.FromResult(restaurant.ToGrpcRestaurant());
+            return Task.FromResult(restaurant.ToGrpcRestaurantMetric());
         }
         catch (Exception e)
         {
@@ -149,9 +148,9 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     {
         try
         {
-            RestaurantModel restaurant = RestaurantModel.FromGrpc(request).Save();
+            RestaurantObject restaurantObject = RestaurantObject.FromGrpc(request).Save();
             LogRequest(request, context);
-            return Task.FromResult(restaurant.ToGrpcRestaurant());
+            return Task.FromResult(restaurantObject.ToGrpcRestaurantMetric());
         }
         catch (Exception e)
         {
@@ -165,8 +164,8 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
         try
         {
             LogRequest(request, context);
-            RestaurantModel? restaurant = RestaurantModel.FromUpdateGrpc(request).Update();
-            return Task.FromResult(restaurant.ToGrpcRestaurant());
+            RestaurantObject? restaurant = RestaurantObject.FromUpdateGrpc(request).Update();
+            return Task.FromResult(restaurant.ToGrpcRestaurantMetric());
         }
         catch (Exception e)
         {
@@ -181,7 +180,7 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
 
         try
         {
-            RestaurantModel.Delete(request.Id);
+            RestaurantObject.Delete(request.Id);
             return Task.FromResult(new DeleteRestaurantResponse { Success = true });
         }
         catch
@@ -199,7 +198,7 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
         try
         {
 
-            RestaurantGroupModel? restaurantGroup = RestaurantGroupModel.GetRestaurantGroup(request.Id);
+            RestaurantGroupObject? restaurantGroup = RestaurantGroupObject.GetRestaurantGroup(request.Id);
             if (restaurantGroup == null)
                 throw new RpcException(new Status(StatusCode.NotFound, "Restaurant group not found"));
 
@@ -217,7 +216,7 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     {
         try
         {
-            RestaurantGroupModel restaurantGroup = RestaurantGroupModel.FromGrpc(request).Save();
+            RestaurantGroupObject restaurantGroup = RestaurantGroupObject.FromGrpc(request).Save();
             LogRequest(request, context);
             return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
         }
@@ -232,7 +231,7 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
     {
         try
         {
-            RestaurantGroupModel? restaurantGroup = RestaurantGroupModel.FromUpdateGrpc(request).Update();
+            RestaurantGroupObject? restaurantGroup = RestaurantGroupObject.FromUpdateGrpc(request).Update();
             LogRequest(request, context);
             return Task.FromResult(restaurantGroup.ToGrpcRestaurantGroup());
         }
@@ -245,11 +244,10 @@ public class ReportingService : reporting.ReportingService.ReportingServiceBase
 
     public override Task<DeleteRestaurantGroupResponse> DeleteRestaurantGroup(DeleteRestaurantGroupRequest request, ServerCallContext context)
     {
-
-
         try
         {
-            RestaurantGroupModel.Delete(request.Id);
+            
+            RestaurantGroupObject.Delete(request.Id);
             LogRequest(request, context);
             return Task.FromResult(new DeleteRestaurantGroupResponse { Success = true });
         }

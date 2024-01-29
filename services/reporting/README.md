@@ -49,14 +49,14 @@ You can use the following tools to help you with the setup:
 
 ### Codes, types
 
-| Code                       | Interval             | Type                  | Service        | Description                       |
-| -------------------------- | -------------------- | --------------------- | -------------- | --------------------------------- |
-| incomes\_<interval>        | 1d \| 1w \| 1m \| 1y | number                | Order, payment | Sum of order total prices         |
-| outcomes\_<interval>       | 1d \| 1w \| 1m \| 1y | number                | Stock          | Sum of restock prices             |
-| top5_selling\_<interval>   | 1w \| 1m             | string[] (product.id) | Order          | Top 5 selling products            |
-| affluence\_<interval>      | 1d                   | number[]              | Order          | Number of orders by hour          |
-| delivery_types\_<interval> | 1d                   | enum                  | Order          | Number of orders by delivery type |
-| rejection_rate\_<interval> | 1d                   | number                | Notification   | Rate of rejected orders           |
+| Code                       | Interval             | Type                       | Service        | Description                       |
+| -------------------------- | -------------------- |----------------------------| -------------- | --------------------------------- |
+| incomes\_<interval>        | 1d \| 1w \| 1m \| 1y | number                     | Order, payment | Sum of order total prices         |
+| outcomes\_<interval>       | 1d \| 1w \| 1m \| 1y | number                     | Stock          | Sum of restock prices             |
+| top5_selling\_<interval>   | 1w \| 1m             | string[] (product.id)      | Order          | Top 5 selling products            |
+| affluence\_<interval>      | 1d                   | number[]                   | Order          | Number of orders by hour          |
+| delivery_types\_<interval> | 1d                   | string (delivery;takeaway) | Order          | Number of orders by delivery type |
+| rejection_rate\_<interval> | 1d                   | number                     | Notification   | Rate of rejected orders           |
 
 ## Testing
 
