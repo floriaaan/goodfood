@@ -7,13 +7,13 @@ public class ReportingContext : DbContext
     public DbSet<MetricObject> Metrics { get; set; }
     public DbSet<RestaurantObject> Restaurants { get; set; }
     public DbSet<RestaurantGroupObject> Groups { get; set; }
-    
+
     private readonly IOptions<Config> _config;
 
     public ReportingContext(IOptions<Config> config)
     {
         _config = config;
-        
+
         Metrics = Set<MetricObject>();
         Restaurants = Set<RestaurantObject>();
         Groups = Set<RestaurantGroupObject>();
