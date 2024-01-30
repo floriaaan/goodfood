@@ -1,0 +1,19 @@
+meta {
+  name: get delivery person
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/delivery-person/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  user token must be a deliver person
+}
