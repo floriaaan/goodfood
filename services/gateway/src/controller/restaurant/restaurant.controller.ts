@@ -11,6 +11,8 @@ import {
   Address,
 } from "@gateway/proto/restaurant_pb";
 import { withCheck } from "@gateway/middleware/auth";
+import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
+import { User } from "@gateway/proto/user_pb";
 
 export const restaurantRoutes = Router();
 
@@ -26,6 +28,63 @@ restaurantRoutes.get("/api/restaurant/:id", (req: Request, res: Response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
+});
+
+restaurantRoutes.get("/api/restaurant/:id/users", async (req: Request, res: Response) => {
+  /* #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'string'
+     }
+     #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+     }
+    */
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  const user = await getUser(userId);
+  if (!user) return res.status(401).json({ message: "Unauthorized" });
+
+  const role = user.getRole()?.getCode();
+  if (role === undefined) return res.status(401).json({ message: "Unauthorized" });
+  if (role !== "ADMIN" && role !== "MANAGER") return res.status(401).json({ message: "Unauthorized" });
+  // ----------------------------
+
+  const { id } = req.params;
+
+  try {
+    const restaurant = (await new Promise((resolve, reject) => {
+      restaurantServiceClient.getRestaurant(new RestaurantId().setId(id), (error, response) => {
+        if (error) reject(error);
+        else resolve(response.toObject());
+      });
+    })) as Restaurant.AsObject;
+    if (!restaurant) return res.status(404).json({ message: "Restaurant not found" });
+    if (!restaurant.useridsList.includes(userId) || role !== "ADMIN")
+      return res.status(401).json({ message: "Unauthorized" });
+
+    const users = await Promise.all(
+      restaurant.useridsList.map(async (userId) => await getUser(userId).catch(() => undefined)),
+    ); // TODO (maybe): create user service method to get multiple users
+
+    return res.status(200).json({
+      usersList: (users.filter(Boolean) as User[]).map((u) => ({
+        id: u.getId(),
+        email: u.getEmail(),
+        firstname: u.getFirstName(),
+        lastname: u.getLastName(),
+        role: u.getRole()?.toObject(),
+      })), // to match list responses
+    });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
 });
 
 restaurantRoutes.get("/api/restaurant", (_: Request, res: Response) => {

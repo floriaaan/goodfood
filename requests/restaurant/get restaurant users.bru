@@ -1,0 +1,15 @@
+meta {
+  name: get restaurant users
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/restaurant/clre4oqjv000014eblvk1mkyw/users
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
