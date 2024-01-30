@@ -1,5 +1,16 @@
 import { deliveryPersonServiceClient, deliveryServiceClient } from "@gateway/services/clients/delivery.client";
-import { Delivery, DeliveryCreateInput, DeliveryPersonCreateInput, Status } from "@gateway/proto/delivery_pb";
+import {
+  Delivery,
+  DeliveryCreateInput,
+  DeliveryId,
+  DeliveryPerson,
+  DeliveryPersonCreateInput,
+  DeliveryPersonList,
+  Location,
+  Status,
+} from "@gateway/proto/delivery_pb";
+import { User, UserId } from "@gateway/proto/user_pb";
+import { userServiceClient } from "@gateway/services/clients/user.client";
 
 export const createDelivery = (
   address: string,
@@ -45,6 +56,33 @@ export const createDeliveryPerson = (
     .setLocationList(locationList);
   return new Promise((resolve, reject) => {
     deliveryPersonServiceClient.createDeliveryPerson(deliveryPerson, (error, response) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+};
+
+export const getDelivery = (id: string): Promise<Delivery | undefined> => {
+  const deliveryId = new DeliveryId();
+  deliveryId.setId(id);
+  return new Promise((resolve, reject) => {
+    deliveryServiceClient.getDelivery(deliveryId, (error, response) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+};
+
+export const getNearestDeliveryPerson = (lat: string, lng: string): Promise<DeliveryPersonList | undefined> => {
+  const location = new Location().setLatitude(Number(lat)).setLongitude(Number(lng));
+  return new Promise((resolve, reject) => {
+    deliveryPersonServiceClient.listNearDeliveryPersons(location, (error, response) => {
       if (error) {
         reject(error);
       } else {

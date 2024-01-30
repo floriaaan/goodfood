@@ -27,6 +27,8 @@ message Payment {
 service PaymentService {
   rpc GetPayment(GetPaymentRequest) returns (Payment) {}
   rpc GetPaymentsByUser(GetPaymentsByUserRequest) returns (GetPaymentsByUserResponse) {}
+  rpc GetPaymentsByStripe(GetPaymentsByStripeRequest) returns (GetPaymentsByStripeResponse) {}
+  rpc UpdatePaymentStatus(UpdatePaymentStatusRequest) returns (Payment) {}
 }
 
 service StripeService {
@@ -45,6 +47,14 @@ message GetPaymentsByUserResponse {
   repeated Payment payments = 1;
 }
 
+message GetPaymentsByStripeRequest {
+  string id = 1;
+}
+
+message GetPaymentsByStripeResponse {
+  repeated Payment payments = 1;
+}
+
 message CreateCheckoutSessionRequest {
   float total = 1;
   string user_id = 2;
@@ -56,4 +66,9 @@ message CreateCheckoutSessionRequest {
 message CreateCheckoutSessionResponse {
   Payment payment = 1;
   string clientSecret = 2;
+}
+
+message UpdatePaymentStatusRequest {
+  string id = 1;
+  string status = 2;
 }
