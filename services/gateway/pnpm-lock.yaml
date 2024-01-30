@@ -29,6 +29,9 @@ dependencies:
   google-protobuf:
     specifier: ^3.21.2
     version: 3.21.2
+  stripe:
+    specifier: 14.11.0
+    version: 14.11.0
   swagger-autogen:
     specifier: ^2.23.5
     version: 2.23.5
@@ -4399,6 +4402,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /stripe@14.11.0:
+    resolution: {integrity: sha512-NmFEkDC0PldP7CQtdPgKs5dVZA/pF+IepldbmB+Kk9B4d7EBkWnbANp0y+/zJcbRGul48s8hmQzeqNWUlWW0wg==}
+    engines: {node: '>=12.*'}
+    dependencies:
+      '@types/node': 18.17.6
+      qs: 6.11.0
+    dev: false
 
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}

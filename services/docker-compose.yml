@@ -12,8 +12,20 @@ services:
       - ./gateway/.env
     ports:
       - "50000:50000"
+      - "4242:4242"
     networks:
       - goodfood-network
+
+  #  Stripe service (for payment)
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: stripe-cli
+    command: "listen --forward-to gateway:4242/webhook"
+    networks:
+      - goodfood-network
+    environment:
+      STRIPE_API_KEY: sk_test_VePHdqKTYQjKNInc7u56JBrQ
 
   #  User service
 
@@ -88,7 +100,6 @@ services:
       - payment/.env.docker
     ports:
       - "50003"
-      - "4242:4242"
     networks:
       - goodfood-network
 

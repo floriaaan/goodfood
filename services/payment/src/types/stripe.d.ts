@@ -1,4 +1,4 @@
-import { Payment } from "@payment/types/payment";
+import {Payment} from "@payment/types/payment";
 
 export type CreateCheckoutSessionRequest = {
   total: number;
@@ -7,6 +7,7 @@ export type CreateCheckoutSessionRequest = {
   name: string;
   email: string;
 };
+
 export type CreateCheckoutSessionResponse = {
   payment: Payment;
   clientSecret: string;

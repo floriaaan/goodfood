@@ -32,5 +32,8 @@ COPY --from=builder /app/proto/ /proto/
 # Expose the gRPC port
 EXPOSE 50000
 
+# Expose the Webhook port
+EXPOSE 4242
+
 # Start the server
 CMD [ "node", "index.js"]
