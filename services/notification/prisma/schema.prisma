@@ -11,13 +11,28 @@ datasource db {
 }
 
 model Notification {
-  id  String   @id @default(cuid())
-  title String 
-  message String
-  message_type MessageType
+  id String @id @default(cuid())
+
+  title        String
+  description  String
+  icon         String
+  image        String?
+  callback_url String?
+  type         MessageType
+
+  user_id       String?
+  restaurant_id String?
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  read_at    DateTime?
 }
 
 enum MessageType {
-  USER_REQUEST
-  OUTPUT
+  USER_CLAIM
+  USER_PUSH
+  USER_EMAIL
+
+  RESTAURANT_PUSH
+  RESTAURANT_EMAIL
 }

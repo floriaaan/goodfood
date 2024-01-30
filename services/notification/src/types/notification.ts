@@ -1,30 +1,39 @@
-export interface Notification {
-    id: string;
+import { Notification } from "@prisma/client";
 
-    title: string;
-    message: string;
-    message_type: MessageType;
-}
+export type CreateNotificationRequest = Omit<
+  Notification,
+  "id" | "created_at" | "updated_at" | "read_at"
+>;
 
-export interface NotificationCreateInput {
-    title: string;
-    message: string;
-    message_type: MessageType;
-}
+export type NotificationIdRequest = {
+  id: Notification["id"];
+};
 
-export interface NotificationId {
-    id: string;
-}
+export type GetNotificationsByUserIdRequest = {
+  user_id: Notification["user_id"];
+};
 
-export interface NotificationList {
-	notifications: Notification[];
-}
+export type GetNotificationsByRestaurantIdRequest = {
+  restaurant_id: Notification["restaurant_id"];
+};
 
-export interface MessageTypeInput {
-    message_type: string;
-}
+export type UpdateNotificationRequest = Partial<
+  Omit<
+    Notification,
+    | "id"
+    | "created_at"
+    | "updated_at"
+    | "read_at"
+    | "user_id"
+    | "restaurant_id"
+    | "type"
+  >
+> & {
+  id: Notification["id"];
+};
 
-export const enum MessageType {
-	USER_REQUEST = "USER_REQUEST",
-	OUTPUT = "OUTPUT"
-}
+export type NotificationList = {
+  notifications: Notification[];
+};
+
+export { Notification };
