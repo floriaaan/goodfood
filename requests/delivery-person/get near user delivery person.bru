@@ -1,11 +1,11 @@
 meta {
-  name: list deliveries by restaurant id
+  name: get near user delivery person
   type: http
   seq: 1
 }
 
 get {
-  url: {{baseUrl}}/api/delivery/by-restaurant/restaurant_id:1
+  url: {{baseUrl}}/api/delivery-person/near/user
   body: none
   auth: bearer
 }
