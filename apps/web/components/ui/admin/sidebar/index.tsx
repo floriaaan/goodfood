@@ -1,8 +1,18 @@
 "use client";
 
-import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/ui/icon/logo";
 import { Select } from "@/components/ui/select";
+import { useAdmin } from "@/hooks/useAdmin";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
   MdChecklist,
   MdCurrencyBitcoin,
@@ -11,16 +21,6 @@ import {
   MdTableView,
   MdUnfoldMore,
 } from "react-icons/md";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { useAdmin } from "@/hooks/useAdmin";
 
 export const Sidebar = () => {
   const [displayMode, setDisplayMode] = useState("Default");
@@ -65,7 +65,7 @@ export const Sidebar = () => {
           <MdCurrencyBitcoin className="h-5 w-5 shrink-0" /> Statistiques et revenus
         </Link>
         <Link
-          href="/admin/stocks"
+          href="/admin/stock"
           className={cn(
             "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
             path === "/admin/stocks" && "bg-black bg-opacity-10",
