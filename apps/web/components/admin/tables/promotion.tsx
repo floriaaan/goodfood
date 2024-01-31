@@ -48,7 +48,7 @@ export const promotions_columns: ColumnDef<Promotion>[] = [
     },
   },
   {
-    accessorKey: "value",
+    accessorKey: "reduction",
     header: ({ column }) => {
       return (
         <button
