@@ -1,4 +1,3 @@
-import { Router } from "express";
 import {
   basketServiceClient,
   deliveryServiceClient,
@@ -13,6 +12,7 @@ import {
   stockServiceClient,
   userServiceClient,
 } from "@gateway/services/clients";
+import { Router } from "express";
 
 export const health_checkRoutes = Router();
 
@@ -31,7 +31,7 @@ const services = {
   userService: userServiceClient,
 };
 
-health_checkRoutes.get("/", async (req, res) => {
+health_checkRoutes.get("/api/health-check", async (req, res) => {
   const serviceStatuses: Record<
     string,
     {
@@ -43,6 +43,7 @@ health_checkRoutes.get("/", async (req, res) => {
   for (const [serviceName, serviceClient] of Object.entries(services)) {
     const start = Date.now();
     const deadline = new Date();
+    // TODO: Make this configurable
     deadline.setSeconds(deadline.getSeconds() + 5);
 
     try {
