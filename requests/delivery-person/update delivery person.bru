@@ -1,0 +1,35 @@
+meta {
+  name: update delivery person
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/api/delivery-person/clrc6hpa9000011x5sm1tj94y
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "phone": "0612345678",
+    "address": {
+      "street": "street",
+      "city": "city",
+      "zipcode": "zipcode",
+      "country": "country",
+      "lat": 40,
+      "lng": 1
+    }
+  }
+}

@@ -1,28 +1,32 @@
-import { Notification } from "@notifications/types/notification";
 import { log } from "@notifications/lib/log";
-import { Data } from "@notifications/types";
 import prisma from "@notifications/lib/prisma";
-import { MessageType } from "@prisma/client";
+import { Data } from "@notifications/types";
+import {
+	Notification,
+	UpdateNotificationRequest,
+} from "@notifications/types/notification";
 
 export const UpdateNotification = async (
-	{ request }: Data<Notification>,
-	callback: (err: any, response: Notification | null) => void
+  { request }: Data<UpdateNotificationRequest>,
+  callback: (err: any, response: Notification | null) => void
 ) => {
-	try {
-		const { id, title, message, message_type } = request;
+  try {
+    const { id, title, description, icon, image, callback_url } = request;
 
-		const notification = await prisma.notification.update({
-			where: { id },
-			data: {
-				title,
-				message,
-				message_type: message_type as unknown as MessageType
-			},
-		}) as unknown as Notification;
-		
-		callback(null, notification);
-	} catch (error) {
-		log.error(error);
-		callback(error, null);
-	}
+    const notification = await prisma.notification.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        icon,
+        image,
+        callback_url,
+      },
+    });
+
+    callback(null, notification);
+  } catch (error) {
+    log.error(error);
+    callback(error, null);
+  }
 };

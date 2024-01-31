@@ -17,11 +17,14 @@ import { restaurantRoutes } from "@gateway/controller/restaurant/restaurant.cont
 import { paymentRoutes } from "@gateway/controller/payment/payment.controller";
 import { mainAddressRoutes } from "@gateway/controller/user/mainAddress.controller";
 import { notificationRoutes } from "@gateway/controller/notification/notification.controller";
+
+import { health_checkRoutes } from "@gateway/handlers/health-check";
+
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 
-const app = express();
+export const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -116,6 +119,12 @@ app.use(
   "/",
   notificationRoutes,
   // #swagger.tags = ['Notification']
+);
+
+app.use(
+  "/",
+  health_checkRoutes,
+  // #swagger.tags = ['Health Check']
 );
 
 app.listen(PORT, () => {

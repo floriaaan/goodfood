@@ -79,4 +79,4 @@ jobs:
           context: ./services/
           file: ./services/promotions/Dockerfile
           push: true
-          tags: pierrelbg/goodfood-promotions:latest
+          tags: floriaaan/goodfood-promotions:latest
