@@ -20,7 +20,7 @@ type AdminContextData = {
   restaurants: Restaurant[];
   refetchRestaurants: () => void;
   restaurant: Restaurant | undefined;
-  restaurant_users: User[] | undefined;
+  restaurant_users: User[];
   refetchRestaurantUsers: () => void;
 
   products: Product[];

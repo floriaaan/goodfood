@@ -2,21 +2,21 @@
 
 import { MdAdd } from "react-icons/md";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DataTable } from "@/components/ui/data-table";
-import { Button } from "@/components/ui/button";
 import { Map, OrderPin, RestaurantPin } from "@/components/map";
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { products_columns } from "@/components/admin/tables/product";
-import { Marker, Popup } from "react-map-gl";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
-import { useAdmin } from "@/hooks/useAdmin";
+import { products_columns } from "@/components/admin/tables/product";
 import { promotions_columns } from "@/components/admin/tables/promotion";
-import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { restaurants_columns } from "@/components/admin/tables/restaurant";
 import { users_columns } from "@/components/admin/tables/user";
+import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { useAdmin } from "@/hooks/useAdmin";
 import { useState } from "react";
+import { Marker, Popup } from "react-map-gl";
 
 export default function AdminHome() {
   const { restaurant, selectRestaurant, restaurant_users, restaurants, products, promotions, orders } = useAdmin();
@@ -104,7 +104,7 @@ export default function AdminHome() {
               <TabsContent value="users">
                 <DataTable
                   columns={users_columns}
-                  data={restaurant_users || []}
+                  data={restaurant_users}
                   create={
                     <Sheet>
                       <SheetTrigger asChild>
