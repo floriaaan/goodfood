@@ -1,17 +1,17 @@
 /* eslint-disable @tanstack/query/exhaustive-deps */
 "use client";
 
-import { createContext, useContext, useMemo } from "react";
-import { createPersistedState } from "@/lib/use-persisted-state";
-import { useQuery } from "@tanstack/react-query";
-import { Restaurant } from "@/types/restaurant";
-import { fetchAPI } from "@/lib/fetchAPI";
 import { useAuth } from "@/hooks";
-import { Allergen, Category, Product } from "@/types/product";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { createPersistedState } from "@/lib/use-persisted-state";
 import { Order } from "@/types/order";
+import { Allergen, Category, Product } from "@/types/product";
 import { Promotion } from "@/types/promotion";
+import { Restaurant } from "@/types/restaurant";
 import { User } from "@/types/user";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { createContext, useContext, useMemo } from "react";
 
 type AdminContextData = {
   selectedRestaurantId: string | null;
@@ -94,7 +94,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const restaurants = useMemo(() => api_restaurants ?? [], [api_restaurants]);
   const { data: api_restaurant_users, refetch: refetchRestaurantUsers } = useQuery<User[]>({
-    queryKey: ["admin", "restaurant", "user", selectedRestaurantId],
+    queryKey: ["admin", "restaurant", "users", selectedRestaurantId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/restaurant/${selectedRestaurantId}/users`, token);
       const body = await res.json();
@@ -102,8 +102,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     },
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     placeholderData: [],
-    enabled: false, // todo: fix issue #42
-    // enabled: !!selectedRestaurantId,
+    enabled: !!selectedRestaurantId,
   });
   const restaurant_users = useMemo(() => api_restaurant_users ?? [], [api_restaurant_users]);
 
