@@ -19,6 +19,7 @@ import { MdArrowDropUp, MdCopyAll } from "react-icons/md";
 
 export const users_columns: ColumnDef<User>[] = [
   {
+    accessorKey: "firstName",
     id: "name",
     header: ({ column }) => {
       return (
@@ -32,13 +33,29 @@ export const users_columns: ColumnDef<User>[] = [
       );
     },
     cell: ({ row }) => {
-      const p = row.original;
+      const p = row.original as unknown as Omit<User, "firstName" | "lastName"> & {
+        firstname: string;
+        lastname: string;
+      };
 
       return (
         <span>
-          {p.firstName} {p.lastName}
+          {p.firstname} {p.lastname}
         </span>
       );
+    },
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "role",
+    header: "Role",
+    cell: ({ getValue }) => {
+      const r = getValue() as User["role"];
+
+      return <span>{r.label}</span>;
     },
   },
 
