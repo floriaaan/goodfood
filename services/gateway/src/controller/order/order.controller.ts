@@ -1,5 +1,5 @@
-import orderService from "../../services/clients/order.client";
-import { Request, Response, Router } from "express";
+import { check, withCheck } from "@gateway/middleware/auth";
+import { Address, Delivery } from "@gateway/proto/delivery_pb";
 import {
   Basket as BasketSnapshot,
   CreateOrderRequest,
@@ -14,12 +14,14 @@ import {
   UpdateOrderRequest,
   UserMinimum,
 } from "@gateway/proto/order_pb";
-import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
+import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
 import { User } from "@gateway/proto/user_pb";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
-import { check, withCheck } from "@gateway/middleware/auth";
+import { restaurantServiceClient } from "@gateway/services/clients";
 import { createDelivery } from "@gateway/services/delivery.service";
-import { Address, Delivery } from "@gateway/proto/delivery_pb";
+import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
+import { Request, Response, Router } from "express";
+import orderService from "../../services/clients/order.client";
 import { getRestaurant } from "@gateway/services/restaurant.service";
 
 export const orderRoutes = Router();
@@ -246,31 +248,93 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   });
 });
 
-orderRoutes.post("/api/order/by-status", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
-  /* #swagger.parameters['body'] = {
-        in: 'body',
+orderRoutes.get(
+  "/api/order/by-status/:status",
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['status'] = {
+        in: 'path',
         required: true,
-        schema: {
-            status :{'$ref': '#/definitions/Status'},
-        }
+        type: 'string'
     }
     #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
         type: 'string'
     } */
-  const { status }: { status: keyof typeof Status } = req.body;
-  const orderInput = new GetOrdersByStatusRequest().setStatus(Status[status]);
+    const status = req.params.status as keyof typeof Status;
+    const orderInput = new GetOrdersByStatusRequest().setStatus(Status[status]);
 
-  orderService.getOrdersByStatus(orderInput, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
+    orderService.getOrdersByStatus(orderInput, (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);
+
+orderRoutes.get(
+  "/api/order/by-restaurant/:id",
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
+  async (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+    } */
+
+    // Auth check and :id check ---
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: "Unauthorized", cause: "authorization not found" });
+    const token = authorization.split("Bearer ")[1];
+    const userId = await getUserIdFromToken(token);
+    if (!userId) return res.status(401).json({ message: "Unauthorized", cause: "userId not found" });
+    const user = await getUser(userId);
+    if (!user) return res.status(401).json({ message: "Unauthorized", cause: "user not found" });
+
+    const role = user.getRole()?.getCode();
+    if (role === undefined) return res.status(401).json({ message: "Unauthorized", cause: "role is undefined" });
+    if (role !== "ADMIN" && role !== "MANAGER")
+      return res.status(401).json({ message: "Unauthorized", cause: "role is not ADMIN or MANAGER" });
+    // ----------------------------
+
+    const { id } = req.params;
+
+    try {
+      const restaurant = (await new Promise((resolve, reject) => {
+        restaurantServiceClient.getRestaurant(new RestaurantId().setId(id), (error, response) => {
+          if (error) reject(error);
+          else resolve(response.toObject());
+        });
+      })) as Restaurant.AsObject;
+      if (!restaurant) return res.status(404).json({ message: "Restaurant not found" });
+      if (!restaurant.useridsList.includes(userId) && role !== "ADMIN")
+        return res.status(401).json({ message: "Unauthorized", cause: "user is not in restaurant and is not ADMIN" });
+
+      // orderService.get(orderInput, (error, response) => {
+      //   if (error) return res.status(500).send({ error });
+      //   else return res.status(200).json(response.toObject());
+      // });
+      // TODO: wait for order service to be updated by @PierreLbg pull request
+      return res.status(500).json({ message: "Not implemented yet" });
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  },
+);
 
 orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['deliveryId'] = {
+        in: 'path',
         required: true,
         type: 'string'
     } */
@@ -295,6 +359,11 @@ orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: 
 orderRoutes.get("/api/order/by-payment/:paymentId", async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['paymentId'] = {
+        in: 'path',
         required: true,
         type: 'string'
     } */
