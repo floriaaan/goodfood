@@ -1,6 +1,5 @@
 namespace goodfood_reporting
 {
-
     public class Program
     {
         public static void Main(string[] args)
@@ -15,6 +14,4 @@ namespace goodfood_reporting
                     webBuilder.UseStartup<Startup>();
                 });
     }
-
-
 }

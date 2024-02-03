@@ -15,7 +15,9 @@ export const fromInterval = (
     : new Date(new Date().setHours(23, 59, 59, 999));
 
   const start = // end - interval
-    interval === "1w"
+      interval === "1d" 
+      ? new Date(end.getTime() - DAY_IN_MS) 
+      : interval === "1w"
       ? new Date(end.getTime() - 7 * DAY_IN_MS)
       : interval === "1m"
       ? new Date(end.getTime() - 30 * DAY_IN_MS)

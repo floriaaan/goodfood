@@ -52,6 +52,14 @@ export type GetOrdersByStatusResponse = {
   orders: ExtendedOrder[];
 };
 
+export type GetOrdersByRestaurantRequest = {
+  id: string;
+};
+
+export type GetOrdersByRestaurantResponse = {
+  orders: ExtendedOrder[];
+};
+
 export type CreateOrderRequest = {
   payment_id: string;
   delivery_id: string;
