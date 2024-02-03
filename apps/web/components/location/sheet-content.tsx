@@ -103,6 +103,20 @@ export const LocationSheetContent = ({ closeModal = () => {} }) => {
             </div>
           ),
         });
+      } else {
+        toast({
+          className: "p-3",
+          children: (
+            <div className="inline-flex w-full items-end justify-between gap-2">
+              <div className="inline-flex shrink-0 gap-2">
+                <MdLocationOn className="h-6 w-6 text-red-500" />
+                <div className="flex w-full grow flex-col">
+                  <ToastTitle>Erreur lors de la mise à jour de votre adresse principale</ToastTitle>
+                </div>
+              </div>
+            </div>
+          ),
+        });
       }
     }
   };
