@@ -2,7 +2,6 @@ import { withCheck } from "@gateway/middleware/auth";
 import { productServiceClient } from "@gateway/services/clients";
 import { extendProduct } from "@gateway/services/product.service";
 import { Request, Response, Router } from "express";
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import {
   Allergen,
   Category,
@@ -13,7 +12,7 @@ import {
   Recipe,
   RestaurantId,
 } from "../../proto/product_pb";
-
+import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 export const productRoutes = Router();
 
 productRoutes.get("/api/product/by-restaurant/:id", (req: Request, res: Response) => {
