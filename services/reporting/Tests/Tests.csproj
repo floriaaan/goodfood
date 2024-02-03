@@ -4,13 +4,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Devart.Data.PostgreSql" Version="8.2.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.25.1" />
     <PackageReference Include="Quartz" Version="3.8.0" />
     <PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.0" />
     <PackageReference Include="xunit" Version="2.6.5" />
