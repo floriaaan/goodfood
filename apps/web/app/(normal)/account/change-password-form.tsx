@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { MdLock } from "react-icons/md";
 import { z } from "zod";
+import zxcvbn from "zxcvbn";
 
 const formSchema = z
   .object({
@@ -18,11 +19,11 @@ const formSchema = z
     password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères"),
     confirmPassword: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères"),
   })
-  .superRefine((data) => {
-    if (data.password !== data.confirmPassword) return { confirmPassword: "Les mots de passe ne correspondent pas" };
-
-    return {};
+  .refine((v) => v.password === v.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas.",
+    path: ["confirmPassword"],
   });
+
 export function ChangePasswordForm() {
   const { session, refetchUser } = useAuth();
   // 1. Define your form.
@@ -80,19 +81,6 @@ export function ChangePasswordForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        {/* <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Adresse mail</FormLabel>
-              <FormControl>
-                <FormInput type="email" className="bg-white" placeholder="jean.bon@beurre.fr" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <FormField
           control={form.control}
           name="oldpassword"
@@ -115,6 +103,7 @@ export function ChangePasswordForm() {
               <FormControl>
                 <FormInput className="bg-white" type="password" {...field} />
               </FormControl>
+              <PasswordStrength password={field.value} />
               <FormMessage />
             </FormItem>
           )}
@@ -137,3 +126,27 @@ export function ChangePasswordForm() {
     </Form>
   );
 }
+
+const PasswordStrength = ({ password }: { password: string }) => {
+  const passwordScore = zxcvbn(password).score;
+  return (
+    <div className="mt-2 h-2 bg-gray-200">
+      <div
+        className={[
+          " h-2  transition-all duration-500 ease-in-out",
+          passwordScore === 0 && password !== ""
+            ? "w-10 bg-red-500"
+            : passwordScore === 1
+            ? "w-1/4 bg-yellow-500"
+            : passwordScore === 2
+            ? "w-1/2 bg-green-500"
+            : passwordScore === 3
+            ? "w-3/4 bg-green-500"
+            : passwordScore === 4
+            ? "w-full animate-pulse bg-blue-500"
+            : "w-0",
+        ].join(" ")}
+      ></div>
+    </div>
+  );
+};
