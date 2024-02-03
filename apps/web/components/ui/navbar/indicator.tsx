@@ -31,7 +31,7 @@ const OrderIndicator = () => {
   const { user } = useAuth();
   if (!user) return null;
   const orders = orderList.filter((order) => order.user.id === user.id && order.status === Status.PENDING);
-  if (orders.length !== 0) return null;
+  if (orders.length === 0) return null;
 
   return (
     <div className="absolute right-0 top-0 z-20 flex h-4 w-8 items-center justify-center gap-x-1 bg-gf-green ">
