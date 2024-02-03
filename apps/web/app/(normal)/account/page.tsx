@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export default function UserAccount() {
   return (
     <>
-      <div className="flex flex-col gap-4 bg-neutral-100 p-4 lg:p-8">
+      <div className="flex flex-col gap-4 bg-neutral-100 p-4 pt-6 lg:p-8">
         <h2 className="font-ultrabold text-3xl uppercase">Mon compte</h2>
         <Accordion defaultValue="infos" type="single" collapsible>
           <AccordionItem value="infos">
