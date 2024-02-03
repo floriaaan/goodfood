@@ -1,0 +1,44 @@
+meta {
+  name: create restaurant
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/restaurant
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+  
+    "name": "Les champs",
+    "description": "restaurant-desc",
+    "address": {
+      "street": "9 rue des champs",
+      "city": "Saint Ouen de Thouberville",
+      "zipCode": "27310",
+      "country": "France",
+      "lat": 49.3573604,
+      "lng": 0.889712
+    },
+    "openingHoursList": [
+      "12h-14h",
+      "19h-22h"
+    ],
+    "phone": "restaurant-phone",
+    "userIds": [
+      "54ed8c99-ccc1-4ebb-8032-73f432ced687",
+      "user-id-2"
+    ]
+  }
+}

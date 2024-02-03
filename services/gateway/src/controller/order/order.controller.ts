@@ -16,12 +16,10 @@ import {
 } from "@gateway/proto/order_pb";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { User } from "@gateway/proto/user_pb";
-import {getBasketByUser, resetBasketByUser} from "@gateway/services/basket.service";
+import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { check, withCheck } from "@gateway/middleware/auth";
-import {Restaurant, RestaurantId} from "@gateway/proto/restaurant_pb";
-import {restaurantServiceClient} from "@gateway/services/clients/restaurant.client";
-import {createDelivery} from "@gateway/services/delivery.service";
-import {Delivery} from "@gateway/proto/delivery_pb";
+import { createDelivery } from "@gateway/services/delivery.service";
+import { Delivery } from "@gateway/proto/delivery_pb";
 
 export const orderRoutes = Router();
 
@@ -103,11 +101,11 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
   if (!user) return res.status(404).send({ error: "User not found" });
 
   const miniUser = new UserMinimum()
-      .setId(String(user.getId()))
-      .setEmail(user.getEmail())
-      .setFirstName(user.getFirstName())
-      .setLastName(user.getLastName())
-      .setPhone(user.getPhone());
+    .setId(String(user.getId()))
+    .setEmail(user.getEmail())
+    .setFirstName(user.getFirstName())
+    .setLastName(user.getLastName())
+    .setPhone(user.getPhone());
 
   let orderBasket: BasketSnapshot | undefined = undefined;
   try {
@@ -118,12 +116,12 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
   }
 
   const orderInput = new CreateOrderRequest()
-      .setUser(miniUser)
-      .setPaymentId(paymentId)
-      .setDeliveryId(deliveryId)
-      .setDeliveryType(deliveryType)
-      .setBasketSnapshot(orderBasket)
-      .setRestaurantId(restaurantId);
+    .setUser(miniUser)
+    .setPaymentId(paymentId)
+    .setDeliveryId(deliveryId)
+    .setDeliveryType(deliveryType)
+    .setBasketSnapshot(orderBasket)
+    .setRestaurantId(restaurantId);
 
   orderService.createOrder(orderInput, (error, response) => {
     if (error) return res.status(500).send({ error });
@@ -230,7 +228,7 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
 
   const { userId } = req.params;
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
-  if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: Number(userId) })))
+  if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: userId })))
     return res.status(401).send({ error: "Unauthorized" });
   // ----------------------------
 
@@ -241,11 +239,8 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   });
 });
 
-orderRoutes.post(
-  "/api/order/by-status",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /* #swagger.parameters['body'] = {
+orderRoutes.post("/api/order/by-status", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /* #swagger.parameters['body'] = {
         in: 'body',
         required: true,
         schema: {
@@ -257,15 +252,14 @@ orderRoutes.post(
         required: true,
         type: 'string'
     } */
-    const { status }: { status: keyof typeof Status } = req.body;
-    const orderInput = new GetOrdersByStatusRequest().setStatus(Status[status]);
+  const { status }: { status: keyof typeof Status } = req.body;
+  const orderInput = new GetOrdersByStatusRequest().setStatus(Status[status]);
 
-    orderService.getOrdersByStatus(orderInput, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  orderService.getOrdersByStatus(orderInput, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
 
 orderRoutes.get("/api/order/by-delivery/:deliveryId", async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {

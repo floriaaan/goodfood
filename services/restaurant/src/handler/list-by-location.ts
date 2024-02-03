@@ -6,7 +6,7 @@ import {
   Restaurant,
   RestaurantList,
 } from "@restaurant/types/restaurant";
-import { getDistance } from 'geolib';
+import { getDistance } from "geolib";
 
 interface RestaurantWithDistance extends Restaurant {
   distance: number;
@@ -19,7 +19,10 @@ export const sortRestaurantsByDistance = (
   return restaurants
     .map((restaurant) => ({
       ...restaurant,
-      distance: getDistance(location, restaurant.location),
+      distance: getDistance(location, [
+        restaurant.address.lat,
+        restaurant.address.lng,
+      ]),
     }))
     .sort((a, b) => a.distance - b.distance);
 };
@@ -29,11 +32,13 @@ export const GetRestaurantsByLocation = async (
   callback: (err: any, response: RestaurantList | null) => void
 ) => {
   try {
-    const { location } = request;
+    const { lat, lng } = request;
 
-    const all = (await prisma.restaurant.findMany()) as unknown as Restaurant[];
+    const all = (await prisma.restaurant.findMany({
+      include: { address: true },
+    })) as unknown as Restaurant[];
 
-    const restaurants = sortRestaurantsByDistance(all, location)
+    const restaurants = sortRestaurantsByDistance(all, [lat, lng])
       .map(({ distance, ...restaurant }) => restaurant as Restaurant)
       .filter((_, i) => i < 10);
 

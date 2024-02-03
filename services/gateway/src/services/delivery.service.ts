@@ -4,7 +4,7 @@ import { Delivery, DeliveryCreateInput, DeliveryPersonCreateInput, Status } from
 export const createDelivery = (
   address: string,
   deliveryPersonId: string,
-  userId: number,
+  userId: string,
   restaurantId: string,
 ): Promise<Delivery | undefined> => {
   const deliveryCreateInput = new DeliveryCreateInput()
@@ -31,14 +31,14 @@ const getEtaByUserAddress = (address: string) => {
 };
 
 export const createDeliveryPerson = (
-  idUser: number,
+  idUser: string,
   firstName: string,
   lastName: string,
   phone: string,
   locationList: number[],
 ) => {
   const deliveryPerson = new DeliveryPersonCreateInput()
-    .setUserId(String(idUser))
+    .setUserId(idUser)
     .setFirstName(firstName)
     .setLastName(lastName)
     .setPhone(phone)

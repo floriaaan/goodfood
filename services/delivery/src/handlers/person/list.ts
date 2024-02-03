@@ -7,7 +7,9 @@ export const ListDeliveryPersons = async (
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const delivery_persons = await prisma.deliveryPerson.findMany();
+    const delivery_persons = await prisma.deliveryPerson.findMany({
+      include: { deliveries: { include: { address: true } }, address: true },
+    });
     callback(null, { delivery_persons });
   } catch (error) {
     log.error(error);

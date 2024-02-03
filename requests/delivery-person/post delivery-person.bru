@@ -7,21 +7,29 @@ meta {
 post {
   url: {{baseUrl}}/api/delivery-person
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "firstName": "<string>",
-    "lastName": "<string>",
-    "phone": "<string>",
-    "locationList": [
-      "<number>",
-      "<number>"
-    ]
+    "firstName": "John",
+    "lastName": "Doe",
+    "phone": "0622345679",
+    "address": {
+      "street": "street",
+      "city": "city",
+      "zipcode": "zipcode",
+      "country": "country",
+      "lat": 40,
+      "lng": 1
+    }
   }
 }

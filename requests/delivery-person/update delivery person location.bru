@@ -1,0 +1,28 @@
+meta {
+  name: update delivery person location
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/api/delivery-person/clrc6hpa9000011x5sm1tj94y/location
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "address": {
+      "lat": 41.5,
+      "lng": 1.19    
+    }
+  }
+}

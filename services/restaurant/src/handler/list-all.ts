@@ -8,8 +8,9 @@ export const GetRestaurants = async (
   callback: (err: any, response: RestaurantList | null) => void
 ) => {
   try {
-    const restaurants =
-      (await prisma.restaurant.findMany()) as unknown as Restaurant[];
+    const restaurants = (await prisma.restaurant.findMany({
+      include: { address: true },
+    })) as unknown as Restaurant[];
 
     callback(null, { restaurants });
   } catch (error) {

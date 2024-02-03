@@ -4,16 +4,21 @@ import { DeliveryId } from "@delivery/types/delivery";
 import { Data } from "@delivery/types";
 
 export const GetDelivery = async (
-  data: Data<DeliveryId>,
+  { request }: Data<DeliveryId>,
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { request } = data;
     const { id } = request;
 
     const delivery = await prisma.delivery.findFirstOrThrow({
       where: { id },
-      include: { delivery_person: true },
+      include: {
+        delivery_person: {
+          include: { address: true },
+        },
+        address: true,
+        restaurant_address: true,
+      },
     });
     callback(null, delivery);
   } catch (error) {

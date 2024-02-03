@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/delivery/by-restaurant/:id
+  url: {{baseUrl}}/api/delivery/by-restaurant/restaurant_id:1
   body: none
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
 }
