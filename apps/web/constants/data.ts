@@ -1,7 +1,7 @@
 /* import { Status } from "@/types/global";
 import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
-import { ExtendedProduct, Allergen, Category, Product, ProductType } from "@/types/product";
+import { Allergen, Category, ExtendedProduct, Product, ProductType } from "@/types/product";
 import { Restaurant } from "@/types/restaurant";
 import { Ingredient } from "@/types/stock";
 import { User } from "@/types/user";
@@ -245,7 +245,14 @@ export const orderList: Order[] = [
     delivery: {
       id: "delivery_id:1",
       eta: "2023-08-07T10:20:00.000Z",
-      address: "9 rue des Champs, 27310 Saint-Ouen-de-Thouberville",
+      address: {
+        lat: 49.440459,
+        lng: 1.094853,
+        street: "1 Rue du Gros Horloge",
+        city: "Rouen",
+        zipcode: "76000",
+        country: "France",
+      },
       status: Status.PENDING,
       restaurant_id: "restaurant_id:1",
       person: {
@@ -303,7 +310,14 @@ export const orderList: Order[] = [
     delivery: {
       id: "delivery_id:2",
       eta: "2021-05-20T12:00:00.000Z",
-      address: "1 Rue du Gros Horloge, 76000 Rouen",
+      address: {
+        lat: 49.370459,
+        lng: 0.9,
+        street: "1 Rue du Gros Horloge",
+        city: "Rouen",
+        zipcode: "76000",
+        country: "France",
+      },
       status: Status.PENDING,
       restaurant_id: "restaurant_id:1",
       person: {
