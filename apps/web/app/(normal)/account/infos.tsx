@@ -19,7 +19,9 @@ export const Infos = () => {
           />
           <div className="flex flex-col gap-4">
             <div>
-              <h3 className="font-ultrabold text-2xl font-bold">{user?.firstName ?? "Nom"}</h3>
+              <h3 className="font-ultrabold text-2xl font-bold">
+                {user?.firstName ?? "Prénom"} {user?.lastName ?? "Nom"}
+              </h3>
               <p className="text-neutral-600">{user?.email ?? "Email"}</p>
             </div>
             <div>

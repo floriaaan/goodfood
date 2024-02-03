@@ -9,9 +9,9 @@ export const Sidebar = () => {
   const path = usePathname();
 
   return (
-    <div className="mb-2 flex flex-col lg:mb-32">
+    <div className=" flex flex-col lg:mb-32">
       <div className="has-background-rectangle h-4"></div>
-      <div className=" sticky h-full w-full flex-row flex-nowrap items-center justify-between gap-2 bg-black p-4 text-white md:flex lg:w-fit lg:grow lg:flex-col lg:justify-normal">
+      <div className=" sticky h-full w-full flex-row flex-nowrap items-center gap-2 bg-black p-4 text-white md:flex lg:w-fit lg:grow lg:flex-col lg:justify-normal">
         <Link
           href="/account"
           className={cn(

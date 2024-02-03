@@ -10,10 +10,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState } from "react";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -24,8 +24,10 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   create,
+  noDataMessage,
 }: DataTableProps<TData, TValue> & {
   create?: React.ReactNode;
+  noDataMessage?: string;
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -73,8 +75,8 @@ export function DataTable<TData, TValue>({
               })
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  Pas de données
+                <TableCell colSpan={columns.length} className="h-24 text-center text-sm text-neutral-600">
+                  {noDataMessage || "Pas de données"}
                 </TableCell>
               </TableRow>
             )}
