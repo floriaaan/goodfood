@@ -4,7 +4,7 @@ export type Delivery = {
   id: string;
   eta: string;
 
-  address: string;
+  address: Address;
   status: Status;
 
   person: DeliveryPerson;
@@ -22,4 +22,14 @@ export type DeliveryPerson = {
   location: [number, number];
 
   deliveries?: Delivery[];
+};
+
+export type Address = {
+  lat: number;
+  lng: number;
+
+  street?: string;
+  city?: string;
+  zipcode?: string;
+  country?: string;
 };

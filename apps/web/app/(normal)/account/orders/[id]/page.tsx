@@ -1,21 +1,43 @@
+"use client";
 import { OrderStatusMap } from "@/app/(normal)/account/orders/[id]/map";
 import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { orderList } from "@/constants/data";
+import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import { useAuth } from "@/hooks";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Link from "next/link";
 import { MdArrowBack, MdArrowForward, MdDirectionsWalk, MdShoppingBasket } from "react-icons/md";
 
 type PageProps = { params: { id: string } };
 
-export default async function UserOrders({ params }: PageProps) {
+export default function UserOrders({ params }: PageProps) {
   // decode url encoded params.id
   const id = decodeURIComponent(params.id);
-  const order = await Promise.resolve(orderList.find((order) => order.id === id));
+  const { session, isAuthenticated } = useAuth();
+  const {
+    data: order,
+    isLoading,
+    isError,
+  } = useQuery<Order>({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["user", "order", id],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/order/${id}`, session?.token);
+      const body = await res.json();
+      return body;
+    },
+    staleTime: 0, // no stale time because we want to always fetch the latest data
+    enabled: isAuthenticated,
+  });
 
-  if (!order) return <div>Order not found</div>;
+  if (isLoading) return <LargeComponentLoader />;
+  if (isError) return <div>Erreur lors du chargement de la commande</div>;
+  if (!order) return <div>Commande introuvable</div>;
 
   return (
     <>
@@ -36,7 +58,7 @@ export default async function UserOrders({ params }: PageProps) {
             <div className="flex w-full flex-col items-start">
               <div className="text-sm font-semibold">Je fais livrer ma commande</div>
               <div className="text-xs">
-                {order.delivery.address} à {format(new Date(order.delivery.eta), "HH:mm")}
+                {order.delivery.address.street} à {format(new Date(order.delivery.eta), "HH:mm")}
               </div>
             </div>
           </div>
