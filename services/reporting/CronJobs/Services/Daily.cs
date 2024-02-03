@@ -65,7 +65,7 @@ public class Daily(IScheduleConfig<Daily> scheduleConfig, ILogger<Daily> logger)
                         new { restaurant.Name });
                     continue;
                 }
-                reportingRestaurant.Update(restaurant.Name, restaurant.Address);
+                reportingRestaurant.Update(restaurant.Name, restaurant.Address.Street);
                 
                 ProcessIncomes(restaurant.Id, reportingRestaurant, cancellationToken);
                 ProcessOutcomes(restaurant.Id, reportingRestaurant, cancellationToken);

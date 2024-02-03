@@ -1,4 +1,5 @@
 using Com.Goodfood.Reporting;
+using Com.Goodfood.Restaurant;
 using Restaurant = Com.Goodfood.Restaurant.Restaurant;
 using RestaurantMetric = Com.Goodfood.Reporting.Restaurant;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,12 @@ namespace reporting.Models
             {
                 Id = this.Id,
                 Name = this.Name,
-                Address = this.Address,
+                Address = new Address()
+                {
+                    Street = this.Address,
+                    RestaurantId = Id,
+                } 
+                    
             };
         }
 
@@ -42,7 +48,7 @@ namespace reporting.Models
         public void FromRestaurantService(Restaurant restaurant)
         {
             this.Name = restaurant.Name;
-            this.Address = restaurant.Address;
+            this.Address = restaurant.Address.Street;
         } 
         
         public static RestaurantObject FromGrpc(CreateRestaurantRequest request)
