@@ -305,7 +305,7 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: R
 
   if (user && user.role?.code === "DELIVERY_PERSON") {
     try {
-      await createDeliveryPerson(user.id, user.firstName, user.lastName, user.phone, []);
+      await createDeliveryPerson(user.id, user.firstName, user.lastName, user.phone, undefined);
     } catch (error) {
       return res.status(500).send({ error });
     }

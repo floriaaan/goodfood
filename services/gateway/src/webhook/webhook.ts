@@ -1,4 +1,4 @@
-import { STRIPE_ENDPOINT_SECRET, stripe } from "@gateway/lib/stripe";
+import { stripe, STRIPE_ENDPOINT_SECRET } from "@gateway/lib/stripe";
 import { log, utils } from "@gateway/lib/log/log";
 import express from "express";
 import { paymentServiceClient } from "@gateway/services/clients/payment.client";
@@ -8,8 +8,10 @@ import orderClient from "@gateway/services/clients/order.client";
 import { Basket, CreateOrderRequest, UserMinimum } from "@gateway/proto/order_pb";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { getUser } from "@gateway/services/user.service";
-import { getDelivery, getNearestDeliveryPerson } from "@gateway/services/delivery.service";
+import { createDelivery } from "@gateway/services/delivery.service";
 import { getRestaurant } from "@gateway/services/restaurant.service";
+import { Address } from "@gateway/proto/delivery_pb";
+import { updateQuantityFromBasket } from "@gateway/services/stock.service";
 
 const app = express();
 
@@ -53,11 +55,20 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
       const user = await getUser(payment.user!.id);
       if (!user) break;
 
-      // const deliveryPersonList = await getNearestDeliveryPerson(restaurant.get);
-      // if (!deliveryPersonList) break;
+      const mainAddress = user.getMainaddress();
+      if (!mainAddress) break;
 
-      const delivery = await getDelivery(user.getId());
+      const delivery = await createDelivery(
+        new Address().setLat(mainAddress.getLat()).setLng(mainAddress.getLng()),
+        user.getId(),
+        restaurant.getId(),
+      );
       if (!delivery) break;
+      // GetIngredientRestaurantsByProduct (ING service) -> get ingredient quantity by productId in (product service) -> delete ingredient quantity in (ingredient service)
+
+      basket.getProductsList().map(async (product) => {
+        updateQuantityFromBasket(product.getId());
+      });
 
       // TODO: Set delivery Type
       orderClient.createOrder(
