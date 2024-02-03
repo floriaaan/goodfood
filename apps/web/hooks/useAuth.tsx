@@ -1,12 +1,12 @@
 "use client";
-import { setCookie, getCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 
 /**
  * TODO: add default restaurant from mainAddress (the nearest one)
  */
 
 import { User } from "@/types/user";
-import { useState, createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 // import { user as user_tmp } from "@/constants/data";
 import { fetchAPI } from "@/lib/fetchAPI";
@@ -28,7 +28,7 @@ type AuthContextType = {
   session: Session | null;
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<Response>;
   logout: () => void;
 
   refetchUser: () => void;
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       body: JSON.stringify({ email, password }),
     });
     const body = await res.json();
-    if (!res.ok || res.status !== 200) throw body;
+    if (!res.ok || res.status !== 200) return res;
 
     setSession(body);
     setCookie("gf-token", body.token, {
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // make max age last time defined in user service
       maxAge: 30 * 24 * 60 * 60,
     });
-    return true;
+    return res;
   };
 
   const logout = () => {

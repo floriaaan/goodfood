@@ -1,28 +1,22 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-import { createPersistedState } from "@/lib/use-persisted-state";
-import { MainAddress } from "@/types/user";
-import { useAuth } from "@/hooks";
-import { useToast } from "@/components/ui/use-toast";
 import { ToastAction, ToastDescription, ToastTitle } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks";
+import { formatEta } from "@/lib/eta";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { getDirections } from "@/lib/fetchers/externals/mapbox";
+import { toPrice } from "@/lib/product/toPrice";
+import { createPersistedState } from "@/lib/use-persisted-state";
+import { Basket, DEFAULT_BASKET } from "@/types/basket";
+import { Product } from "@/types/product";
+import { Restaurant } from "@/types/restaurant";
+import { MainAddress } from "@/types/user";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { toPrice } from "@/lib/product/toPrice";
-import { useQuery } from "@tanstack/react-query";
-import { Product } from "@/types/product";
-import { fetchAPI } from "@/lib/fetchAPI";
-import { Basket, DEFAULT_BASKET } from "@/types/basket";
-import { Restaurant } from "@/types/restaurant";
-import { getDirections } from "@/lib/fetchers/externals/mapbox";
-import { formatEta } from "@/lib/eta";
 
 type Address = Omit<MainAddress, "id" | "lat" | "lng">;
 
