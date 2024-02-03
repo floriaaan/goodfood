@@ -22,6 +22,7 @@ model Product {
   type Product_type
   categories Category[]
   allergens  Allergen[]
+  recipe Recipe[]
 }
 
 model Category {
@@ -38,6 +39,14 @@ model Allergen {
   libelle String   @unique
 
   products Product[]
+}
+
+model Recipe {
+    id   String   @id @default(cuid())
+    product Product @relation(fields: [product_id], references: [id])
+    product_id String
+    ingredient_id String
+    quantity Int
 }
 
 enum Product_type {
