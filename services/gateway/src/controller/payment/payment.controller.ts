@@ -62,7 +62,7 @@ paymentRoutes.get("/api/payment/by-user/:userId", async (req: Request, res: Resp
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   // ----------------------------
   const { id } = req.params;
-  if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: Number(id) })))
+  if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: id })))
     return res.status(401).json({ message: "Unauthorized" });
 
   paymentServiceClient.getPaymentsByUser(new GetPaymentsByUserRequest().setId(id), (error, response) => {

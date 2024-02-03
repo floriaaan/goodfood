@@ -1,0 +1,32 @@
+meta {
+  name: create notification
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/notification/
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "notification-title",
+    "description": "notification-description",
+    "icon": "notification-icon",
+    "image": "notification-image",
+    "callback_url": "notification-callback_url",
+    "type": "USER_CLAIM",
+    "user_id": "54ed8c99-ccc1-4ebb-8032-73f432ced687",
+    "restaurant_id": "clr7vjrof0000rf2xvitq6c2t"
+  }
+}

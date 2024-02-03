@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/stock/ingredient/restaurant/by-restaurant/:id
+  url: {{baseUrl}}/api/stock/ingredient/restaurant/by-restaurant/clr4nqub90000pk2no8cyqwmy
   body: none
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
 }

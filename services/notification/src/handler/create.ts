@@ -1,27 +1,43 @@
-import { NotificationCreateInput, Notification } from "@notifications/types/notification";
 import { log } from "@notifications/lib/log";
-import { Data } from "@notifications/types";
 import prisma from "@notifications/lib/prisma";
-import { MessageType } from "@prisma/client";
+import { Data } from "@notifications/types";
+import {
+  CreateNotificationRequest,
+  Notification,
+} from "@notifications/types/notification";
 
 export const CreateNotification = async (
-	{ request }: Data<NotificationCreateInput>,
-	callback: (err: any, response: Notification | null) => void
+  { request }: Data<CreateNotificationRequest>,
+  callback: (err: any, response: Notification | null) => void
 ) => {
-	try {
-		const {  message, message_type, title } = request;
+  try {
+    const {
+      title,
+      description,
+      icon,
+      image,
+      callback_url,
+      type,
+      user_id,
+      restaurant_id,
+    } = request;
 
-		const notifications = await prisma.notification.create({
-			data: {
-				title,
-				message,
-				message_type: message_type as unknown as MessageType
-			},
-		}) as unknown as Notification;
+    const notification = await prisma.notification.create({
+      data: {
+        title,
+        description,
+        icon,
+        image,
+        callback_url,
+        type,
+        user_id,
+        restaurant_id,
+      },
+    });
 
-		callback(null, notifications);
-	} catch (error) {
-		log.error(error);
-		callback(error, null);
-	}
+    callback(null, notification);
+  } catch (error) {
+    log.error(error);
+    callback(error, null);
+  }
 };

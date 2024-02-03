@@ -19,23 +19,75 @@ model Delivery {
   id  String   @id @default(cuid())
   eta DateTime
 
-  address String
-  status  Status @default(PENDING)
+  address    Address?
+  address_id String?
+
+  status Status @default(PENDING)
 
   delivery_person    DeliveryPerson @relation(fields: [delivery_person_id], references: [id])
   delivery_person_id String
 
-  user_id       String
-  restaurant_id String
+  restaurant_address RestaurantAddress @relation(fields: [restaurant_id], references: [id])
+  restaurant_id      String
+
+  user_id String
+}
+
+model Address {
+  id String @id @default(cuid())
+
+  lat Float
+  lng Float
+
+  street  String?
+  city    String?
+  zipcode String?
+  country String?
+
+  delivery    Delivery @relation(fields: [delivery_id], references: [id], onDelete: Cascade)
+  delivery_id String   @unique
+
+  @@map("DeliveryAddress")
+}
+
+model RestaurantAddress {
+  id String @unique
+
+  lat Float
+  lng Float
+
+  street  String?
+  city    String?
+  zipcode String?
+  country String?
+
+  deliveries Delivery[]
 }
 
 model DeliveryPerson {
-  id         String  @id @default(cuid())
-  user_id    String  @unique
+  id         String @id @default(cuid())
+  user_id    String @unique
   first_name String
   last_name  String
-  phone      String  @unique
-  location   Float[]
+  phone      String @unique
 
   deliveries Delivery[]
+
+  address    DeliveryPersonAddress?
+  address_id String?                @unique
+}
+
+model DeliveryPersonAddress {
+  id String @id @default(cuid())
+
+  lat Float
+  lng Float
+
+  street  String?
+  city    String?
+  zipcode String?
+  country String?
+
+  delivery_person    DeliveryPerson @relation(fields: [delivery_person_id], references: [id], onDelete: Cascade)
+  delivery_person_id String         @unique
 }
