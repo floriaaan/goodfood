@@ -1,28 +1,21 @@
 import { deliveryPersonServiceClient, deliveryServiceClient } from "@gateway/services/clients/delivery.client";
 import {
+  Address,
   Delivery,
   DeliveryCreateInput,
   DeliveryId,
-  DeliveryPerson,
   DeliveryPersonCreateInput,
   DeliveryPersonList,
   Location,
-  Status,
 } from "@gateway/proto/delivery_pb";
-import { User, UserId } from "@gateway/proto/user_pb";
-import { userServiceClient } from "@gateway/services/clients/user.client";
 
 export const createDelivery = (
-  address: string,
-  deliveryPersonId: string,
+  address: Address,
   userId: string,
   restaurantId: string,
 ): Promise<Delivery | undefined> => {
   const deliveryCreateInput = new DeliveryCreateInput()
-    .setEta(getEtaByUserAddress(address))
-    .setAddress(address)
-    .setStatus(Status.PENDING)
-    .setDeliveryPersonId(deliveryPersonId)
+    .setAddress(address ? new Address().setLat(address.getLat()).setLng(address.getLng()) : address)
     .setUserId(userId.toString())
     .setRestaurantId(restaurantId);
   return new Promise((resolve, reject) => {
@@ -46,14 +39,14 @@ export const createDeliveryPerson = (
   firstName: string,
   lastName: string,
   phone: string,
-  locationList: number[],
+  address: Address.AsObject | undefined,
 ) => {
   const deliveryPerson = new DeliveryPersonCreateInput()
     .setUserId(idUser)
     .setFirstName(firstName)
     .setLastName(lastName)
     .setPhone(phone)
-    .setLocationList(locationList);
+    .setAddress(address ? new Address().setLat(address.lat).setLng(address.lng) : address);
   return new Promise((resolve, reject) => {
     deliveryPersonServiceClient.createDeliveryPerson(deliveryPerson, (error, response) => {
       if (error) {
