@@ -1,6 +1,15 @@
 import { Request, Response, Router } from "express";
-import { productServiceClient } from "../../services/clients/product.client";
-import { Allergen, Category, File, Product, ProductId, ProductType, RestaurantId } from "../../proto/product_pb";
+import { productServiceClient } from "@gateway/services/clients";
+import {
+  Allergen,
+  Category,
+  File,
+  Product,
+  ProductId,
+  ProductType,
+  Recipe,
+  RestaurantId,
+} from "../../proto/product_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import { withCheck } from "@gateway/middleware/auth";
 
@@ -79,7 +88,10 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
                     }],
                 allergens: [{
                         id:"allergen:id"
-                    }],
+                    }],,
+                "recipe": [
+                  { "id": "2", "quantity": 15 }
+                ]
             }
         }
         #swagger.parameters['authorization'] = {
@@ -101,10 +113,14 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
     nutriscore,
     allergens,
     categories,
+    recipe,
   } = req.body;
 
   const categoryList = categories.map((category: { id: string }) => new Category().setId(category.id));
   const allergenList = allergens.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
+  const ingredientQuantity = recipe.map((ingredientList: { id: string; quantity: number }) =>
+    new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.id),
+  );
 
   const product = new Product()
     .setRestaurantId(restaurantId)
@@ -118,7 +134,8 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
     .setCategoriesList(categoryList)
-    .setAllergensList(allergenList);
+    .setAllergensList(allergenList)
+    .setRecipeList(ingredientQuantity);
 
   productServiceClient.createProduct(product, (error, response) => {
     if (error) {
@@ -148,6 +165,9 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
                 allergens: [{
                         id:"allergen:id"
                     }],
+                "recipe": [
+                  { "id": "2", "quantity": 15 }
+                ]
             }
         }
         #swagger.parameters['authorization'] = {
@@ -174,10 +194,14 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
     nutriscore,
     categories,
     allergens,
+    recipe,
   } = req.body;
 
   const categoryList = categories.map((category: { id: string }) => new Category().setId(category.id));
   const allergenList = allergens.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
+  const recipeList = recipe.map((ingredientList: { id: string; quantity: number }) =>
+    new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.id),
+  );
 
   const product = new Product()
     .setId(id)
@@ -192,7 +216,8 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
     .setCategoriesList(categoryList)
-    .setAllergensList(allergenList);
+    .setAllergensList(allergenList)
+    .setRecipeList(recipeList);
 
   productServiceClient.updateProduct(product, (error, response) => {
     if (error) return res.status(500).send({ error });
@@ -222,3 +247,25 @@ productRoutes.post("/api/product/image", withCheck({ role: ["MANAGER", "ADMIN"] 
     else return res.status(200).json(response.toObject());
   });
 });
+
+productRoutes.get(
+  "/api/product/ingredient-quantity/:id",
+  withCheck({ role: ["MANAGER", "ADMIN"] }),
+  (req: Request, res: Response) => {
+    /* #swagger.parameters['id'] = {
+               in: 'path',
+               required: true,
+               type: 'string'
+         }
+        #swagger.parameters['authorization'] = {
+            in: 'header',
+            required: true,
+            type: 'string'
+        }  */
+    const { id } = req.params;
+    productServiceClient.getIngredientByProduct(new ProductId().setId(id), (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    });
+  },
+);

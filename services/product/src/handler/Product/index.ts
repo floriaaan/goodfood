@@ -5,6 +5,7 @@ import { DeleteProduct } from "./delete";
 import { getProductList } from "./list";
 import { GetProductTypeList } from "./listType";
 import { UploadImage } from "../Image/upload";
+import { listIngredientQuantity } from "@product/handler/Product/listIngredientQuantity";
 
 export default {
 	CreateProduct,
@@ -13,5 +14,6 @@ export default {
 	DeleteProduct,
 	getProductList,
 	GetProductTypeList,
+	GetIngredientByProduct: listIngredientQuantity,
 	UploadImage,
 };

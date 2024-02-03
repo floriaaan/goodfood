@@ -243,7 +243,6 @@ services:
       context: .
       dockerfile: ./delivery/Dockerfile
     env_file:
-      - delivery/.env
       - delivery/.env.docker
     ports:
       - "50008"
