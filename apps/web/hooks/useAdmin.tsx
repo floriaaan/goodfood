@@ -175,7 +175,6 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const categories = useMemo(() => api_categories ?? [], [api_categories]);
 
-
   const { data: api_users, refetch: refetchUsers } = useQuery<User[]>({
     queryKey: ["admin", "users"],
     queryFn: async () => {
