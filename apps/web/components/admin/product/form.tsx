@@ -5,18 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormInput,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormTextarea,
-} from "@/components/ui/form";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,26 +17,37 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
-import { useMemo, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
-import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
-import { Product, ProductType, ProductTypeLabels } from "@/types/product";
-import { SelectQuantity } from "@/components/ui/form/select-quantity";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useQuery } from "@tanstack/react-query";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormInput,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormTextarea,
+} from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
+import { SelectQuantity } from "@/components/ui/form/select-quantity";
+import { useAuth } from "@/hooks";
 import { useAdmin } from "@/hooks/useAdmin";
 import { fetchAPI } from "@/lib/fetchAPI";
-import { useAuth } from "@/hooks";
+import { cn } from "@/lib/utils";
+import { Product, ProductType, ProductTypeLabels } from "@/types/product";
 import { IngredientRestaurant } from "@/types/stock";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useMemo, useRef, useState } from "react";
+import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
+import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
 
 // todo: check with product create request
 const formSchema = z.object({
@@ -87,28 +87,30 @@ export function ProductCreateEditForm({
 
   const form = useForm<ProductCreateEditFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialValues ? {
-      ...initialValues,
-      allergensList: ((initialValues as unknown as Product)?.allergensList || []).map((a) => a.id),
-      categoriesList: ((initialValues as unknown as Product)?.categoriesList || []).map((c) => c.id),
-    } : {
-      name: "",
-      image: "https://picsum.photos/200/300",
-      comment: "",
-      price: "0.0",
-      preparation: "",
-      weight: "",
-      kilocalories: "",
-      nutriscore: "",
+    defaultValues: initialValues
+      ? {
+          ...initialValues,
+          allergensList: ((initialValues as unknown as Product)?.allergensList || []).map((a) => a.id),
+          categoriesList: ((initialValues as unknown as Product)?.categoriesList || []).map((c) => c.id),
+        }
+      : {
+          name: "",
+          image: "https://picsum.photos/200/300",
+          comment: "",
+          price: "0.0",
+          preparation: "",
+          weight: "",
+          kilocalories: "",
+          nutriscore: "",
 
-      type: ProductType.PLATS,
+          type: ProductType.PLATS,
 
-      restaurant_id: "",
-      categoriesList: [],
-      allergensList: [],
+          restaurant_id: "",
+          categoriesList: [],
+          allergensList: [],
 
-      // ingredients: [],
-    },
+          // ingredients: [],
+        },
   });
 
   async function handler(values: ProductCreateEditFormValues) {

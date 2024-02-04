@@ -1,5 +1,7 @@
 "use client";
 
+import { OrderCreateEditFormValues } from "@/components/admin/order/form";
+import { OrderFormSheetContent } from "@/components/admin/order/sheet-content";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,57 +12,80 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Address, Restaurant } from "@/types/restaurant";
+import { Order } from "@/types/order";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { MdArrowDropUp, MdCopyAll, MdEdit } from "react-icons/md";
-import {RestaurantFormSheetContent} from "@/components/admin/restaurant/sheet-content";
-import {RestaurantCreateEditFormValues} from "@/components/admin/restaurant/form";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const restaurants_columns: ColumnDef<Restaurant>[] = [
+export const orders_columns: ColumnDef<Order>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "user",
     header: ({ column }) => {
       return (
         <button
           className="inline-flex items-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nom
+          Client
           <MdArrowDropUp className={cn("ml-1 h-4 w-4", column.getIsSorted() === "asc" && "rotate-180")} />
         </button>
       );
     },
-  },
-
-  {
-    accessorKey: "address",
-    header: "Adresse",
     cell: ({ getValue }) => {
-      const value = getValue() as Address;
+      const p = getValue() as Order["user"];
+
       return (
         <span>
-          {value.street} {value.zipcode} {value.city}
+          {p.first_name} {p.last_name}
         </span>
       );
     },
   },
   {
-    accessorKey: "phone",
-    header: "Téléphone",
+    accessorKey: "delivery_type",
+    header: ({ column }) => {
+      return (
+        <button
+          className="inline-flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Type de livraison
+          <MdArrowDropUp className={cn("ml-1 h-4 w-4", column.getIsSorted() === "asc" && "rotate-180")} />
+        </button>
+      );
+    },
   },
   {
-    accessorKey: "openinghoursList",
-    header: "Horaires",
+    accessorKey: "payment",
+    header: ({ column }) => {
+      return (
+        <button
+          className="inline-flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Paiement
+          <MdArrowDropUp className={cn("ml-1 h-4 w-4", column.getIsSorted() === "asc" && "rotate-180")} />
+        </button>
+      );
+    },
+    cell: ({ getValue }) => {
+      const p = getValue() as Order["payment"];
+
+      return (
+        <span>
+          {p.total} - {p.status}
+        </span>
+      );
+    },
   },
 
   {
     id: "actions",
     cell: ({ row }) => {
-      const restaurant = row.original;
+      const p = row.original;
 
       return (
         <Sheet>
@@ -73,9 +98,9 @@ export const restaurants_columns: ColumnDef<Restaurant>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-y-1 p-2">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(restaurant.id)}>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(p.id)}>
                 <MdCopyAll className="h-4 w-4 shrink-0" />
-                {"Copier l'identifiant restaurant"}
+                {"Copier l'identifiant commande"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
 
@@ -87,10 +112,7 @@ export const restaurants_columns: ColumnDef<Restaurant>[] = [
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <RestaurantFormSheetContent
-              initialValues={{ ...restaurant } as unknown as RestaurantCreateEditFormValues}
-              id={restaurant.id}
-          />
+          <OrderFormSheetContent initialValues={{ ...p } as unknown as OrderCreateEditFormValues} id={p.id} />
         </Sheet>
       );
     },

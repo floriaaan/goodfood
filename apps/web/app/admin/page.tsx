@@ -7,13 +7,15 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { orders_columns } from "@/components/admin/order/columns";
+import { products_columns } from "@/components/admin/product/columns";
 import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
+import { promotions_columns } from "@/components/admin/promotion/columns";
 import { PromotionFormSheetContent } from "@/components/admin/promotion/sheet-content";
-import {RestaurantFormSheetContent} from "@/components/admin/restaurant/sheet-content";
-import { products_columns } from "@/components/admin/tables/product";
-import { promotions_columns } from "@/components/admin/tables/promotion";
-import { restaurants_columns } from "@/components/admin/tables/restaurant";
-import { users_columns } from "@/components/admin/tables/user";
+import {restaurants_columns} from "@/components/admin/restaurant/columns";
+import { RestaurantFormSheetContent } from "@/components/admin/restaurant/sheet-content";
+import { users_columns } from "@/components/admin/user/columns";
+import { UserCreateSheet } from "@/components/admin/user/sheet";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -86,11 +88,11 @@ export default function AdminHome() {
           </div>
           <Tabs defaultValue="products" className="w-full">
             <TabsList className="w-full justify-between">
-              <TabsTrigger value="users" className="py-4">
-                Utilisateurs
-              </TabsTrigger>
               <TabsTrigger value="restaurants" className="py-4">
                 Restaurants
+              </TabsTrigger>
+              <TabsTrigger value="users" className="py-4">
+                Managers du restaurant
               </TabsTrigger>
               <TabsTrigger value="products" className="py-4">
                 Produits
@@ -104,21 +106,7 @@ export default function AdminHome() {
             </TabsList>
             <div className="p-4">
               <TabsContent value="users">
-                <DataTable
-                  columns={users_columns}
-                  data={restaurant_users}
-                  create={
-                    <Sheet>
-                      <SheetTrigger asChild>
-                        <Button className="w-fit bg-black px-6 text-white">
-                          <MdAdd className="h-4 w-4 shrink-0" />
-                          Ajouter un utilisateur
-                        </Button>
-                      </SheetTrigger>
-                      {/* todo: sheet content */}
-                    </Sheet>
-                  }
-                />
+                <DataTable columns={users_columns} data={restaurant_users} create={<UserCreateSheet />} />
               </TabsContent>
               <TabsContent value="restaurants">
                 <DataTable
@@ -154,7 +142,9 @@ export default function AdminHome() {
                   }
                 />
               </TabsContent>
-              <TabsContent value="orders">Commandes</TabsContent>
+              <TabsContent value="orders">
+                <DataTable columns={orders_columns} data={orders} />
+              </TabsContent>
               <TabsContent value="promotions">
                 <DataTable
                   columns={promotions_columns}
