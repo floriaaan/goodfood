@@ -11,7 +11,7 @@ import { orders_columns } from "@/components/admin/order/columns";
 import { products_columns } from "@/components/admin/product/columns";
 import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
 import { promotions_columns } from "@/components/admin/promotion/columns";
-import { PromotionFormSheetContent } from "@/components/admin/promotion/sheet-content";
+import { PromotionCreateSheet } from "@/components/admin/promotion/sheet";
 import {restaurants_columns} from "@/components/admin/restaurant/columns";
 import { RestaurantFormSheetContent } from "@/components/admin/restaurant/sheet-content";
 import { users_columns } from "@/components/admin/user/columns";
@@ -19,12 +19,26 @@ import { UserCreateSheet } from "@/components/admin/user/sheet";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useAdmin } from "@/hooks/useAdmin";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Marker, Popup } from "react-map-gl";
 
 export default function AdminHome() {
   const { restaurant, selectRestaurant, restaurant_users, restaurants, products, promotions, orders } = useAdmin();
   const [popup_restaurantId, setPopup_restaurantId] = useState<string | null>(null);
+
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (restaurant && mapRef.current) {
+      // @ts-ignore - mapRef is not typed
+      mapRef.current.flyTo({
+        center: [restaurant.address.lng, restaurant.address.lat],
+        zoom: 15,
+        pitch: 40,
+      });
+    }
+  }, [restaurant]);
+
   return (
     <>
       {restaurant ? (
@@ -35,6 +49,7 @@ export default function AdminHome() {
                 latitude: restaurant?.address.lat || 0,
                 longitude: restaurant?.address.lng || 0,
               }}
+              mapRef={mapRef}
             >
               {orders
                 .map((o) => o.delivery.person.location)
@@ -146,21 +161,7 @@ export default function AdminHome() {
                 <DataTable columns={orders_columns} data={orders} />
               </TabsContent>
               <TabsContent value="promotions">
-                <DataTable
-                  columns={promotions_columns}
-                  data={promotions}
-                  create={
-                    <Sheet>
-                      <SheetTrigger asChild>
-                        <Button className="w-fit bg-black px-6 text-white">
-                          <MdAdd className="h-4 w-4 shrink-0" />
-                          Créer un code promotionnel
-                        </Button>
-                      </SheetTrigger>
-                      <PromotionFormSheetContent />
-                    </Sheet>
-                  }
-                />
+                <DataTable columns={promotions_columns} data={promotions} create={<PromotionCreateSheet />} />
               </TabsContent>
             </div>
           </Tabs>
