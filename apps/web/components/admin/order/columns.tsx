@@ -16,8 +16,6 @@ import { Order } from "@/types/order";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { MdArrowDropUp, MdCopyAll, MdEdit } from "react-icons/md";
-import {RestaurantFormSheetContent} from "@/components/admin/restaurant/sheet-content";
-import {RestaurantCreateEditFormValues} from "@/components/admin/restaurant/form";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
