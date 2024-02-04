@@ -5,23 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { PromotionDeleteAlert } from "@/components/admin/promotion/delete-alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormInput, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Promotion } from "@/types/promotion";
-import { MdDelete, MdDone } from "react-icons/md";
+import { MdDone } from "react-icons/md";
 
 const formSchema = z.object({
   code: z.string().min(2).max(255),
@@ -36,10 +26,12 @@ export function PromotionCreateEditForm({
   initialValues,
   onSubmit,
   id,
+  closeSheet,
 }: {
   initialValues?: PromotionCreateEditFormValues;
   onSubmit: (values: PromotionCreateEditFormValues) => void;
   id?: Promotion["id"];
+  closeSheet: () => void;
 }) {
   const { restaurant, restaurants } = useAdmin();
 
@@ -143,29 +135,7 @@ export function PromotionCreateEditForm({
         </div>
 
         <div className="item-center inline-flex h-24 shrink-0 items-center justify-between gap-4 bg-gray-50 p-6">
-          {initialValues && (
-            <>
-              <AlertDialog>
-                {/* TODO: delete */}
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" type="button">
-                    <MdDelete className="h-4 w-4" />
-                    Supprimer
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce code promotionnel ?</AlertDialogTitle>
-                    <AlertDialogDescription>Cette action est irréversible.</AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                    <AlertDialogAction>Continuer</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
+          {initialValues && id && <PromotionDeleteAlert closeSheet={closeSheet} id={id} />}
           <Button type="submit">
             <MdDone className="h-4 w-4" />
             {id ? "Modifier" : "Créer"}
