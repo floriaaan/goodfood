@@ -8,6 +8,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
+import { PromotionFormSheetContent } from "@/components/admin/promotion/sheet-content";
 import { products_columns } from "@/components/admin/tables/product";
 import { promotions_columns } from "@/components/admin/tables/promotion";
 import { restaurants_columns } from "@/components/admin/tables/restaurant";
@@ -165,7 +166,7 @@ export default function AdminHome() {
                           Créer un code promotionnel
                         </Button>
                       </SheetTrigger>
-                      {/* todo: sheet content */}
+                      <PromotionFormSheetContent />
                     </Sheet>
                   }
                 />
