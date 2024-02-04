@@ -1,5 +1,7 @@
 "use client";
 
+import { PromotionCreateEditFormValues } from "@/components/admin/promotion/form";
+import { PromotionFormSheetContent } from "@/components/admin/promotion/sheet-content";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -92,7 +94,7 @@ export const promotions_columns: ColumnDef<Promotion>[] = [
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* sheet content */}
+          <PromotionFormSheetContent initialValues={{ ...p } as unknown as PromotionCreateEditFormValues} id={p.id} />
         </Sheet>
       );
     },

@@ -3,6 +3,7 @@ import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle, XCircleIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function HealthCheckPage() {
   const { data: health_check, isLoading } = useQuery<
@@ -23,6 +24,22 @@ export default function HealthCheckPage() {
     staleTime: 1000 * 10, // 10 seconds,
     refetchInterval: 1000 * 10,
   });
+
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setInterval(() => {
+        setElapsedTime((prevTime) => prevTime + 1);
+      }, 100);
+
+      return () => {
+        clearInterval(timer);
+      };
+    } else {
+      setElapsedTime(0);
+    }
+  }, [isLoading]);
 
   return (
     <>
@@ -56,7 +73,15 @@ export default function HealthCheckPage() {
             ))}
           </div>
         ) : (
-          <LargeComponentLoader />
+          <div className="mx-auto flex w-full grow flex-col items-center justify-center">
+            <div className="h-96 w-96">
+              <LargeComponentLoader />
+            </div>
+            <p className="font-extrabold">
+              Temps écoulé: <span className="w-10">{elapsedTime / 10}</span> secondes
+            </p>
+            <small>Temps max de réponse: 5 secondes</small>
+          </div>
         )}
       </div>
     </>
