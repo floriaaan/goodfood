@@ -14,6 +14,8 @@ import { Address, Restaurant } from "@/types/restaurant";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { MdArrowDropUp, MdCopyAll, MdEdit } from "react-icons/md";
+import {RestaurantFormSheetContent} from "@/components/admin/restaurant/sheet-content";
+import {RestaurantCreateEditFormValues} from "@/components/admin/restaurant/form";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -58,7 +60,7 @@ export const restaurants_columns: ColumnDef<Restaurant>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const p = row.original;
+      const restaurant = row.original;
 
       return (
         <Sheet>
@@ -71,7 +73,7 @@ export const restaurants_columns: ColumnDef<Restaurant>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-y-1 p-2">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(p.id)}>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(restaurant.id)}>
                 <MdCopyAll className="h-4 w-4 shrink-0" />
                 {"Copier l'identifiant restaurant"}
               </DropdownMenuItem>
@@ -85,7 +87,10 @@ export const restaurants_columns: ColumnDef<Restaurant>[] = [
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* sheet content */}
+          <RestaurantFormSheetContent
+              initialValues={{ ...restaurant } as unknown as RestaurantCreateEditFormValues}
+              id={restaurant.id}
+          />
         </Sheet>
       );
     },
