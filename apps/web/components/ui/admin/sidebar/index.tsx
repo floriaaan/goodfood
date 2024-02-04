@@ -24,7 +24,7 @@ import {
 
 export const Sidebar = () => {
   const [displayMode, setDisplayMode] = useState("Default");
-  const { selectRestaurant, restaurant, restaurants } = useAdmin();
+  const { selectRestaurant, restaurants, selectedRestaurantId } = useAdmin();
   const path = usePathname();
 
   return (
@@ -41,7 +41,8 @@ export const Sidebar = () => {
         <Select
           aria-label="Restaurant / Groupe séléctionné"
           options={restaurants.map((e) => ({ label: e.name, value: e.id }))}
-          selected={restaurant?.id || restaurants[0]?.id}
+          selected={selectedRestaurantId || restaurants[0].id}
+          defaultValue={selectedRestaurantId || restaurants[0].id}
           setSelected={selectRestaurant}
         />
       )}
