@@ -87,15 +87,15 @@ export function ProductCreateEditForm({
 
   const form = useForm<ProductCreateEditFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialValues ? {
       ...initialValues,
       allergensList: ((initialValues as unknown as Product)?.allergensList || []).map((a) => a.id),
       categoriesList: ((initialValues as unknown as Product)?.categoriesList || []).map((c) => c.id),
-    } || {
+    } : {
       name: "",
       image: "https://picsum.photos/200/300",
       comment: "",
-      price: 0.0,
+      price: "0.0",
       preparation: "",
       weight: "",
       kilocalories: "",
@@ -104,8 +104,8 @@ export function ProductCreateEditForm({
       type: ProductType.PLATS,
 
       restaurant_id: "",
-      categories: [],
-      allergens: [],
+      categoriesList: [],
+      allergensList: [],
 
       // ingredients: [],
     },

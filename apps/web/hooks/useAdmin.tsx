@@ -37,6 +37,9 @@ type AdminContextData = {
 
   allergens: Allergen[];
   refetchAllergens: () => void;
+
+  users: User[];
+  refetchUsers: () => void;
 };
 
 const AdminContext = createContext({
@@ -63,6 +66,9 @@ const AdminContext = createContext({
 
   allergens: [],
   refetchAllergens: () => {},
+
+  users: [],
+  refetchUsers: () => {},
 } as AdminContextData);
 
 export const useAdmin = () => {
@@ -169,6 +175,19 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const categories = useMemo(() => api_categories ?? [], [api_categories]);
 
+
+  const { data: api_users, refetch: refetchUsers } = useQuery<User[]>({
+    queryKey: ["admin", "users"],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/user`, token);
+      const body = await res.json();
+      return body.usersList;
+    },
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    placeholderData: [],
+  });
+  const users = useMemo(() => api_users ?? [], [api_users]);
+
   return (
     <AdminContext.Provider
       value={{
@@ -195,6 +214,9 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
         allergens,
         refetchAllergens,
+
+        users,
+        refetchUsers,
       }}
     >
       {children}
