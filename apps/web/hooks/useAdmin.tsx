@@ -8,6 +8,7 @@ import { Order } from "@/types/order";
 import { Allergen, Category, Product } from "@/types/product";
 import { Promotion } from "@/types/promotion";
 import { Restaurant } from "@/types/restaurant";
+import { Ingredient, IngredientRestaurant } from "@/types/stock";
 import { User } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -40,6 +41,12 @@ type AdminContextData = {
 
   users: User[];
   refetchUsers: () => void;
+
+  ingredients: Ingredient[];
+  refetchIngredients: () => void;
+
+  ingredients_restaurant: IngredientRestaurant[];
+  refetchIngredientRestaurant: () => void;
 };
 
 const AdminContext = createContext({
@@ -69,6 +76,12 @@ const AdminContext = createContext({
 
   users: [],
   refetchUsers: () => {},
+
+  ingredients: [],
+  refetchIngredients: () => {},
+
+  ingredients_restaurant: [],
+  refetchIngredientRestaurant: () => {},
 } as AdminContextData);
 
 export const useAdmin = () => {
@@ -187,6 +200,33 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const users = useMemo(() => api_users ?? [], [api_users]);
 
+  const { data: api_ingredients, refetch: refetchIngredients } = useQuery<Ingredient[]>({
+    queryKey: ["admin", "ingredient"],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/stock/ingredient/`, session?.token);
+      const body = await res.json();
+      return body.ingredientsList;
+    },
+    enabled: !!selectedRestaurantId && !!session?.token,
+    placeholderData: [],
+  });
+  const ingredients = useMemo(() => api_ingredients || [], [api_ingredients]);
+
+  const { data: api_ingredients_restaurant, refetch: refetchIngredientRestaurant } = useQuery<IngredientRestaurant[]>({
+    queryKey: ["admin", "ingredient", "restaurant", selectedRestaurantId],
+    queryFn: async () => {
+      const res = await fetchAPI(
+        `/api/stock/ingredient/restaurant/by-restaurant/${selectedRestaurantId}`,
+        session?.token,
+      );
+      const body = await res.json();
+      return body.ingredientRestaurantsList;
+    },
+    enabled: !!selectedRestaurantId && !!session?.token,
+    placeholderData: [],
+  });
+  const ingredients_restaurant = useMemo(() => api_ingredients_restaurant || [], [api_ingredients_restaurant]);
+
   return (
     <AdminContext.Provider
       value={{
@@ -216,6 +256,12 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
         users,
         refetchUsers,
+
+        ingredients,
+        refetchIngredients,
+
+        ingredients_restaurant,
+        refetchIngredientRestaurant,
       }}
     >
       {children}
