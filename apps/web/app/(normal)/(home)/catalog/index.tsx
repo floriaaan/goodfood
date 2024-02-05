@@ -43,7 +43,9 @@ export const Catalog = () => {
           </section>
         </CatalogContext.Provider>
       ) : (
-        <LargeComponentLoader className="mx-auto w-full" />
+        <div className="h-96 lg:col-span-2">
+          <LargeComponentLoader className="mx-auto h-full w-full" />
+        </div>
       )}
     </>
   );
