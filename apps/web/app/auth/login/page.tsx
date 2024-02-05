@@ -9,7 +9,9 @@ export default function Login() {
   return (
     <div className="mx-auto w-full max-w-sm lg:w-96">
       <div>
-        <Logo />
+        <Link href="/">
+          <Logo />
+        </Link>
 
         <h2 className="font-ultrabold mt-6 text-3xl font-extrabold text-gray-900 dark:text-gray-100">Connexion</h2>
       </div>
