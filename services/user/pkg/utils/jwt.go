@@ -3,7 +3,6 @@ package utils
 import (
 	"errors"
 	"github.com/golang-jwt/jwt"
-	"goodfood-user/pkg/models"
 	"time"
 )
 
@@ -29,10 +28,10 @@ func (w *JwtWrapper) ParseToken(signedToken string) (token *jwt.Token, err error
 	)
 }
 
-func (w *JwtWrapper) GenerateToken(user models.User) (signedToken string, err error) {
+func (w *JwtWrapper) GenerateToken(id string, mail string) (signedToken string, err error) {
 	claims := &JwtClaims{
-		Id:    user.Id.String(),
-		Email: user.Email,
+		Id:    id,
+		Email: mail,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(w.ExpirationHours)).Unix(),
 			Issuer:    w.Issuer,
