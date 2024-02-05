@@ -2,9 +2,9 @@
 
 import { AmountStat } from "@/components/admin/stats/amountStat";
 import { ProductCard } from "@/components/admin/stats/productCard";
+import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { extendedProductList, stats } from "@/constants/data";
 import { useAdmin } from "@/hooks/useAdmin";
-import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 
 export default function AdminStats() {
   const { restaurant } = useAdmin();
@@ -12,9 +12,15 @@ export default function AdminStats() {
   if (!restaurant) return <LargeComponentLoader />;
 
   return (
-    <div className="relative flex flex-col gap-20 p-16">
-      <h1 className="text-5xl font-extrabold">{restaurant.name}</h1>
-      <div className="flex flex-wrap gap-16">
+    <div className="flex flex-col">
+      <h2 className="font-ultrabold inline-flex items-center gap-2 bg-neutral-100 p-2 text-3xl uppercase lg:p-8">
+        Statistiques et revenus pour:
+        <span>{restaurant.name}</span>
+      </h2>
+      <h3 className="font-ultrabold inline-flex items-center gap-2 bg-neutral-800 p-2 text-2xl uppercase text-white lg:px-8 lg:py-4">
+        Revenus
+      </h3>
+      <div className="grid grid-cols-3 gap-4 p-4 lg:px-8">
         {stats
           .filter((e, index) => [0, 1, 2].includes(index))
           .map((stat, index) => (
@@ -27,21 +33,21 @@ export default function AdminStats() {
             />
           ))}
       </div>
-      <div className="flex-col gap-16 ">
-        <h2 className="pb-4 text-3xl font-bold">
-          Produits les plus demandés de la semaine{" "}
-          <span className="text-sm font-semibold text-gray-500">Mis à jour à l’instant</span>
-        </h2>
-
-        <div className="flex max-w-5xl flex-wrap gap-8 overflow-hidden">
-          {extendedProductList
-            .filter((product, index) => [0, 1].includes(index))
-            .map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index + 1} />
-            ))}
-        </div>
+      <h3 className="font-ultrabold inline-flex items-end gap-2 bg-neutral-800 p-2 text-2xl uppercase text-white lg:px-8 lg:py-4">
+        Produits les plus demandés de la semaine{" "}
+        <span className="mb-1 text-sm font-semibold text-neutral-400">Mis à jour à l’instant</span>
+      </h3>
+      <div className="grid grid-cols-3 gap-4 p-4 lg:px-8">
+        {extendedProductList
+          .filter((product, index) => [0, 1].includes(index))
+          .map((product, index) => (
+            <ProductCard key={product.id} product={product} index={index + 1} />
+          ))}
       </div>
-      <div className="flex flex-wrap gap-16">
+      <h3 className="font-ultrabold inline-flex items-end gap-2 bg-neutral-800 p-2 text-2xl uppercase text-white lg:px-8 lg:py-4">
+        Dépenses
+      </h3>
+      <div className="grid grid-cols-3 gap-4 p-4 lg:px-8">
         {stats
           .filter((e, index) => [3, 4, 5].includes(index))
           .map((stat, index) => (
