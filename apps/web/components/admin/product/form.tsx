@@ -45,7 +45,7 @@ import { Product, ProductType, ProductTypeLabels } from "@/types/product";
 import { IngredientRestaurant } from "@/types/stock";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
 import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
 
@@ -83,7 +83,7 @@ export function ProductCreateEditForm({
   id?: Product["id"];
 }) {
   const { session } = useAuth();
-  const { restaurant, categories, allergens } = useAdmin();
+  const { ingredients_restaurant, categories, allergens } = useAdmin();
 
   const form = useForm<ProductCreateEditFormValues>({
     resolver: zodResolver(formSchema),
@@ -123,18 +123,6 @@ export function ProductCreateEditForm({
   const [image_clientUrl, setImage_clientUrl] = useState<string | null>(initialValues?.image || null);
   const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
   const [image_error, setImage_error] = useState<string | null>(null);
-
-  const { data: api_ingredients_options } = useQuery<IngredientRestaurant[]>({
-    queryKey: ["admin", "ingredient", "restaurant", restaurant?.id],
-    queryFn: async () => {
-      const res = await fetchAPI(`/api/stock/ingredient/restaurant/by-restaurant/${restaurant?.id}`, session?.token);
-      const body = await res.json();
-      return body.ingredientRestaurantsList;
-    },
-    enabled: !!restaurant?.id && !!session?.token,
-    placeholderData: [],
-  });
-  const ingredients_options = useMemo(() => api_ingredients_options || [], [api_ingredients_options]);
 
   const { data: api_ingredients } = useQuery<IngredientRestaurant[]>({
     queryKey: ["admin", "ingredient", "product", id],
@@ -469,7 +457,7 @@ export function ProductCreateEditForm({
                 <AccordionContent>
                   <div className="flex flex-col gap-y-4">
                     <SelectQuantity
-                      options={ingredients_options.map((i) => ({
+                      options={ingredients_restaurant.map((i) => ({
                         label: i.ingredient.name,
                         value: i.id,
                       }))}
@@ -488,7 +476,7 @@ export function ProductCreateEditForm({
                             &bull;
                             <strong>
                               {
-                                ingredients_options.find((il) => il.id.toString() === i.value.toString())?.ingredient
+                                ingredients_restaurant.find((il) => il.id.toString() === i.value.toString())?.ingredient
                                   .name
                               }{" "}
                               ({i.quantity})
