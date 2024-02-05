@@ -219,7 +219,7 @@ export default function CheckoutPage({ params }: PageProps) {
           <hr className="border-gray-300" />
 
           <Button asChild className="w-64">
-            <Link href="/login">Se connecter</Link>
+            <Link href="/auth/login">Se connecter</Link>
           </Button>
         </div>
       )}
