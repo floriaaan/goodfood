@@ -43,46 +43,51 @@ export default function HealthCheckPage() {
 
   return (
     <>
-      <div className="flex max-h-screen w-full grow flex-col gap-3 px-6 pb-6 pt-8">
-        <h2 className="text-xl font-semibold">{"État de l'application"}</h2>
-
-        <h4 className="text-lg font-semibold">{"Services"}</h4>
-        {!isLoading ? (
-          <div className="grid w-full grid-cols-2 gap-4">
-            {Object.entries(health_check ?? {}).map(([name, { ok, responseTime }]) => (
-              <div
-                key={name}
-                className="inline-flex items-center justify-between gap-1 border border-gray-200 p-4 text-gray-600"
-              >
-                <div className="flex justify-between">
-                  <span className="font-semibold first-letter:uppercase">{name.replace("Service", "")}</span>
+      <div className="flex flex-col">
+        <h2 className="font-ultrabold inline-flex items-center bg-neutral-100 p-2 text-3xl uppercase lg:p-8">
+          {"Etat de santé de l'application"}
+        </h2>
+        <h3 className="font-ultrabold inline-flex items-center gap-2 bg-neutral-800 p-2 text-2xl uppercase text-white lg:px-8 lg:py-4">
+          Services
+        </h3>
+        <div className="flex flex-col gap-4 p-2 lg:p-8">
+          {!isLoading ? (
+            <div className="grid w-full grid-cols-2 gap-4">
+              {Object.entries(health_check ?? {}).map(([name, { ok, responseTime }]) => (
+                <div
+                  key={name}
+                  className="inline-flex items-center justify-between gap-1 border border-gray-200 p-4 text-gray-600"
+                >
+                  <div className="flex justify-between">
+                    <span className="font-semibold first-letter:uppercase">{name.replace("Service", "")}</span>
+                  </div>
+                  <div className="inline-flex items-center gap-1">
+                    <span className="text-xs font-bold">{responseTime} ms</span>
+                    {ok ? (
+                      <span className="text-green-500">
+                        <CheckCircle className="h-5 w-5" />
+                      </span>
+                    ) : (
+                      <span className="text-red-500">
+                        <XCircleIcon className="h-5 w-5" />
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="inline-flex items-center gap-1">
-                  <span className="text-xs font-bold">{responseTime} ms</span>
-                  {ok ? (
-                    <span className="text-green-500">
-                      <CheckCircle className="h-5 w-5" />
-                    </span>
-                  ) : (
-                    <span className="text-red-500">
-                      <XCircleIcon className="h-5 w-5" />
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="mx-auto flex w-full grow flex-col items-center justify-center">
-            <div className="h-96 w-96">
-              <LargeComponentLoader />
+              ))}
             </div>
-            <p className="font-extrabold">
-              Temps écoulé: <span className="w-10">{elapsedTime / 10}</span> secondes
-            </p>
-            <small>Temps max de réponse: 5 secondes</small>
-          </div>
-        )}
+          ) : (
+            <div className="mx-auto flex w-full grow flex-col items-center justify-center">
+              <div className="h-96 w-96">
+                <LargeComponentLoader />
+              </div>
+              <p className="font-extrabold">
+                Temps écoulé: <span className="w-10">{elapsedTime / 10}</span> secondes
+              </p>
+              <small>Temps max de réponse: 5 secondes</small>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
