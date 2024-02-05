@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { createPersistedState } from "@/lib/use-persisted-state";
 import { MainAddress } from "@/types/user";
@@ -241,7 +235,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const checkout = () => {
-    if (!user) return push("/login");
+    if (!user) return push("/auth/login");
     if (!address || !selectedRestaurantId || Object.values(basket as Basket).filter(Boolean).length === 0) return;
 
     push("/checkout");
