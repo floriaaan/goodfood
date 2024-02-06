@@ -13,7 +13,7 @@ export const UpdatePaymentStatus = async (
 
         const payment = await prisma.payment.update({
             where: {
-                id
+                stripe_id: id
             },
             data: {
                status
@@ -21,8 +21,7 @@ export const UpdatePaymentStatus = async (
             include: { user: true },
         });
 
-        callback(null, payment
-        );
+        callback(null, payment);
     } catch (error) {
         log.error(error);
         callback(error, null);

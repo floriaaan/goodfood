@@ -13,14 +13,17 @@ export const createDelivery = (
   address: Address,
   userId: string,
   restaurantId: string,
+  restaurantAddress: Address,
 ): Promise<Delivery | undefined> => {
   const deliveryCreateInput = new DeliveryCreateInput()
-    .setAddress(address ? new Address().setLat(address.getLat()).setLng(address.getLng()) : address)
+    .setAddress(address)
     .setUserId(userId.toString())
-    .setRestaurantId(restaurantId);
+    .setRestaurantId(restaurantId)
+    .setRestaurantAddress(restaurantAddress);
   return new Promise((resolve, reject) => {
     deliveryServiceClient.createDelivery(deliveryCreateInput, (error, response) => {
       if (error) {
+        console.error(error);
         reject(error);
       } else {
         resolve(response);
@@ -50,6 +53,7 @@ export const createDeliveryPerson = (
   return new Promise((resolve, reject) => {
     deliveryPersonServiceClient.createDeliveryPerson(deliveryPerson, (error, response) => {
       if (error) {
+        console.error(error);
         reject(error);
       } else {
         resolve(response);
@@ -64,6 +68,7 @@ export const getDelivery = (id: string): Promise<Delivery | undefined> => {
   return new Promise((resolve, reject) => {
     deliveryServiceClient.getDelivery(deliveryId, (error, response) => {
       if (error) {
+        console.error(error);
         reject(error);
       } else {
         resolve(response);
@@ -77,6 +82,7 @@ export const getNearestDeliveryPerson = (lat: string, lng: string): Promise<Deli
   return new Promise((resolve, reject) => {
     deliveryPersonServiceClient.listNearDeliveryPersons(location, (error, response) => {
       if (error) {
+        console.error(error);
         reject(error);
       } else {
         resolve(response);
