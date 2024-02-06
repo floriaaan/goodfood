@@ -8,7 +8,7 @@ import { Order } from "@/types/order";
 import { Allergen, Category, Product } from "@/types/product";
 import { Promotion } from "@/types/promotion";
 import { Restaurant } from "@/types/restaurant";
-import { Ingredient, IngredientRestaurant } from "@/types/stock";
+import { Ingredient, IngredientRestaurant, Supplier, SupplyOrder } from "@/types/stock";
 import { User } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -47,6 +47,12 @@ type AdminContextData = {
 
   ingredients_restaurant: IngredientRestaurant[];
   refetchIngredientRestaurant: () => void;
+
+  suppliers: Supplier[];
+  refetchSuppliers: () => void;
+
+  supply_orders: SupplyOrder[];
+  refetchSupplyOrders: () => void;
 };
 
 const AdminContext = createContext({
@@ -82,6 +88,12 @@ const AdminContext = createContext({
 
   ingredients_restaurant: [],
   refetchIngredientRestaurant: () => {},
+
+  suppliers: [],
+  refetchSuppliers: () => {},
+
+  supply_orders: [],
+  refetchSupplyOrders: () => {},
 } as AdminContextData);
 
 export const useAdmin = () => {
@@ -227,6 +239,30 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const ingredients_restaurant = useMemo(() => api_ingredients_restaurant || [], [api_ingredients_restaurant]);
 
+  const { data: api_suppliers, refetch: refetchSuppliers } = useQuery<Supplier[]>({
+    queryKey: ["admin", "stock", "supply", "supplier"],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/stock/supplier`, session?.token);
+      const body = await res.json();
+      return body.suppliersList;
+    },
+    enabled: !!selectedRestaurantId && !!session?.token,
+    placeholderData: [],
+  });
+  const suppliers = useMemo(() => api_suppliers || [], [api_suppliers]);
+
+  const { data: api_supply_orders, refetch: refetchSupplyOrders } = useQuery<SupplyOrder[]>({
+    queryKey: ["admin", "stock", "supply", "orders", selectedRestaurantId],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/stock/supply/order/by-restaurant/${selectedRestaurantId}`, session?.token);
+      const body = await res.json();
+      return body.supplyOrdersList;
+    },
+    enabled: !!selectedRestaurantId && !!session?.token,
+    placeholderData: [],
+  });
+  const supply_orders = useMemo(() => api_supply_orders || [], [api_supply_orders]);
+
   return (
     <AdminContext.Provider
       value={{
@@ -262,6 +298,12 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
         ingredients_restaurant,
         refetchIngredientRestaurant,
+
+        suppliers,
+        refetchSuppliers,
+
+        supply_orders,
+        refetchSupplyOrders,
       }}
     >
       {children}

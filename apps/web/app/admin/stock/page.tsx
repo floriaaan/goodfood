@@ -4,7 +4,7 @@ import { useAdmin } from "@/hooks/useAdmin";
 import { LinkIcon, PlusIcon } from "lucide-react";
 
 export default function StockPage() {
-  const { restaurant, products, ingredients_restaurant } = useAdmin();
+  const { restaurant, products, ingredients_restaurant, suppliers, supply_orders } = useAdmin();
   if (!restaurant) return null;
   return (
     <div className="flex flex-col">
