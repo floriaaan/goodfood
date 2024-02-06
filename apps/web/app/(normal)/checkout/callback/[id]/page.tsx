@@ -23,7 +23,7 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
   const { isAuthenticated, isBasketEmpty, isRestaurantSelected } = useBasket();
 
   if (!(isAuthenticated && user && session?.token)) return;
-  const { data: payment } = useQuery<Payment>({
+  const { data: payment } = useQuery<{ Payment: Payment; clientSecret: string }>({
     queryKey: ["payment", paymentId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/payment/${paymentId}`, session?.token);
@@ -33,22 +33,12 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
   });
 
   const { data: order } = useQuery<Order>({
-    queryKey: ["order", "payment", paymentId],
+    queryKey: ["Order", "PaymentId", paymentId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-payment/${paymentId}`, session?.token);
       const body = await res.json();
       return body;
     },
-  });
-
-  const { data: delivery } = useQuery<Delivery>({
-    queryKey: ["delivery", order?.deliveryId],
-    queryFn: async () => {
-      const res = await fetchAPI(`/api/api/delivery/${order!.deliveryId}`, session?.token);
-      const body = await res.json();
-      return body;
-    },
-    enabled: !!order?.deliveryId,
   });
 
   return (
@@ -57,13 +47,13 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
         <MdArrowBack className="h-4 w-4 shrink-0" />
         Retour
       </Link>
-      {delivery && payment && (
+      {order && (
         <>
           <div className="flex w-full flex-col gap-4 overflow-hidden border border-gray-200 p-4">
             <div className="inline-flex w-full items-center justify-between">
-              <h2 className="text-xl font-semibold">Suivi de la commande #{delivery.id}</h2>
+              <h2 className="text-xl font-semibold">Suivi de la commande #{order.id}</h2>
               <span className="text-right text-lg font-semibold">
-                Arrivée prévue à {format(new Date(delivery.eta), "HH:mm")}
+                Arrivée prévue à {format(new Date(order.delivery.eta), "HH:mm")}
               </span>
             </div>
             <div className="flex w-full flex-col items-start gap-3 ">
@@ -72,16 +62,16 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
                 <div className="flex w-full flex-col items-start">
                   <div className="text-sm font-semibold">Je fais livrer ma commande</div>
                   <div className="text-xs">
-                    {delivery.address} à {format(new Date(delivery.eta), "HH:mm")}
+                    {order.delivery.address} à {format(new Date(order.delivery.eta), "HH:mm")}
                   </div>
                 </div>
               </div>
               <div className="inline-flex items-center gap-1">
                 <MdShoppingBasket className="mt-px w-4 shrink-0" />
                 <div className="text-sm">
-                  {payment.status === PaymentStatus.APPROVED && "La commande a été payée"}
-                  {payment.status === PaymentStatus.PENDING && "Le paiement est en attente"}
-                  {payment.status === PaymentStatus.REJECTED && "Le paiement a été refusé"}
+                  {order.payment.status === PaymentStatus.APPROVED && "La commande a été payée"}
+                  {order.payment.status === PaymentStatus.PENDING && "Le paiement est en attente"}
+                  {order.payment.status === PaymentStatus.REJECTED && "Le paiement a été refusé"}
                 </div>
                 <Dialog>
                   <DialogTrigger className="ml-1 mt-px inline-flex items-center gap-1 border-b border-black text-xs font-semibold leading-none">
