@@ -159,8 +159,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     },
     staleTime: 1000 * 60 * 60 * 2, // 2 hours
     placeholderData: [],
-    enabled: false, // todo: fix issue #41
-    // enabled: !!selectedRestaurantId,
+    enabled: !!selectedRestaurantId,
   });
   const orders = useMemo(() => api_orders ?? [], [api_orders]);
 

@@ -287,7 +287,13 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const [eta, setEta] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!selectedRestaurant) return;
+    if (
+      !selectedRestaurant ||
+      !selectedRestaurant.address ||
+      !selectedRestaurant.address.lat ||
+      !selectedRestaurant.address.lng
+    )
+      return;
     (async () => {
       const directions = await getDirections(
         { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },

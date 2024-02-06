@@ -36,14 +36,14 @@ export type SupplyOrder = {
   id: number;
 
   quantity: number;
-  unit_price: number;
+  unitPrice: number;
 
-  ingredient_restaurant_id: number;
-  ingredient_restaurant: IngredientRestaurant;
+  ingredientRestaurantId: number;
+  ingredientRestaurant: IngredientRestaurant;
 
-  supplier_id: number;
+  supplierId?: number;
   supplier: Supplier;
 
-  created_at: string | Date;
-  updated_at: string | Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 };
