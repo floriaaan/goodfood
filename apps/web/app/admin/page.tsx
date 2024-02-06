@@ -21,6 +21,7 @@ import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useEffect, useRef, useState } from "react";
 import { Marker, Popup } from "react-map-gl";
+import {RestaurantCreateSheet, RestaurantRefreshSheet} from "@/components/admin/restaurant/sheet";
 
 export default function AdminHome() {
   const { restaurant, selectRestaurant, restaurant_users, restaurants, products, promotions, orders } = useAdmin();
@@ -71,7 +72,7 @@ export default function AdminHome() {
                     setPopup_restaurantId(r.id);
                   }}
                 >
-                  <RestaurantPin />
+                  <RestaurantPin applyStroke={restaurant == r}/>
                 </Marker>
               ))}
               {popup_restaurantId && (
@@ -124,21 +125,7 @@ export default function AdminHome() {
                 <DataTable columns={users_columns} data={restaurant_users} create={<UserCreateSheet />} />
               </TabsContent>
               <TabsContent value="restaurants">
-                <DataTable
-                  columns={restaurants_columns}
-                  data={restaurants}
-                  create={
-                    <Sheet>
-                      <SheetTrigger asChild>
-                        <Button className="w-fit bg-black px-6 text-white">
-                          <MdAdd className="h-4 w-4 shrink-0" />
-                          Créer un restaurant
-                        </Button>
-                      </SheetTrigger>
-                      <RestaurantFormSheetContent />
-                    </Sheet>
-                  }
-                />
+                <DataTable columns={restaurants_columns} data={restaurants} create={<RestaurantCreateSheet />} refresh={<RestaurantRefreshSheet />}/>
               </TabsContent>
               <TabsContent value="products">
                 <DataTable
