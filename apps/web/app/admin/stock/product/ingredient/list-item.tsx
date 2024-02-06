@@ -2,6 +2,7 @@
 import { IngredientRestaurantSheetContent } from "@/app/admin/stock/product/ingredient/sheet-content";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { IngredientRestaurant } from "@/types/stock";
+import { MousePointerClickIcon } from "lucide-react";
 import { useState } from "react";
 
 export const IngredientRestaurantListItem = (ir: IngredientRestaurant) => {
@@ -31,6 +32,9 @@ export const IngredientRestaurantListItem = (ir: IngredientRestaurant) => {
                 <span>{"Rupture de stock"}</span>
               </div>
             )}
+          </div>
+          <div className="absolute bottom-1 right-1">
+            <MousePointerClickIcon className="h-4 w-4" />
           </div>
         </div>
       </SheetTrigger>

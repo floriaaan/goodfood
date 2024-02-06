@@ -7,17 +7,21 @@ meta {
 post {
   url: {{baseUrl}}/api/stock/supply/order
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "quantity": "<number>",
-    "ingredientRestaurantId": "<number>",
-    "supplierId": "<number>"
+    "quantity": "25",
+    "ingredientRestaurantId": "1",
+    "supplierId": "1"
   }
 }
