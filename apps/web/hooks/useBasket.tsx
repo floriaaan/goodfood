@@ -42,6 +42,7 @@ type BasketContextData = {
   addProduct: (id: string, quantity: number) => void;
   removeProduct: (id: string, quantity: number) => void;
 
+  refetch: () => void;
   checkout: () => void;
 
   // RESTAURANT
@@ -325,6 +326,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         addProduct,
         removeProduct,
         checkout,
+        refetch,
 
         products: products ?? [],
 
