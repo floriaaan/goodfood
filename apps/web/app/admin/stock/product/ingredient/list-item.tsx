@@ -12,7 +12,7 @@ export const IngredientRestaurantListItem = (ir: IngredientRestaurant) => {
   return (
     <Sheet {...{ open, onOpenChange }}>
       <SheetTrigger asChild>
-        <div className="relative flex cursor-pointer flex-col gap-x-2 gap-y-1 bg-neutral-100 px-2 py-1 text-xs">
+        <div className="relative flex cursor-pointer flex-col gap-x-2 gap-y-1 border border-neutral-100 bg-neutral-50 px-2 py-1 text-xs hover:bg-neutral-100">
           <strong className="text-sm first-letter:uppercase">{ir.ingredient.name}</strong>
           <div className="flex gap-2">
             <span className="min-w-[64px] shrink-0">Quantité</span> <strong>{ir.quantity}</strong>

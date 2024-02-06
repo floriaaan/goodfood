@@ -15,7 +15,7 @@ export const ProductStockCard = ({
   const hasOutOfStock = ingredients_restaurant.filter((ir) => ir.quantity <= 0); // less than 0 cant be possible but who knows
 
   return (
-    <div className="flex flex-col border ">
+    <div className="flex w-80 flex-col  border">
       <div className="relative h-48 w-full ">
         <Image
           src={product.image}
