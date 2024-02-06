@@ -18,6 +18,8 @@ import {
 import { User } from "@gateway/proto/user_pb";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { createDelivery } from "@gateway/services/delivery.service";
+import { Address, Delivery } from "@gateway/proto/delivery_pb";
+import { getRestaurant } from "@gateway/services/restaurant.service";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { Request, Response, Router } from "express";
 import orderService from "../../services/clients/order.client";
