@@ -137,6 +137,7 @@ deliveryPersonRoutes.post("/api/delivery-person", withCheck({ role: "ADMIN" }), 
         in: 'body',
         required: true,
         schema: {
+            userId:"userId",
             firstName:"John",
             lastName:"Doe",
             phone:"0612345678",
@@ -156,8 +157,9 @@ deliveryPersonRoutes.post("/api/delivery-person", withCheck({ role: "ADMIN" }), 
         type: 'string'
     } */
 
-  const { firstName, lastName, phone, address } = req.body;
+  const { userId, firstName, lastName, phone, address } = req.body;
   const deliveryPerson = new DeliveryPersonCreateInput()
+    .setUserId(userId)
     .setFirstName(firstName)
     .setLastName(lastName)
     .setPhone(phone)

@@ -14,7 +14,6 @@ export const listIngredientQuantity = async (
         const ingredientQuantity = await prisma.recipe.findMany({
             where: {product_id: id},
         }) as unknown as Recipe[];
-        console.log(ingredientQuantity);
 
         const RecipeResponse: RecipeResponse = {
             productId: id,

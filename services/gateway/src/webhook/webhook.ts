@@ -1,17 +1,15 @@
 import { stripe, STRIPE_ENDPOINT_SECRET } from "@gateway/lib/stripe";
 import { log, utils } from "@gateway/lib/log/log";
 import express from "express";
-import { paymentServiceClient } from "@gateway/services/clients/payment.client";
-import { Payment, UpdatePaymentStatusRequest } from "@gateway/proto/payment_pb";
 import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
-import orderClient from "@gateway/services/clients/order.client";
-import { Basket, CreateOrderRequest, UserMinimum } from "@gateway/proto/order_pb";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { getUser } from "@gateway/services/user.service";
 import { createDelivery } from "@gateway/services/delivery.service";
 import { getRestaurant } from "@gateway/services/restaurant.service";
 import { Address } from "@gateway/proto/delivery_pb";
 import { updateQuantityFromBasket } from "@gateway/services/stock.service";
+import { updatePaymentStatus } from "@gateway/services/payment.service";
+import { createOrder } from "@gateway/services/order.service";
 
 const app = express();
 
@@ -32,65 +30,53 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
     }
   }
 
-  const { payment_status, id } = event.data.object;
-  let payment: Payment.AsObject;
-  paymentServiceClient.updatePaymentStatus(
-    new UpdatePaymentStatusRequest().setId(id).setStatus(payment_status as PaymentStatus),
-    (error, response) => {
-      if (error) log.error("Gateway-webhook: UpdatePaymentStatusRequest: ", error);
-      else payment = response.toObject();
-    },
-  );
-
   switch (event.type) {
     case "checkout.session.completed": {
-      // @ts-ignore
-      if (!payment) break;
-      const basket = await getBasketByUser(payment.user!.id);
-      if (!basket) break;
+      const { id } = event.data.object;
+      const paymentUpdated = await updatePaymentStatus(id, PaymentStatus.APPROVED);
+      if (!paymentUpdated) break;
+      const payment = paymentUpdated.toObject();
+      try {
+        const basket = await getBasketByUser(payment.user!.id);
+        if (!basket) break;
 
-      const restaurant = await getRestaurant(basket.getRestaurantId());
-      if (!restaurant) break;
+        const restaurant = await getRestaurant(basket.getRestaurantId());
+        if (!restaurant) break;
 
-      const user = await getUser(payment.user!.id);
-      if (!user) break;
+        const user = await getUser(payment.user!.id);
+        if (!user) break;
 
-      const mainAddress = user.getMainaddress();
-      if (!mainAddress) break;
+        const mainAddress = user.getMainaddress()?.toObject();
+        if (!mainAddress) break;
 
-      const delivery = await createDelivery(
-        new Address().setLat(mainAddress.getLat()).setLng(mainAddress.getLng()),
-        user.getId(),
-        restaurant.getId(),
-      );
-      if (!delivery) break;
-      // GetIngredientRestaurantsByProduct (ING service) -> get ingredient quantity by productId in (product service) -> delete ingredient quantity in (ingredient service)
+        const restAddress = restaurant.getAddress();
+        if (!restAddress) break;
 
-      basket.getProductsList().map(async (product) => {
-        updateQuantityFromBasket(product.getId());
-      });
+        const delivery = await createDelivery(
+          new Address().setLat(mainAddress.lat).setLng(mainAddress.lng),
+          user.getId(),
+          restaurant.getId(),
+          restAddress,
+        );
+        if (!delivery) break;
 
-      // TODO: Set delivery Type
-      orderClient.createOrder(
-        new CreateOrderRequest()
-          .setPaymentId(payment.id)
-          .setDeliveryId(delivery.getId())
-          .setDeliveryType("delivery")
-          .setUser(new UserMinimum().setId(user.getId()).setEmail(user.getEmail()).setPhone(user.getPhone()))
-          .setBasketSnapshot(new Basket().setString(basket?.toString() || ""))
-          .setRestaurantId(basket?.getRestaurantId()),
-        (error, response) => {
-          if (error) log.error("Gateway-webhook: createOrder: ", error);
-          else resetBasketByUser(user.getId());
-        },
-      );
+        basket.getProductsList().map(async (product) => {
+          await updateQuantityFromBasket(product.getId());
+        });
+        // TODO: Set delivery Type
+        const order = await createOrder(payment.id, delivery.getId(), "DELIVERY", user, basket, restaurant.getId());
 
-      if (payment_status === "paid") break;
+        if (order) await resetBasketByUser(user.getId());
+        console.log("LINE 89 order :", order);
+      } catch (e) {
+        console.log(e);
+      }
+      // if (payment_status === "paid") break;
     }
 
     // case checkout session expired
     case "checkout.session.expired": {
-      if (payment_status === "unpaid") break;
+      // if (payment_status === "unpaid") break;
     }
 
     default:

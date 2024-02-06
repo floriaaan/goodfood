@@ -7,25 +7,28 @@ meta {
 post {
   url: {{baseUrl}}/api/stock/ingredient/restaurant
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "alertThreshold": "<number>",
-    "quantity": "<number>",
+    "alertThreshold": 5,
+    "quantity": 20,
     "productList": [
-      "<string>",
-      "<string>"
+      "clsahxeoz0002lj36ma65d20i"
     ],
-    "unitPrice": "<number>",
-    "pricePerKilo": "<number>",
-    "restaurantId": "<string>",
-    "ingredientId": "<number>",
-    "supplierId": "<number>"
+    "unitPrice": 2,
+    "pricePerKilo": 1.5,
+    "restaurantId": "clsahhmnm000097zkxvkjmf33",
+    "ingredientId": 1,
+    "supplierId": 1
   }
 }

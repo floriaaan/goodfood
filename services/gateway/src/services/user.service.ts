@@ -7,6 +7,7 @@ export const getUser = (id: string): Promise<User | undefined> => {
   return new Promise((resolve, reject) => {
     userServiceClient.getUser(userId, (error, response) => {
       if (error) {
+        console.error(error);
         reject(error);
       } else {
         resolve(response.getUser());
@@ -21,6 +22,7 @@ export const getUserIdFromToken = (token: string): Promise<string | undefined> =
   return new Promise((resolve, reject) => {
     userServiceClient.validate(userToken, (error, response) => {
       if (error) {
+        console.error(error);
         reject(error);
       } else {
         resolve(response.getId());

@@ -12,6 +12,7 @@ export type User = {
 
 export type Payment = {
   id: string;
+  stripe_id: string;
   total: number;
   status: PaymentStatus;
   user: User;

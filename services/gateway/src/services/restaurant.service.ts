@@ -5,6 +5,7 @@ export const getRestaurant = (id: string): Promise<Restaurant | undefined> => {
   return new Promise((resolve, reject) => {
     restaurantServiceClient.getRestaurant(new RestaurantId().setId(id), (error, response) => {
       if (error) {
+        console.error(error);
         reject(error);
       } else {
         resolve(response);

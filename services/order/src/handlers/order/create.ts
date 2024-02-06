@@ -2,7 +2,6 @@ import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
 import { CreateOrderRequest, Order } from "@order/types/order";
 import { Data } from "@order/types";
-import { parseStruct } from "@order/lib/struct";
 import { toGrpc } from "@order/lib/transformer";
 
 export const CreateOrder = async (
@@ -52,7 +51,7 @@ export const CreateOrder = async (
 
     callback(null, toGrpc(order));
   } catch (error) {
-    log.error(error);
+    log.error("UNE ERROR EST LA: ", error);
     callback(error, null);
   }
 };

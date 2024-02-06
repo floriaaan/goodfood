@@ -4,9 +4,17 @@ import { Order, BasketSnapshot } from "@/types/order";
 import { Restaurant } from "@/types/restaurant";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
+import { useQuery } from "@tanstack/react-query";
 
-export const CheckoutReceipt = async (order: Order) => {
-  const restaurant = (await (await fetchAPI(`/api/restaurant/${order.restaurant_id}`)).json()) as Restaurant;
+export const CheckoutReceipt = (order: Order) => {
+  const { data: restaurant } = useQuery<Restaurant>({
+    queryKey: ["restaurant", order.restaurant_id],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/restaurant/${order.restaurant_id}`, undefined);
+      const body = await res.json();
+      return body;
+    },
+  });
   if (!restaurant) return null;
 
   const basket: BasketSnapshot = order.basket_snapshot.json ?? JSON.parse(order.basket_snapshot.string);
