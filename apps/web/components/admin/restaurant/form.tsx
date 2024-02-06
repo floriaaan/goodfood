@@ -19,6 +19,20 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormInput,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    FormTextarea,
+} from "@/components/ui/form";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { MdArrowDropDown, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
+import { Restaurant } from "@/types/restaurant";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -35,7 +49,15 @@ import {
     FormMessage,
     FormTextarea,
 } from "@/components/ui/form";
+import { useAdmin } from "@/hooks/useAdmin";
 import { useAuth } from "@/hooks";
+import {toName} from "@/lib/user";
+import {Marker} from "react-map-gl";
+import {Map, RestaurantPin} from "@/components/map";
+import {useEffect, useRef, useState} from "react";
+import {FaMapMarkerAlt} from "react-icons/fa";
+import {getAddress, searchAddress} from "@/lib/fetchers/externals/api-gouv";
+import {RestaurantDeleteAlert} from "@/components/admin/restaurant/delete-alert";
 import { useAdmin } from "@/hooks/useAdmin";
 import { toName } from "@/lib/user";
 import { Restaurant } from "@/types/restaurant";
@@ -63,17 +85,32 @@ const formSchema = z.object({
 export type RestaurantCreateEditFormValues = z.infer<typeof formSchema>;
 
 export function RestaurantCreateEditForm({
-  initialValues,
-  onSubmit,
-  id,
-}: {
-  initialValues?: RestaurantCreateEditFormValues;
-  onSubmit: (values: RestaurantCreateEditFormValues) => void;
-  id?: Restaurant["id"];
+                                          initialValues,
+                                          onSubmit,
+                                          id,
+                                          closeSheet,
+                                      }: {
+    initialValues?: RestaurantCreateEditFormValues;
+    onSubmit: (values: RestaurantCreateEditFormValues) => void;
+    id?: Restaurant["id"];
+    closeSheet: () => void;
 }) {
-  const { session } = useAuth();
-  const { restaurants, restaurant, categories, allergens, users } = useAdmin();
-  const [[longitude, latitude], setLongLat] = useState([NaN, NaN]);
+
+    const { session } = useAuth();
+    const { refetchRestaurants, restaurants, restaurant, users } = useAdmin();
+    const [ [ longitude, latitude ], setLongLat ] = useState([NaN, NaN]);
+    const mapRef = useRef(null);
+
+    useEffect(() => {
+        if (longitude && latitude && mapRef.current) {
+            // @ts-ignore - mapRef is not typed
+            mapRef.current.flyTo({
+                center: [longitude, latitude],
+                zoom: 15,
+                pitch: 40,
+            });
+        }
+    }, [longitude, latitude]);
 
   const form = useForm<RestaurantCreateEditFormValues>({
     resolver: zodResolver(formSchema),
@@ -98,29 +135,29 @@ export function RestaurantCreateEditForm({
         },
   });
 
-  async function handler(values: RestaurantCreateEditFormValues) {
-    // eslint-disable-next-line no-console
-    console.log("pass", values);
-    onSubmit(values);
-  }
+
+    async function handler(values: RestaurantCreateEditFormValues) {
+               // eslint-disable-next-line no-console
+        console.log("pass", values);
+        onSubmit(values);
+    }
 
   async function handleLongLat(values: RestaurantCreateEditFormValues) {
-    const address = `${values.street} ${values.city} ${values.zipcode}`.replaceAll(" ", "+");
-    const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=api-adresse.data.gouv.fr/?q=${address}`);
-    const data = await response.json();
+    const data = await searchAddress(`${values.street} ${values.city} ${values.zipcode}`);
+    console.log(data);
+    if(data.features.length > 1) return;
     setLongLat([data.features[0].geometry.coordinates[0], data.features[0].geometry.coordinates[1]]);
-    form.setValue("longitude", data.features[0].geometry.coordinates[0]);
-    form.setValue("latitude", data.features[0].geometry.coordinates[1]);
-  }
+        form.setValue("longitude", data.features[0].geometry.coordinates[0]);
+        form.setValue("latitude", data.features[0].geometry.coordinates[1]);
+        return [data.features[0].geometry.coordinates[0], data.features[0].geometry.coordinates[1]];
+    }
 
   async function handleOnclickMap(longitude: number, latitude: number) {
-    const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${longitude}&lat=${latitude}`);
-    const data = await response.json();
-    form.setValue("street", data.features[0].properties.name);
-    form.setValue("city", data.features[0].properties.city);
-    form.setValue("zipcode", data.features[0].properties.postcode);
-    form.setValue("country", data.features[0].properties.country);
-  }
+    const data = await getAddress(latitude, longitude);
+        form.setValue("street", data.features[0].properties.name);
+        form.setValue("city", data.features[0].properties.city);
+        form.setValue("zipcode", data.features[0].properties.postcode);
+    }
 
   return (
     <Form {...form}>
@@ -137,13 +174,14 @@ export function RestaurantCreateEditForm({
               handleOnclickMap(e.lngLat.lng, e.lngLat.lat);
             }}
             center={{
-              latitude: restaurant?.address.lat || 0,
-              longitude: restaurant?.address.lng || 0,
+              latitude: initialValues?.latitude || restaurant?.address.lat || 0,
+              longitude: initialValues?.longitude || restaurant?.address.lng || 0,
             }}
+                        mapRef={mapRef}
           >
             {restaurants.map((r) => (
               <Marker key={r.id} latitude={r.address.lat} longitude={r.address.lng} anchor="bottom">
-                <RestaurantPin />
+                <RestaurantPin applyStroke={r.id == id || false} />
               </Marker>
             ))}
             {longitude && latitude && (
@@ -151,7 +189,7 @@ export function RestaurantCreateEditForm({
                 {(() => {
                   return (
                     <Marker anchor="bottom" longitude={longitude} latitude={latitude}>
-                      <RestaurantPin />
+                      <RestaurantPin applyStroke={true}/>
                     </Marker>
                   );
                 })()}
@@ -361,30 +399,7 @@ export function RestaurantCreateEditForm({
         </div>
 
         <div className="item-center inline-flex h-24 shrink-0 items-center justify-between gap-4 bg-gray-50 p-6">
-          {initialValues && (
-            <>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" type="button">
-                    <MdDelete className="h-4 w-4" />
-                    Supprimer
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce restaurant ?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action est irréversible. Le restaurant sera supprimé.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                    <AlertDialogAction>Continuer</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
+          {initialValues && id && <RestaurantDeleteAlert closeSheet={closeSheet} id={id} />}
           <Button type="submit">
             <MdDone className="h-4 w-4" />
             {id ? "Modifier" : "Créer"}

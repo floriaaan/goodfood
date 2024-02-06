@@ -24,9 +24,11 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   create,
+  refresh,
   noDataMessage,
 }: DataTableProps<TData, TValue> & {
   create?: React.ReactNode;
+  refresh?: React.ReactNode;
   noDataMessage?: string;
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -84,6 +86,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end gap-x-4 py-4">
+        {refresh}
         {create}
         <Button
           variant="outline"
@@ -94,7 +97,7 @@ export function DataTable<TData, TValue>({
           <MdChevronLeft className="h-4 w-4 shrink-0" />
         </Button>
         <span className="inline-flex h-11 w-11 items-center justify-center gap-x-2 border-2 p-3 text-sm font-bold uppercase">
-          {table.getPageCount()}
+          {table.getState().pagination.pageIndex + 1 || 0}/{table.getPageCount()}
         </span>
         <Button
           variant="outline"
