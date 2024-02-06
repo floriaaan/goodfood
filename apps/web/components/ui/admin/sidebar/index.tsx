@@ -4,13 +4,18 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/ui/icon/logo";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { Select } from "@/components/ui/select";
+import { useAuth } from "@/hooks";
 import { useAdmin } from "@/hooks/useAdmin";
+import { toName } from "@/lib/user";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,6 +31,7 @@ import {
 } from "react-icons/md";
 
 export const Sidebar = () => {
+  const { user, logout } = useAuth();
   const path = usePathname();
   const { selectRestaurant, restaurants, selectedRestaurantId, restaurant } = useAdmin();
 
@@ -35,6 +41,8 @@ export const Sidebar = () => {
     if (displayMode === "restaurant" && !path.startsWith("/admin/restaurant")) push("/admin/restaurant");
     else if (displayMode === "supervision" && path.startsWith("/admin/restaurant")) push("/admin");
   }, [displayMode, path, push]);
+
+  if (!user) return null;
 
   return (
     <div className="flex h-screen flex-col items-center px-6 py-3 shadow-xl">
@@ -46,60 +54,62 @@ export const Sidebar = () => {
           <MdKeyboardBackspace /> {"Retour à l'application"}
         </Link>
       </div>
-      {restaurants.length > 0 && (
-        <Select
-          aria-label="Restaurant / Groupe séléctionné"
-          options={restaurants.map((e) => ({ label: e.name, value: e.id }))}
-          selected={selectedRestaurantId || restaurants[0].id}
-          defaultValue={selectedRestaurantId || restaurants[0].id}
-          setSelected={selectRestaurant}
-        />
-      )}
-      {restaurant ? (
-        <>
-          <div className="my-10 flex flex-col gap-2">
-            <Link
-              href="/admin"
-              className={cn(
-                "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5 ",
-                path === "/admin" && "bg-black bg-opacity-10",
-              )}
-            >
-              <MdTableView className="h-5 w-5 shrink-0" /> Visualisation des données
-            </Link>
-            <Link
-              href="/admin/stats"
-              className={cn(
-                "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
-                path === "/admin/stats" && "bg-black bg-opacity-10",
-              )}
-            >
-              <MdCurrencyBitcoin className="h-5 w-5 shrink-0" /> Statistiques et revenus
-            </Link>
-            <Link
-              href="/admin/stock"
-              className={cn(
-                "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
-                path === "/admin/stocks" && "bg-black bg-opacity-10",
-              )}
-            >
-              <MdChecklist className="h-5 w-5 shrink-0" />
-              Gestion des stocks
-            </Link>
-            <Link
-              href="/admin/health-check"
-              className={cn(
-                "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
-                path === "/admin/health-check" && "bg-black bg-opacity-10",
-              )}
-            >
-              <MdDoneAll className="h-5 w-5 shrink-0" />
-              État de l’application
-            </Link>
-          </div>
-          <div className="mb-5 mt-auto w-full cursor-pointer bg-black bg-opacity-5 px-4 py-2 font-semibold">
+      <div className="flex h-14 w-full shrink-0">
+        {restaurants.length > 0 && (
+          <Select
+            aria-label="Restaurant / Groupe séléctionné"
+            options={restaurants.map((e) => ({ label: e.name, value: e.id }))}
+            selected={selectedRestaurantId || restaurants[0].id}
+            defaultValue={selectedRestaurantId || restaurants[0].id}
+            setSelected={selectRestaurant}
+          />
+        )}
+      </div>
+      <div className="my-10 h-full grow">
+        {restaurant ? (
+          <>
+            <div className=" flex h-full grow flex-col gap-2">
+              <Link
+                href="/admin"
+                className={cn(
+                  "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5 ",
+                  path === "/admin" && "bg-black bg-opacity-10",
+                )}
+              >
+                <MdTableView className="h-5 w-5 shrink-0" /> Visualisation des données
+              </Link>
+              <Link
+                href="/admin/stats"
+                className={cn(
+                  "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
+                  path === "/admin/stats" && "bg-black bg-opacity-10",
+                )}
+              >
+                <MdCurrencyBitcoin className="h-5 w-5 shrink-0" /> Statistiques et revenus
+              </Link>
+              <Link
+                href="/admin/stock"
+                className={cn(
+                  "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
+                  path === "/admin/stocks" && "bg-black bg-opacity-10",
+                )}
+              >
+                <MdChecklist className="h-5 w-5 shrink-0" />
+                Gestion des stocks
+              </Link>
+              <Link
+                href="/admin/health-check"
+                className={cn(
+                  "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
+                  path === "/admin/health-check" && "bg-black bg-opacity-10",
+                )}
+              >
+                <MdDoneAll className="h-5 w-5 shrink-0" />
+                État de l’application
+              </Link>
+            </div>
             <DropdownMenu>
-              <DropdownMenuTrigger className="inline-flex h-full w-full items-center justify-between text-sm">
+              <DropdownMenuTrigger className=" inline-flex w-full  cursor-pointer items-center justify-between bg-black/5 px-4 py-2 text-sm font-semibold">
                 {displayMode === "supervision" ? (
                   <MdHomeWork className="h-5 w-5 shrink-0" />
                 ) : (
@@ -108,7 +118,7 @@ export const Sidebar = () => {
                 Mode {displayMode}
                 <MdUnfoldMore className="h-5 w-5 shrink-0" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-fit">
+              <DropdownMenuContent className="w-fit" side="top">
                 {(["supervision", "restaurant"] as const).map((e) => (
                   <DropdownMenuItem key={e} onClick={() => setDisplayMode(e)}>
                     Mode {e}
@@ -116,13 +126,43 @@ export const Sidebar = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+          </>
+        ) : (
+          <div className="w-full">
+            <LargeComponentLoader />
           </div>
-        </>
-      ) : (
-        <div className="w-full">
-          <LargeComponentLoader />
-        </div>
-      )}
+        )}
+      </div>
+      <div className="my-4 w-full">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="inline-flex w-full items-center justify-between gap-x-2 py-2 pr-4 text-sm font-semibold">
+            <div className="inline-flex items-center gap-x-4">
+              <Image
+                alt="User profile pic"
+                src="/images/tmp/user.png"
+                width={32}
+                height={32}
+                className="h-8 w-8 shrink-0"
+              />
+              <span>{toName(user)}</span>
+            </div>
+            <MdUnfoldMore className="h-5 w-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top">
+            <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href="/account/">Mes informations</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <button className="w-full cursor-pointer" onClick={logout}>
+                Se déconnecter
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 };

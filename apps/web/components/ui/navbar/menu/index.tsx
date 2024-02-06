@@ -1,5 +1,15 @@
 "use client";
 
+import { BasketWrapper } from "@/components/basket";
+import { LocationSheetContent } from "@/components/location/sheet-content";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Indicator } from "@/components/ui/navbar/indicator";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/hooks/useAuth";
+import Link from "next/link";
+import { useState } from "react";
+import { HiSparkles } from "react-icons/hi2";
 import {
   MdAccountBox,
   MdAdminPanelSettings,
@@ -13,16 +23,6 @@ import {
   MdReceipt,
   MdShoppingBasket,
 } from "react-icons/md";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { useAuth } from "@/hooks/useAuth";
-import { BasketWrapper } from "@/components/basket";
-import { LocationSheetContent } from "@/components/location/sheet-content";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { HiSparkles } from "react-icons/hi2";
-import { useState } from "react";
-import { Indicator } from "@/components/ui/navbar/indicator";
 
 export const MenuDropdown = () => {
   const [open, onOpenChange] = useState(false);
@@ -30,8 +30,10 @@ export const MenuDropdown = () => {
   return (
     <Sheet {...{ open, onOpenChange }}>
       <SheetTrigger className="gf_shadow relative flex h-10 w-10 shrink-0 items-center justify-center border border-black">
-        <MdMenu className="h-5 w-5" />
-        <Indicator />
+        <>
+          <MdMenu className="h-5 w-5" />
+          <Indicator />
+        </>
       </SheetTrigger>
       <SheetContent side="right" className="sm:max-w-md md:max-w-lg lg:max-w-xl">
         <MenuSheetContent close={() => onOpenChange(false)} />
@@ -51,10 +53,10 @@ const MenuSheetContent = ({ close }: { close: () => void }) => {
       <Accordion type="single" collapsible className="h-full shrink grow">
         <AccordionItem value="account">
           <AccordionTrigger>
-            <button className="inline-flex items-center gap-2 text-sm font-bold">
+            <div className="inline-flex items-center gap-2 text-sm font-bold">
               <MdAccountBox className="h-5 w-5" />
               Mon compte
-            </button>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-y-1.5 py-3">
@@ -87,10 +89,10 @@ const MenuSheetContent = ({ close }: { close: () => void }) => {
         </AccordionItem>
         <AccordionItem value="basket">
           <AccordionTrigger>
-            <button className="inline-flex items-center gap-2 text-sm font-bold">
+            <div className="inline-flex items-center gap-2 text-sm font-bold">
               <MdShoppingBasket className="h-5 w-5" />
               Panier
-            </button>
+            </div>
           </AccordionTrigger>
           <AccordionContent className="max-h-96 overflow-y-scroll sm:max-h-max">
             <BasketWrapper showHeader={false} />
@@ -98,10 +100,10 @@ const MenuSheetContent = ({ close }: { close: () => void }) => {
         </AccordionItem>
         <AccordionItem value="location">
           <AccordionTrigger>
-            <button className="inline-flex items-center gap-2 text-sm font-bold">
+            <div className="inline-flex items-center gap-2 text-sm font-bold">
               <MdDeliveryDining className="h-5 w-5" />
               Livraison
-            </button>
+            </div>
           </AccordionTrigger>
           <AccordionContent className="max-h-96 overflow-y-scroll sm:max-h-max">
             <LocationSheetContent />
@@ -111,10 +113,10 @@ const MenuSheetContent = ({ close }: { close: () => void }) => {
         {user?.role?.code === "ADMIN" && (
           <AccordionItem value="admin">
             <AccordionTrigger>
-              <button className="inline-flex items-center gap-2 text-sm font-bold">
+              <div className="inline-flex items-center gap-2 text-sm font-bold">
                 <MdAdminPanelSettings className="h-5 w-5" />
                 Administration
-              </button>
+              </div>
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex flex-col gap-y-1.5 py-3">
