@@ -5,7 +5,7 @@ import * as z from "zod";
 const formSchema = z.object({
   firstName: z.string().min(1, "Le prénom ne peut pas être une chaîne vide"),
   lastName: z.string().min(1, "Le nom de famille ne peut pas être une chaîne vide"),
-  phone: z.string().optional(),
+  phone: z.string().regex(/(\+33 |0)\d (\d{2} ){3}\d{2}|(\+33|0)\d{9}/, "Veuillez vérifier le format du numéros de téléphone").optional(),
 });
 
 import { Button } from "@/components/ui/button";

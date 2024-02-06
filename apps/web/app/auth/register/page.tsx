@@ -24,10 +24,12 @@ export default function Register() {
   const [body, setBody] = useState({} as any);
 
   const register = async () => {
+    body.phone = body.phone.replace("+33", "0").replace(/ /g, "");
     const res = await fetchAPI("/api/user/register", undefined, {
       body: JSON.stringify(body),
       method: "POST",
     });
+    console.log(res);
     if (!res.ok)
       return toast({
         className: "p-3",
