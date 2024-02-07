@@ -1,5 +1,5 @@
-import { Request, Response, Router } from "express";
-import { stockServiceClient } from "../../services/clients/stock.client";
+import { check, withCheck } from "@gateway/middleware/auth";
+import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
 import {
   CreateIngredientRequest,
   CreateIngredientRestaurantRequest,
@@ -25,11 +25,11 @@ import {
   UpdateSupplierRequest,
   UpdateSupplyOrderRequest,
 } from "@gateway/proto/stock_pb";
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { check, withCheck } from "@gateway/middleware/auth";
-import { getUserIdFromToken } from "@gateway/services/user.service";
 import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
-import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
+import { getUserIdFromToken } from "@gateway/services/user.service";
+import { Request, Response, Router } from "express";
+import { Empty } from "google-protobuf/google/protobuf/empty_pb";
+import { stockServiceClient } from "../../services/clients/stock.client";
 
 export const stockRoutes = Router();
 /**
@@ -324,7 +324,7 @@ stockRoutes.post(
             schema: {
                 alertThreshold: 5,
                 quantity: 2,
-                productList: ["product_id:1", "product_id:2"],
+                inProductListList: ["product_id:1", "product_id:2"],
                 unitPrice: 2,
                 pricePerKilo: 1.5,
                 restaurantId: "restaurant_id:1",
@@ -346,12 +346,20 @@ stockRoutes.post(
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
     // ----------------------------
 
-    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId, supplierId } =
-      req.body;
+    const {
+      alertThreshold,
+      quantity,
+      inProductListList,
+      unitPrice,
+      pricePerKilo,
+      restaurantId,
+      ingredientId,
+      supplierId,
+    } = req.body;
     const ingredientRestaurant = new CreateIngredientRestaurantRequest()
       .setAlertThreshold(alertThreshold)
       .setQuantity(quantity)
-      .setInProductListList(productList)
+      .setInProductListList(inProductListList)
       .setUnitPrice(unitPrice)
       .setPricePerKilo(pricePerKilo)
       .setRestaurantId(restaurantId)
@@ -396,7 +404,7 @@ stockRoutes.put(
         schema: {
           alertThreshold: 5,
           quantity: 2,
-          productList: ["product_id:1", "product_id:2"],
+          inProductListList: ["product_id:1", "product_id:2"],
           unitPrice: 2,
           pricePerKilo: 1.5,
           restaurantId: "restaurant_id:1",
@@ -418,13 +426,21 @@ stockRoutes.put(
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
     // ----------------------------
     const { id } = req.params;
-    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId, supplierId } =
-      req.body;
+    const {
+      alertThreshold,
+      quantity,
+      inProductListList,
+      unitPrice,
+      pricePerKilo,
+      restaurantId,
+      ingredientId,
+      supplierId,
+    } = req.body;
     const ingredientRestaurant = new UpdateIngredientRestaurantRequest()
       .setId(Number(id))
       .setAlertThreshold(alertThreshold)
       .setQuantity(quantity)
-      .setInProductListList(productList)
+      .setInProductListList(inProductListList)
       .setUnitPrice(unitPrice)
       .setPricePerKilo(pricePerKilo)
       .setRestaurantId(restaurantId)
