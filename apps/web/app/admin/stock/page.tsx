@@ -1,9 +1,11 @@
 "use client";
+import { ir_columns } from "@/app/admin/stock/ingredient-restaurant/columns";
 import { ProductStockCard } from "@/app/admin/stock/product/card";
 import { IngredientRestaurantSheetContent } from "@/app/admin/stock/product/ingredient-restaurant/sheet-content";
 import { IngredientSheetContent } from "@/app/admin/stock/product/ingredient/sheet-content";
 import { SupplierCard } from "@/app/admin/stock/supplier/card";
 import { SupplierSheetContent } from "@/app/admin/stock/supplier/sheet-content";
+import { DataTable } from "@/components/ui/data-table";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useAdmin } from "@/hooks/useAdmin";
 import { cn } from "@/lib/utils";
@@ -25,7 +27,7 @@ export default function StockPage() {
         <span>{restaurant.name}</span>
       </h2>
       <h3 className="font-ultrabold inline-flex items-center gap-2 bg-neutral-800 p-2 text-2xl uppercase text-white lg:px-8 lg:py-4">
-        Produits & ingrédients
+        Produits & quantités
       </h3>
       <div className="inline-flex gap-4 overflow-x-auto p-2 lg:p-8 ">
         <div className="flex h-[calc(12rem+16rem+2px)] w-80 flex-col gap-4 border border-transparent">
@@ -119,6 +121,11 @@ export default function StockPage() {
         {suppliers.length > 0 ? (
           suppliers
             .sort((a, b) => a.id - b.id)
+            .sort(
+              (a, b) =>
+                supply_orders.filter((so) => so.supplierId === a.id).length -
+                supply_orders.filter((so) => so.supplierId === b.id).length,
+            )
             .map((s) => (
               <SupplierCard
                 key={s.id}
@@ -131,6 +138,12 @@ export default function StockPage() {
             {"Aucun fournisseur n'est disponible pour le moment."}
           </div>
         )}
+      </div>
+      <h3 className="font-ultrabold inline-flex items-center gap-2 bg-neutral-800 p-2 text-2xl uppercase text-white lg:px-8 lg:py-4">
+        Ingrédients du restaurant
+      </h3>
+      <div className="flex w-full gap-4 p-2 lg:p-8">
+        <DataTable data={ingredients_restaurant} columns={ir_columns} />
       </div>
     </div>
   );
