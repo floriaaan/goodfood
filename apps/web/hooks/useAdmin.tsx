@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { createPersistedState } from "@/lib/use-persisted-state";
 import { Order } from "@/types/order";
-import { Allergen, Category, Product } from "@/types/product";
+import {Allergen, Category, ExtendedProduct, Product} from "@/types/product";
 import { Promotion } from "@/types/promotion";
 import { Restaurant } from "@/types/restaurant";
 import { Ingredient, IngredientRestaurant, Supplier, SupplyOrder } from "@/types/stock";
@@ -27,6 +27,8 @@ type AdminContextData = {
   refetchRestaurantUsers: () => void;
   isRestaurantUsersLoading: boolean;
 
+  extendedProducts: ExtendedProduct[];
+  refetchExtendedProducts: () => void;
   products: Product[];
   refetchProducts: () => void;
   isProductsLoading: boolean;
@@ -81,6 +83,8 @@ const AdminContext = createContext({
   refetchRestaurantUsers: () => {},
   isRestaurantUsersLoading: true,
 
+  extendedProducts: [],
+  refetchExtendedProducts: () => {},
   products: [],
   refetchProducts: () => {},
   isProductsLoading: true,
@@ -159,7 +163,8 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     placeholderData: [],
   });
   const restaurants = useMemo(() => api_restaurants ?? [], [api_restaurants]);
-  const {
+
+	const {
     data: api_restaurant_users,
     refetch: refetchRestaurantUsers,
     isLoading: isRestaurantUsersLoading,
@@ -200,6 +205,37 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     placeholderData: [],
   });
   const products = useMemo(() => api_products ?? [], [api_products]);
+
+	const { data: api_extendedProducts, refetch: refetchExtendedProducts } = useQuery<Product[]>({
+		queryKey: ["admin", "extendProduct", "restaurant", selectedRestaurantId],
+		queryFn: async () => {
+			const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, token);
+			const body = await res.json();
+			body.productsList = body.productsList.map((p: ExtendedProduct) => {
+				var detail = (p.comment == "" ? "comment, " : "") +
+					(p.preparation == "" ? "preparation, " : "") +
+					(p.weight == "" ? "weight, " : "") +
+					(p.kilocalories == "" ? "kilocalories, " : "") +
+					(p.nutriscore == "" ? "nutriscore, " : "") +
+					(p.categoriesList?.length == 0 ? "categoriesList, " : "") +
+					(p.allergensList?.length == 0 ? "categoriesList, " : "")
+				;
+				detail = detail != "" ? "(" +  detail.slice(0, -2) + ")" : "";
+
+				const ok = "✅ Tout est ok !";
+				const attention = "⚠️ " + detail.split(",").length + " élément(s) manquant(s) !";
+
+				const comment = detail == "" ? ok : attention;
+				return { ...p, additional_information: [comment, detail] }
+			});
+			return body.productsList;
+		},
+		staleTime: 1000 * 60 * 60 * 24, // 24 hours
+		placeholderData: [],
+		enabled: !!selectedRestaurantId,
+	});
+	const extendedProducts = useMemo(() => api_extendedProducts ?? [], [api_extendedProducts]);
+
 
   const {
     data: api_orders,
@@ -412,6 +448,8 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
         refetchRestaurantUsers,
         isRestaurantUsersLoading,
 
+        extendedProducts,
+        refetchExtendedProducts,
         products,
         refetchProducts,
         isProductsLoading,
