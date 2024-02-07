@@ -15,7 +15,6 @@ const checkRole = async (token: string, expectedRole: Role | Role[]) => {
   console.log(userId);
   if (userId === undefined) return false;
   const user = await getUser(userId);
-  console.log(user?.getRole()?.getCode());
   if (user === undefined) return false;
 
   if (Array.isArray(expectedRole)) return expectedRole.includes(user.getRole()?.getCode() as Role);
