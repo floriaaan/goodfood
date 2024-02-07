@@ -51,7 +51,7 @@ export const CreateOrder = async (
 
     callback(null, toGrpc(order));
   } catch (error) {
-    log.error("UNE ERROR EST LA: ", error);
+    log.error(error);
     callback(error, null);
   }
 };
