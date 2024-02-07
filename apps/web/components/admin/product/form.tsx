@@ -6,17 +6,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -42,12 +31,13 @@ import { useAdmin } from "@/hooks/useAdmin";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { cn } from "@/lib/utils";
 import { Product, ProductType, ProductTypeLabels } from "@/types/product";
-import { IngredientRestaurant } from "@/types/stock";
+import {Ingredient, IngredientRestaurant} from "@/types/stock";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
 import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
+import {ProductDeleteAlert} from "@/components/admin/product/delete-alert";
 
 // todo: check with product create request
 const formSchema = z.object({
@@ -60,9 +50,9 @@ const formSchema = z.object({
   kilocalories: z.string().max(255),
   nutriscore: z.string().max(255),
 
-  type: z.enum(Object.keys(ProductTypeLabels) as any),
+  type: z.string(),
 
-  restaurant_id: z.string().uuid(),
+  restaurantId: z.string(),
   categoriesList: z.array(z.string()),
   allergensList: z.array(z.string()),
 
@@ -75,54 +65,55 @@ export function ProductCreateEditForm({
   initialValues,
   onSubmit,
   onImageChange,
+  getIngredientProduct,
   id,
+  closeSheet,
 }: {
   initialValues?: ProductCreateEditFormValues;
   onSubmit: (values: ProductCreateEditFormValues) => void;
   onImageChange: (file: File) => Promise<string>;
+  getIngredientProduct: (id: string) => Promise<IngredientRestaurant[] | undefined>;
   id?: Product["id"];
+  closeSheet: () => void;
 }) {
   const { session } = useAuth();
-  const { ingredients_restaurant, categories, allergens } = useAdmin();
+  const { ingredients_restaurant, categories, allergens, restaurant } = useAdmin();
 
   const form = useForm<ProductCreateEditFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialValues
       ? {
-          ...initialValues,
-          allergensList: ((initialValues as unknown as Product)?.allergensList || []).map((a) => a.id),
-          categoriesList: ((initialValues as unknown as Product)?.categoriesList || []).map((c) => c.id),
-        }
+        ...initialValues,
+        price: initialValues.price.toString(),
+      }
       : {
-          name: "",
-          image: "https://picsum.photos/200/300",
-          comment: "",
-          price: "0.0",
-          preparation: "",
-          weight: "",
-          kilocalories: "",
-          nutriscore: "",
+        name: "",
+        image: "https://picsum.photos/200/300",
+        comment: "",
+        price: "0.0",
+        preparation: "",
+        weight: "",
+        kilocalories: "",
+        nutriscore: "",
 
-          type: ProductType.PLATS,
+        type: ProductType.PLATS.toString(),
 
-          restaurant_id: "",
-          categoriesList: [],
-          allergensList: [],
-
-          // ingredients: [],
-        },
+        restaurantId: restaurant?.id || "",
+        categoriesList: [],
+        allergensList: [],
+      },
   });
+
+  const image_inputRef = useRef<HTMLInputElement>(null);
+  const [image_clientUrl, setImage_clientUrl] = useState<string | null>(initialValues?.image || null);
+  const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
+  const [image_error, setImage_error] = useState<string | null>(null);
 
   async function handler(values: ProductCreateEditFormValues) {
     // eslint-disable-next-line no-console
     console.log("pass", values);
     onSubmit(values);
   }
-
-  const image_inputRef = useRef<HTMLInputElement>(null);
-  const [image_clientUrl, setImage_clientUrl] = useState<string | null>(initialValues?.image || null);
-  const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
-  const [image_error, setImage_error] = useState<string | null>(null);
 
   const { data: api_ingredients } = useQuery<IngredientRestaurant[]>({
     queryKey: ["admin", "ingredient", "product", id],
@@ -250,7 +241,7 @@ export function ProductCreateEditForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Type de produit</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+                        <Select onValueChange={field.onChange} defaultValue={ProductType[parseInt(field.value)]}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Type de produit" />
@@ -258,7 +249,7 @@ export function ProductCreateEditForm({
                           </FormControl>
                           <SelectContent>
                             {Object.entries(ProductTypeLabels).map(([value, label]) => (
-                              <SelectItem key={value.toString()} value={value.toString()}>
+                              <SelectItem key={value} value={ProductType[parseInt(value)]}>
                                 {label}
                               </SelectItem>
                             ))}
@@ -368,10 +359,10 @@ export function ProductCreateEditForm({
                                 {field.value.length === 0
                                   ? "Aucun allergène sélectionné"
                                   : field.value.map((a) => (
-                                      <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
-                                        {allergens.find((al) => al.id.toString() === a)?.libelle}
-                                      </div>
-                                    ))}
+                                    <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                      {allergens.find((al) => al.id.toString() === a)?.libelle}
+                                    </div>
+                                  ))}
                                 <MdArrowDropDown className="absolute right-2 h-4 w-4" />
                               </div>
                             </DropdownMenuTrigger>
@@ -410,14 +401,14 @@ export function ProductCreateEditForm({
                                 {field.value.length === 0
                                   ? "Aucune catégorie sélectionnée"
                                   : field.value.map((a) => {
-                                      const category = categories.find((al) => al.id.toString() === a);
-                                      if (!category) return null;
-                                      return (
-                                        <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
-                                          {`${category.icon} ${category.libelle}`}
-                                        </div>
-                                      );
-                                    })}
+                                    const category = categories.find((al) => al.id.toString() === a);
+                                    if (!category) return null;
+                                    return (
+                                      <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                        {`${category.icon} ${category.libelle}`}
+                                      </div>
+                                    );
+                                  })}
                                 <MdArrowDropDown className="absolute right-2 h-4 w-4" />
                               </div>
                             </DropdownMenuTrigger>
@@ -500,30 +491,7 @@ export function ProductCreateEditForm({
         </div>
 
         <div className="item-center inline-flex h-24 shrink-0 items-center justify-between gap-4 bg-gray-50 p-6">
-          {initialValues && (
-            <>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" type="button">
-                    <MdDelete className="h-4 w-4" />
-                    Supprimer
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce produit ?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action est irréversible. Le produit sera supprimé de la carte du restaurant.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                    <AlertDialogAction>Continuer</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
+          {initialValues && id && <ProductDeleteAlert closeSheet={closeSheet} id={id} />}
           <Button type="submit">
             <MdDone className="h-4 w-4" />
             {id ? "Modifier" : "Créer"}

@@ -1,7 +1,5 @@
 "use client";
 
-import { MdAdd } from "react-icons/md";
-
 import { Map, OrderPin, RestaurantPin } from "@/components/map";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
@@ -9,19 +7,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { orders_columns } from "@/components/admin/order/columns";
 import { products_columns } from "@/components/admin/product/columns";
-import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
 import { promotions_columns } from "@/components/admin/promotion/columns";
-import { PromotionCreateSheet } from "@/components/admin/promotion/sheet";
+import { PromotionCreateSheet, PromotionRefreshSheet } from "@/components/admin/promotion/sheet";
 import {restaurants_columns} from "@/components/admin/restaurant/columns";
-import { RestaurantFormSheetContent } from "@/components/admin/restaurant/sheet-content";
 import { users_columns } from "@/components/admin/user/columns";
 import { UserCreateSheet } from "@/components/admin/user/sheet";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useEffect, useRef, useState } from "react";
 import { Marker, Popup } from "react-map-gl";
 import {RestaurantCreateSheet, RestaurantRefreshSheet} from "@/components/admin/restaurant/sheet";
+import {ProductCreateSheet, ProductRefreshSheet} from "@/components/admin/product/sheet";
 
 export default function AdminHome() {
   const { restaurant, selectRestaurant, restaurant_users, restaurants, products, promotions, orders } = useAdmin();
@@ -128,27 +124,13 @@ export default function AdminHome() {
                 <DataTable columns={restaurants_columns} data={restaurants} create={<RestaurantCreateSheet />} refresh={<RestaurantRefreshSheet />}/>
               </TabsContent>
               <TabsContent value="products">
-                <DataTable
-                  columns={products_columns}
-                  data={products}
-                  create={
-                    <Sheet>
-                      <SheetTrigger asChild>
-                        <Button className="w-fit bg-black px-6 text-white">
-                          <MdAdd className="h-4 w-4 shrink-0" />
-                          Créer un produit
-                        </Button>
-                      </SheetTrigger>
-                      <ProductFormSheetContent />
-                    </Sheet>
-                  }
-                />
+                <DataTable columns={products_columns} data={products} create={<ProductCreateSheet />} refresh={<ProductRefreshSheet />}/>
               </TabsContent>
               <TabsContent value="orders">
                 <DataTable columns={orders_columns} data={orders} />
               </TabsContent>
               <TabsContent value="promotions">
-                <DataTable columns={promotions_columns} data={promotions} create={<PromotionCreateSheet />} />
+                <DataTable columns={promotions_columns} data={promotions} create={<PromotionCreateSheet />} refresh={<PromotionRefreshSheet />}/>
               </TabsContent>
             </div>
           </Tabs>

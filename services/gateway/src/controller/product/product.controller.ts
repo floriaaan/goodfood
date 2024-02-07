@@ -95,10 +95,10 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
                 weight: "weight",
                 kilocalories: "0",
                 nutriscore: "A",
-                categories: [{
+                categoriesList: [{
                         id: "category:id",
                     }],
-                allergens: [{
+                allergensList: [{
                         id:"allergen:id"
                     }],,
                 "recipe": [
@@ -123,13 +123,13 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
     weight,
     kilocalories,
     nutriscore,
-    allergens,
-    categories,
+    categoriesList,
+    allergensList,
     recipe,
   } = req.body;
 
-  const categoryList = categories.map((category: { id: string }) => new Category().setId(category.id));
-  const allergenList = allergens.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
+  const categories = categoriesList?.map((category: { id: string }) => new Category().setId(category.id));
+  const allergens = allergensList?.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
   const ingredientQuantity = recipe.map((ingredientList: { id: string; quantity: number }) =>
     new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.id),
   );
@@ -145,8 +145,8 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
     .setWeight(weight)
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
-    .setCategoriesList(categoryList)
-    .setAllergensList(allergenList)
+    .setCategoriesList(categories)
+    .setAllergensList(allergens)
     .setRecipeList(ingredientQuantity);
 
   productServiceClient.createProduct(product, async (error, r) => {
@@ -207,13 +207,13 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
     weight,
     kilocalories,
     nutriscore,
-    categories,
-    allergens,
+    categoriesList,
+    allergensList,
     recipe,
   } = req.body;
 
-  const categoryList = categories.map((category: { id: string }) => new Category().setId(category.id));
-  const allergenList = allergens.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
+  const categories = categoriesList.map((category: { id: string }) => new Category().setId(category.id));
+  const allergens = allergensList.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
   const recipeList = recipe.map((ingredientList: { id: string; quantity: number }) =>
     new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.id),
   );
@@ -230,8 +230,8 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
     .setWeight(weight)
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
-    .setCategoriesList(categoryList)
-    .setAllergensList(allergenList)
+    .setCategoriesList(categories)
+    .setAllergensList(allergens)
     .setRecipeList(recipeList);
 
   productServiceClient.updateProduct(product, async (error, r) => {

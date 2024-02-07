@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { ToastTitle } from "@/components/ui/toast";
 import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/hooks";
-import { useAdmin } from "@/hooks/useAdmin";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Promotion } from "@/types/promotion";
 import { XIcon } from "lucide-react";
@@ -25,7 +24,6 @@ import { MdDelete } from "react-icons/md";
 export const PromotionDeleteAlert = ({ closeSheet, id }: { closeSheet: () => void; id: Promotion["id"] }) => {
   const [open, setOpen] = useState(false);
   const { session } = useAuth();
-  const { refetchPromotions } = useAdmin();
   if (!session) return null;
 
   const handleDelete = async () => {
@@ -63,8 +61,6 @@ export const PromotionDeleteAlert = ({ closeSheet, id }: { closeSheet: () => voi
           </div>
         ),
       });
-    } finally {
-      refetchPromotions();
     }
   };
 

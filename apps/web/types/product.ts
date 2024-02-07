@@ -10,10 +10,10 @@ export type Product = {
   nutriscore: number | string;
   type: ProductType;
 
+  restaurantId: string;
   isOutOfStock?: boolean;
   canMake?: number;
 
-  restaurant_id: string;
   categoriesList: Category[];
   allergensList: Allergen[];
   recipeList: Recipe[];

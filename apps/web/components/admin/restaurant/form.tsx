@@ -31,7 +31,7 @@ import {
     FormTextarea,
 } from "@/components/ui/form";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { MdArrowDropDown, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
+import { MdArrowDropDown, MdDone, MdInfoOutline } from "react-icons/md";
 import { Restaurant } from "@/types/restaurant";
 import {
     DropdownMenu,
@@ -50,7 +50,6 @@ import {
     FormTextarea,
 } from "@/components/ui/form";
 import { useAdmin } from "@/hooks/useAdmin";
-import { useAuth } from "@/hooks";
 import {toName} from "@/lib/user";
 import {Marker} from "react-map-gl";
 import {Map, RestaurantPin} from "@/components/map";
@@ -96,8 +95,7 @@ export function RestaurantCreateEditForm({
     closeSheet: () => void;
 }) {
 
-    const { session } = useAuth();
-    const { refetchRestaurants, restaurants, restaurant, users } = useAdmin();
+    const { restaurants, restaurant, users } = useAdmin();
     const [ [ longitude, latitude ], setLongLat ] = useState([NaN, NaN]);
     const mapRef = useRef(null);
 

@@ -19,19 +19,19 @@ import { fetchAPI } from "@/lib/fetchAPI";
 import { XIcon } from "lucide-react";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
-import {Restaurant} from "@/types/restaurant";
+import {Product} from "@/types/product";
 
-export const RestaurantDeleteAlert = ({ closeSheet, id }: { closeSheet: () => void; id: Restaurant["id"] }) => {
+export const ProductDeleteAlert = ({ closeSheet, id }: { closeSheet: () => void; id: Product["id"] }) => {
 	const [open, setOpen] = useState(false);
 	const { session } = useAuth();
 	if (!session) return null;
 
 	const handleDelete = async () => {
 		try {
-			const res = await fetchAPI(`/api/restaurant/${id}`, session.token, {
+			const res = await fetchAPI(`/api/product/${id}`, session.token, {
 				method: "DELETE",
 			});
-			if (!res.ok) throw new Error("Une erreur s'est produite lors de la suppression du restaurant");
+			if (!res.ok) throw new Error("Une erreur s'est produite lors de la suppression du produit");
 			toast({
 				className: "p-3",
 				children: (
@@ -39,7 +39,7 @@ export const RestaurantDeleteAlert = ({ closeSheet, id }: { closeSheet: () => vo
 						<div className="inline-flex shrink-0 gap-2">
 							<MdDelete className="h-6 w-6 text-red-500" />
 							<div className="flex w-full grow flex-col">
-								<ToastTitle>Le restaurant a été supprimée avec succès</ToastTitle>
+								<ToastTitle>Le produit a été supprimée avec succès</ToastTitle>
 							</div>
 						</div>
 					</div>
@@ -75,12 +75,12 @@ export const RestaurantDeleteAlert = ({ closeSheet, id }: { closeSheet: () => vo
 				</AlertDialogTrigger>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce restaurant ?</AlertDialogTitle>
+						<AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce produit ?</AlertDialogTitle>
 						<AlertDialogDescription>Cette action est irréversible.</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel>Annuler</AlertDialogCancel>
-						<AlertDialogAction onClick={() => handleDelete()}>Continuer</AlertDialogAction>
+						<AlertDialogAction onClick={() => {handleDelete()}}>Continuer</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
