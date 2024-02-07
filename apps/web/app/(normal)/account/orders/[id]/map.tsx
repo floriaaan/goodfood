@@ -10,7 +10,7 @@ export const OrderStatusMap = (order: Order) => {
   const [d_lat, d_lng] = d_location;
 
   const { restaurants } = useLocation();
-  const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
+  const restaurant = restaurants.find((r) => r.id === order.restaurantId);
   const { address: r_location } = restaurant || {};
   const [r_lat, r_lng] = [r_location?.lat, r_location?.lng] || [0, 0];
 
@@ -33,12 +33,12 @@ export const OrderStatusMap = (order: Order) => {
           <UserPin />
         </Marker>
 
-        {order.delivery_type === DeliveryType.DELIVERY && (
+        {order.deliveryType === DeliveryType.DELIVERY && (
           <Marker latitude={d_lat} longitude={d_lng} anchor="center">
             <OrderPin />
           </Marker>
         )}
-        {order.delivery_type === DeliveryType.TAKEAWAY && (
+        {order.deliveryType === DeliveryType.TAKEAWAY && (
           <Marker latitude={r_lat} longitude={r_lng} anchor="bottom">
             <RestaurantPin />
           </Marker>
