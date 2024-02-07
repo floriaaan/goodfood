@@ -1,6 +1,7 @@
 "use client";
-import { IngredientRestaurantSheetContent } from "@/app/admin/stock/product/ingredient/sheet-content";
+import { IngredientRestaurantSheetContent } from "@/app/admin/stock/product/ingredient-restaurant/sheet-content";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { toPrice } from "@/lib/product/toPrice";
 import { IngredientRestaurant } from "@/types/stock";
 import { MousePointerClickIcon } from "lucide-react";
 import { useState } from "react";
@@ -14,7 +15,11 @@ export const IngredientRestaurantListItem = (ir: IngredientRestaurant) => {
     <Sheet {...{ open, onOpenChange }}>
       <SheetTrigger asChild>
         <div className="relative flex cursor-pointer flex-col gap-x-2 gap-y-1 border border-neutral-100 bg-neutral-50 px-2 py-1 text-xs hover:bg-neutral-100">
-          <strong className="text-sm first-letter:uppercase">{ir.ingredient.name}</strong>
+          <div className="inline-flex items-center gap-0.5 text-[10px]">
+            <strong className="text-sm first-letter:uppercase">{ir.ingredient.name}</strong>
+            <span>({toPrice(ir.unitPrice)}/unité)</span>
+            <span>({toPrice(ir.pricePerKilo)}/kg)</span>
+          </div>
           <div className="flex gap-2">
             <span className="min-w-[64px] shrink-0">Quantité</span> <strong>{ir.quantity}</strong>
           </div>

@@ -1,4 +1,6 @@
-import { IngredientRestaurantListItem } from "@/app/admin/stock/product/ingredient/list-item";
+"use client";
+import { IngredientRestaurantListItem } from "@/app/admin/stock/product/ingredient-restaurant/list-item";
+import { useAdmin } from "@/hooks/useAdmin";
 import { Product } from "@/types/product";
 import { IngredientRestaurant } from "@/types/stock";
 import Image from "next/image";
@@ -11,6 +13,7 @@ export const ProductStockCard = ({
   product: Product;
   ingredients_restaurant: IngredientRestaurant[];
 }) => {
+  const { isIngredientsRestaurantLoading } = useAdmin();
   const hasThreshold = ingredients_restaurant.filter((ir) => ir.quantity <= ir.alertThreshold);
   const hasOutOfStock = ingredients_restaurant.filter((ir) => ir.quantity <= 0); // less than 0 cant be possible but who knows
 
@@ -44,10 +47,14 @@ export const ProductStockCard = ({
         </div>
       </div>
       <div className="flex h-64 flex-col gap-1 overflow-y-auto p-4">
-        <span className="text-sm font-semibold">Ingrédients et quantités</span>
-        {ingredients_restaurant.map((ir) => (
-          <IngredientRestaurantListItem {...ir} key={ir.id.toString()} />
-        ))}
+        <span className="mb-0.5 text-[10px] uppercase">Ingrédients et quantités</span>
+        {ingredients_restaurant.length > 0 ? (
+          ingredients_restaurant.map((ir) => <IngredientRestaurantListItem {...ir} key={ir.id.toString()} />)
+        ) : isIngredientsRestaurantLoading ? (
+          <span className="text-xs text-gray-500">Chargement des ingrédients...</span>
+        ) : (
+          <span className="text-xs text-gray-500">Aucun ingrédient disponible pour le moment.</span>
+        )}
       </div>
     </div>
   );
