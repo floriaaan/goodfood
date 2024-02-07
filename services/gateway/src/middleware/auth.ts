@@ -12,7 +12,6 @@ export type Role = keyof typeof ROLES;
 
 const checkRole = async (token: string, expectedRole: Role | Role[]) => {
   const userId = await getUserIdFromToken(token);
-  console.log(userId);
   if (userId === undefined) return false;
   const user = await getUser(userId);
   if (user === undefined) return false;
