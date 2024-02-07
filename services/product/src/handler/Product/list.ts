@@ -16,6 +16,7 @@ export const getProductList = async (
             include: {
                 categories: true,
                 allergens: true,
+                recipe: true
             }
         }) as unknown as Product[];
 

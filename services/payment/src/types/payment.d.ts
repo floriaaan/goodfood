@@ -1,5 +1,3 @@
-// import { Prisma } from "@prisma/client";
-
 import { PaymentStatus } from "@prisma/client";
 
 export type User = {
@@ -26,6 +24,20 @@ export type GetPaymentRequest = {
 export type GetPaymentsByUserRequest = {
   id: string;
 };
+
 export type GetPaymentsByUserResponse = {
   payments: Payment[];
+};
+
+export type GetPaymentsByStripeRequest = {
+  id: string;
+};
+
+export type GetPaymentsByStripeResponse = {
+  payments: Payment[];
+};
+
+export type UpdatePaymentStatusRequest = {
+  id: string;
+  status: PaymentStatus;
 };

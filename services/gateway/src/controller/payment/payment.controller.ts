@@ -3,6 +3,7 @@ import { GetPaymentRequest, GetPaymentsByUserRequest, Payment } from "@gateway/p
 import { paymentServiceClient } from "@gateway/services/clients/payment.client";
 import { getUserIdFromToken } from "@gateway/services/user.service";
 import { check } from "@gateway/middleware/auth";
+import { log } from "@gateway/lib/log/log";
 
 export const paymentRoutes = Router();
 
@@ -35,14 +36,18 @@ paymentRoutes.get("/api/payment/:id", async (req: Request, res: Response) => {
       });
     });
 
-    if (payment.userId !== userId.toString() || (await check(token, { role: "ADMIN" })))
+    if (
+      (payment.userId === userId.toString() && !(await check(token, { role: "ADMIN" }))) ||
+      (payment.userId !== userId.toString() && (await check(token, { role: "ADMIN" })))
+    )
       return res.status(401).json({ message: "Unauthorized" });
+    else return res.status(200).json(payment);
   } catch (error) {
     return res.status(500).send({ error });
   }
 });
 
-paymentRoutes.get("/api/payment/by-user/:userId", async (req: Request, res: Response) => {
+paymentRoutes.get("/api/payment/by-user/:id", async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
@@ -62,7 +67,11 @@ paymentRoutes.get("/api/payment/by-user/:userId", async (req: Request, res: Resp
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   // ----------------------------
   const { id } = req.params;
-  if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: id })))
+
+  if (
+    ((await check(token, { id: id })) && !(await check(token, { role: "ADMIN" }))) ||
+    (!(await check(token, { id: id })) && (await check(token, { role: "ADMIN" })))
+  )
     return res.status(401).json({ message: "Unauthorized" });
 
   paymentServiceClient.getPaymentsByUser(new GetPaymentsByUserRequest().setId(id), (error, response) => {

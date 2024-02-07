@@ -13,8 +13,6 @@ import { logGRPC } from "@payment/middleware/log";
 import paymentHandlers from "@payment/handlers/payment";
 import stripeHandlers from "@payment/handlers/stripe";
 
-import { stripe_webhook_listener } from "@payment/handlers/stripe";
-
 const PORT = process.env.PORT || 50003;
 const ADDRESS = `0.0.0.0:${PORT}`;
 
@@ -43,7 +41,6 @@ server.bindAsync(ADDRESS, serverInsecure, () => {
     `\n` +
     `started on: ${utils.bold(ADDRESS)} ${utils.green("✓")}`;
   log.debug(message);
-  stripe_webhook_listener();
 });
 
 export default server;

@@ -17,7 +17,7 @@ import { MdArrowForward, MdOutlineShoppingBasket } from "react-icons/md";
 
 const BasketWrapperComponent = ({ showHeader = true }) => {
   const { basket, total, checkout, isBasketEmpty, isRestaurantSelected, isAuthenticated, products } = useBasket();
-  const basketProductList = basket.products
+  const basketProductList = basket.productsList
     .map(({ id }) => products.find((product) => product.id === id) as Product)
     .filter(Boolean);
 

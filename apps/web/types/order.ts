@@ -38,8 +38,8 @@ export type Order = {
   updated_at: Date | string;
 };
 
-export type BasketSnapshot = Omit<Basket, "products"> & {
-  products: (BasketItem & {
+export type BasketSnapshot = Omit<Basket, "productsList"> & {
+  productsList: (BasketItem & {
     price: number;
     name: string;
   })[];

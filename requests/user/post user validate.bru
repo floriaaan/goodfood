@@ -11,9 +11,13 @@ post {
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQxNDk5MjksImlzcyI6ImdvLWdycGMtYXV0aC1zdmMiLCJJZCI6MiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.hk3p30gxjhe4eUc3BrxBsBwVCAAoMHBLo4by5mChaKk
+  token: {{token}}
 }
 
 body:json {
   {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDQxNDk5MjksImlzcyI6ImdvLWdycGMtYXV0aC1zdmMiLCJJZCI6MiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.hk3p30gxjhe4eUc3BrxBsBwVCAAoMHBLo4by5mChaKk"}
+}
+
+script:post-response {
+  bru.setEnvVar("token", res.getBody().token);
 }

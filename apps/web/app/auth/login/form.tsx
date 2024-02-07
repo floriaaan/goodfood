@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks";
 import { useRouter } from "next/navigation";
 
 export function LoginForm() {
-  const { login, isAuthentified } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const { push } = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -27,7 +27,7 @@ export function LoginForm() {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     login(values.email, values.password).then(() => {
-      if (isAuthentified) push("/");
+      if (isAuthenticated) push("/");
     });
   }
   return (

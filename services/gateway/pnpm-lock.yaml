@@ -29,6 +29,9 @@ dependencies:
   google-protobuf:
     specifier: ^3.21.2
     version: 3.21.2
+  stripe:
+    specifier: 14.11.0
+    version: 14.11.0
   swagger-autogen:
     specifier: ^2.23.5
     version: 2.23.5
@@ -40,6 +43,15 @@ devDependencies:
   '@types/amqplib':
     specifier: ^0.10.1
     version: 0.10.1
+  '@types/body-parser':
+    specifier: ^1.19.5
+    version: 1.19.5
+  '@types/cors':
+    specifier: ^2.8.17
+    version: 2.8.17
+  '@types/cors':
+    specifier: ^2.8.17
+    version: 2.8.17
   '@types/body-parser':
     specifier: ^1.19.5
     version: 1.19.5
@@ -1094,6 +1106,19 @@ packages:
     dependencies:
       '@types/node': 18.17.6
     dev: true
+
+  /@types/cors@2.8.17:
+    resolution: {integrity: sha512-8CGDvrBj1zgo2qE+oS3pOCyYNqCPryMWY2bGfwA0dcfopWGgxs+78df0Rs3rc9THP4JkOhLsAa+15VdpAqkcUA==}
+    dependencies:
+      '@types/node': 18.17.6
+    dev: true
+
+  /@types/cors@2.8.17:
+    resolution: {integrity: sha512-8CGDvrBj1zgo2qE+oS3pOCyYNqCPryMWY2bGfwA0dcfopWGgxs+78df0Rs3rc9THP4JkOhLsAa+15VdpAqkcUA==}
+    dependencies:
+      '@types/node': 18.17.6
+    dev: true
+
 
   /@types/express-serve-static-core@4.17.35:
     resolution: {integrity: sha512-wALWQwrgiB2AWTT91CB62b6Yt0sNHpznUXeZEcnPU3DRdlDIz74x8Qg1UUYKSVFi+va5vKOLYRBI1bRKiLLKIg==}
@@ -4377,6 +4402,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /stripe@14.11.0:
+    resolution: {integrity: sha512-NmFEkDC0PldP7CQtdPgKs5dVZA/pF+IepldbmB+Kk9B4d7EBkWnbANp0y+/zJcbRGul48s8hmQzeqNWUlWW0wg==}
+    engines: {node: '>=12.*'}
+    dependencies:
+      '@types/node': 18.17.6
+      qs: 6.11.0
+    dev: false
 
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}

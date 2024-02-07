@@ -44,6 +44,7 @@ message Product {
 	ProductType type = 11;
 	repeated Category categories = 12;
 	repeated Allergen allergens = 13;
+	repeated Recipe recipe = 14;
 }
 
 message File{
@@ -94,6 +95,16 @@ message AllergenList {
 	repeated Allergen allergens = 1;
 }
 
+message RecipeResponse {
+	string productId = 1;
+	repeated Recipe recipe = 2;
+}
+
+message Recipe {
+	string ingredient_id = 1;
+	int32 quantity = 2;
+}
+
 service ProductService {
 	rpc GetProductTypeList(google.protobuf.Empty) returns (ProductTypeList) {}
 	rpc GetProductList(RestaurantId) returns (ProductList) {}
@@ -102,8 +113,9 @@ service ProductService {
 	rpc ReadProduct(ProductId) returns (Product) {}
 	rpc UpdateProduct(Product) returns (Product) {}
 	rpc DeleteProduct(ProductId) returns (google.protobuf.Empty) {}
+	rpc GetIngredientByProduct(ProductId) returns (RecipeResponse) {}
 
-	rpc UploadImage(File) returns (Url); 
+	rpc UploadImage(File) returns (Url);
 }
 
 service AllergenService {

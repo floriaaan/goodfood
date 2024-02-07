@@ -96,6 +96,7 @@ export const Sidebar = () => {
           <DropdownMenuContent className="w-12">
             <DropdownMenuItem
               onClick={(input) => {
+                // @ts-ignore
                 setDisplayMode(input.target!.firstChild.data);
               }}
             >
@@ -103,6 +104,7 @@ export const Sidebar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(input) => {
+                // @ts-ignore
                 setDisplayMode(input.target!.firstChild.data);
               }}
             >
@@ -110,6 +112,7 @@ export const Sidebar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(input) => {
+                // @ts-ignore
                 setDisplayMode(input.target!.firstChild.data);
               }}
             >

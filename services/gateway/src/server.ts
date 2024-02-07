@@ -23,6 +23,7 @@ import { health_checkRoutes } from "@gateway/handlers/health-check";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+import {stripe_webhook_listener} from "@gateway/webhook";
 
 export const app = express();
 app.use(cors());
@@ -132,4 +133,5 @@ app.listen(PORT, () => {
     `0.0.0.0:${PORT}`,
   )} ${utils.green("✓")}\n`;
   log.debug(message);
+  stripe_webhook_listener();
 });

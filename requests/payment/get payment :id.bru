@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/payment/:id
+  url: {{baseUrl}}/api/payment/clr906hr30000pf2gdlrt8e44
   body: none
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
 }
