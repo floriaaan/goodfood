@@ -4,6 +4,10 @@ export type Ingredient = {
   description: string | null;
 };
 
+export type IngredientRestaurantList = {
+  ingredientRestaurantsList: IngredientRestaurant[];
+};
+
 export type IngredientRestaurant = {
   id: number;
   key: string;

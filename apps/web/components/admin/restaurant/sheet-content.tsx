@@ -11,10 +11,10 @@ import {ToastTitle} from "@radix-ui/react-toast";
 import {XIcon} from "lucide-react";
 
 export const RestaurantFormSheetContent = ({
-                                            initialValues,
-                                            id,
-                                            closeSheet,
-                                        }: {
+    initialValues,
+    id,
+    closeSheet,
+}: {
     initialValues?: RestaurantCreateEditFormValues;
     id?: Restaurant["id"];
     closeSheet: () => void;
@@ -79,7 +79,6 @@ export const RestaurantFormSheetContent = ({
 
 
     const onSubmit = async (values: RestaurantCreateEditFormValues) => {
-        console.log("submitting");
         try {
             if(!id)
                 createRestaurant(toRestaurant(values));

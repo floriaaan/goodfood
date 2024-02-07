@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import {useState} from "react";
 import {MdAdd, MdRefresh} from "react-icons/md";
-import {RestaurantFormSheetContent} from "@/components/admin/restaurant/sheet-content";
 import {useAdmin} from "@/hooks/useAdmin";
+import {ProductFormSheetContent} from "@/components/admin/product/sheet-content";
 
-export const RestaurantCreateSheet = () => {
+export const ProductCreateSheet = () => {
 	const [sheetOpen, setSheetOpen] = useState(false);
 
 	return (
@@ -15,21 +15,21 @@ export const RestaurantCreateSheet = () => {
 			<SheetTrigger asChild>
 				<Button className="w-fit bg-black px-6 text-white">
 					<MdAdd className="h-4 w-4 shrink-0" />
-					Créer un restaurant
+					Créer un produit
 				</Button>
 			</SheetTrigger>
-			<RestaurantFormSheetContent closeSheet={() => setSheetOpen(false)}/>
+			<ProductFormSheetContent closeSheet={() => setSheetOpen(false)}/>
 		</Sheet>
 	);
 };
 
-export const RestaurantRefreshSheet = () => {
-	const { refetchRestaurants } = useAdmin();
+export const ProductRefreshSheet = () => {
+	const { refetchProducts } = useAdmin();
 
 	return (
 		<Sheet>
 			<SheetTrigger asChild>
-				<Button onClick={refetchRestaurants} className="w-fit bg-black px-6 text-white">
+				<Button onClick={refetchProducts} className="w-fit bg-black px-6 text-white">
 					<MdRefresh className="h-4 w-4 shrink-0" />
 					Actualiser
 				</Button>
