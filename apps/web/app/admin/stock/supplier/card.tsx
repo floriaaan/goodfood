@@ -17,7 +17,7 @@ export const SupplierCard = ({ supplier, supply_orders }: { supplier: Supplier; 
   const [supplyOrderSheetOpen, setSupplyOrderSheetOpen] = useState(false);
   return (
     <>
-      <div className="h-80 w-80 overflow-hidden border px-3 pt-2">
+      <div className="h-80 w-96 overflow-hidden border px-3 pt-2">
         <div className="inline-flex w-full items-start justify-between gap-2">
           <div className="flex flex-col gap-0.5 text-sm">
             <span className="-mb-1 text-[10px] uppercase">Fournisseur</span>
