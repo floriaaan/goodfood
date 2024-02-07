@@ -7,6 +7,7 @@ import {
   GetOrderByDeliveryRequest,
   GetOrderByPaymentRequest,
   GetOrderRequest,
+  GetOrdersByRestaurantRequest,
   GetOrdersByStatusRequest,
   GetOrdersByUserRequest,
   Order,
@@ -315,12 +316,10 @@ orderRoutes.get(
       if (!restaurant.useridsList.includes(userId) && role !== "ADMIN")
         return res.status(401).json({ message: "Unauthorized", cause: "user is not in restaurant and is not ADMIN" });
 
-      // orderService.get(orderInput, (error, response) => {
-      //   if (error) return res.status(500).send({ error });
-      //   else return res.status(200).json(response.toObject());
-      // });
-      // TODO: wait for order service to be updated by @PierreLbg pull request
-      return res.status(500).json({ message: "Not implemented yet" });
+      orderService.getOrdersByRestaurant(new GetOrdersByRestaurantRequest().setId(restaurant.id), (error, response) => {
+        if (error) return res.status(500).send({ error });
+        else return res.status(200).json(response.toObject());
+      });
     } catch (error) {
       return res.status(500).json({ error });
     }
