@@ -1,12 +1,8 @@
 import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
-import {
-  ExtendedOrder,
-  GetOrdersByRestaurantRequest,
-  GetOrdersByRestaurantResponse,
-} from "@order/types/order";
-import { Data } from "@order/types";
 import { toGrpc } from "@order/lib/transformer";
+import { Data } from "@order/types";
+import { ExtendedOrder, GetOrdersByRestaurantRequest, GetOrdersByRestaurantResponse } from "@order/types/order";
 
 export const GetOrdersByRestaurant = async (
   { request }: Data<GetOrdersByRestaurantRequest>,
@@ -15,7 +11,7 @@ export const GetOrdersByRestaurant = async (
   try {
     const { id } = request;
     const orders = (await prisma.order.findMany({
-      where: { restaurant_id : id },
+      where: { restaurant_id: id },
       include: { basket_snapshot: true, user: true },
     })) as ExtendedOrder[];
     callback(null, { orders: orders.map(toGrpc) as ExtendedOrder[] });
