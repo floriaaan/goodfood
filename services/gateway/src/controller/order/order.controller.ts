@@ -19,7 +19,8 @@ import { User } from "@gateway/proto/user_pb";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { check, withCheck } from "@gateway/middleware/auth";
 import { createDelivery } from "@gateway/services/delivery.service";
-import { Delivery } from "@gateway/proto/delivery_pb";
+import { Address, Delivery } from "@gateway/proto/delivery_pb";
+import { getRestaurant } from "@gateway/services/restaurant.service";
 
 export const orderRoutes = Router();
 
@@ -186,8 +187,14 @@ orderRoutes.post("/api/order/tmp", async (req: Request, res: Response) => {
 
   let delivery: Delivery | undefined = undefined;
   try {
-    const userAddress = `${userToObj.mainaddress?.street} ${userToObj.mainaddress?.zipcode} ${userToObj.mainaddress?.country}`;
-    delivery = await createDelivery(userAddress, deliveryType, userId, restaurantId);
+    const restaurant = await getRestaurant(restaurantId);
+    if (!restaurant || restaurant.hasAddress()) return res.status(404).send({ error: "Restaurant not found" });
+    delivery = await createDelivery(
+      new Address().setLat(user.getMainaddress()!.getLat()).setLng(user.getMainaddress()!.getLng()),
+      userId,
+      restaurantId,
+      new Address().setLat(restaurant.getAddress()!.getLat()).setLng(restaurant.getAddress()!.getLat()),
+    );
     if (!delivery?.getId()) throw delivery;
   } catch (error) {
     return res.status(500).send({ error });

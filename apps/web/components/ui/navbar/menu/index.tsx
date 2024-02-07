@@ -108,7 +108,7 @@ const MenuSheetContent = ({ close }: { close: () => void }) => {
           </AccordionContent>
         </AccordionItem>
         {/* TODO: change "ADMIN" to enum */}
-        {user.role.code === "ADMIN" && (
+        {user?.role?.code === "ADMIN" && (
           <AccordionItem value="admin">
             <AccordionTrigger>
               <button className="inline-flex items-center gap-2 text-sm font-bold">

@@ -32,7 +32,7 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
     queryFn: async () => {
       const res = await fetchAPI(`/api/restaurant/by-location`, undefined, {
         method: "POST",
-        body: JSON.stringify({ locationList: [lat, lng] }),
+        body: JSON.stringify({ lat, lng }),
       });
       const body = await res.json();
       return body.restaurantsList;
@@ -42,7 +42,6 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
   });
 
   const refreshLocation = () => {
-    // console.log("refreshing location", { lat, lng });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });

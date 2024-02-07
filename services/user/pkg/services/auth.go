@@ -59,7 +59,7 @@ func (s *Server) LogIn(_ context.Context, req *pb.LogInInput) (*pb.LogInResponse
 		return &pb.LogInResponse{}, status.Error(401, "Invalid credentials")
 	}
 
-	token, _ := s.Jwt.GenerateToken(user)
+	token, _ := s.Jwt.GenerateToken(user.Id.String(), user.Email)
 
 	return &pb.LogInResponse{User: mapper.ToProtoUser(&user), Token: token}, nil
 }
@@ -85,7 +85,10 @@ func (s *Server) Validate(_ context.Context, req *pb.ValidateInput) (*pb.Validat
 		return nil, status.Error(401, "JWT is expired")
 	}
 
+	newToken, _ := s.Jwt.GenerateToken(claims.Id, claims.Email)
+
 	return &pb.ValidateResponse{
-		Id: claims.Id,
+		Id:    claims.Id,
+		Token: newToken,
 	}, nil
 }

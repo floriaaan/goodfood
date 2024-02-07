@@ -1,18 +1,23 @@
 "use client";
 
 import { Logo } from "@/components/ui/icon/logo";
-import { useLocation } from "@/hooks";
+import { useAuth, useLocation } from "@/hooks";
 import { useBasket } from "@/hooks/useBasket";
 import { cn } from "@/lib/utils";
 import { MdArrowForwardIos, MdOutlineLocationOn } from "react-icons/md";
 
 export const LocationFullTrigger = ({ className }: { className?: string }) => {
+  const { isAuthenticated } = useAuth();
   const { restaurants } = useLocation();
   const { selectedRestaurantId, address, eta } = useBasket();
   const { street, zipcode, city, country } = address || {};
 
   const isAddressDefined = street && zipcode && city && country;
-  const address_displayed = isAddressDefined ? `${street}, ${zipcode} ${city}, ${country}` : "Ajouter une adresse";
+  const address_displayed = isAddressDefined
+    ? `${street}, ${zipcode} ${city}, ${country}`
+    : isAuthenticated
+    ? "Ajouter une adresse"
+    : "Se connecter";
 
   return (
     <div
@@ -38,7 +43,7 @@ export const LocationFullTrigger = ({ className }: { className?: string }) => {
             <>
               {/* todo: link to restaurant list store*/}
               <Logo className="h-4 w-fit" color="text-gray-400" />
-              {`${restaurants.find(({ id }) => id === selectedRestaurantId)?.name} - ${eta}`}
+              {`${restaurants.find(({ id }) => id === selectedRestaurantId)?.name} - arrivée prévue entre ${eta}`}
             </>
           ) : (
             "Choisir un restaurant"

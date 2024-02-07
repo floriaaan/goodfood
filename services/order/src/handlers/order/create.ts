@@ -2,7 +2,6 @@ import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
 import { CreateOrderRequest, Order } from "@order/types/order";
 import { Data } from "@order/types";
-import { parseStruct } from "@order/lib/struct";
 import { toGrpc } from "@order/lib/transformer";
 
 export const CreateOrder = async (

@@ -39,8 +39,8 @@ export const LocationRestaurant = ({
               getDistance(
                 { latitude: lat, longitude: lng },
                 {
-                  latitude: restaurant.locationList[0],
-                  longitude: restaurant.locationList[1],
+                  latitude: restaurant.address.lat,
+                  longitude: restaurant.address.lng,
                 },
               ) / 1000
             ).toFixed(1)} km`}

@@ -6,10 +6,11 @@ import { setCookie, getCookie } from "cookies-next";
  */
 
 import { User } from "@/types/user";
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useMemo } from "react";
 
 // import { user as user_tmp } from "@/constants/data";
 import { fetchAPI } from "@/lib/fetchAPI";
+import { useQuery } from "@tanstack/react-query";
 
 export type Session =
   | {
@@ -26,17 +27,21 @@ export type Session =
 type AuthContextType = {
   session: Session | null;
   user: User | null;
-  isAuthentified: boolean;
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
+
+  refetchUser: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
   session: null,
   user: null,
-  isAuthentified: false,
+  isAuthenticated: false,
   login: (() => {}) as unknown as AuthContextType["login"],
   logout: () => {},
+
+  refetchUser: () => {},
 });
 
 export const useAuth = () => {
@@ -54,6 +59,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return null;
     })(),
   );
+
+  const { data: api_user, refetch: refetchUser } = useQuery<User>({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["user", "me"],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/user/${session?.user?.id}`, session?.token);
+      const body = await res.json();
+      return body;
+    },
+    enabled: !!session?.token && !!session?.user?.id,
+  });
+  const user = useMemo(() => (session && api_user ? api_user : session?.user ?? null), [api_user, session]);
 
   const login = async (email: string, password: string) => {
     const res = await fetchAPI("/api/user/login", undefined, {
@@ -82,9 +99,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ session, login, logout, user: session?.user ?? null, isAuthentified: session?.user !== null }}
-    >
+    <AuthContext.Provider value={{ session, login, logout, user, isAuthenticated: !!session?.token, refetchUser }}>
       {children}
     </AuthContext.Provider>
   );

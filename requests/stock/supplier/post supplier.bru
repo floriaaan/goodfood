@@ -7,16 +7,20 @@ meta {
 post {
   url: {{baseUrl}}/api/stock/supplier
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "name": "<string>",
-    "contact": "<string>"
+    "name": "supplier",
+    "contact": "mail@mail.com"
   }
 }

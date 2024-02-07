@@ -50,6 +50,7 @@ export const UpdateProduct = async (
             include: {
                 categories: true,
                 allergens: true,
+                recipe: true
             }
         }) as unknown as Product;
 
