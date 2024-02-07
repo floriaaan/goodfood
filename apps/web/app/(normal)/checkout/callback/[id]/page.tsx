@@ -33,7 +33,7 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
   });
 
   const { data: order } = useQuery<Order>({
-    queryKey: ["Order", "PaymentId", paymentId],
+    queryKey: ["order", "payment", paymentId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-payment/${paymentId}`, session?.token);
       const body = await res.json();
