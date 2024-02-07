@@ -68,7 +68,7 @@ export default function AdminHome() {
                     setPopup_restaurantId(r.id);
                   }}
                 >
-                  <RestaurantPin applyStroke={restaurant == r}/>
+                  <RestaurantPin applyStroke={restaurant == r} />
                 </Marker>
               ))}
               {popup_restaurantId && (
@@ -121,7 +121,12 @@ export default function AdminHome() {
                 <DataTable columns={users_columns} data={restaurant_users} create={<UserCreateSheet />} />
               </TabsContent>
               <TabsContent value="restaurants">
-                <DataTable columns={restaurants_columns} data={restaurants} create={<RestaurantCreateSheet />} refresh={<RestaurantRefreshSheet />}/>
+                <DataTable
+                  columns={restaurants_columns}
+                  data={restaurants}
+                  create={<RestaurantCreateSheet />}
+                  refresh={<RestaurantRefreshSheet />}
+                />
               </TabsContent>
               <TabsContent value="products">
                 <DataTable columns={products_columns} data={extendedProducts} create={<ProductCreateSheet />} refresh={<ProductRefreshSheet />}/>
