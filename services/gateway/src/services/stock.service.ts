@@ -61,7 +61,10 @@ export const updateStock = (ingredient: IngredientRestaurant): Promise<Ingredien
   });
 };
 
-export const updateQuantityFromBasket = async (productId: string): Promise<IngredientRestaurant[] | undefined> => {
+export const updateQuantityFromBasket = async (
+  productId: string,
+  quantity: number,
+): Promise<IngredientRestaurant[] | undefined> => {
   const ingredientsList = await getIngredientRestaurantsByProduct(productId);
   if (!ingredientsList) return;
 
@@ -75,7 +78,7 @@ export const updateQuantityFromBasket = async (productId: string): Promise<Ingre
           ingredientByProduct
             .toObject()
             .recipeList.find((i) => i.ingredientId === ingredient.getIngredientId().toString())?.quantity || 0;
-        await updateStock(ingredient.setQuantity(ingredient.getQuantity() - ingredientQuantity));
+        await updateStock(ingredient.setQuantity(ingredient.getQuantity() - ingredientQuantity * quantity));
       });
       const ingredientRest = await getIngredientByRestaurant(ingredientsList[0].getRestaurantId());
       resolve(ingredientRest);

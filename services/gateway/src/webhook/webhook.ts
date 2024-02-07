@@ -61,13 +61,12 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
         if (!delivery) break;
 
         basket.getProductsList().map(async (product) => {
-          await updateQuantityFromBasket(product.getId());
+          await updateQuantityFromBasket(product.getId(), product.getQuantity());
         });
         // TODO: Set delivery Type
         const order = await createOrder(payment.id, delivery.getId(), "DELIVERY", user, basket, restaurant.getId());
 
         if (order) await resetBasketByUser(user.getId());
-        console.log("LINE 89 order :", order);
       } catch (e) {
         console.log(e);
       }
