@@ -7,6 +7,8 @@ import {
   CreateCheckoutSessionResponse,
 } from "@payment/types/stripe";
 
+const FEES_IN_EUR = 0.5;
+
 export const CreateCheckoutSession = async (
   { request }: Data<CreateCheckoutSessionRequest>,
   callback: (err: any, response: CreateCheckoutSessionResponse | null) => void
@@ -17,7 +19,7 @@ export const CreateCheckoutSession = async (
     const newPayment = await prisma.payment.create({
       data: {
         stripe_id: (Math.random()+1).toString(36).substring(2),
-        total,
+        total: total + FEES_IN_EUR,
         user: {
           connectOrCreate: {
             where: { id: user_id },
