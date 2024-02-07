@@ -43,20 +43,18 @@ import {ProductDeleteAlert} from "@/components/admin/product/delete-alert";
 const formSchema = z.object({
   name: z.string().min(3).max(255),
   image: z.string().url(),
-  comment: z.string(),
+  comment: z.string().optional(),
   price: z.string().regex(/^\d+(\.\d{1,2})?$/),
-  preparation: z.string().max(1024),
-  weight: z.string().max(255),
-  kilocalories: z.string().max(255),
-  nutriscore: z.string().max(255),
+  preparation: z.string().max(1024).optional(),
+  weight: z.string().max(255).optional(),
+  kilocalories: z.string().max(255).optional(),
+  nutriscore: z.string().max(255).optional(),
 
   type: z.string(),
 
   restaurantId: z.string(),
-  categoriesList: z.array(z.string()),
-  allergensList: z.array(z.string()),
-
-  // ingredients: z.array(z.string().uuid()),
+  categoriesList: z.array(z.string()).optional(),
+  allergensList: z.array(z.string()).optional()
 });
 
 export type ProductCreateEditFormValues = z.infer<typeof formSchema>;
@@ -196,7 +194,7 @@ export function ProductCreateEditForm({
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nom du produit</FormLabel>
+                        <FormLabel>Nom du produit*</FormLabel>
                         <FormControl>
                           <FormInput placeholder="Egg-ocado Toast" {...field} />
                         </FormControl>
@@ -227,7 +225,7 @@ export function ProductCreateEditForm({
                     name="price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Prix du produit</FormLabel>
+                        <FormLabel>Prix du produit*</FormLabel>
                         <FormControl>
                           <FormInput type="number" placeholder="7€50" {...field} />
                         </FormControl>
@@ -240,7 +238,7 @@ export function ProductCreateEditForm({
                     name="type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Type de produit</FormLabel>
+                        <FormLabel>Type de produit*</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={ProductType[parseInt(field.value)]}>
                           <FormControl>
                             <SelectTrigger className="w-full">
@@ -356,9 +354,9 @@ export function ProductCreateEditForm({
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <div className="relative inline-flex h-12 items-center gap-x-1 border p-2">
-                                {field.value.length === 0
+                                {field.value?.length === 0
                                   ? "Aucun allergène sélectionné"
-                                  : field.value.map((a) => (
+                                  : field.value?.map((a) => (
                                     <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
                                       {allergens.find((al) => al.id.toString() === a)?.libelle}
                                     </div>
@@ -370,13 +368,13 @@ export function ProductCreateEditForm({
                               {allergens.map((a) => (
                                 <DropdownMenuCheckboxItem
                                   key={a.id.toString()}
-                                  checked={field.value.includes(a.id.toString())}
+                                  checked={field.value?.includes(a.id.toString())}
                                   onCheckedChange={(checked) => {
                                     form.setValue(
                                       "allergensList",
                                       checked
-                                        ? [...field.value, a.id.toString()]
-                                        : field.value.filter((o) => o !== a.id.toString()),
+                                        ? [...field.value || [], a.id.toString()]
+                                        : field.value?.filter((o) => o !== a.id.toString()),
                                     );
                                   }}
                                 >
@@ -398,9 +396,9 @@ export function ProductCreateEditForm({
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <div className="relative inline-flex h-12 items-center gap-x-1 border p-2">
-                                {field.value.length === 0
+                                {field.value?.length === 0
                                   ? "Aucune catégorie sélectionnée"
-                                  : field.value.map((a) => {
+                                  : field.value?.map((a) => {
                                     const category = categories.find((al) => al.id.toString() === a);
                                     if (!category) return null;
                                     return (
@@ -416,13 +414,13 @@ export function ProductCreateEditForm({
                               {categories.map((a) => (
                                 <DropdownMenuCheckboxItem
                                   key={a.id.toString()}
-                                  checked={field.value.includes(a.id.toString())}
+                                  checked={field.value?.includes(a.id.toString())}
                                   onCheckedChange={(checked) => {
                                     form.setValue(
                                       "categoriesList",
                                       checked
-                                        ? [...field.value, a.id.toString()]
-                                        : field.value.filter((o) => o !== a.id.toString()),
+                                        ? [...field.value || [], a.id.toString()]
+                                        : field.value?.filter((o) => o !== a.id.toString()),
                                     );
                                   }}
                                 >

@@ -54,7 +54,6 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
           <small>{(cell.getValue() as ExtendedProduct["additional_information"])?.[1]}</small>
         )}
       </div>
-      // <img src={cell.getValue() as string} alt={cell.row.original.name} className="h-12 w-12 shrink-0 object-cover" />
     ),
   },
   {

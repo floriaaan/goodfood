@@ -20,7 +20,7 @@ import {RestaurantCreateSheet, RestaurantRefreshSheet} from "@/components/admin/
 import {ProductCreateSheet, ProductRefreshSheet} from "@/components/admin/product/sheet";
 
 export default function AdminHome() {
-  const { restaurant, selectRestaurant, restaurant_users, restaurants, products, promotions, orders } = useAdmin();
+  const { restaurant, selectRestaurant, restaurant_users, restaurants, extendedProducts, promotions, orders } = useAdmin();
   const [popup_restaurantId, setPopup_restaurantId] = useState<string | null>(null);
 
   const mapRef = useRef(null);
@@ -124,7 +124,7 @@ export default function AdminHome() {
                 <DataTable columns={restaurants_columns} data={restaurants} create={<RestaurantCreateSheet />} refresh={<RestaurantRefreshSheet />}/>
               </TabsContent>
               <TabsContent value="products">
-                <DataTable columns={products_columns} data={products} create={<ProductCreateSheet />} refresh={<ProductRefreshSheet />}/>
+                <DataTable columns={products_columns} data={extendedProducts} create={<ProductCreateSheet />} refresh={<ProductRefreshSheet />}/>
               </TabsContent>
               <TabsContent value="orders">
                 <DataTable columns={orders_columns} data={orders} />
