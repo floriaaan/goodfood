@@ -102,7 +102,7 @@ export default function StockPage() {
         Fournisseurs & commandes fournisseurs
       </h3>
       <div className="inline-flex gap-4 overflow-x-auto p-2 lg:p-8 ">
-        <div className="flex h-80 w-80 flex-col gap-4 border border-transparent">
+        <div className="flex h-80 w-60 flex-col gap-4 border border-transparent">
           <Sheet
             {...{
               isOpen: supplierSheetOpen,
