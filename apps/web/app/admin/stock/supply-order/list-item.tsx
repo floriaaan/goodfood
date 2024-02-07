@@ -1,10 +1,10 @@
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAdmin } from "@/hooks/useAdmin";
 import { toPrice } from "@/lib/product/toPrice";
@@ -27,11 +27,17 @@ export const SupplyOrderListItem = ({ supply_order: so }: { supply_order: Supply
           className="relative flex cursor-pointer flex-col gap-0.5 border border-neutral-100 bg-neutral-50 px-3 py-2 text-xs hover:bg-neutral-100"
         >
           <div className="inline-flex items-center justify-between gap-x-1">
-            <span className="text-sm font-bold first-letter:uppercase">{so.ingredientRestaurant.ingredient.name}</span>
-            <span>{new Date(so.createdAt.toString()).toLocaleString()}</span>
+            <div className="inline-flex items-center gap-x-1">
+              <span className="text-sm font-bold first-letter:uppercase">
+                {so.ingredientRestaurant.ingredient.name}
+              </span>
+              <span className="text-[10px]">({toPrice(so.unitPrice)}/unité)</span>
+            </div>
+            <span className="text-[10px]">{new Date(so.createdAt.toString()).toLocaleString()}</span>
           </div>
           <span>
-            <span className="font-semibold text-green-600">+{so.quantity}</span> ({toPrice(so.quantity * so.unitPrice)})
+            <span className="font-semibold text-green-600">+{so.quantity}</span> ({toPrice(so.quantity * so.unitPrice)}
+            /total)
           </span>
           <div className="absolute bottom-1 right-2">
             <MousePointerClickIcon className="h-4 w-4" />
@@ -63,9 +69,9 @@ export const SupplyOrderListItem = ({ supply_order: so }: { supply_order: Supply
               {[so].map((so) => (
                 <div key={so.id} className="inline-flex items-center gap-x-2.5">
                   <span className="w-8">{so.quantity}</span>
-                  <span className="w-12 text-right">{toPrice(so.ingredientRestaurant.unitPrice)}</span>
+                  <span className="w-12 text-right">{toPrice(so.unitPrice)}</span>
                   <span className="grow">{so.ingredientRestaurant.ingredient.name}</span>
-                  <span className="w-12 text-right">{toPrice(so.ingredientRestaurant.unitPrice * so.quantity)}</span>
+                  <span className="w-12 text-right">{toPrice(so.unitPrice * so.quantity)}</span>
                 </div>
               ))}
             </div>

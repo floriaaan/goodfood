@@ -5,43 +5,49 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { IngredientDeleteAlert } from "@/app/admin/stock/product/ingredient/delete-alert";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormInput, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useAdmin } from "@/hooks/useAdmin";
-import { Ingredient } from "@/types/stock";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormInput,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Supplier } from "@/types/stock";
 import { MdDone } from "react-icons/md";
 
 const formSchema = z.object({
   name: z.string().min(1, "Veuillez entrer un nom"),
-  description: z.string().nullable(),
+  contact: z.string().min(1, "Veuillez entrer un contact"),
 });
 
-export type IngredientCreateEditFormValues = z.infer<typeof formSchema>;
+export type SupplierCreateEditFormValues = z.infer<typeof formSchema>;
 
-export function IngredientCreateEditForm({
+export function SupplierCreateEditForm({
   initialValues,
   onSubmit,
   id,
   closeSheet,
 }: {
-  initialValues?: IngredientCreateEditFormValues;
-  onSubmit: (values: IngredientCreateEditFormValues) => void;
-  id?: Ingredient["id"];
+  initialValues?: SupplierCreateEditFormValues;
+  onSubmit: (values: SupplierCreateEditFormValues) => void;
+  id?: Supplier["id"];
   closeSheet: () => void;
 }) {
-  const { ingredients } = useAdmin();
-  const form = useForm<IngredientCreateEditFormValues>({
+  const form = useForm<SupplierCreateEditFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialValues
       ? { ...initialValues }
       : {
           name: "",
-          description: "",
+          contact: "",
         },
   });
 
-  async function handler(values: IngredientCreateEditFormValues) {
+  async function handler(values: SupplierCreateEditFormValues) {
     onSubmit(values);
   }
 
@@ -52,53 +58,37 @@ export function IngredientCreateEditForm({
         className="flex h-full w-full flex-col justify-between placeholder:text-gray-200"
       >
         <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto px-4 pt-12">
-          <h2 className="text-2xl font-bold">{id ? `Modifier ${form.getValues("name")}` : "Créer un ingrédient"}</h2>
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom</FormLabel>
+                <FormLabel>{"Nom du fournisseur"}</FormLabel>
                 <FormControl>
-                  <FormInput type="text" placeholder="Nom" {...field} />
+                  <FormInput {...field} placeholder="Les fournils du Brasil" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
-            name="description"
+            name="contact"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>{"Contact"}</FormLabel>
                 <FormControl>
-                  <FormInput
-                    type="text"
-                    placeholder="Description"
-                    {...field}
-                    value={field.value === null ? "" : field.value}
-                  />
+                  <FormInput {...field} placeholder="dubrasil@fournil.com" />
                 </FormControl>
+                <FormDescription>{"Adresse email ou numéro de téléphone"}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <small className="pt-4">
-            <strong>Ingrédients déjà créés:</strong>
-            <ul>
-              {ingredients.map((i) => (
-                <li key={i.id} className="list-item first-letter:uppercase">
-                  {i.name}
-                </li>
-              ))}
-            </ul>
-          </small>
         </div>
 
         <div className="item-center inline-flex h-24 shrink-0 items-center justify-between gap-4 bg-gray-50 p-6">
-          {initialValues && id && <IngredientDeleteAlert closeSheet={closeSheet} id={id} />}
+          {/* {initialValues && id && <SupplierDeleteAlert closeSheet={closeSheet} id={id} />} */}
           <Button type="submit">
             <MdDone className="h-4 w-4" />
             {id ? "Modifier" : "Créer"}

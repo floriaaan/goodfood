@@ -1,31 +1,33 @@
-import { IngredientCreateEditForm, IngredientCreateEditFormValues } from "@/app/admin/stock/product/ingredient/form";
-import { SheetClose, SheetContent } from "@/components/ui/sheet";
+import { SupplyOrderCreateEditForm, SupplyOrderCreateEditFormValues } from "@/app/admin/stock/supply-order/form";
+import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ToastTitle } from "@/components/ui/toast";
 import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/hooks";
 import { useAdmin } from "@/hooks/useAdmin";
 import { fetchAPI } from "@/lib/fetchAPI";
-import { Ingredient } from "@/types/stock";
+import { IngredientRestaurant, Supplier } from "@/types/stock";
 import { XIcon } from "lucide-react";
 import { MdDone } from "react-icons/md";
 
-export const IngredientSheetContent = ({
-  ingredient,
+export const SupplyOrderDialogContent = ({
   closeSheet,
+  supplier,
+  ingredientRestaurant,
 }: {
-  ingredient?: Ingredient;
   closeSheet: () => void;
+  supplier: Supplier;
+  ingredientRestaurant?: IngredientRestaurant;
 }) => {
   const { session } = useAuth();
-  const { refetchIngredients } = useAdmin();
+  const { refetchSupplyOrders, refetchIngredientRestaurant } = useAdmin();
   if (!session) return null;
 
-  const create = async (values: IngredientCreateEditFormValues) => {
-    const res = await fetchAPI(`/api/stock/ingredient`, session.token, {
+  const create = async (values: SupplyOrderCreateEditFormValues) => {
+    const res = await fetchAPI(`/api/stock/supply/order`, session.token, {
       method: "POST",
       body: JSON.stringify(values),
     });
-    if (!res.ok) throw new Error("Une erreur s'est produite lors de la création de l'ingrédient");
+    if (!res.ok) throw new Error("Une erreur s'est produite lors de la commande");
     return toast({
       className: "p-3",
       children: (
@@ -33,7 +35,7 @@ export const IngredientSheetContent = ({
           <div className="inline-flex shrink-0 gap-2">
             <MdDone className="h-6 w-6 text-green-500" />
             <div className="flex w-full grow flex-col">
-              <ToastTitle>{"L'ingrédient a été créé avec succès"}</ToastTitle>
+              <ToastTitle>{"La commande a été créé avec succès"}</ToastTitle>
             </div>
           </div>
         </div>
@@ -41,12 +43,11 @@ export const IngredientSheetContent = ({
     });
   };
 
-  const onSubmit = async (values: IngredientCreateEditFormValues) => {
+  const onSubmit = async (values: SupplyOrderCreateEditFormValues) => {
     try {
-      // if (id) update(values);
-      // else
       await create(values);
-      refetchIngredients();
+      refetchSupplyOrders();
+      refetchIngredientRestaurant();
       closeSheet();
     } catch (err) {
       toast({
@@ -66,11 +67,13 @@ export const IngredientSheetContent = ({
   };
 
   return (
-    <SheetContent side="right" className="w-full border-l-0 sm:max-w-xl">
+    <DialogContent className="px-0 pb-0">
+      <DialogHeader className="px-4">
+        <DialogTitle>{"Création d'une commande fournisseur"}</DialogTitle>
+      </DialogHeader>
       <div className="flex h-full w-full">
-        <IngredientCreateEditForm {...{ onSubmit, initialValues: ingredient, id: ingredient?.id, closeSheet }} />
+        <SupplyOrderCreateEditForm {...{ onSubmit, closeSheet, supplier, ingredientRestaurant }} />
       </div>
-      <SheetClose />
-    </SheetContent>
+    </DialogContent>
   );
 };
