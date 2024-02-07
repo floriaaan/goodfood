@@ -42,7 +42,7 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
   });
 
   const { data: delivery } = useQuery<Delivery>({
-    queryKey: ["Delivery", order?.deliveryId],
+    queryKey: ["delivery", order?.deliveryId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/api/delivery/${order!.deliveryId}`, session?.token);
       const body = await res.json();
