@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { MdArrowBack, MdArrowForward, MdDirectionsWalk, MdShoppingBasket } from "react-icons/md";
 import { useAuth, useBasket } from "@/hooks";
 import Link from "next/link";

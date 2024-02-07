@@ -226,7 +226,7 @@ export const restaurantList: Restaurant[] = [
 export const orderList: Order[] = [
   {
     id: "order_id:1",
-    payment_id: "payment_id:1",
+    paymentId: "payment_id:1",
     payment: {
       id: "payment_id:1",
       total: 8.5,
@@ -241,7 +241,7 @@ export const orderList: Order[] = [
       },
     },
 
-    delivery_id: "delivery_id:1",
+    deliveryId: "delivery_id:1",
     delivery: {
       id: "delivery_id:1",
       eta: "2023-08-07T10:20:00.000Z",
@@ -266,7 +266,7 @@ export const orderList: Order[] = [
       user_id: "user_id:1",
     },
 
-    delivery_type: DeliveryType.DELIVERY,
+    deliveryType: DeliveryType.DELIVERY,
     user: {
       id: "user_id:1",
       first_name: "John",
@@ -274,7 +274,7 @@ export const orderList: Order[] = [
       email: "john@doe.com",
       phone: "0612345678",
     },
-    basket_snapshot: {
+    basketSnapshot: {
       json: {
         "product_id:1": { count: 1, price: 15 },
         "product_id:2": { count: 2, price: 10 },
@@ -286,13 +286,13 @@ export const orderList: Order[] = [
       total: 35,
     },
     status: Status.PENDING,
-    restaurant_id: "restaurant_id:1",
+    restaurantId: "restaurant_id:1",
     created_at: new Date("2000-01-01T12:00:00.000Z"),
     updated_at: new Date("2000-01-01T12:00:00.000Z"),
   },
   {
     id: "order_id:2",
-    payment_id: "payment_id:2",
+    paymentId: "payment_id:2",
     payment: {
       id: "payment_id:2",
       total: 8.5,
@@ -306,7 +306,7 @@ export const orderList: Order[] = [
         email: "john@doe.com",
       },
     },
-    delivery_id: "delivery_id:2",
+    deliveryId: "delivery_id:2",
     delivery: {
       id: "delivery_id:2",
       eta: "2021-05-20T12:00:00.000Z",
@@ -330,7 +330,7 @@ export const orderList: Order[] = [
       delivery_person_id: "delivery_person_id:1",
       user_id: "user_id:1",
     },
-    delivery_type: DeliveryType.DELIVERY,
+    deliveryType: DeliveryType.DELIVERY,
     user: {
       id: "user_id:1",
       first_name: "John",
@@ -338,7 +338,7 @@ export const orderList: Order[] = [
       email: "john@doe.com",
       phone: "0612345678",
     },
-    basket_snapshot: {
+    basketSnapshot: {
       json: {
         "product_id:1": { count: 1, price: 15 },
         "product_id:2": { count: 4, price: 5 },
@@ -350,7 +350,7 @@ export const orderList: Order[] = [
       total: 35,
     },
     status: Status.FULFILLED,
-    restaurant_id: "restaurant_id:2",
+    restaurantId: "restaurant_id:2",
     created_at: new Date("2023-11-17T12:00:00.000Z"),
     updated_at: new Date("2023-11-17T12:00:00.000Z"),
   },

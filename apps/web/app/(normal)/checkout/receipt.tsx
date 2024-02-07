@@ -8,16 +8,16 @@ import { useQuery } from "@tanstack/react-query";
 
 export const CheckoutReceipt = (order: Order) => {
   const { data: restaurant } = useQuery<Restaurant>({
-    queryKey: ["restaurant", order.restaurant_id],
+    queryKey: ["restaurant", order.restaurantId],
     queryFn: async () => {
-      const res = await fetchAPI(`/api/restaurant/${order.restaurant_id}`, undefined);
+      const res = await fetchAPI(`/api/restaurant/${order.restaurantId}`, undefined);
       const body = await res.json();
       return body;
     },
   });
   if (!restaurant) return null;
 
-  const basket: BasketSnapshot = order.basket_snapshot.json ?? JSON.parse(order.basket_snapshot.string);
+  const basket: BasketSnapshot = order.basketSnapshot.json ?? JSON.parse(order.basketSnapshot.string);
 
   return (
     <div className="flex w-96 flex-col bg-[url(/images/wrinkled-paper.jpg)] bg-center p-5 font-mono text-sm uppercase">
