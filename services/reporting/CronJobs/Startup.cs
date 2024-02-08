@@ -11,7 +11,7 @@ namespace CronJobs
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings-cronjobs.json", optional: true, reloadOnChange: true);
             Config = builder.Build();
         }
         
