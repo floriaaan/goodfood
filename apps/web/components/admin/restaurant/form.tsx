@@ -7,63 +7,32 @@ import * as z from "zod";
 
 import { Map, RestaurantPin } from "@/components/map";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormInput,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    FormTextarea,
+  Form,
+  FormControl,
+  FormField,
+  FormInput,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormTextarea,
 } from "@/components/ui/form";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { MdArrowDropDown, MdDone, MdInfoOutline } from "react-icons/md";
 import { Restaurant } from "@/types/restaurant";
 import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormInput,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    FormTextarea,
-} from "@/components/ui/form";
-import { useAdmin } from "@/hooks/useAdmin";
-import {toName} from "@/lib/user";
-import {Marker} from "react-map-gl";
-import {Map, RestaurantPin} from "@/components/map";
-import {useEffect, useRef, useState} from "react";
-import {FaMapMarkerAlt} from "react-icons/fa";
-import {getAddress, searchAddress} from "@/lib/fetchers/externals/api-gouv";
-import {RestaurantDeleteAlert} from "@/components/admin/restaurant/delete-alert";
 import { useAdmin } from "@/hooks/useAdmin";
 import { toName } from "@/lib/user";
-import { Restaurant } from "@/types/restaurant";
-import { useState } from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { MdArrowDropDown, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
 import { Marker } from "react-map-gl";
+import { useEffect, useRef, useState } from "react";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { getAddress, searchAddress } from "@/lib/fetchers/externals/api-gouv";
+import { RestaurantDeleteAlert } from "@/components/admin/restaurant/delete-alert";
 
 // todo: check with restaurant create request
 const formSchema = z.object({
@@ -86,31 +55,30 @@ const formSchema = z.object({
 export type RestaurantCreateEditFormValues = z.infer<typeof formSchema>;
 
 export function RestaurantCreateEditForm({
-                                          initialValues,
-                                          onSubmit,
-                                          id,
-                                          closeSheet,
-                                      }: {
-    initialValues?: RestaurantCreateEditFormValues;
-    onSubmit: (values: RestaurantCreateEditFormValues) => void;
-    id?: Restaurant["id"];
-    closeSheet: () => void;
+  initialValues,
+  onSubmit,
+  id,
+  closeSheet,
+}: {
+  initialValues?: RestaurantCreateEditFormValues;
+  onSubmit: (values: RestaurantCreateEditFormValues) => void;
+  id?: Restaurant["id"];
+  closeSheet: () => void;
 }) {
+  const { restaurants, restaurant, users } = useAdmin();
+  const [[longitude, latitude], setLongLat] = useState([NaN, NaN]);
+  const mapRef = useRef(null);
 
-    const { restaurants, restaurant, users } = useAdmin();
-    const [ [ longitude, latitude ], setLongLat ] = useState([NaN, NaN]);
-    const mapRef = useRef(null);
-
-    useEffect(() => {
-        if (longitude && latitude && mapRef.current) {
-            // @ts-ignore - mapRef is not typed
-            mapRef.current.flyTo({
-                center: [longitude, latitude],
-                zoom: 15,
-                pitch: 40,
-            });
-        }
-    }, [longitude, latitude]);
+  useEffect(() => {
+    if (longitude && latitude && mapRef.current) {
+      // @ts-ignore - mapRef is not typed
+      mapRef.current.flyTo({
+        center: [longitude, latitude],
+        zoom: 15,
+        pitch: 40,
+      });
+    }
+  }, [longitude, latitude]);
 
   const form = useForm<RestaurantCreateEditFormValues>({
     resolver: zodResolver(formSchema),
@@ -135,29 +103,28 @@ export function RestaurantCreateEditForm({
         },
   });
 
-
-    async function handler(values: RestaurantCreateEditFormValues) {
-               // eslint-disable-next-line no-console
-        console.log("pass", values);
-        onSubmit(values);
-    }
+  async function handler(values: RestaurantCreateEditFormValues) {
+    // eslint-disable-next-line no-console
+    console.log("pass", values);
+    onSubmit(values);
+  }
 
   async function handleLongLat(values: RestaurantCreateEditFormValues) {
     const data = await searchAddress(`${values.street} ${values.city} ${values.zipcode}`);
     console.log(data);
-    if(data.features.length > 1) return;
+    if (data.features.length > 1) return;
     setLongLat([data.features[0].geometry.coordinates[0], data.features[0].geometry.coordinates[1]]);
-        form.setValue("longitude", data.features[0].geometry.coordinates[0]);
-        form.setValue("latitude", data.features[0].geometry.coordinates[1]);
-        return [data.features[0].geometry.coordinates[0], data.features[0].geometry.coordinates[1]];
-    }
+    form.setValue("longitude", data.features[0].geometry.coordinates[0]);
+    form.setValue("latitude", data.features[0].geometry.coordinates[1]);
+    return [data.features[0].geometry.coordinates[0], data.features[0].geometry.coordinates[1]];
+  }
 
   async function handleOnclickMap(longitude: number, latitude: number) {
     const data = await getAddress(latitude, longitude);
-        form.setValue("street", data.features[0].properties.name);
-        form.setValue("city", data.features[0].properties.city);
-        form.setValue("zipcode", data.features[0].properties.postcode);
-    }
+    form.setValue("street", data.features[0].properties.name);
+    form.setValue("city", data.features[0].properties.city);
+    form.setValue("zipcode", data.features[0].properties.postcode);
+  }
 
   return (
     <Form {...form}>
@@ -177,7 +144,7 @@ export function RestaurantCreateEditForm({
               latitude: initialValues?.latitude || restaurant?.address.lat || 0,
               longitude: initialValues?.longitude || restaurant?.address.lng || 0,
             }}
-                        mapRef={mapRef}
+            mapRef={mapRef}
           >
             {restaurants.map((r) => (
               <Marker key={r.id} latitude={r.address.lat} longitude={r.address.lng} anchor="bottom">
@@ -189,7 +156,7 @@ export function RestaurantCreateEditForm({
                 {(() => {
                   return (
                     <Marker anchor="bottom" longitude={longitude} latitude={latitude}>
-                      <RestaurantPin applyStroke={true}/>
+                      <RestaurantPin applyStroke={true} />
                     </Marker>
                   );
                 })()}

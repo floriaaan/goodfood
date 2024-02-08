@@ -1,6 +1,5 @@
 import { Product, ProductId, RecipeResponse } from "@gateway/proto/product_pb";
 import { productServiceClient } from "@gateway/services/clients";
-import { ProductId, Product, RecipeResponse } from "@gateway/proto/product_pb";
 import { getIngredientRestaurantsByProduct } from "@gateway/services/stock.service";
 
 export const getProduct = (id: string): Promise<Product | undefined> => {
@@ -8,19 +7,6 @@ export const getProduct = (id: string): Promise<Product | undefined> => {
     productServiceClient.readProduct(new ProductId().setId(id), (error, response) => {
       if (error) reject(error);
       else resolve(response);
-    });
-  });
-};
-
-export const getIngredientByProduct = (id: string): Promise<RecipeResponse | undefined> => {
-  return new Promise((resolve, reject) => {
-    productServiceClient.getIngredientByProduct(new ProductId().setId(id), (error, response) => {
-      if (error) {
-        console.error(error);
-        reject(error);
-      } else {
-        resolve(response);
-      }
     });
   });
 };

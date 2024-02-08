@@ -14,7 +14,6 @@ export const CreateDelivery = async (
     const { address, restaurant_id, user_id, restaurant_address } = request;
     const { lat: u_lat, lng: u_lng } = address;
     const { lat: r_lat, lng: r_lng } = restaurant_address;
-    log.error("LES ADDRESS: ",address, restaurant_address);
 
     /*
       ETA calculation:

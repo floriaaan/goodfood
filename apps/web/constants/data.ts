@@ -1,4 +1,4 @@
-/* import { Status } from "@/types/global";
+import { Status } from "@/types/global";
 import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
 import { Allergen, Category, ExtendedProduct, Product, ProductType } from "@/types/product";
@@ -14,6 +14,7 @@ export const productList: Product[] = [
     preparation: "15 min",
     weight: "420g",
     kilocalories: "182 kcal",
+    recipeList: [],
     allergensList: [
       {
         id: "allergen_id:1",
@@ -41,6 +42,7 @@ export const productList: Product[] = [
     preparation: "10 min",
     weight: "300g",
     kilocalories: "150 kcal",
+    recipeList: [],
     allergensList: [
       {
         id: "allergen_id:1",
@@ -77,6 +79,7 @@ export const productList: Product[] = [
     ],
     nutriscore: -1,
     restaurantId: "",
+    recipeList: [],
     type: ProductType.SNACKS,
     image: "/images/tmp/bread.jpeg",
     categoriesList: [],
@@ -90,6 +93,7 @@ export const productList: Product[] = [
     weight: "N/A",
     kilocalories: "N/A",
     allergensList: [],
+    recipeList: [],
     nutriscore: -1,
     restaurantId: "",
     type: ProductType.SNACKS,
@@ -128,7 +132,7 @@ export const extendedProductList: ExtendedProduct[] = [
     comment: `Un sauté de porc épicé avec poivrons colorés, edamames et riz pour pimenter votre journée. Rassurez-vous, aucun porc épic n'a été blessé dans sa préparation !`,
     stock_quantity: "25",
     additional_information: undefined,
-    ingredients: [],
+    recipeList: [],
   },
   {
     id: "product-2",
@@ -158,7 +162,7 @@ export const extendedProductList: ExtendedProduct[] = [
     comment: `Le Goodwich au pesto verde combine le goût riche du pesto basilic avec la douceur de la mozzarella, le tout enveloppé dans un pain savoureux. Une expérience de saveurs simple et satisfaisante, idéale pour les amateurs de pesto`,
     stock_quantity: "17",
     additional_information: undefined,
-    ingredients: [],
+    recipeList: [],
   },
   // TODO: how to handle extra products? (utensils, bread, etc.)
   {
@@ -182,7 +186,7 @@ export const extendedProductList: ExtendedProduct[] = [
     comment: `La preuve que les bonnes choses viennent en petites bouchées.`,
     stock_quantity: "74",
     additional_information: undefined,
-    ingredients: [],
+    recipeList: [],
   },
 ];
 
@@ -229,6 +233,7 @@ export const orderList: Order[] = [
     paymentId: "payment_id:1",
     payment: {
       id: "payment_id:1",
+      stripe_id: "stripe_id:1",
       total: 8.5,
       status: PaymentStatus.APPROVED,
       created_at: "2023-08-07T10:20:00.000Z",
@@ -257,10 +262,10 @@ export const orderList: Order[] = [
       restaurant_id: "restaurant_id:1",
       deliveryPerson: {
         id: "delivery_person_id:1",
-        first_name: "John",
-        last_name: "Doe",
+        firstName: "John",
+        lastName: "Doe",
         phone: "0612345678",
-        location: [49.440459, 1.094853],
+        address: { lat: 49.440459, lng: 1.094853 },
       },
       delivery_person_id: "delivery_person_id:1",
       user_id: "user_id:1",
@@ -295,6 +300,7 @@ export const orderList: Order[] = [
     paymentId: "payment_id:2",
     payment: {
       id: "payment_id:2",
+      stripe_id: "stripe_id:2",
       total: 8.5,
       status: PaymentStatus.PENDING,
       created_at: "2023-08-07T10:20:00.000Z",
@@ -322,10 +328,10 @@ export const orderList: Order[] = [
       restaurant_id: "restaurant_id:1",
       deliveryPerson: {
         id: "delivery_person_id:2",
-        first_name: "Jane",
-        last_name: "Doe",
+        firstName: "Jane",
+        lastName: "Doe",
         phone: "0612345678",
-        location: [49.370459, 0.9],
+        address: { lat: 49.440459, lng: 1.094853 },
       },
       delivery_person_id: "delivery_person_id:1",
       user_id: "user_id:1",
@@ -475,5 +481,3 @@ export const stats = [
     date: new Date(),
   },
 ];
-
-*/
