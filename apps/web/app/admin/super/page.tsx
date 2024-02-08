@@ -11,7 +11,7 @@ export default function AdminSuperPage() {
         Gestion des rôles
       </h2>
       <div className="flex w-full gap-4 p-2 lg:p-8">
-        <DataTable data={users} columns={users_columns} />
+        <DataTable data={users.sort((a, b) => a.id.localeCompare(b.id))} columns={users_columns} />
       </div>
     </div>
   );
