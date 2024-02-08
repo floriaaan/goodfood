@@ -24,12 +24,12 @@ export const ProductCreateSheet = () => {
 };
 
 export const ProductRefreshSheet = () => {
-	const { refetchProducts } = useAdmin();
+	const { refetchExtendedProducts } = useAdmin();
 
 	return (
 		<Sheet>
 			<SheetTrigger asChild>
-				<Button onClick={refetchProducts} className="w-fit bg-black px-6 text-white">
+				<Button onClick={refetchExtendedProducts} className="w-fit bg-black px-6 text-white">
 					<MdRefresh className="h-4 w-4 shrink-0" />
 					Actualiser
 				</Button>

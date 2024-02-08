@@ -1,7 +1,7 @@
 import {ProductCreateEditFormValues} from "@/components/admin/product/form";
-import {Allergen, Category, Product} from "@/types/product";
+import {Allergen, Category, Product, Recipe} from "@/types/product";
 
-export const toProduct = (productFormValues: ProductCreateEditFormValues, categoryList: (Category | undefined)[] | undefined , allergenList: (Allergen | undefined)[] | undefined) => {
+export const toProduct = (productFormValues: ProductCreateEditFormValues, categoryList: (Category | undefined)[] | undefined , allergenList: (Allergen | undefined)[] | undefined, recipeList: Recipe[]) => {
 
 	return {
 		id: "",
@@ -16,12 +16,15 @@ export const toProduct = (productFormValues: ProductCreateEditFormValues, catego
 		type: parseInt(productFormValues.type),
 
 		restaurantId: productFormValues.restaurantId,
+
 		categoriesList: categoryList,
 		allergensList: allergenList,
+
+		recipeList: recipeList,
 	} as Product;
 }
 
-export const toUpdateProduct = (sourceProduct: Product, productFormValues: ProductCreateEditFormValues, categoryList: (Category | undefined)[] | undefined, allergenList: (Allergen | undefined)[] | undefined) => {
+export const toUpdateProduct = (sourceProduct: Product, productFormValues: ProductCreateEditFormValues, categoryList: (Category | undefined)[] | undefined, allergenList: (Allergen | undefined)[] | undefined, recipeList: Recipe[]) => {
 	return {
 		id: sourceProduct.id,
 		name: productFormValues.name ?? sourceProduct.name,
@@ -37,7 +40,8 @@ export const toUpdateProduct = (sourceProduct: Product, productFormValues: Produ
 		restaurantId: productFormValues.restaurantId ?? sourceProduct.restaurantId,
 
 		categoriesList: categoryList ?? sourceProduct.categoriesList,
-		allergensList: allergenList ?? sourceProduct.allergensList
+		allergensList: allergenList ?? sourceProduct.allergensList,
 
+		recipeList: recipeList ?? sourceProduct.recipeList,
 	} as Product;
 }

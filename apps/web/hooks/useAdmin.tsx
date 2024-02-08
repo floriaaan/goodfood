@@ -153,6 +153,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await fetchAPI(`/api/restaurant`, token);
       const body = await res.json();
       if (body.error) throw new Error(body.error);
+      console.log(body.restaurantsList);
       return body.restaurantsList;
     },
     enabled: !!token,
@@ -164,7 +165,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const restaurants = useMemo(() => api_restaurants ?? [], [api_restaurants]);
 
-	const {
+  const {
     data: api_restaurant_users,
     refetch: refetchRestaurantUsers,
     isLoading: isRestaurantUsersLoading,
@@ -206,35 +207,37 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const products = useMemo(() => api_products ?? [], [api_products]);
 
-	const { data: api_extendedProducts, refetch: refetchExtendedProducts } = useQuery<Product[]>({
-		queryKey: ["admin", "extendProduct", "restaurant", selectedRestaurantId],
-		queryFn: async () => {
-			const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, token);
-			const body = await res.json();
-			body.productsList = body.productsList.map((p: ExtendedProduct) => {
-				var detail = (p.comment == "" ? "comment, " : "") +
-					(p.preparation == "" ? "preparation, " : "") +
-					(p.weight == "" ? "weight, " : "") +
-					(p.kilocalories == "" ? "kilocalories, " : "") +
-					(p.nutriscore == "" ? "nutriscore, " : "") +
-					(p.categoriesList?.length == 0 ? "categoriesList, " : "") +
-					(p.allergensList?.length == 0 ? "categoriesList, " : "")
-				;
-				detail = detail != "" ? "(" +  detail.slice(0, -2) + ")" : "";
+  const { data: api_extendedProducts, refetch: refetchExtendedProducts } = useQuery<Product[]>({
+    queryKey: ["admin", "extendProduct", "restaurant", selectedRestaurantId],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, token);
+      const body = await res.json();
+      body.productsList = body.productsList.map((p: ExtendedProduct) => {
+        var detail = (p.comment == "" ? "Description, " : "") +
+          (p.preparation == "" ? "Preparation, " : "") +
+          (p.weight == "" ? "Poids, " : "") +
+          (p.kilocalories == "" ? "Kilocalories, " : "") +
+          (p.nutriscore == "" ? "Nutriscore, " : "") +
+          (p.categoriesList?.length == 0 ? "Catégories, " : "") +
+          (p.allergensList?.length == 0 ? "Allergènes, " : "")
+        ;
+        detail = detail != "" ? "(" +  detail.slice(0, -2) + ")" : "";
 
-				const ok = "✅ Tout est ok !";
-				const attention = "⚠️ " + detail.split(",").length + " élément(s) manquant(s) !";
+        const ok = "✅ Tout est ok !";
+        const attention = "⚠️ " + detail.split(",").length + " élément(s) manquant(s) !";
 
-				const comment = detail == "" ? ok : attention;
-				return { ...p, additional_information: [comment, detail] }
-			});
-			return body.productsList;
-		},
-		staleTime: 1000 * 60 * 60 * 24, // 24 hours
-		placeholderData: [],
-		enabled: !!selectedRestaurantId,
-	});
-	const extendedProducts = useMemo(() => api_extendedProducts ?? [], [api_extendedProducts]);
+        const comment = detail == "" ? ok : attention;
+
+        console.log(body.productsList);
+        return { ...p, additional_information: [comment, detail] }
+      });
+      return body.productsList;
+    },
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    placeholderData: [],
+    enabled: !!selectedRestaurantId,
+  });
+  const extendedProducts = useMemo(() => api_extendedProducts ?? [], [api_extendedProducts]);
 
 
   const {
