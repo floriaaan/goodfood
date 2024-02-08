@@ -2,21 +2,22 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-import { createPersistedState } from "@/lib/use-persisted-state";
-import { MainAddress } from "@/types/user";
-import { useAuth } from "@/hooks";
-import { useToast } from "@/components/ui/use-toast";
 import { ToastAction, ToastDescription, ToastTitle } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks";
+import { formatEta } from "@/lib/eta";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { getDirections } from "@/lib/fetchers/externals/mapbox";
+import { toPrice } from "@/lib/product/toPrice";
+import { createPersistedState } from "@/lib/use-persisted-state";
+import { Basket, DEFAULT_BASKET } from "@/types/basket";
+import { Product } from "@/types/product";
+import { Restaurant } from "@/types/restaurant";
+import { MainAddress } from "@/types/user";
+import { useQuery } from "@tanstack/react-query";
+import { XIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { toPrice } from "@/lib/product/toPrice";
-import { useQuery } from "@tanstack/react-query";
-import { Product } from "@/types/product";
-import { fetchAPI } from "@/lib/fetchAPI";
-import { Basket, DEFAULT_BASKET } from "@/types/basket";
-import { Restaurant } from "@/types/restaurant";
-import { getDirections } from "@/lib/fetchers/externals/mapbox";
-import { formatEta } from "@/lib/eta";
 
 type Address = Omit<MainAddress, "id" | "lat" | "lng">;
 
@@ -155,7 +156,23 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     const p = products.find((p) => p.id === id);
     if (!p) return;
 
-    //todo: check if product is available (stock)
+    if (p.isOutOfStock)
+      return toast({
+        className: "p-3",
+        children: (
+          <div className="inline-flex w-full items-end justify-between gap-2">
+            <div className="inline-flex shrink-0 gap-2">
+              <XIcon className="h-6 w-6 text-green-500" />
+              <div className="flex w-full grow flex-col">
+                <ToastTitle>Le produit est victime de son succès !</ToastTitle>
+                <small className="text-xs font-bold">
+                  Le produit <strong>{p.name}</strong> est en rupture de stock
+                </small>
+              </div>
+            </div>
+          </div>
+        ),
+      });
 
     let ok = !isAuthenticated; // if not authenticated, add product to basket without calling api
     if (isAuthenticated) {
