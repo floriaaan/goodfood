@@ -71,7 +71,8 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
         </button>
       );
     },
-    accessorKey: "stock_quantity",
+    accessorKey: "canMake",
+    cell: (cell) => (cell.getValue() as number)
   },
   {
     id: "actions",
