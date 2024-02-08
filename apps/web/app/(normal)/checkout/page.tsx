@@ -118,7 +118,7 @@ export default function CheckoutPage({ params }: PageProps) {
                     Payer
                   </Button>
                   <Dialog onOpenChange={setDelivery_isModalOpen} open={delivery_isModalOpen || hasCreatedOrder}>
-                    <DialogContent className="flex aspect-video max-h-screen w-screen items-center justify-center">
+                    <DialogContent className="flex aspect-video max-h-screen w-screen items-center justify-center p-0">
                       <div id="checkout" className="w-full">
                         {delivery_checkoutSessionSecret ? (
                           <EmbeddedCheckoutProvider
@@ -127,7 +127,7 @@ export default function CheckoutPage({ params }: PageProps) {
                               clientSecret: delivery_checkoutSessionSecret,
                             }}
                           >
-                            <EmbeddedCheckout className="max-h-screen w-full " />
+                            <EmbeddedCheckout className="max-h-screen w-full pt-1" />
                           </EmbeddedCheckoutProvider>
                         ) : (
                           <div className="h-64 w-64">

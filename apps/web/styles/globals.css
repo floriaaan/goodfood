@@ -90,6 +90,9 @@
   .gf_shadow {
     @apply shadow-[3px_3px_0px_0px_#000000] transition-shadow duration-150 active:shadow-[0px_0px_0px_0px_#000000];
   }
+  .gf_shadow_green {
+    @apply shadow-[3px_3px_0px_0px_#22c55e] transition-shadow duration-150 active:shadow-[0px_0px_0px_0px_#22c55e];
+  }
 }
 
 .has-background-grid {

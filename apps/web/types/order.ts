@@ -12,8 +12,8 @@ export type UserMinimum = {
 };
 
 export enum DeliveryType {
-  TAKEAWAY = "TAKEAWAY",
-  DELIVERY = "DELIVERY",
+  DELIVERY = 0,
+  TAKEAWAY = 1,
 }
 
 export type Order = {

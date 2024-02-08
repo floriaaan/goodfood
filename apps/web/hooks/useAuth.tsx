@@ -4,11 +4,8 @@ import { getCookie, setCookie } from "cookies-next";
 /**
  * TODO: add default restaurant from mainAddress (the nearest one)
  */
-
 import { User } from "@/types/user";
 import { createContext, useContext, useMemo, useState } from "react";
-
-// import { user as user_tmp } from "@/constants/data";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { useQuery } from "@tanstack/react-query";
 
