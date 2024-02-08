@@ -51,7 +51,7 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
 
         const restAddress = restaurant.getAddress();
         if (!restAddress) break;
-        //TODO : set main address add CITY
+
         const delivery = await createDelivery(
           new Address()
             .setLat(mainAddress.lat)
