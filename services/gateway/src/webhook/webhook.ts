@@ -39,20 +39,19 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
       try {
         const basket = await getBasketByUser(payment.userId);
         if (!basket) break;
-        console.log("basket ", basket);
+
         const restaurant = await getRestaurant(basket.getRestaurantId());
         if (!restaurant) break;
-        console.log("restaurant ", restaurant);
+
         const user = await getUser(payment.userId);
         if (!user) break;
-        console.log("user", user);
+
         const mainAddress = user.getMainaddress()?.toObject();
         if (!mainAddress) break;
-        console.log("mainAddress", mainAddress);
 
         const restAddress = restaurant.getAddress();
         if (!restAddress) break;
-        console.log("restAddress", restAddress);
+
         const delivery = await createDelivery(
           new Address()
             .setLat(mainAddress.lat)
@@ -65,7 +64,6 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
           restAddress,
         );
         if (!delivery) break;
-        console.log("delivery", delivery);
 
         basket.getProductsList().map(async (product) => {
           await updateQuantityFromBasket(product.getId(), product.getQuantity());
