@@ -29,7 +29,6 @@ export default function Register() {
       body: JSON.stringify(body),
       method: "POST",
     });
-    console.log(res);
     if (!res.ok)
       return toast({
         className: "p-3",
@@ -38,7 +37,7 @@ export default function Register() {
             <div className="inline-flex shrink-0 gap-2">
               <MdAccountCircle className="h-6 w-6 text-red-500" />
               <div className="flex w-full grow flex-col">
-                <ToastTitle>Erreur lors de la mise à jour de votre mot de passe</ToastTitle>
+                <ToastTitle>Erreur lors de la création de votre compte</ToastTitle>
               </div>
             </div>
           </div>
