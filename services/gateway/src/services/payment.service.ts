@@ -1,5 +1,5 @@
 import { paymentServiceClient } from "@gateway/services/clients";
-import { Payment, UpdatePaymentStatusRequest } from "@gateway/proto/payment_pb";
+import { GetPaymentRequest, Payment, UpdatePaymentStatusRequest } from "@gateway/proto/payment_pb";
 import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
 
 export const updatePaymentStatus = (id: string, status: PaymentStatus): Promise<Payment | undefined> => {
@@ -15,5 +15,18 @@ export const updatePaymentStatus = (id: string, status: PaymentStatus): Promise<
         }
       },
     );
+  });
+};
+
+export const getPayment = (id: string): Promise<Payment | undefined> => {
+  return new Promise((resolve, reject) => {
+    paymentServiceClient.getPayment(new GetPaymentRequest().setId(id), (error, response) => {
+      if (error) {
+        console.error(error);
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    });
   });
 };

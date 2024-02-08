@@ -22,6 +22,7 @@ import orderService from "../../services/clients/order.client";
 import { restaurantServiceClient } from "@gateway/services/clients";
 import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
 import { getPayment } from "@gateway/services/payment.service";
+import { getDelivery } from "@gateway/services/delivery.service";
 
 export const orderRoutes = Router();
 
@@ -61,7 +62,8 @@ orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
     if (order.user?.id !== userId.toString() || !(await check(token, { role: "ADMIN" })))
       return res.status(401).send({ error: "Unauthorized" });
     const payment = await getPayment(order.paymentId);
-    return res.status(200).json({ ...order, payment: payment?.toObject() });
+    const delivery = await getDelivery(order.deliveryId);
+    return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
   } catch (error) {
     return res.status(500).send({ error });
   }
@@ -128,8 +130,9 @@ orderRoutes.post("/api/order", async (req: Request, res: Response) => {
   orderService.createOrder(orderInput, async (error, response) => {
     const order = response.toObject();
     const payment = await getPayment(order.paymentId);
+    const delivery = await getDelivery(order.deliveryId);
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json({ ...order, payment: payment?.toObject() });
+    else return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
   });
 });
 
@@ -155,7 +158,8 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   orderService.getOrdersByUser(orderInput, (error, response) => {
     const orderList = response.toObject().ordersList.map(async (order) => {
       const payment = await getPayment(order.paymentId);
-      return { ...order, payment: payment?.toObject() };
+      const delivery = await getDelivery(order.deliveryId);
+      return { ...order, payment: payment?.toObject(), delivery: delivery?.toObject() };
     });
     if (error) return res.status(500).send({ error });
     else return res.status(201).json(orderList);
@@ -182,7 +186,8 @@ orderRoutes.get(
     orderService.getOrdersByStatus(orderInput, (error, response) => {
       const orderList = response.toObject().ordersList.map(async (order) => {
         const payment = await getPayment(order.paymentId);
-        return { ...order, payment: payment?.toObject() };
+        const delivery = await getDelivery(order.deliveryId);
+        return { ...order, payment: payment?.toObject(), delivery: delivery?.toObject() };
       });
       if (error) return res.status(500).send({ error });
       else return res.status(200).json({ orderList });
@@ -234,8 +239,13 @@ orderRoutes.get(
         return res.status(401).json({ message: "Unauthorized", cause: "user is not in restaurant and is not ADMIN" });
 
       orderService.getOrdersByRestaurant(new GetOrdersByRestaurantRequest().setId(restaurant.id), (error, response) => {
+        const orderList = response.toObject().ordersList.map(async (order) => {
+          const payment = await getPayment(order.paymentId);
+          const delivery = await getDelivery(order.deliveryId);
+          return { ...order, payment: payment?.toObject(), delivery: delivery?.toObject() };
+        });
         if (error) return res.status(500).send({ error });
-        else return res.status(200).json(response.toObject());
+        else return res.status(200).json({ orderList });
       });
     } catch (error) {
       return res.status(500).json({ error });
@@ -300,8 +310,9 @@ orderRoutes.get("/api/order/by-payment/:paymentId", async (req: Request, res: Re
   orderService.getOrderByPayment(orderInput, async (error, response) => {
     const order = response.toObject();
     const payment = await getPayment(order.paymentId);
+    const delivery = await getDelivery(order.deliveryId);
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json({ ...order, payment: payment?.toObject() });
+    else return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
   });
 });
 
@@ -337,8 +348,9 @@ orderRoutes.put("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request, r
   orderService.updateOrder(orderInput, async (error, response) => {
     const order = response.toObject();
     const payment = await getPayment(order.paymentId);
+    const delivery = await getDelivery(order.deliveryId);
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json({ ...order, payment: payment?.toObject() });
+    else return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
   });
 });
 
