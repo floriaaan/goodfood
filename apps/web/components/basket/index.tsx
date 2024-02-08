@@ -1,8 +1,6 @@
 "use client";
 
-import { BasketExtra } from "@/components/basket/extra";
 import { ProductBasketItem } from "@/components/basket/product";
-import { BasketPromotion } from "@/components/basket/promotion";
 import { BasketTaxes } from "@/components/basket/taxes";
 import { Button } from "@/components/ui/button";
 import { GradientHeader } from "@/components/ui/header/gradient";
@@ -103,10 +101,12 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
           </div>
         </section>
         <hr className="mx-4 my-2 border border-gray-200" />
-        <BasketExtra />
+        {/* TODO: make it useful */}
+        {/* <BasketExtra /> */}
         {!isBasketEmpty && (
           <>
-            <BasketPromotion />
+            {/* TODO: make it useful */}
+            {/* <BasketPromotion /> */}
             <BasketTaxes />
             <GradientHeader
               color="bg-gf-green-100/50"
