@@ -3,10 +3,10 @@
 import { RoleDialogContent } from "@/app/admin/super/dialog-content";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { User } from "@/types/user";
@@ -32,7 +32,8 @@ export const users_columns: ColumnDef<User>[] = [
       );
     },
     cell: ({ getValue }) => {
-      return <span className="line-clamp-1 truncate">{getValue() as string}</span>;
+      const id = (getValue() as User["id"]).split("-");
+      return <span className="line-clamp-1 truncate">{id[0] + "-" + id[1] + " ..."}</span>;
     },
   },
   {
