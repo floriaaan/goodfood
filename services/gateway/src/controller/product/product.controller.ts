@@ -1,5 +1,8 @@
-import { Request, Response, Router } from "express";
+import { withCheck } from "@gateway/middleware/auth";
 import { productServiceClient } from "@gateway/services/clients";
+import { extendProduct } from "@gateway/services/product.service";
+import { Request, Response, Router } from "express";
+import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import {
   Allergen,
   Category,
@@ -10,8 +13,6 @@ import {
   Recipe,
   RestaurantId,
 } from "../../proto/product_pb";
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { withCheck } from "@gateway/middleware/auth";
 
 export const productRoutes = Router();
 
@@ -23,23 +24,34 @@ productRoutes.get("/api/product/by-restaurant/:id", (req: Request, res: Response
          } */
   const { id } = req.params;
 
-  productServiceClient.getProductList(new RestaurantId().setId(id), (error, response) => {
+  productServiceClient.getProductList(new RestaurantId().setId(id), async (error, r) => {
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
+    else {
+      const response = r.toObject();
+      const productsList = await Promise.all(response.productsList.map((p) => extendProduct(p)));
+      return res.status(200).json({ ...response, productsList });
+    }
   });
 });
 
-productRoutes.get("/api/product/:id", (req: Request, res: Response) => {
+productRoutes.get("/api/product/:id", async (req: Request, res: Response) => {
   /* #swagger.parameters['id'] = {
                in: 'path',
                required: true,
                type: 'string'
          } */
   const { id } = req.params;
-  productServiceClient.readProduct(new ProductId().setId(id), (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
+  const product = (await new Promise((resolve, reject) => {
+    productServiceClient.readProduct(new ProductId().setId(id), (error, response) => {
+      if (error) reject(error);
+      else resolve(response.toObject());
+    });
+  })) as Product.AsObject;
+  if (!product) return res.status(404).send({ error: "Product not found" });
+
+  const extendedProduct = await extendProduct(product); // can't be null because product is not null
+
+  return res.status(200).json(extendedProduct);
 });
 
 productRoutes.get("/api/product/type", (_: Request, res: Response) => {
@@ -137,10 +149,13 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
     .setAllergensList(allergenList)
     .setRecipeList(ingredientQuantity);
 
-  productServiceClient.createProduct(product, (error, response) => {
-    if (error) {
-      return res.status(500).send({ error });
-    } else return res.status(201).json(response.toObject());
+  productServiceClient.createProduct(product, async (error, r) => {
+    if (error) return res.status(500).send({ error });
+    else {
+      const response = r.toObject();
+      const extendedProduct = await extendProduct(response);
+      return res.status(201).json(extendedProduct);
+    }
   });
 });
 
@@ -219,9 +234,13 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
     .setAllergensList(allergenList)
     .setRecipeList(recipeList);
 
-  productServiceClient.updateProduct(product, (error, response) => {
+  productServiceClient.updateProduct(product, async (error, r) => {
     if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
+    else {
+      const response = r.toObject();
+      const extendedProduct = await extendProduct(response);
+      return res.status(201).json(extendedProduct);
+    }
   });
 });
 

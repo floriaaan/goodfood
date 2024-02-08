@@ -310,16 +310,16 @@ services:
 
   # Reporting service
 
-  reporting-service:
-    image: floriaaan/goodfood-reporting:latest
-    # restart: unless-stopped
-    build:
-      context: .
-      dockerfile: ./reporting/Dockerfile
-    ports:
-      - "50020"
-    networks:
-      - goodfood-network
+  # reporting-service:
+  #   image: floriaaan/goodfood-reporting:latest
+  #   # restart: unless-stopped
+  #   build:
+  #     context: .
+  #     dockerfile: ./reporting/Dockerfile
+  #   ports:
+  #     - "50020"
+  #   networks:
+  #     - goodfood-network
 
   reporting-postgres:
     image: postgres:15.2

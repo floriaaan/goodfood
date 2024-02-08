@@ -1,15 +1,15 @@
-import { stripe, STRIPE_ENDPOINT_SECRET } from "@gateway/lib/stripe";
 import { log, utils } from "@gateway/lib/log/log";
-import express from "express";
-import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
-import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
-import { getUser } from "@gateway/services/user.service";
-import { createDelivery } from "@gateway/services/delivery.service";
-import { getRestaurant } from "@gateway/services/restaurant.service";
+import { stripe, STRIPE_ENDPOINT_SECRET } from "@gateway/lib/stripe";
 import { Address } from "@gateway/proto/delivery_pb";
-import { updateQuantityFromBasket } from "@gateway/services/stock.service";
-import { updatePaymentStatus } from "@gateway/services/payment.service";
+import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
+import { createDelivery } from "@gateway/services/delivery.service";
 import { createOrder } from "@gateway/services/order.service";
+import { updatePaymentStatus } from "@gateway/services/payment.service";
+import { getRestaurant } from "@gateway/services/restaurant.service";
+import { updateQuantityFromBasket } from "@gateway/services/stock.service";
+import { getUser } from "@gateway/services/user.service";
+import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
+import express from "express";
 
 const app = express();
 
@@ -71,11 +71,13 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
         console.log(e);
       }
       // if (payment_status === "paid") break;
+      break;
     }
 
     // case checkout session expired
     case "checkout.session.expired": {
       // if (payment_status === "unpaid") break;
+      break;
     }
 
     default:
