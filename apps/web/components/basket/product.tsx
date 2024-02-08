@@ -1,6 +1,7 @@
 import { ProductSheetContent } from "@/components/product/sheet-content";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useBasket } from "@/hooks/useBasket";
+import { toPrice } from "@/lib/product/toPrice";
 import { Product } from "@/types/product";
 import Image from "next/image";
 import { MdAdd, MdDelete, MdRemove } from "react-icons/md";
@@ -52,7 +53,7 @@ export const ProductBasketItem = (product: Product) => {
             </div>
             <div className="inline-flex items-center gap-x-1">
               <span className="flex h-6 items-center justify-center border bg-gray-200 px-2 text-sm font-bold text-black">
-                {product.price.toFixed(2).replace(".", "€")}
+                {toPrice(product.price * basketProduct.quantity)}
               </span>
             </div>
           </div>
