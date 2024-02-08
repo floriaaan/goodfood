@@ -1,12 +1,16 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { SheetClose, SheetContent } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBasket } from "@/hooks";
 import { getNutriscoreImageUrl } from "@/lib/product/nutriscore";
 import { toPrice } from "@/lib/product/toPrice";
 import { Product } from "@/types/product";
 import Image from "next/image";
 
 export const ProductSheetContent = (product: Product) => {
+  const { addProduct } = useBasket();
+
   return (
     <SheetContent side="left">
       <div className="flex h-full flex-col justify-between">
@@ -56,16 +60,34 @@ export const ProductSheetContent = (product: Product) => {
               <TabsTrigger value="allergens">Allergènes</TabsTrigger>
             </TabsList>
             <div className="mt-2">
-              {/* TODO:  */}
-              <TabsContent value="prep">prep</TabsContent>
-              <TabsContent value="ingredients">ingredients</TabsContent>
-              <TabsContent value="allergens">allergens</TabsContent>
+              <TabsContent value="prep" className="flex flex-col gap-y-2">
+                <p className="text-[10px] uppercase">Préparation</p>
+                {product.preparation && <p>{product.preparation}</p>}
+              </TabsContent>
+              <TabsContent value="ingredients" className="flex flex-col gap-y-2">
+                <p className="text-[10px] uppercase">Ingrédients</p>
+                {/* TODO:  */}
+              </TabsContent>
+              <TabsContent value="allergens" className="flex flex-col gap-y-2">
+                <p className="text-[10px] uppercase">Allergènes</p>
+                <ul>
+                  {product.allergensList.map((allergen) => (
+                    <li key={allergen.id}>{allergen.libelle}</li>
+                  ))}
+                </ul>
+              </TabsContent>
             </div>
           </Tabs>
         </div>
         <div className="item-center inline-flex h-16 items-center justify-between gap-4 bg-gray-50 p-4">
           <span className="h-fit bg-gray-200/60 px-2 py-1 font-extrabold text-gray-600">{toPrice(product.price)}</span>
-          <Button className="h-fit w-fit bg-black text-white ring-black">Je prends ça</Button>
+          <Button
+            className="h-fit w-fit bg-black text-white ring-black"
+            disabled={product.isOutOfStock}
+            onClick={() => addProduct(product.id, 1)}
+          >
+            Je prends ça
+          </Button>
         </div>
       </div>
     </SheetContent>

@@ -10,9 +10,18 @@ export type Product = {
   nutriscore: number | string;
   type: ProductType;
 
+  isOutOfStock?: boolean;
+  canMake?: number;
+
   restaurant_id: string;
   categoriesList: Category[];
   allergensList: Allergen[];
+  recipeList: Recipe[];
+};
+
+export type Recipe = {
+  ingredientId: string;
+  quantity: number;
 };
 
 export enum ProductType {
