@@ -11,8 +11,8 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
 
   <ItemGroup>
-    <Protobuf Include="..\..\proto\restaurant.proto" GrpcServices="Server" Link="Protos\restaurant.proto" />
-    <Protobuf Include="..\..\proto\metric.proto" GrpcServices="Server" Link="Protos\metric.proto" />
+    <Protobuf Include="..\proto\restaurant.proto" GrpcServices="Server" Link="Protos\restaurant.proto" />
+    <Protobuf Include="..\proto\metric.proto" GrpcServices="Server" Link="Protos\metric.proto" />
 
     <PackageReference Include="Grpc.AspNetCore" Version="2.52.0" />
     <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.52.0" />

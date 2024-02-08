@@ -12,6 +12,7 @@ namespace CronJobs
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://*:8081"); // replace 5000 with your desired port
                 });
     }
 }

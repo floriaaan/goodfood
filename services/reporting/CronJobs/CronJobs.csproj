@@ -11,10 +11,10 @@
         <ProjectReference Include="..\Server\reporting.csproj" />
     </ItemGroup>
     <ItemGroup>        
-        <Protobuf Include="..\..\proto\restaurant.proto" GrpcServices="Client" Link="Protos\restaurant.proto" />
-        <Protobuf Include="..\..\proto\order.proto" GrpcServices="Client" Link="Protos\order.proto" />
-        <Protobuf Include="..\..\proto\stock.proto" GrpcServices="Client" Link="Protos\stock.proto" />
-        <Protobuf Include="..\..\proto\payment.proto" GrpcServices="Client" Link="Protos\payment.proto" />
+        <Protobuf Include="..\proto\restaurant.proto" GrpcServices="Client" Link="Protos\restaurant.proto" />
+        <Protobuf Include="..\proto\order.proto" GrpcServices="Client" Link="Protos\order.proto" />
+        <Protobuf Include="..\proto\stock.proto" GrpcServices="Client" Link="Protos\stock.proto" />
+        <Protobuf Include="..\proto\payment.proto" GrpcServices="Client" Link="Protos\payment.proto" />
         
         <PackageReference Include="Cronos" Version="0.8.0" />
 
