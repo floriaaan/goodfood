@@ -10,44 +10,44 @@ import { DeliveryType, Order } from "@/types/order";
 import { useState } from "react";
 import { MdCheck, MdLock, MdRestaurant, MdShoppingBasket } from "react-icons/md";
 
-import { loadStripe } from "@stripe/stripe-js";
-import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
-import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
+import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { orderList } from "@/constants/data";
+import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import { TiLocationArrow } from "react-icons/ti";
 
-import { Player } from "@lottiefiles/react-lottie-player";
 import { useAuth, useBasket, useLocation } from "@/hooks";
-import Link from "next/link";
-import { HomeIcon } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Payment } from "@/types/payment";
+import { Player } from "@lottiefiles/react-lottie-player";
+import { useQuery } from "@tanstack/react-query";
+import { HomeIcon } from "lucide-react";
+import Link from "next/link";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 type PageProps = { params: { id: string } };
 
-export default function CheckoutPage({ params }: PageProps) {
+export default function CheckoutPage({}: PageProps) {
   // decode url encoded params.id
-  const paymentId = decodeURIComponent(params.id);
   const { user, session } = useAuth();
 
   const { restaurants } = useLocation();
 
-  const { isAuthenticated, isBasketEmpty, isRestaurantSelected } = useBasket();
+  const { isAuthenticated, isBasketEmpty, isRestaurantSelected, selectedRestaurant } = useBasket();
 
-  const [deliveryType, setDeliveryType] = useState(DeliveryType.DELIVERY);
+  const [deliveryType, setDeliveryType] = useState(DeliveryType.DELIVERY.toString());
 
   const [delivery_isModalOpen, setDelivery_isModalOpen] = useState(false);
   const [delivery_checkoutSessionSecret, setDelivery_checkoutSessionSecret] = useState("");
 
   const [takeaway_isModalOpen, setTakeaway_isModalOpen] = useState(false);
 
+  // TODO: implement takeway order creation
   const [hasCreatedOrder, setHasCreatedOrder] = useState(false);
-  const [order, setOrder] = useState<Order | null>(orderList[0]);
+  const [order, setOrder] = useState<Order | null>(orderList[0]); // TODO: replace with real order
 
   const { data: payment } = useQuery<{ Payment: Payment; clientSecret: string }>({
     queryKey: ["payment", "stripe"],
@@ -64,6 +64,9 @@ export default function CheckoutPage({ params }: PageProps) {
     },
   });
 
+  if (!user) return null;
+  if (!selectedRestaurant) return null;
+
   return (
     <div className="flex h-full grow p-4 pb-12">
       {isAuthenticated && isRestaurantSelected && !isBasketEmpty && (
@@ -73,37 +76,35 @@ export default function CheckoutPage({ params }: PageProps) {
             <small>Sélectionnez votre mode de paiement</small>
             <RadioGroup
               disabled={hasCreatedOrder}
-              onValueChange={(e) => {
-                setDeliveryType(e as DeliveryType);
-              }}
-              defaultValue={DeliveryType.DELIVERY}
+              onValueChange={setDeliveryType}
+              defaultValue={DeliveryType.DELIVERY.toString()}
             >
               <Label
-                htmlFor={DeliveryType.TAKEAWAY}
+                htmlFor={DeliveryType.TAKEAWAY.toString()}
                 className={cn(
                   "h-full w-full cursor-pointer leading-6",
                   "flex cursor-pointer items-center gap-x-2 border p-4",
-                  deliveryType !== DeliveryType.TAKEAWAY && "opacity-50",
+                  deliveryType !== DeliveryType.TAKEAWAY.toString() && "opacity-50",
                 )}
               >
-                <RadioGroupItem value={DeliveryType.TAKEAWAY} id={DeliveryType.TAKEAWAY} />
+                <RadioGroupItem value={DeliveryType.TAKEAWAY.toString()} id={DeliveryType.TAKEAWAY.toString()} />
                 {"Je paye sur place et j’emporte ma commande"}
               </Label>
               <Label
-                htmlFor={DeliveryType.DELIVERY}
+                htmlFor={DeliveryType.DELIVERY.toString()}
                 className={cn(
                   "w-full cursor-pointer leading-6",
                   "flex cursor-pointer items-center gap-x-2 border p-4",
-                  deliveryType !== DeliveryType.DELIVERY && "opacity-50",
+                  deliveryType !== DeliveryType.DELIVERY.toString() && "opacity-50",
                 )}
               >
-                <RadioGroupItem value={DeliveryType.DELIVERY} id={DeliveryType.DELIVERY} />
+                <RadioGroupItem value={DeliveryType.DELIVERY.toString()} id={DeliveryType.DELIVERY.toString()} />
                 Je fais livrer ma commande et je paye maintenant par carte bancaire
               </Label>
             </RadioGroup>
 
             <div className="w-full">
-              {deliveryType === DeliveryType.DELIVERY && (
+              {deliveryType === DeliveryType.DELIVERY.toString() && (
                 <>
                   {/* DELIVERY */}
                   <Button
@@ -139,7 +140,7 @@ export default function CheckoutPage({ params }: PageProps) {
                   </Dialog>
                 </>
               )}
-              {deliveryType === DeliveryType.TAKEAWAY && (
+              {deliveryType === DeliveryType.TAKEAWAY.toString() && (
                 <>
                   {/* TAKEAWAY */}
                   <Button
@@ -199,7 +200,12 @@ export default function CheckoutPage({ params }: PageProps) {
             </div>
           </main>
           <div className="flex flex-col gap-1">
-            <CheckoutRecap />
+            <CheckoutRecap
+              deliveryType={deliveryType}
+              address={
+                deliveryType === DeliveryType.DELIVERY.toString() ? user.mainaddress : selectedRestaurant.address
+              }
+            />
             <small className="mt-2 inline-flex flex-wrap items-center justify-center gap-1 text-center text-[10px] leading-3 text-gray-500">
               En passant votre commande, vous acceptez nos
               <u className="font-semibold">Conditions générales de vente</u>
