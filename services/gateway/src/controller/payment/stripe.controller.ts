@@ -58,7 +58,7 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
   );
 
   const total = products.reduce((acc, product) => {
-    return acc + product.price;
+    return acc + product.price * (basket.productsList.find((p) => p.id === product.id)?.quantity || 1);
   }, 0);
 
   const createCheckoutSessionRequest = new CreateCheckoutSessionRequest()
