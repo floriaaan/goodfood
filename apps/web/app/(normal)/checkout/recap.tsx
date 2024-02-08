@@ -2,13 +2,15 @@
 import { BasketTaxes } from "@/components/basket/taxes";
 import { GradientHeader } from "@/components/ui/header/gradient";
 import { useBasket } from "@/hooks";
+import { DeliveryType } from "@/types/order";
+import { Address } from "@/types/restaurant";
 import { MdDirectionsWalk, MdOutlineShoppingBasket, MdShoppingBasket } from "react-icons/md";
 
-export const CheckoutRecap = () => {
-  const { address, total, eta, basket, products } = useBasket();
-  const { street, city } = address || {};
+export const CheckoutRecap = ({ deliveryType, address }: { deliveryType: string; address: Address }) => {
+  const { total, eta, basket, products } = useBasket();
+  const { street, city, zipcode } = address || {};
 
-  const address_displayed = `${street}, ${city}`;
+  const address_displayed = `${street}, ${zipcode} ${city}`;
 
   return (
     <div id="SidebarRoot" className="flex w-full flex-col justify-end gap-1 border border-solid border-gray-100">
@@ -18,9 +20,14 @@ export const CheckoutRecap = () => {
           <div className="inline-flex items-start gap-1">
             <MdDirectionsWalk className="mt-px w-4 shrink-0" />
             <div className="flex w-full flex-col items-start">
-              <div className="text-sm font-semibold">Je fais livrer ma commande</div>
+              <div className="text-sm font-semibold">
+                {deliveryType === DeliveryType.DELIVERY.toString()
+                  ? "Je fais livrer ma commande"
+                  : "Je vais chercher ma commande en restaurant"}
+              </div>
               <div className="text-xs">
-                {address_displayed} à {eta}
+                {address_displayed}
+                {deliveryType === DeliveryType.DELIVERY.toString() && ` à ${eta}`}
               </div>
             </div>
           </div>
