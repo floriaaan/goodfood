@@ -100,7 +100,7 @@ export function PromotionCreateEditForm({
             name="reduction"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Méthode de réduction</FormLabel>
+                <FormLabel>Valeur de la réduction</FormLabel>
                 <FormControl>
                   <FormInput type="number" placeholder="10" {...field} />
                 </FormControl>
