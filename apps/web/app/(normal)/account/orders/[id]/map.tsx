@@ -3,18 +3,19 @@ import { Bow, Map, Marker, OrderPin, RestaurantPin, UserPin } from "@/components
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { useLocation } from "@/hooks";
 import { DeliveryType, Order } from "@/types/order";
+import { Delivery } from "@/types/delivery";
 
-export const OrderStatusMap = (order: Order) => {
-  const delivery_person = order.delivery.person;
-  const { location: d_location } = delivery_person;
-  const [d_lat, d_lng] = d_location;
+export const OrderStatusMap = ({ order, delivery }: { order: Order; delivery: Delivery }) => {
+  const delivery_person = delivery.deliveryPerson;
+  const { address: d_location } = delivery_person;
+  const { lat: d_lat, lng: d_lng } = d_location;
 
   const { restaurants } = useLocation();
   const restaurant = restaurants.find((r) => r.id === order.restaurantId);
   const { address: r_location } = restaurant || {};
   const [r_lat, r_lng] = [r_location?.lat, r_location?.lng] || [0, 0];
 
-  const { address } = order.delivery;
+  const { address } = delivery;
   const [u_lat, u_lng] = [address?.lat, address?.lng] || [0, 0];
 
   if (!u_lat || !u_lng || !d_lat || !d_lng || !r_lat || !r_lng)

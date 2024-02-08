@@ -157,7 +157,7 @@ export default function CheckoutPage({ params }: PageProps) {
                     <DialogContent className="grid aspect-video h-auto max-w-4xl justify-center gap-2 md:grid-cols-2">
                       {order &&
                         (() => {
-                          const restaurant = restaurants.find((r) => r.id === order.restaurant_id);
+                          const restaurant = restaurants.find((r) => r.id === order.restaurantId);
                           if (!restaurant) return null;
                           return (
                             <>

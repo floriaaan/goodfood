@@ -16,11 +16,12 @@ import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useEffect, useRef, useState } from "react";
 import { Marker, Popup } from "react-map-gl";
-import {RestaurantCreateSheet, RestaurantRefreshSheet} from "@/components/admin/restaurant/sheet";
-import {ProductCreateSheet, ProductRefreshSheet} from "@/components/admin/product/sheet";
+import { RestaurantCreateSheet, RestaurantRefreshSheet } from "@/components/admin/restaurant/sheet";
+import { ProductCreateSheet, ProductRefreshSheet } from "@/components/admin/product/sheet";
 
 export default function AdminHome() {
-  const { restaurant, selectRestaurant, restaurant_users, restaurants, extendedProducts, promotions, orders } = useAdmin();
+  const { restaurant, selectRestaurant, restaurant_users, restaurants, extendedProducts, promotions, orders } =
+    useAdmin();
   const [popup_restaurantId, setPopup_restaurantId] = useState<string | null>(null);
 
   const mapRef = useRef(null);
@@ -48,13 +49,13 @@ export default function AdminHome() {
               }}
               mapRef={mapRef}
             >
-              {orders
-                .map((o) => o.delivery.person.location)
-                .map((o, i) => (
-                  <Marker key={i} latitude={o[0]} longitude={o[1]}>
-                    <OrderPin />
-                  </Marker>
-                ))}
+              {/*{orders*/}
+              {/*  .map((o) => o.delivery.person.location)*/}
+              {/*  .map((o, i) => (*/}
+              {/*    <Marker key={i} latitude={o[0]} longitude={o[1]}>*/}
+              {/*      <OrderPin />*/}
+              {/*    </Marker>*/}
+              {/*  ))}*/}
               {restaurants.map((r) => (
                 <Marker
                   key={r.id}
@@ -129,13 +130,23 @@ export default function AdminHome() {
                 />
               </TabsContent>
               <TabsContent value="products">
-                <DataTable columns={products_columns} data={extendedProducts} create={<ProductCreateSheet />} refresh={<ProductRefreshSheet />}/>
+                <DataTable
+                  columns={products_columns}
+                  data={extendedProducts}
+                  create={<ProductCreateSheet />}
+                  refresh={<ProductRefreshSheet />}
+                />
               </TabsContent>
               <TabsContent value="orders">
                 <DataTable columns={orders_columns} data={orders} />
               </TabsContent>
               <TabsContent value="promotions">
-                <DataTable columns={promotions_columns} data={promotions} create={<PromotionCreateSheet />} refresh={<PromotionRefreshSheet />}/>
+                <DataTable
+                  columns={promotions_columns}
+                  data={promotions}
+                  create={<PromotionCreateSheet />}
+                  refresh={<PromotionRefreshSheet />}
+                />
               </TabsContent>
             </div>
           </Tabs>
