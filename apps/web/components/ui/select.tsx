@@ -27,17 +27,15 @@ const Select = forwardRef<HTMLSelectElement, InputProps>(({ className, ...props 
       </span>
       <select
         ref={ref}
-        defaultValue={props.options[0].value}
-        onChange={(event) => {
-          props.setSelected(event.target.value);
-        }}
+        value={props.selected}
+        onChange={(event) => props.setSelected(event.target.value)}
         id="select-input"
         className={cn(
           "absolute bottom-2.5 z-[9] flex w-full cursor-pointer appearance-none bg-transparent px-3 align-text-bottom text-sm font-bold placeholder:text-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
       >
-        {...props.options.map((option, index) => (
+        {props.options.map((option, index) => (
           <option value={option.value} key={index}>
             {option.label}
           </option>

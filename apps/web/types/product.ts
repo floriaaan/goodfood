@@ -10,18 +10,13 @@ export type Product = {
   nutriscore: number | string;
   type: ProductType;
 
+  restaurantId: string;
   isOutOfStock?: boolean;
   canMake?: number;
 
-  restaurant_id: string;
   categoriesList: Category[];
   allergensList: Allergen[];
   recipeList: Recipe[];
-};
-
-export type Recipe = {
-  ingredientId: string;
-  quantity: number;
 };
 
 export enum ProductType {
@@ -54,9 +49,13 @@ export type Category = {
   icon: string;
 };
 
+export type Recipe = {
+  ingredientId: string;
+  quantity: number;
+};
+
 export type ExtendedProduct = Product &
   Partial<{
     stock_quantity: string;
     additional_information: [string, string] | [string];
-    ingredients: any[]; // TODO: type
   }>;

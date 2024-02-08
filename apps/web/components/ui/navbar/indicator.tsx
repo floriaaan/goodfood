@@ -1,10 +1,12 @@
 "use client";
 
-import { orderList } from "@/constants/data";
 import { useAuth, useBasket } from "@/hooks";
 import { Status } from "@/types/global";
 import dynamic from "next/dynamic";
 import { MdReceipt, MdShoppingBasket } from "react-icons/md";
+import { useQuery } from "@tanstack/react-query";
+import { Order } from "@/types/order";
+import { fetchAPI } from "@/lib/fetchAPI";
 
 const BasketIndicator = () => {
   const { basket } = useBasket();
@@ -28,10 +30,18 @@ const BasketIndicator = () => {
 };
 
 const OrderIndicator = () => {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   if (!user) return null;
-  const orders = orderList.filter((order) => order.user.id === user.id && order.status === Status.PENDING);
-  if (orders.length !== 0) return null;
+
+  const { data: orders } = useQuery<Order[]>({
+    queryKey: ["order", "user", user.id],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/order/by-user/${user.id}`, session?.token);
+      const orders = await res.json();
+      return orders.filter((order: Order) => order.delivery.status === Status.PENDING) || [];
+    },
+  });
+  if (!orders || orders.length === 0) return null;
 
   return (
     <div className="absolute right-0 top-0 z-20 flex h-4 w-8 items-center justify-center gap-x-1 bg-gf-green ">

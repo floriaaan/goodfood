@@ -1,14 +1,11 @@
 "use client";
-import { setCookie, getCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 
 /**
  * TODO: add default restaurant from mainAddress (the nearest one)
  */
-
 import { User } from "@/types/user";
-import { useState, createContext, useContext, useMemo } from "react";
-
-// import { user as user_tmp } from "@/constants/data";
+import { createContext, useContext, useMemo, useState } from "react";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { useQuery } from "@tanstack/react-query";
 
@@ -28,7 +25,7 @@ type AuthContextType = {
   session: Session | null;
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<Response>;
   logout: () => void;
 
   refetchUser: () => void;
@@ -64,9 +61,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["user", "me"],
     queryFn: async () => {
-      const res = await fetchAPI(`/api/user/${session?.user?.id}`, session?.token);
-      const body = await res.json();
-      return body;
+      try {
+        const res = await fetchAPI(`/api/user/${session?.user?.id}`, session?.token);
+        const body = await res.json();
+        return body;
+      } catch {
+        // TODO: revalidate token
+        // const revalidate = await fetchAPI("/api/user/revalidate", session?.token);
+        setSession(null);
+        setCookie("gf-token", null, { maxAge: -1 });
+        setCookie("gf-user", null, { maxAge: -1 });
+        return null;
+      }
     },
     enabled: !!session?.token && !!session?.user?.id,
   });
@@ -78,7 +84,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       body: JSON.stringify({ email, password }),
     });
     const body = await res.json();
-    if (!res.ok || res.status !== 200) throw body;
+    if (!res.ok || res.status !== 200) return res;
 
     setSession(body);
     setCookie("gf-token", body.token, {
@@ -89,7 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // make max age last time defined in user service
       maxAge: 30 * 24 * 60 * 60,
     });
-    return true;
+    return res;
   };
 
   const logout = () => {

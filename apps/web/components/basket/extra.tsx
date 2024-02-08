@@ -9,14 +9,18 @@ export const BasketExtra = () => {
   const hasUtensils = basket.productsList.some((product) => product.id === "extra/utensils" && product.quantity > 0);
 
   return (
-    <section className="flex flex-col gap-y-1">
+    <section className={cn("mb-2 flex flex-col gap-y-1", "")}>
       <div className="inline-flex w-full items-center justify-between bg-gray-100 py-1.5 pl-3 pr-1.5">
         <span className="text-sm font-bold">Pain</span>
         <div className="inline-flex items-center gap-x-2">
           <span className="text-xs font-bold">0€15</span>
           <button
+            disabled
             onClick={() => (!hasBread ? addProduct("extra/bread", 1) : removeProduct("extra/bread", 1))}
-            className={cn("flex h-8 w-8 items-center justify-center border", hasBread ? "bg-gray-300" : "bg-white")}
+            className={cn(
+              "flex h-8 w-8 items-center justify-center border disabled:opacity-50",
+              hasBread ? "bg-gray-300" : "bg-white",
+            )}
           >
             {!hasBread ? <MdAdd className="h-4 w-4" /> : <MdDelete className="h-4 w-4" />}
           </button>
@@ -28,8 +32,9 @@ export const BasketExtra = () => {
           <div className="inline-flex items-center gap-x-2">
             <span className="text-xs font-bold">0€15</span>
             <button
+              disabled
               className={cn(
-                "flex h-8 w-8 items-center justify-center border",
+                "flex h-8 w-8 items-center justify-center border disabled:opacity-50",
                 hasUtensils ? "bg-gray-300" : "bg-white",
               )}
               onClick={() => (!hasUtensils ? addProduct("extra/utensils", 1) : removeProduct("extra/utensils", 1))}

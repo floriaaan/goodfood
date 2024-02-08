@@ -308,30 +308,30 @@ services:
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
 
-  # Reporting service
-
-  # reporting-service:
-  #   image: floriaaan/goodfood-reporting:latest
-  #   # restart: unless-stopped
-  #   build:
-  #     context: .
-  #     dockerfile: ./reporting/Dockerfile
-  #   ports:
-  #     - "50020"
-  #   networks:
-  #     - goodfood-network
-
-  reporting-postgres:
-    image: postgres:15.2
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - "51020:5432"
-    volumes:
-      - goodfood-reporting-volume:/var/lib/postgresql/data
-    networks:
-      - goodfood-network
+#  # Reporting service
+#
+#  reporting-service:
+#    image: floriaaan/goodfood-reporting:latest
+#    # restart: unless-stopped
+#    build:
+#      context: .
+#      dockerfile: ./reporting/Dockerfile
+#    ports:
+#      - "50020"
+#    networks:
+#      - goodfood-network
+#
+#  reporting-postgres:
+#    image: postgres:15.2
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=password
+#    ports:
+#      - "51020:5432"
+#    volumes:
+#      - goodfood-reporting-volume:/var/lib/postgresql/data
+#    networks:
+#      - goodfood-network
 
   # Log service
 

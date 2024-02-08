@@ -1,10 +1,18 @@
+/* eslint-disable @tanstack/query/exhaustive-deps */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -16,52 +24,36 @@ import {
   FormMessage,
   FormTextarea,
 } from "@/components/ui/form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
-import { useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
-import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
-import { Product, ProductType, ProductTypeLabels } from "@/types/product";
-import { allergensList, categoriesList, ingredientList } from "@/constants/data";
 import { SelectQuantity } from "@/components/ui/form/select-quantity";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks";
+import { useAdmin } from "@/hooks/useAdmin";
+import { cn } from "@/lib/utils";
+import { Product, ProductType, Recipe, ProductTypeLabels } from "@/types/product";
+import Image from "next/image";
+import {useEffect, useRef, useState} from "react";
+import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
+import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
+import {ProductDeleteAlert} from "@/components/admin/product/delete-alert";
 
 // todo: check with product create request
 const formSchema = z.object({
   name: z.string().min(3).max(255),
   image: z.string().url(),
-  comment: z.string(),
-  price: z.number().positive(),
-  preparation: z.string().max(1024),
-  weight: z.string().max(255),
-  kilocalories: z.string().max(255),
-  nutriscore: z.string().max(255),
+  comment: z.string().optional(),
+  price: z.string().regex(/^\d+(\.\d{1,2})?$/),
+  preparation: z.string().max(1024).optional(),
+  weight: z.string().max(255).optional(),
+  kilocalories: z.string().max(255).optional(),
+  nutriscore: z.string().max(255).optional(),
 
-  type: z.enum(Object.keys(ProductTypeLabels) as any),
+  type: z.string(),
 
-  restaurant_id: z.string().uuid(),
-  categoriesList: z.array(z.string().uuid()),
-  allergensList: z.array(z.string()),
+  restaurantId: z.string(),
+  categoriesList: z.array(z.string()).optional(),
+  allergensList: z.array(z.string()).optional(),
 
-  // ingredients: z.array(z.string().uuid()),
+  recipeList: z.array(z.object({ingredientId: z.string(), quantity: z.number()})).min(1),
 });
 
 export type ProductCreateEditFormValues = z.infer<typeof formSchema>;
@@ -70,51 +62,61 @@ export function ProductCreateEditForm({
   initialValues,
   onSubmit,
   onImageChange,
+  id,
+  closeSheet,
 }: {
   initialValues?: ProductCreateEditFormValues;
   onSubmit: (values: ProductCreateEditFormValues) => void;
   onImageChange: (file: File) => Promise<string>;
+  id?: Product["id"];
+  closeSheet: () => void;
 }) {
+  const { ingredients_restaurant, categories, allergens, restaurant } = useAdmin();
+
   const form = useForm<ProductCreateEditFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      ...initialValues,
-      allergensList: ((initialValues as unknown as Product)?.allergensList || []).map((a) => a.id),
-      categoriesList: ((initialValues as unknown as Product)?.categoriesList || []).map((c) => c.id),
-    } || {
-      name: "",
-      image: "https://picsum.photos/200/300",
-      comment: "",
-      price: undefined,
-      preparation: "",
-      weight: "",
-      kilocalories: "",
-      nutriscore: "",
+    defaultValues: initialValues
+      ? {
+        ...initialValues,
+        price: initialValues.price.toString(),
+      }
+      : {
+        name: "",
+        image: "https://picsum.photos/200/300",
+        comment: "",
+        price: "0.0",
+        preparation: "",
+        weight: "",
+        kilocalories: "",
+        nutriscore: "",
 
-      type: ProductType.PLATS,
+        type: ProductType.PLATS.toString(),
 
-      restaurant_id: "",
-      categories: [],
-      allergens: [],
+        restaurantId: restaurant?.id || "",
+        categoriesList: [],
+        allergensList: [],
 
-      // ingredients: [],
-    },
+        recipeList: [],
+      },
   });
-
-  async function handler(values: ProductCreateEditFormValues) {
-    form.setValue("name", "change");
-    // eslint-disable-next-line no-console
-    console.log(values);
-    onSubmit(values);
-  }
 
   const image_inputRef = useRef<HTMLInputElement>(null);
   const [image_clientUrl, setImage_clientUrl] = useState<string | null>(initialValues?.image || null);
   const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
   const [image_error, setImage_error] = useState<string | null>(null);
 
+  async function handler(values: ProductCreateEditFormValues) {
+    // eslint-disable-next-line no-console
+    console.log("pass", values);
+    onSubmit(values);
+  }
+
   // ingredients are not included in the form
-  const [ingredients, setIngredients] = useState<{ value: number; quantity: number }[]>([]);
+  const [ingredients, setIngredients] = useState<{ value: string; quantity: number }[]>(form.getValues("recipeList").map((i: Recipe) => ({ value: i.ingredientId, quantity: i.quantity })));
+
+  useEffect(() => {
+    form.setValue("recipeList", ingredients.map((i) => ({ ingredientId: i.value, quantity: i.quantity })));
+  }, [ingredients]);
 
   return (
     <Form {...form}>
@@ -182,7 +184,7 @@ export function ProductCreateEditForm({
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nom du produit</FormLabel>
+                        <FormLabel>Nom du produit*</FormLabel>
                         <FormControl>
                           <FormInput placeholder="Egg-ocado Toast" {...field} />
                         </FormControl>
@@ -213,7 +215,7 @@ export function ProductCreateEditForm({
                     name="price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Prix du produit</FormLabel>
+                        <FormLabel>Prix du produit*</FormLabel>
                         <FormControl>
                           <FormInput type="number" placeholder="7€50" {...field} />
                         </FormControl>
@@ -226,8 +228,8 @@ export function ProductCreateEditForm({
                     name="type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Type de produit</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+                        <FormLabel>Type de produit*</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={ProductType[parseInt(field.value)]}>
                           <FormControl>
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Type de produit" />
@@ -235,7 +237,7 @@ export function ProductCreateEditForm({
                           </FormControl>
                           <SelectContent>
                             {Object.entries(ProductTypeLabels).map(([value, label]) => (
-                              <SelectItem key={value.toString()} value={value.toString()}>
+                              <SelectItem key={value} value={ProductType[parseInt(value)]}>
                                 {label}
                               </SelectItem>
                             ))}
@@ -342,27 +344,27 @@ export function ProductCreateEditForm({
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <div className="relative inline-flex h-12 items-center gap-x-1 border p-2">
-                                {field.value.length === 0
+                                {field.value?.length === 0
                                   ? "Aucun allergène sélectionné"
-                                  : field.value.map((a) => (
-                                      <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
-                                        {allergensList.find((al) => al.id.toString() === a)?.libelle}
-                                      </div>
-                                    ))}
+                                  : field.value?.map((a) => (
+                                    <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                      {allergens.find((al) => al.id.toString() === a)?.libelle}
+                                    </div>
+                                  ))}
                                 <MdArrowDropDown className="absolute right-2 h-4 w-4" />
                               </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-full">
-                              {allergensList.map((a) => (
+                              {allergens.map((a) => (
                                 <DropdownMenuCheckboxItem
                                   key={a.id.toString()}
-                                  checked={field.value.includes(a.id.toString())}
+                                  checked={field.value?.includes(a.id.toString())}
                                   onCheckedChange={(checked) => {
                                     form.setValue(
                                       "allergensList",
                                       checked
-                                        ? [...field.value, a.id.toString()]
-                                        : field.value.filter((o) => o !== a.id.toString()),
+                                        ? [...field.value || [], a.id.toString()]
+                                        : field.value?.filter((o) => o !== a.id.toString()),
                                     );
                                   }}
                                 >
@@ -384,31 +386,31 @@ export function ProductCreateEditForm({
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <div className="relative inline-flex h-12 items-center gap-x-1 border p-2">
-                                {field.value.length === 0
+                                {field.value?.length === 0
                                   ? "Aucune catégorie sélectionnée"
-                                  : field.value.map((a) => {
-                                      const category = categoriesList.find((al) => al.id.toString() === a);
-                                      if (!category) return null;
-                                      return (
-                                        <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
-                                          {`${category.icon} ${category.libelle}`}
-                                        </div>
-                                      );
-                                    })}
+                                  : field.value?.map((a) => {
+                                    const category = categories.find((al) => al.id.toString() === a);
+                                    if (!category) return null;
+                                    return (
+                                      <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                        {`${category.icon} ${category.libelle}`}
+                                      </div>
+                                    );
+                                  })}
                                 <MdArrowDropDown className="absolute right-2 h-4 w-4" />
                               </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-full">
-                              {categoriesList.map((a) => (
+                              {categories.map((a) => (
                                 <DropdownMenuCheckboxItem
                                   key={a.id.toString()}
-                                  checked={field.value.includes(a.id.toString())}
+                                  checked={field.value?.includes(a.id.toString())}
                                   onCheckedChange={(checked) => {
                                     form.setValue(
                                       "categoriesList",
                                       checked
-                                        ? [...field.value, a.id.toString()]
-                                        : field.value.filter((o) => o !== a.id.toString()),
+                                        ? [...field.value || [], a.id.toString()]
+                                        : field.value?.filter((o) => o !== a.id.toString()),
                                     );
                                   }}
                                 >
@@ -434,12 +436,12 @@ export function ProductCreateEditForm({
                 <AccordionContent>
                   <div className="flex flex-col gap-y-4">
                     <SelectQuantity
-                      options={ingredientList.map((i) => ({
-                        label: i.name,
-                        value: i.id,
+                      options={ingredients_restaurant.map((i) => ({
+                        label: i.ingredient.name,
+                        value: i.id?.toString(),
                       }))}
                       placeholder="Ingrédient"
-                      state={ingredients}
+                      state={ingredients.map((i) => ({ value: i.value, quantity: i.quantity }))}
                       // @ts-ignore
                       setState={setIngredients}
                     />
@@ -447,13 +449,16 @@ export function ProductCreateEditForm({
                       {ingredients.map((i) => (
                         <li
                           className="mb-2 inline-flex w-full list-disc items-center justify-between last:mb-0"
-                          key={i.value}
+                          key={i.value?.toString()}
                         >
                           <span className="inline-flex items-center gap-1">
                             &bull;
                             <strong>
-                              {ingredientList.find((il) => il.id.toString() === i.value.toString())?.name} ({i.quantity}
-                              )
+                              {
+                                ingredients_restaurant.find((il) => il.ingredientId?.toString() === i.value?.toString())?.ingredient
+                                  .name
+                              }{" "}
+                              ({i.quantity})
                             </strong>
                           </span>
                           <button
@@ -474,33 +479,10 @@ export function ProductCreateEditForm({
         </div>
 
         <div className="item-center inline-flex h-24 shrink-0 items-center justify-between gap-4 bg-gray-50 p-6">
-          {initialValues && (
-            <>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" type="button">
-                    <MdDelete className="h-4 w-4" />
-                    Supprimer
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce produit ?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action est irréversible. Le produit sera supprimé de la carte du restaurant.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                    <AlertDialogAction>Continuer</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
+          {initialValues && id && <ProductDeleteAlert closeSheet={closeSheet} id={id} />}
           <Button type="submit">
             <MdDone className="h-4 w-4" />
-            Créer
+            {id ? "Modifier" : "Créer"}
           </Button>
         </div>
       </form>
