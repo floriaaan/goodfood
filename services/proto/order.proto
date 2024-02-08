@@ -55,7 +55,6 @@ service OrderService {
   rpc GetOrderByDelivery(GetOrderByDeliveryRequest) returns (Order) {}
   rpc GetOrderByPayment(GetOrderByPaymentRequest) returns (Order) {}
   rpc GetOrdersByStatus(GetOrdersByStatusRequest) returns (GetOrdersByStatusResponse) {}
-  rpc GetOrdersByRestaurant(GetOrdersByRestaurantRequest) returns (GetOrdersByRestaurantResponse) {}
   rpc CreateOrder(CreateOrderRequest) returns (Order) {}
   rpc UpdateOrder(UpdateOrderRequest) returns (Order) {}
   rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse) {}
@@ -101,14 +100,6 @@ message GetOrdersByStatusRequest {
 }
 
 message GetOrdersByStatusResponse {
-  repeated Order orders = 1;
-}
-
-message GetOrdersByRestaurantRequest {
-  string id = 1;
-}
-
-message GetOrdersByRestaurantResponse{
   repeated Order orders = 1;
 }
 
