@@ -1,7 +1,7 @@
-/* import { Status } from "@/types/global";
+import { Status } from "@/types/global";
 import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
-import { ExtendedProduct, Allergen, Category, Product, ProductType } from "@/types/product";
+import { Allergen, Category, ExtendedProduct, Product, ProductType } from "@/types/product";
 import { Restaurant } from "@/types/restaurant";
 import { Ingredient } from "@/types/stock";
 import { User } from "@/types/user";
@@ -14,6 +14,7 @@ export const productList: Product[] = [
     preparation: "15 min",
     weight: "420g",
     kilocalories: "182 kcal",
+    recipeList: [],
     allergensList: [
       {
         id: "allergen_id:1",
@@ -21,7 +22,7 @@ export const productList: Product[] = [
       },
     ],
     nutriscore: "C",
-    restaurant_id: "restaurant_id:1",
+    restaurantId: "restaurant_id:1",
     type: ProductType.PLATS,
     image: "/images/tmp/pork.png",
     categoriesList: [
@@ -41,6 +42,7 @@ export const productList: Product[] = [
     preparation: "10 min",
     weight: "300g",
     kilocalories: "150 kcal",
+    recipeList: [],
     allergensList: [
       {
         id: "allergen_id:1",
@@ -48,7 +50,7 @@ export const productList: Product[] = [
       },
     ],
     nutriscore: "B",
-    restaurant_id: "restaurant_id:1",
+    restaurantId: "restaurant_id:1",
     type: ProductType.PLATS,
     image: "/images/tmp/wich.png",
     categoriesList: [
@@ -76,7 +78,8 @@ export const productList: Product[] = [
       },
     ],
     nutriscore: -1,
-    restaurant_id: "",
+    restaurantId: "",
+    recipeList: [],
     type: ProductType.SNACKS,
     image: "/images/tmp/bread.jpeg",
     categoriesList: [],
@@ -90,8 +93,9 @@ export const productList: Product[] = [
     weight: "N/A",
     kilocalories: "N/A",
     allergensList: [],
+    recipeList: [],
     nutriscore: -1,
-    restaurant_id: "",
+    restaurantId: "",
     type: ProductType.SNACKS,
     image: "/images/tmp/utensils.jpeg",
     categoriesList: [],
@@ -114,7 +118,7 @@ export const extendedProductList: ExtendedProduct[] = [
       },
     ],
     nutriscore: "C",
-    restaurant_id: "restaurant-1",
+    restaurantId: "restaurant-1",
     type: ProductType.PLATS,
     image: "/images/tmp/pork.png",
     categoriesList: [
@@ -128,7 +132,7 @@ export const extendedProductList: ExtendedProduct[] = [
     comment: `Un sauté de porc épicé avec poivrons colorés, edamames et riz pour pimenter votre journée. Rassurez-vous, aucun porc épic n'a été blessé dans sa préparation !`,
     stock_quantity: "25",
     additional_information: undefined,
-    ingredients: [],
+    recipeList: [],
   },
   {
     id: "product-2",
@@ -144,7 +148,7 @@ export const extendedProductList: ExtendedProduct[] = [
       },
     ],
     nutriscore: "B",
-    restaurant_id: "restaurant-1",
+    restaurantId: "restaurant-1",
     type: ProductType.PLATS,
     image: "/images/tmp/wich.png",
     categoriesList: [
@@ -158,7 +162,7 @@ export const extendedProductList: ExtendedProduct[] = [
     comment: `Le Goodwich au pesto verde combine le goût riche du pesto basilic avec la douceur de la mozzarella, le tout enveloppé dans un pain savoureux. Une expérience de saveurs simple et satisfaisante, idéale pour les amateurs de pesto`,
     stock_quantity: "17",
     additional_information: undefined,
-    ingredients: [],
+    recipeList: [],
   },
   // TODO: how to handle extra products? (utensils, bread, etc.)
   {
@@ -175,14 +179,14 @@ export const extendedProductList: ExtendedProduct[] = [
       },
     ],
     nutriscore: -1,
-    restaurant_id: "",
+    restaurantId: "",
     type: ProductType.SNACKS,
     image: "/images/tmp/bread.jpeg",
     categoriesList: [],
     comment: `La preuve que les bonnes choses viennent en petites bouchées.`,
     stock_quantity: "74",
     additional_information: undefined,
-    ingredients: [],
+    recipeList: [],
   },
 ];
 
@@ -226,9 +230,10 @@ export const restaurantList: Restaurant[] = [
 export const orderList: Order[] = [
   {
     id: "order_id:1",
-    payment_id: "payment_id:1",
+    paymentId: "payment_id:1",
     payment: {
       id: "payment_id:1",
+      stripe_id: "stripe_id:1",
       total: 8.5,
       status: PaymentStatus.APPROVED,
       created_at: "2023-08-07T10:20:00.000Z",
@@ -241,25 +246,32 @@ export const orderList: Order[] = [
       },
     },
 
-    delivery_id: "delivery_id:1",
+    deliveryId: "delivery_id:1",
     delivery: {
       id: "delivery_id:1",
       eta: "2023-08-07T10:20:00.000Z",
-      address: "9 rue des Champs, 27310 Saint-Ouen-de-Thouberville",
+      address: {
+        lat: 49.440459,
+        lng: 1.094853,
+        street: "1 Rue du Gros Horloge",
+        city: "Rouen",
+        zipcode: "76000",
+        country: "France",
+      },
       status: Status.PENDING,
       restaurant_id: "restaurant_id:1",
-      person: {
+      deliveryPerson: {
         id: "delivery_person_id:1",
-        first_name: "John",
-        last_name: "Doe",
+        firstName: "John",
+        lastName: "Doe",
         phone: "0612345678",
-        location: [49.440459, 1.094853],
+        address: { lat: 49.440459, lng: 1.094853 },
       },
       delivery_person_id: "delivery_person_id:1",
       user_id: "user_id:1",
     },
 
-    delivery_type: DeliveryType.DELIVERY,
+    deliveryType: DeliveryType.DELIVERY,
     user: {
       id: "user_id:1",
       first_name: "John",
@@ -267,7 +279,7 @@ export const orderList: Order[] = [
       email: "john@doe.com",
       phone: "0612345678",
     },
-    basket_snapshot: {
+    basketSnapshot: {
       json: {
         "product_id:1": { count: 1, price: 15 },
         "product_id:2": { count: 2, price: 10 },
@@ -279,15 +291,16 @@ export const orderList: Order[] = [
       total: 35,
     },
     status: Status.PENDING,
-    restaurant_id: "restaurant_id:1",
+    restaurantId: "restaurant_id:1",
     created_at: new Date("2000-01-01T12:00:00.000Z"),
     updated_at: new Date("2000-01-01T12:00:00.000Z"),
   },
   {
     id: "order_id:2",
-    payment_id: "payment_id:2",
+    paymentId: "payment_id:2",
     payment: {
       id: "payment_id:2",
+      stripe_id: "stripe_id:2",
       total: 8.5,
       status: PaymentStatus.PENDING,
       created_at: "2023-08-07T10:20:00.000Z",
@@ -299,24 +312,31 @@ export const orderList: Order[] = [
         email: "john@doe.com",
       },
     },
-    delivery_id: "delivery_id:2",
+    deliveryId: "delivery_id:2",
     delivery: {
       id: "delivery_id:2",
       eta: "2021-05-20T12:00:00.000Z",
-      address: "1 Rue du Gros Horloge, 76000 Rouen",
+      address: {
+        lat: 49.370459,
+        lng: 0.9,
+        street: "1 Rue du Gros Horloge",
+        city: "Rouen",
+        zipcode: "76000",
+        country: "France",
+      },
       status: Status.PENDING,
       restaurant_id: "restaurant_id:1",
-      person: {
+      deliveryPerson: {
         id: "delivery_person_id:2",
-        first_name: "Jane",
-        last_name: "Doe",
+        firstName: "Jane",
+        lastName: "Doe",
         phone: "0612345678",
-        location: [49.370459, 0.9],
+        address: { lat: 49.440459, lng: 1.094853 },
       },
       delivery_person_id: "delivery_person_id:1",
       user_id: "user_id:1",
     },
-    delivery_type: DeliveryType.DELIVERY,
+    deliveryType: DeliveryType.DELIVERY,
     user: {
       id: "user_id:1",
       first_name: "John",
@@ -324,7 +344,7 @@ export const orderList: Order[] = [
       email: "john@doe.com",
       phone: "0612345678",
     },
-    basket_snapshot: {
+    basketSnapshot: {
       json: {
         "product_id:1": { count: 1, price: 15 },
         "product_id:2": { count: 4, price: 5 },
@@ -336,7 +356,7 @@ export const orderList: Order[] = [
       total: 35,
     },
     status: Status.FULFILLED,
-    restaurant_id: "restaurant_id:2",
+    restaurantId: "restaurant_id:2",
     created_at: new Date("2023-11-17T12:00:00.000Z"),
     updated_at: new Date("2023-11-17T12:00:00.000Z"),
   },
@@ -461,5 +481,3 @@ export const stats = [
     date: new Date(),
   },
 ];
-
-*/

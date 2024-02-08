@@ -10,10 +10,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useState } from "react";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -24,8 +24,12 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   create,
+  refresh,
+  noDataMessage,
 }: DataTableProps<TData, TValue> & {
   create?: React.ReactNode;
+  refresh?: React.ReactNode;
+  noDataMessage?: string;
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -42,7 +46,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <div className="w-full">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -73,8 +77,8 @@ export function DataTable<TData, TValue>({
               })
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  Pas de données
+                <TableCell colSpan={columns.length} className="h-24 text-center text-sm text-neutral-600">
+                  {noDataMessage || "Pas de données"}
                 </TableCell>
               </TableRow>
             )}
@@ -82,6 +86,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end gap-x-4 py-4">
+        {refresh}
         {create}
         <Button
           variant="outline"
@@ -92,7 +97,7 @@ export function DataTable<TData, TValue>({
           <MdChevronLeft className="h-4 w-4 shrink-0" />
         </Button>
         <span className="inline-flex h-11 w-11 items-center justify-center gap-x-2 border-2 p-3 text-sm font-bold uppercase">
-          {table.getPageCount()}
+          {table.getState().pagination.pageIndex + 1 || 0}/{table.getPageCount()}
         </span>
         <Button
           variant="outline"

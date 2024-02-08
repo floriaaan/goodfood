@@ -7,17 +7,19 @@ import {
   CreateCheckoutSessionResponse,
 } from "@payment/types/stripe";
 
+const FEES_IN_EUR = 0.5;
+
 export const CreateCheckoutSession = async (
   { request }: Data<CreateCheckoutSessionRequest>,
   callback: (err: any, response: CreateCheckoutSessionResponse | null) => void
 ) => {
   try {
     const { total, user_id, name, email, return_url_base } = request;
-
+    const totalWithFees = total + FEES_IN_EUR;
     const newPayment = await prisma.payment.create({
       data: {
         stripe_id: (Math.random()+1).toString(36).substring(2),
-        total,
+        total: totalWithFees,
         user: {
           connectOrCreate: {
             where: { id: user_id },
@@ -37,7 +39,7 @@ export const CreateCheckoutSession = async (
             product_data: {
               name: "Panier - GoodFood",
             },
-            unit_amount: total * 100,
+            unit_amount: totalWithFees * 100,
           },
           quantity: 1,
         },

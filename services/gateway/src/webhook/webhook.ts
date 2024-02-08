@@ -1,6 +1,8 @@
 import { log, utils } from "@gateway/lib/log/log";
 import { stripe, STRIPE_ENDPOINT_SECRET } from "@gateway/lib/stripe";
 import { Address } from "@gateway/proto/delivery_pb";
+import express from "express";
+import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { createDelivery } from "@gateway/services/delivery.service";
 import { createOrder } from "@gateway/services/order.service";
@@ -8,8 +10,6 @@ import { updatePaymentStatus } from "@gateway/services/payment.service";
 import { getRestaurant } from "@gateway/services/restaurant.service";
 import { updateQuantityFromBasket } from "@gateway/services/stock.service";
 import { getUser } from "@gateway/services/user.service";
-import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
-import express from "express";
 
 const app = express();
 
@@ -37,13 +37,13 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
       if (!paymentUpdated) break;
       const payment = paymentUpdated.toObject();
       try {
-        const basket = await getBasketByUser(payment.user!.id);
+        const basket = await getBasketByUser(payment.userId);
         if (!basket) break;
 
         const restaurant = await getRestaurant(basket.getRestaurantId());
         if (!restaurant) break;
 
-        const user = await getUser(payment.user!.id);
+        const user = await getUser(payment.userId);
         if (!user) break;
 
         const mainAddress = user.getMainaddress()?.toObject();
@@ -53,7 +53,12 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
         if (!restAddress) break;
 
         const delivery = await createDelivery(
-          new Address().setLat(mainAddress.lat).setLng(mainAddress.lng),
+          new Address()
+            .setLat(mainAddress.lat)
+            .setLng(mainAddress.lng)
+            .setCountry(mainAddress.country)
+            .setStreet(mainAddress.street)
+            .setZipcode(mainAddress.zipcode),
           user.getId(),
           restaurant.getId(),
           restAddress,
@@ -65,7 +70,6 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
         });
         // TODO: Set delivery Type
         const order = await createOrder(payment.id, delivery.getId(), "DELIVERY", user, basket, restaurant.getId());
-
         if (order) await resetBasketByUser(user.getId());
       } catch (e) {
         console.log(e);

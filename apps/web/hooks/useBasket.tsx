@@ -19,7 +19,7 @@ import { XIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-type Address = Omit<MainAddress, "id" | "lat" | "lng">;
+type Address = Omit<MainAddress, "id">;
 
 type Taxes = {
   delivery: number;
@@ -38,9 +38,11 @@ type BasketContextData = {
   addProduct: (id: string, quantity: number) => void;
   removeProduct: (id: string, quantity: number) => void;
 
+  refetch: () => void;
   checkout: () => void;
 
   // RESTAURANT
+  selectedRestaurant: Restaurant | null;
   selectedRestaurantId: string | null;
   selectRestaurant: (id: string) => void;
 
@@ -51,7 +53,7 @@ type BasketContextData = {
   // ADDRESS
   address: Address | null;
   setAddress: (address: Address) => void;
-  eta: string;
+  eta: string | undefined;
 
   // HELPERS
   isBasketEmpty: boolean;
@@ -267,30 +269,38 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     setPromotion(null);
   };
 
-  const [address, setAddress] = useAddressState<Address | null>(
+  const [address, setAddress] = useAddressState<Address>(
     mainaddress ?? {
       street: "",
       zipcode: "",
       city: "",
       country: "France",
+      lat: 0,
+      lng: 0,
     },
-  );
+  ) as [Address, (address: Address) => void];
 
-  const [eta, setEta] = useState<string>("calcul en cours");
+  const [eta, setEta] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!mainaddress || !mainaddress.lat || !mainaddress.lng || !selectedRestaurant) return;
+    if (
+      !selectedRestaurant ||
+      !selectedRestaurant.address ||
+      !selectedRestaurant.address.lat ||
+      !selectedRestaurant.address.lng
+    )
+      return;
     (async () => {
       const directions = await getDirections(
         { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },
-        { lat: mainaddress.lat, lng: mainaddress.lng },
+        { lat: address.lat, lng: address.lng },
       );
       if (!directions) return;
       const duration_in_seconds = directions.routes[0].duration;
       const eta = formatEta(duration_in_seconds);
       setEta(eta);
     })();
-  }, [selectedRestaurantId, mainaddress, selectedRestaurant]);
+  }, [selectedRestaurantId, address, selectedRestaurant]);
 
   const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
@@ -318,9 +328,11 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         addProduct,
         removeProduct,
         checkout,
+        refetch,
 
         products: products ?? [],
 
+        selectedRestaurant,
         selectedRestaurantId: selectedRestaurantId as string | null,
         selectRestaurant,
 

@@ -1,4 +1,5 @@
 import { Layer, Source } from "react-map-gl";
+import { calculateDistance } from "@/components/map/distance";
 
 type Marker = {
   latitude: number;
@@ -23,7 +24,6 @@ function getBezierPoints(markerA: Marker, markerB: Marker, midPoint: Marker, num
   return points;
 }
 
-export const BOW_HEIGHT = 0.075;
 export const Bow = ({ markerA, markerB }: BowProps) => {
   // Calculate the midpoint
   const midPoint = {
@@ -32,7 +32,7 @@ export const Bow = ({ markerA, markerB }: BowProps) => {
   };
 
   // Add or subtract from the latitude or longitude to create a curve
-  midPoint.latitude += BOW_HEIGHT;
+  midPoint.latitude += getBowHeight({ markerA, markerB });
 
   // Generate the points along the Bézier curve
   const points = getBezierPoints(markerA, markerB, midPoint, 15);
@@ -55,4 +55,19 @@ export const Bow = ({ markerA, markerB }: BowProps) => {
       />
     </Source>
   );
+};
+export const BOW_HEIGHT = 0.075;
+
+const getBowHeight = ({ markerA, markerB }: BowProps): number => {
+  const distance = calculateDistance(markerA.latitude, markerA.longitude, markerB.latitude, markerB.longitude);
+  switch (true) {
+    case distance < 1000:
+      return BOW_HEIGHT / 10;
+    case distance < 5000:
+      return BOW_HEIGHT / 5;
+    case distance < 10000:
+      return BOW_HEIGHT;
+    default:
+      return BOW_HEIGHT * 3;
+  }
 };

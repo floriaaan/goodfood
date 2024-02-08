@@ -1,14 +1,15 @@
 "use client";
 
-import { BasketExtra } from "@/components/basket/extra";
 import { ProductBasketItem } from "@/components/basket/product";
-import { BasketPromotion } from "@/components/basket/promotion";
 import { BasketTaxes } from "@/components/basket/taxes";
 import { Button } from "@/components/ui/button";
 import { GradientHeader } from "@/components/ui/header/gradient";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import { ToastTitle } from "@/components/ui/toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useBasket } from "@/hooks";
+import { toast } from "@/components/ui/use-toast";
+import { useAuth, useBasket } from "@/hooks";
+import { fetchAPI } from "@/lib/fetchAPI";
 import { Product } from "@/types/product";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -16,7 +17,9 @@ import { Suspense } from "react";
 import { MdArrowForward, MdOutlineShoppingBasket } from "react-icons/md";
 
 const BasketWrapperComponent = ({ showHeader = true }) => {
-  const { basket, total, checkout, isBasketEmpty, isRestaurantSelected, isAuthenticated, products } = useBasket();
+  const { session } = useAuth();
+  const { basket, total, checkout, isBasketEmpty, isRestaurantSelected, isAuthenticated, products, refetch } =
+    useBasket();
   const basketProductList = basket.productsList
     .map(({ id }) => products.find((product) => product.id === id) as Product)
     .filter(Boolean);
@@ -31,6 +34,50 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
                 <MdOutlineShoppingBasket className="h-8 w-8" />
                 <span className="text-2xl font-bold">Panier</span>
               </div>
+              {isAuthenticated && session && basket.productsList.length > 0 && (
+                <button
+                  className="bg-gf-orange/60 px-2 py-1 text-xs font-extrabold text-gf-orange-700"
+                  onClick={async () => {
+                    try {
+                      const res = await fetchAPI(`/api/basket/reset`, session.token, {
+                        method: "POST",
+                      });
+                      if (!res.ok) throw new Error("Une erreur est survenue lors de la réinitialisation du panier.");
+                      toast({
+                        className: "p-3",
+                        children: (
+                          <div className="inline-flex w-full items-end justify-between gap-2">
+                            <div className="inline-flex shrink-0 gap-2">
+                              <MdOutlineShoppingBasket className="h-6 w-6 text-green-500" />
+                              <div className="flex w-full grow flex-col">
+                                <ToastTitle>Votre panier a été réinitialisé avec succès.</ToastTitle>
+                                <small className="text-xs">Vous pouvez maintenant ajouter des produits.</small>
+                              </div>
+                            </div>
+                          </div>
+                        ),
+                      });
+                      refetch();
+                    } catch (e) {
+                      toast({
+                        className: "p-3",
+                        children: (
+                          <div className="inline-flex w-full items-end justify-between gap-2">
+                            <div className="inline-flex shrink-0 gap-2">
+                              <MdOutlineShoppingBasket className="h-6 w-6 text-red-500" />
+                              <div className="flex w-full grow flex-col">
+                                <ToastTitle>{(e as Error).message}</ToastTitle>
+                              </div>
+                            </div>
+                          </div>
+                        ),
+                      });
+                    }
+                  }}
+                >
+                  Réinitialiser
+                </button>
+              )}
             </GradientHeader>
           )}
           <div className="relative w-full">
@@ -54,10 +101,12 @@ const BasketWrapperComponent = ({ showHeader = true }) => {
           </div>
         </section>
         <hr className="mx-4 my-2 border border-gray-200" />
-        <BasketExtra />
+        {/* TODO: make it useful */}
+        {/* <BasketExtra /> */}
         {!isBasketEmpty && (
           <>
-            <BasketPromotion />
+            {/* TODO: make it useful */}
+            {/* <BasketPromotion /> */}
             <BasketTaxes />
             <GradientHeader
               color="bg-gf-green-100/50"

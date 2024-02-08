@@ -12,26 +12,26 @@ export type UserMinimum = {
 };
 
 export enum DeliveryType {
-  TAKEAWAY = "TAKEAWAY",
-  DELIVERY = "DELIVERY",
+  DELIVERY = 0,
+  TAKEAWAY = 1,
 }
 
 export type Order = {
   id: string;
-  delivery_type: DeliveryType;
-  restaurant_id: string;
+  deliveryType: DeliveryType;
+  restaurantId: string;
   user: UserMinimum;
-  basket_snapshot: {
+  basketSnapshot: {
     string: string;
     json?: string | object | BasketSnapshot;
     total: number;
   };
   status: Status;
 
-  payment_id: string;
+  paymentId: string;
   payment: Payment;
 
-  delivery_id: string;
+  deliveryId: string;
   delivery: Delivery;
 
   created_at: Date | string;

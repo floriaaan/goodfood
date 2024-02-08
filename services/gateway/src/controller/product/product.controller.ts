@@ -2,18 +2,8 @@ import { withCheck } from "@gateway/middleware/auth";
 import { productServiceClient } from "@gateway/services/clients";
 import { extendProduct } from "@gateway/services/product.service";
 import { Request, Response, Router } from "express";
+import {Allergen, Category, File, Product, ProductId, ProductType, Recipe, RestaurantId} from "../../proto/product_pb";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import {
-  Allergen,
-  Category,
-  File,
-  Product,
-  ProductId,
-  ProductType,
-  Recipe,
-  RestaurantId,
-} from "../../proto/product_pb";
-
 export const productRoutes = Router();
 
 productRoutes.get("/api/product/by-restaurant/:id", (req: Request, res: Response) => {
@@ -95,14 +85,14 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
                 weight: "weight",
                 kilocalories: "0",
                 nutriscore: "A",
-                categories: [{
+                categoriesList: [{
                         id: "category:id",
                     }],
-                allergens: [{
+                allergensList: [{
                         id:"allergen:id"
                     }],,
-                "recipe": [
-                  { "id": "2", "quantity": 15 }
+                "recipeList": [
+                  { "ingredient_id": "2", "quantity": 15 }
                 ]
             }
         }
@@ -123,15 +113,15 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
     weight,
     kilocalories,
     nutriscore,
-    allergens,
-    categories,
-    recipe,
+    categoriesList,
+    allergensList,
+    recipeList,
   } = req.body;
 
-  const categoryList = categories.map((category: { id: string }) => new Category().setId(category.id));
-  const allergenList = allergens.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
-  const ingredientQuantity = recipe.map((ingredientList: { id: string; quantity: number }) =>
-    new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.id),
+  const categories = categoriesList?.map((category: { id: string }) => new Category().setId(category.id));
+  const allergens = allergensList?.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
+  const recipe = recipeList.map((ingredientList: { ingredientId: string; quantity: number }) =>
+    new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.ingredientId),
   );
 
   const product = new Product()
@@ -145,9 +135,9 @@ productRoutes.post("/api/product", withCheck({ role: ["MANAGER", "ADMIN"] }), (r
     .setWeight(weight)
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
-    .setCategoriesList(categoryList)
-    .setAllergensList(allergenList)
-    .setRecipeList(ingredientQuantity);
+    .setCategoriesList(categories)
+    .setAllergensList(allergens)
+    .setRecipeList(recipe);
 
   productServiceClient.createProduct(product, async (error, r) => {
     if (error) return res.status(500).send({ error });
@@ -180,7 +170,7 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
                 allergens: [{
                         id:"allergen:id"
                     }],
-                "recipe": [
+                "recipeList": [
                   { "id": "2", "quantity": 15 }
                 ]
             }
@@ -207,14 +197,14 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
     weight,
     kilocalories,
     nutriscore,
-    categories,
-    allergens,
-    recipe,
+    categoriesList,
+    allergensList,
+    recipeList,
   } = req.body;
 
-  const categoryList = categories.map((category: { id: string }) => new Category().setId(category.id));
-  const allergenList = allergens.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
-  const recipeList = recipe.map((ingredientList: { id: string; quantity: number }) =>
+  const categories = categoriesList.map((category: { id: string }) => new Category().setId(category.id));
+  const allergens = allergensList.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
+  const recipe = recipeList.map((ingredientList: { id: string; quantity: number }) =>
     new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.id),
   );
 
@@ -230,9 +220,9 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
     .setWeight(weight)
     .setKilocalories(kilocalories)
     .setNutriscore(nutriscore)
-    .setCategoriesList(categoryList)
-    .setAllergensList(allergenList)
-    .setRecipeList(recipeList);
+    .setCategoriesList(categories)
+    .setAllergensList(allergens)
+    .setRecipeList(recipe);
 
   productServiceClient.updateProduct(product, async (error, r) => {
     if (error) return res.status(500).send({ error });
@@ -268,23 +258,23 @@ productRoutes.post("/api/product/image", withCheck({ role: ["MANAGER", "ADMIN"] 
 });
 
 productRoutes.get(
-  "/api/product/ingredient-quantity/:id",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /* #swagger.parameters['id'] = {
-               in: 'path',
-               required: true,
-               type: 'string'
-         }
-        #swagger.parameters['authorization'] = {
-            in: 'header',
-            required: true,
-            type: 'string'
-        }  */
-    const { id } = req.params;
-    productServiceClient.getIngredientByProduct(new ProductId().setId(id), (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
+	"/api/product/ingredient-quantity/:id",
+	withCheck({ role: ["MANAGER", "ADMIN"] }),
+	(req: Request, res: Response) => {
+		/* #swagger.parameters['id'] = {
+							 in: 'path',
+							 required: true,
+							 type: 'string'
+				 }
+				#swagger.parameters['authorization'] = {
+						in: 'header',
+						required: true,
+						type: 'string'
+				}  */
+		const { id } = req.params;
+		productServiceClient.getIngredientByProduct(new ProductId().setId(id), (error, response) => {
+			if (error) return res.status(500).send({ error });
+			else return res.status(200).json(response.toObject());
+		});
+	},
 );

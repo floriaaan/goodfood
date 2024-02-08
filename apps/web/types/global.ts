@@ -1,6 +1,6 @@
 export enum Status {
-  PENDING = "PENDING",
-  IN_PROGRESS = "IN_PROGRESS",
-  FULFILLED = "FULFILLED",
-  REJECTED = "REJECTED",
+  PENDING = 0,
+  IN_PROGRESS = 1,
+  FULFILLED = 2,
+  REJECTED = 3,
 }

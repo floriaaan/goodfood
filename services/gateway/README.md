@@ -48,6 +48,10 @@ You can now access the microservice at `http://localhost:50000`.
 
 NB: If you want to run the microservice in development mode, you can run `npm run dev` instead.
 
+## To set up stripe webhook
+Use this command once the gateway is running:  
+`stripe listen --forward-to localhost:4242/webhook `
+
 ## Testing
 
 ### Requests examples

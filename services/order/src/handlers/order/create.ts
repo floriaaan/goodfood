@@ -26,7 +26,7 @@ export const CreateOrder = async (
     };
 
     const user_in_db = await prisma.userMinimum.findFirst({
-      where: { email: user.email },
+      where: { id: user.id },
     });
     const order = await prisma.order.create({
       data: {
@@ -35,7 +35,7 @@ export const CreateOrder = async (
         payment_id,
         user: user_in_db
           ? { connect: { id: user_in_db.id } }
-          : { create: { ...user, id: undefined } },
+          : { create: { ...user, id: user.id } },
         basket_snapshot: {
           create: {
             string: basket_snapshot.string,

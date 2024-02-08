@@ -1,12 +1,8 @@
 import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
-import {
-  ExtendedOrder,
-  GetOrdersByRestaurantRequest,
-  GetOrdersByRestaurantResponse,
-} from "@order/types/order";
-import { Data } from "@order/types";
 import { toGrpc } from "@order/lib/transformer";
+import { Data } from "@order/types";
+import { ExtendedOrder, GetOrdersByRestaurantRequest, GetOrdersByRestaurantResponse } from "@order/types/order";
 
 export const GetOrdersByRestaurant = async (
   { request }: Data<GetOrdersByRestaurantRequest>,
