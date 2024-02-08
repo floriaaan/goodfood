@@ -1,4 +1,4 @@
-FROM node:18-alpine3.17  as builder
+FROM node:18-alpine3.18  as builder
 
 # Set working directory
 WORKDIR /app
@@ -23,7 +23,7 @@ RUN npm run build
 
 
 # Create a new image with the application
-FROM node:18-alpine3.17 as runner
+FROM node:18-alpine3.18 as runner
 
 # Set working directory
 WORKDIR /app
