@@ -73,7 +73,9 @@ const formSchema = z.object({
   city: z.string(),
   zipcode: z.string(),
   country: z.string(),
-  phone: z.string().regex(/(\d\d ){4}\d\d/),
+  phone: z
+    .string()
+    .regex(/(\+33 |0)\d (\d{2} ){3}\d{2}|(\+33|0)\d{9}/, "Veuillez vérifier le format du numéros de téléphone"),
   longitude: z.number(),
   latitude: z.number(),
 
