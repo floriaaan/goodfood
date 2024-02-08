@@ -1,10 +1,15 @@
 "use client";
 
-import { Sidebar } from "@/components/ui/admin/sidebar";
-import { ReactNode } from "react";
+import { Sidebar } from "@/components/admin/sidebar";
+import { useAuth } from "@/hooks";
 import { AdminProvider } from "@/hooks/useAdmin";
+import { ReactNode } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  if (!user) return null;
+  if (user.role.code !== "MANAGER" && user.role.code !== "ADMIN") return "Unauthorized";
+
   return (
     <AdminProvider>
       <div className="inline-flex w-full overflow-hidden">
