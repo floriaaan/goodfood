@@ -1,14 +1,23 @@
 "use client";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { orderList } from "@/constants/data";
 import { useAuth } from "@/hooks";
 import { Status } from "@/types/global";
 import { MdRateReview } from "react-icons/md";
+import { useQuery } from "@tanstack/react-query";
+import { Order } from "@/types/order";
+import { fetchAPI } from "@/lib/fetchAPI";
 export const RatingBanner = () => {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   if (!user) return null;
 
-  const lastOrder = orderList.findLast((order) => order.user.id === user.id && order.status === Status.FULFILLED);
+  const { data: lastOrder } = useQuery<Order>({
+    queryKey: ["order", "user", user.id],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/order/by-user/${user.id}`, session?.token);
+      const orders = await res.json();
+      return orders.ordersList.findLast((order: Order) => order.delivery.status === Status.PENDING);
+    },
+  });
   if (!lastOrder) return null;
 
   // If last order is older than 7 days, don't show the banner

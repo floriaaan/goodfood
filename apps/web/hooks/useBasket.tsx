@@ -18,10 +18,6 @@ import { useQuery } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MainAddress } from "@/types/user";
-import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 type Address = Omit<MainAddress, "id">;
 
