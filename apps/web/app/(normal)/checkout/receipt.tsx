@@ -1,6 +1,6 @@
 import { fetchAPI } from "@/lib/fetchAPI";
 import { toPrice } from "@/lib/product/toPrice";
-import { BasketSnapshot, Order } from "@/types/order";
+import { BasketSnapshot, DeliveryType, Order } from "@/types/order";
 import { Restaurant } from "@/types/restaurant";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
@@ -9,7 +9,7 @@ import { Product } from "@/types/product";
 import { useEffect, useState } from "react";
 
 export const CheckoutReceipt = (order: Order) => {
-  const [productList, setProductList] = useState<{ product: Product; quantity: number }[] | null>(null);
+  const [productList, setProductList] = useState<{ product: Product; quantity: number }[]>([]);
   const { data: restaurant } = useQuery<Restaurant>({
     queryKey: ["restaurant", order.restaurantId],
     queryFn: async () => {
@@ -20,7 +20,7 @@ export const CheckoutReceipt = (order: Order) => {
   });
 
   useEffect(() => {
-    async () => {
+    (async () => {
       const productsList = await Promise.all(
         basket.productsList.map(async ({ id, quantity }) => {
           const product = await getProduct(id);
@@ -28,7 +28,7 @@ export const CheckoutReceipt = (order: Order) => {
         }),
       );
       setProductList(productsList);
-    };
+    })();
   }, []);
 
   const getProduct = async (id: string): Promise<Product> => {
@@ -36,8 +36,7 @@ export const CheckoutReceipt = (order: Order) => {
     return await res.json();
   };
 
-  if (!restaurant || !productList) return null;
-  console.log(productList);
+  if (!restaurant) return null;
   const basket: BasketSnapshot = JSON.parse(order.basketSnapshot.string);
 
   return (
@@ -72,6 +71,13 @@ export const CheckoutReceipt = (order: Order) => {
             </div>
           ))}
         </div>
+        <div className="flex grow flex-col overflow-y-auto">
+          <div className="inline-flex items-center gap-x-2.5">
+            <span className="w-8"></span>
+            <span className="grow">Frais</span>
+            <span className="w-12 text-right">{toPrice(0.5)}</span>
+          </div>
+        </div>
         <div className="flex flex-col">
           <div className="inline-flex items-center justify-between gap-x-2.5 border-t border-dashed border-black">
             <span className="begin">NOMBRE DE PRODUIT:</span>
@@ -84,7 +90,10 @@ export const CheckoutReceipt = (order: Order) => {
         </div>
       </div>
 
-      <p className="">MODE DE PAIEMENT: sur place</p>
+      <p className="">
+        MODE DE PAIEMENT:{" "}
+        {order.deliveryType.toString() === DeliveryType.DELIVERY.toString() ? "par carte" : "sur place"}
+      </p>
       <p className="">RESTAURANT: {restaurant.name}</p>
       <u className="text-xs">{`${restaurant.address.street} ${restaurant.address.zipcode} ${restaurant.address.city}`}</u>
     </div>
