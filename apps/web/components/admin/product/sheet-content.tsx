@@ -1,6 +1,6 @@
 import { ProductCreateEditForm, ProductCreateEditFormValues } from "@/components/admin/product/form";
 import { SheetClose, SheetContent } from "@/components/ui/sheet";
-import {Allergen, Category, Product} from "@/types/product";
+import {Allergen, Category, Product, Recipe} from "@/types/product";
 import {useAdmin} from "@/hooks/useAdmin";
 import {useAuth} from "@/hooks";
 import {fetchAPI} from "@/lib/fetchAPI";
@@ -9,7 +9,6 @@ import {MdDone} from "react-icons/md";
 import {ToastTitle} from "@radix-ui/react-toast";
 import {XIcon} from "lucide-react";
 import {toProduct, toUpdateProduct} from "@/lib/product/toProduct";
-import {IngredientRestaurantList} from "@/types/stock";
 
 export const ProductFormSheetContent = ({
                                           initialValues,
@@ -35,14 +34,14 @@ export const ProductFormSheetContent = ({
     return toast({
       className: "p-3",
       children: (
-          <div className="inline-flex w-full items-end justify-between gap-2">
-            <div className="inline-flex shrink-0 gap-2">
-              <MdDone className="h-6 w-6 text-green-500" />
-              <div className="flex w-full grow flex-col">
-                <ToastTitle>Le produit a été créé avec succès</ToastTitle>
-              </div>
+        <div className="inline-flex w-full items-end justify-between gap-2">
+          <div className="inline-flex shrink-0 gap-2">
+            <MdDone className="h-6 w-6 text-green-500" />
+            <div className="flex w-full grow flex-col">
+              <ToastTitle>Le produit a été créé avec succès</ToastTitle>
             </div>
           </div>
+        </div>
       ),
     });
   }
@@ -57,14 +56,14 @@ export const ProductFormSheetContent = ({
     return toast({
       className: "p-3",
       children: (
-          <div className="inline-flex w-full items-end justify-between gap-2">
-            <div className="inline-flex shrink-0 gap-2">
-              <MdDone className="h-6 w-6 text-green-500" />
-              <div className="flex w-full grow flex-col">
-                <ToastTitle>Le produit a été mis à jour avec succès</ToastTitle>
-              </div>
+        <div className="inline-flex w-full items-end justify-between gap-2">
+          <div className="inline-flex shrink-0 gap-2">
+            <MdDone className="h-6 w-6 text-green-500" />
+            <div className="flex w-full grow flex-col">
+              <ToastTitle>Le produit a été mis à jour avec succès</ToastTitle>
             </div>
           </div>
+        </div>
       ),
     });
   }
@@ -94,14 +93,18 @@ export const ProductFormSheetContent = ({
     try {
       const categoryList = await Promise.all(values?.categoriesList?.map((categoryId) => getCategory(categoryId)) as unknown as Promise<Category>[]);
       const allergenList = await Promise.all(values?.allergensList?.map((allergenId) => getAllergen(allergenId)) as unknown as Promise<Allergen>[]);
-      if (!id)
-        createProduct(toProduct(values, categoryList, allergenList));
+      const recipeList = values.recipeList as Recipe[];
+      if (!id){
+        const product = toProduct(values, categoryList, allergenList, recipeList)
+        console.log(product);
+        createProduct(product);
+      }
       else{
         const product = await getProduct(id);
         if(product)
-          updateProduct(toUpdateProduct(product, values, categoryList, allergenList));
+          updateProduct(toUpdateProduct(product, values, categoryList, allergenList, recipeList));
         else
-            throw new Error("Le produit n'existe pas");
+          throw new Error("Le produit n'existe pas");
       }
       closeSheet();
       refetchProducts();
@@ -110,14 +113,14 @@ export const ProductFormSheetContent = ({
       toast({
         className: "p-3",
         children: (
-            <div className="inline-flex w-full items-end justify-between gap-2">
-              <div className="inline-flex shrink-0 gap-2">
-                <XIcon className="h-6 w-6 text-red-500" />
-                <div className="flex w-full grow flex-col">
-                  <ToastTitle>{(err as Error).message ?? "Une erreur est survenue."}</ToastTitle>
-                </div>
+          <div className="inline-flex w-full items-end justify-between gap-2">
+            <div className="inline-flex shrink-0 gap-2">
+              <XIcon className="h-6 w-6 text-red-500" />
+              <div className="flex w-full grow flex-col">
+                <ToastTitle>{(err as Error).message ?? "Une erreur est survenue."}</ToastTitle>
               </div>
             </div>
+          </div>
         ),
       });
     }
@@ -131,20 +134,12 @@ export const ProductFormSheetContent = ({
     });
   };
 
-  const getIngredientProduct = async (id: string) => {
-    if (!id || !isAuthenticated) return;
-
-    const res = await fetchAPI(`/api/stock/ingredient/restaurant/by-product/${id}`, session?.token);
-    var ingredientProduct =  await Promise.resolve(res.json() as Promise<IngredientRestaurantList>);
-    return ingredientProduct.ingredientRestaurantsList;
-  }
-
   return (
-      <SheetContent side="right" className="w-full border-l-0 sm:max-w-xl">
-        <div className="flex h-full w-full">
-          <ProductCreateEditForm {...{ onSubmit, onImageChange, getIngredientProduct, initialValues, id, closeSheet }} />
-        </div>
-        <SheetClose />
-      </SheetContent>
+    <SheetContent side="right" className="w-full border-l-0 sm:max-w-xl">
+      <div className="flex h-full w-full">
+        <ProductCreateEditForm {...{ onSubmit, onImageChange, initialValues, id, closeSheet }} />
+      </div>
+      <SheetClose />
+    </SheetContent>
   );
 };

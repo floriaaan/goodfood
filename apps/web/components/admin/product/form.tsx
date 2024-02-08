@@ -28,13 +28,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { SelectQuantity } from "@/components/ui/form/select-quantity";
 import { useAuth } from "@/hooks";
 import { useAdmin } from "@/hooks/useAdmin";
-import { fetchAPI } from "@/lib/fetchAPI";
 import { cn } from "@/lib/utils";
-import { Product, ProductType, ProductTypeLabels } from "@/types/product";
-import {Ingredient, IngredientRestaurant} from "@/types/stock";
-import { useQuery } from "@tanstack/react-query";
+import { Product, ProductType, Recipe, ProductTypeLabels } from "@/types/product";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
 import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
 import {ProductDeleteAlert} from "@/components/admin/product/delete-alert";
@@ -54,7 +51,9 @@ const formSchema = z.object({
 
   restaurantId: z.string(),
   categoriesList: z.array(z.string()).optional(),
-  allergensList: z.array(z.string()).optional()
+  allergensList: z.array(z.string()).optional(),
+
+  recipeList: z.array(z.object({ingredientId: z.string(), quantity: z.number()})).min(1),
 });
 
 export type ProductCreateEditFormValues = z.infer<typeof formSchema>;
@@ -63,18 +62,15 @@ export function ProductCreateEditForm({
   initialValues,
   onSubmit,
   onImageChange,
-  getIngredientProduct,
   id,
   closeSheet,
 }: {
   initialValues?: ProductCreateEditFormValues;
   onSubmit: (values: ProductCreateEditFormValues) => void;
   onImageChange: (file: File) => Promise<string>;
-  getIngredientProduct: (id: string) => Promise<IngredientRestaurant[] | undefined>;
   id?: Product["id"];
   closeSheet: () => void;
 }) {
-  const { session } = useAuth();
   const { ingredients_restaurant, categories, allergens, restaurant } = useAdmin();
 
   const form = useForm<ProductCreateEditFormValues>({
@@ -99,6 +95,8 @@ export function ProductCreateEditForm({
         restaurantId: restaurant?.id || "",
         categoriesList: [],
         allergensList: [],
+
+        recipeList: [],
       },
   });
 
@@ -113,20 +111,12 @@ export function ProductCreateEditForm({
     onSubmit(values);
   }
 
-  const { data: api_ingredients } = useQuery<IngredientRestaurant[]>({
-    queryKey: ["admin", "ingredient", "product", id],
-    queryFn: async () => {
-      const res = await fetchAPI(`/api/stock/ingredient/restaurant/by-product/${id}`, session?.token);
-      const body = await res.json();
-      return body.ingredientRestaurantsList;
-    },
-    enabled: !!id && !!session?.token,
-    placeholderData: [],
-  });
   // ingredients are not included in the form
-  const [ingredients, setIngredients] = useState<{ value: number; quantity: number }[]>(
-    api_ingredients ? api_ingredients.map((i) => ({ value: i.id, quantity: i.quantity })) : [],
-  );
+  const [ingredients, setIngredients] = useState<{ value: string; quantity: number }[]>(form.getValues("recipeList").map((i: Recipe) => ({ value: i.ingredientId, quantity: i.quantity })));
+
+  useEffect(() => {
+    form.setValue("recipeList", ingredients.map((i) => ({ ingredientId: i.value, quantity: i.quantity })));
+  }, [ingredients]);
 
   return (
     <Form {...form}>
@@ -448,10 +438,10 @@ export function ProductCreateEditForm({
                     <SelectQuantity
                       options={ingredients_restaurant.map((i) => ({
                         label: i.ingredient.name,
-                        value: i.id,
+                        value: i.id?.toString(),
                       }))}
                       placeholder="Ingrédient"
-                      state={ingredients}
+                      state={ingredients.map((i) => ({ value: i.value, quantity: i.quantity }))}
                       // @ts-ignore
                       setState={setIngredients}
                     />
@@ -459,13 +449,13 @@ export function ProductCreateEditForm({
                       {ingredients.map((i) => (
                         <li
                           className="mb-2 inline-flex w-full list-disc items-center justify-between last:mb-0"
-                          key={i.value}
+                          key={i.value?.toString()}
                         >
                           <span className="inline-flex items-center gap-1">
                             &bull;
                             <strong>
                               {
-                                ingredients_restaurant.find((il) => il.id.toString() === i.value.toString())?.ingredient
+                                ingredients_restaurant.find((il) => il.ingredientId?.toString() === i.value?.toString())?.ingredient
                                   .name
                               }{" "}
                               ({i.quantity})

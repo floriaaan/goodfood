@@ -19,11 +19,6 @@ export type Product = {
   recipeList: Recipe[];
 };
 
-export type Recipe = {
-  ingredientId: string;
-  quantity: number;
-};
-
 export enum ProductType {
   ENTREES = 0,
   PLATS = 1,
@@ -54,9 +49,13 @@ export type Category = {
   icon: string;
 };
 
+export type Recipe = {
+  ingredientId: string;
+  quantity: number;
+};
+
 export type ExtendedProduct = Product &
   Partial<{
     stock_quantity: string;
     additional_information: [string, string] | [string];
-    ingredients: any[]; // TODO: type
   }>;
