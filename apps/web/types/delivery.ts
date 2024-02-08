@@ -7,7 +7,7 @@ export type Delivery = {
   address: Address;
   status: Status;
 
-  person: DeliveryPerson;
+  deliveryPerson: DeliveryPerson;
   delivery_person_id: string;
 
   user_id: string;
@@ -16,10 +16,10 @@ export type Delivery = {
 
 export type DeliveryPerson = {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   phone: string;
-  location: [number, number];
+  address: Address;
 
   deliveries?: Delivery[];
 };

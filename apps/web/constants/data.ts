@@ -255,7 +255,7 @@ export const orderList: Order[] = [
       },
       status: Status.PENDING,
       restaurant_id: "restaurant_id:1",
-      person: {
+      deliveryPerson: {
         id: "delivery_person_id:1",
         first_name: "John",
         last_name: "Doe",
@@ -320,7 +320,7 @@ export const orderList: Order[] = [
       },
       status: Status.PENDING,
       restaurant_id: "restaurant_id:1",
-      person: {
+      deliveryPerson: {
         id: "delivery_person_id:2",
         first_name: "Jane",
         last_name: "Doe",
