@@ -37,13 +37,13 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
       if (!paymentUpdated) break;
       const payment = paymentUpdated.toObject();
       try {
-        const basket = await getBasketByUser(payment.user!.id);
+        const basket = await getBasketByUser(payment.userId);
         if (!basket) break;
 
         const restaurant = await getRestaurant(basket.getRestaurantId());
         if (!restaurant) break;
 
-        const user = await getUser(payment.user!.id);
+        const user = await getUser(payment.userId);
         if (!user) break;
 
         const mainAddress = user.getMainaddress()?.toObject();
@@ -51,9 +51,14 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
 
         const restAddress = restaurant.getAddress();
         if (!restAddress) break;
-
+        //TODO : set main address add CITY
         const delivery = await createDelivery(
-          new Address().setLat(mainAddress.lat).setLng(mainAddress.lng),
+          new Address()
+            .setLat(mainAddress.lat)
+            .setLng(mainAddress.lng)
+            .setCountry(mainAddress.country)
+            .setStreet(mainAddress.street)
+            .setZipcode(mainAddress.zipcode),
           user.getId(),
           restaurant.getId(),
           restAddress,
