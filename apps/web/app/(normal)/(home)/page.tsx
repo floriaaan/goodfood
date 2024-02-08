@@ -2,10 +2,12 @@ import { Catalog } from "@/app/(normal)/(home)/catalog";
 import { CTA } from "@/app/(normal)/(home)/cta";
 import { BasketWrapper } from "@/components/basket";
 import { RatingBanner } from "@/app/(normal)/(home)/rating-banner";
+import { PendingOrderBanner } from "@/app/(normal)/(home)/pending-order-banner";
 
 export default function Home() {
   return (
     <>
+      <PendingOrderBanner />
       <RatingBanner />
       <CTA />
       <div className="has-background-grid relative h-full grow p-2 py-6">
