@@ -1,4 +1,3 @@
-import { deliveryPersonServiceClient, deliveryServiceClient } from "@gateway/services/clients/delivery.client";
 import {
   Address,
   Delivery,
@@ -8,6 +7,7 @@ import {
   DeliveryPersonList,
   Location,
 } from "@gateway/proto/delivery_pb";
+import { deliveryPersonServiceClient, deliveryServiceClient } from "@gateway/services/clients/delivery.client";
 
 export const createDelivery = (
   address: Address,
@@ -32,11 +32,6 @@ export const createDelivery = (
   });
 };
 
-// TODO: add google call
-const getEtaByUserAddress = (address: string) => {
-  return new Date().toString();
-};
-
 export const createDeliveryPerson = (
   idUser: string,
   firstName: string,
@@ -44,12 +39,18 @@ export const createDeliveryPerson = (
   phone: string,
   address: Address.AsObject | undefined,
 ) => {
+  const dp_address = address ? new Address().setLat(address.lat).setLng(address.lng) : undefined;
+  if (address?.street) dp_address?.setStreet(address.street);
+  if (address?.city) dp_address?.setCity(address.city);
+  if (address?.zipcode) dp_address?.setZipcode(address.zipcode);
+  if (address?.country) dp_address?.setCountry(address.country);
+
   const deliveryPerson = new DeliveryPersonCreateInput()
     .setUserId(idUser)
     .setFirstName(firstName)
     .setLastName(lastName)
     .setPhone(phone)
-    .setAddress(address ? new Address().setLat(address.lat).setLng(address.lng) : address);
+    .setAddress(dp_address);
   return new Promise((resolve, reject) => {
     deliveryPersonServiceClient.createDeliveryPerson(deliveryPerson, (error, response) => {
       if (error) {
