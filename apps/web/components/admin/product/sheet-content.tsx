@@ -1,20 +1,20 @@
 import { ProductCreateEditForm, ProductCreateEditFormValues } from "@/components/admin/product/form";
 import { SheetClose, SheetContent } from "@/components/ui/sheet";
-import {Allergen, Category, Product, Recipe} from "@/types/product";
-import {useAdmin} from "@/hooks/useAdmin";
-import {useAuth} from "@/hooks";
-import {fetchAPI} from "@/lib/fetchAPI";
-import {toast} from "@/components/ui/use-toast";
-import {MdDone} from "react-icons/md";
-import {ToastTitle} from "@radix-ui/react-toast";
-import {XIcon} from "lucide-react";
-import {toProduct, toUpdateProduct} from "@/lib/product/toProduct";
+import { toast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks";
+import { useAdmin } from "@/hooks/useAdmin";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { toProduct, toUpdateProduct } from "@/lib/product/toProduct";
+import { Allergen, Category, Product, Recipe } from "@/types/product";
+import { ToastTitle } from "@radix-ui/react-toast";
+import { XIcon } from "lucide-react";
+import { MdDone } from "react-icons/md";
 
 export const ProductFormSheetContent = ({
-                                          initialValues,
-                                          id,
-                                          closeSheet,
-                                        }: {
+  initialValues,
+  id,
+  closeSheet,
+}: {
   initialValues?: ProductCreateEditFormValues;
   id?: Product["id"];
   closeSheet: () => void;
@@ -25,7 +25,6 @@ export const ProductFormSheetContent = ({
   const createProduct = async (productInput: Product) => {
     if (!productInput || !isAuthenticated) return;
 
-    console.log(JSON.stringify(productInput));
     const res = await fetchAPI("/api/product", session?.token, {
       method: "POST",
       body: JSON.stringify(productInput),
@@ -44,13 +43,13 @@ export const ProductFormSheetContent = ({
         </div>
       ),
     });
-  }
+  };
   const updateProduct = async (productInput: Product) => {
     if (!productInput || !productInput.id || !isAuthenticated) return;
 
     const res = await fetchAPI(`/api/product/${productInput.id}`, session?.token, {
       method: "PUT",
-      body: JSON.stringify( productInput ),
+      body: JSON.stringify(productInput),
     });
     if (!res.ok) throw new Error("Une erreur s'est produite lors de la mise à jour du restaurant");
     return toast({
@@ -66,50 +65,49 @@ export const ProductFormSheetContent = ({
         </div>
       ),
     });
-  }
+  };
 
-  const getProduct = async (id : string) => {
+  const getProduct = async (id: string) => {
     if (!id || !isAuthenticated) return;
 
     const res = await fetchAPI(`/api/product/${id}`, session?.token);
-    return await res.json() as Promise<Product>;
-  }
+    return (await res.json()) as Promise<Product>;
+  };
 
-  const getAllergen = async (id : string) => {
+  const getAllergen = async (id: string) => {
     if (!id || !isAuthenticated) return;
 
     const res = await fetchAPI(`/api/allergen/${id}`, session?.token);
-    return await res.json() as Allergen;
-  }
+    return (await res.json()) as Allergen;
+  };
 
-  const getCategory = async (id : string) => {
+  const getCategory = async (id: string) => {
     if (!id || !isAuthenticated) return;
 
     const res = await fetchAPI(`/api/category/${id}`, session?.token);
-    return await res.json() as Category;
-  }
+    return (await res.json()) as Category;
+  };
 
   const onSubmit = async (values: ProductCreateEditFormValues) => {
     try {
-      const categoryList = await Promise.all(values?.categoriesList?.map((categoryId) => getCategory(categoryId)) as unknown as Promise<Category>[]);
-      const allergenList = await Promise.all(values?.allergensList?.map((allergenId) => getAllergen(allergenId)) as unknown as Promise<Allergen>[]);
+      const categoryList = await Promise.all(
+        values?.categoriesList?.map((categoryId) => getCategory(categoryId)) as unknown as Promise<Category>[],
+      );
+      const allergenList = await Promise.all(
+        values?.allergensList?.map((allergenId) => getAllergen(allergenId)) as unknown as Promise<Allergen>[],
+      );
       const recipeList = values.recipeList as Recipe[];
-      if (!id){
-        const product = toProduct(values, categoryList, allergenList, recipeList)
-        console.log(product);
+      if (!id) {
+        const product = toProduct(values, categoryList, allergenList, recipeList);
         createProduct(product);
-      }
-      else{
+      } else {
         const product = await getProduct(id);
-        if(product)
-          updateProduct(toUpdateProduct(product, values, categoryList, allergenList, recipeList));
-        else
-          throw new Error("Le produit n'existe pas");
+        if (product) updateProduct(toUpdateProduct(product, values, categoryList, allergenList, recipeList));
+        else throw new Error("Le produit n'existe pas");
       }
       closeSheet();
       refetchProducts();
     } catch (err) {
-      console.log((err as Error).message ?? "Une erreur est survenue.");
       toast({
         className: "p-3",
         children: (
@@ -126,7 +124,7 @@ export const ProductFormSheetContent = ({
     }
   };
 
-  const onImageChange = (file: File) => {
+  const onImageChange = (_file: File) => {
     return new Promise<string>((resolve) => {
       setTimeout(() => {
         resolve("https://picsum.photos/200/300");

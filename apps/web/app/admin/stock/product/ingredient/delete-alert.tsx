@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { ToastTitle } from "@/components/ui/toast";
 import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/hooks";
-import { useAdmin } from "@/hooks/useAdmin";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Ingredient } from "@/types/stock";
 import { XIcon } from "lucide-react";
@@ -25,7 +24,6 @@ import { MdDelete } from "react-icons/md";
 export const IngredientDeleteAlert = ({ closeSheet, id }: { closeSheet: () => void; id: Ingredient["id"] }) => {
   const [open, setOpen] = useState(false);
   const { session } = useAuth();
-  const { refetchIngredients } = useAdmin();
   if (!session) return null;
 
   const handleDelete = async () => {

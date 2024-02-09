@@ -15,4 +15,4 @@ export const getAddress = async (lat: number, lon: number) => {
 
   const res = await response.json();
   return res as Result;
-}
+};
