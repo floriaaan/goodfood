@@ -18,6 +18,8 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import { TiLocationArrow } from "react-icons/ti";
 
+import { NotFoundResource } from "@/components/ui/not-found-resource";
+import { NotLogged } from "@/components/ui/not-logged";
 import { useAuth, useBasket, useLocation } from "@/hooks";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Payment } from "@/types/payment";
@@ -64,8 +66,8 @@ export default function CheckoutPage({}: PageProps) {
     },
   });
 
-  if (!user) return null;
-  if (!selectedRestaurant) return null;
+  if (!user) return <NotLogged />;
+  if (!selectedRestaurant) return <NotFoundResource reason="Aucun restaurant sélectionné" />;
 
   return (
     <div className="flex h-full grow p-4 pb-12">

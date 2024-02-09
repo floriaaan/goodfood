@@ -4,11 +4,12 @@ import { BecomeDeliveryPersonButton } from "@/app/(normal)/account/become-delive
 import { ChangePasswordForm } from "@/app/(normal)/account/change-password-form";
 import { Infos } from "@/app/(normal)/account/infos";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { NotLogged } from "@/components/ui/not-logged";
 import { useAuth } from "@/hooks";
 
 export default function UserAccount() {
   const { user } = useAuth();
-  if (!user) return "Unauthenticated";
+  if (!user) return <NotLogged />;
   return (
     <>
       <div className="flex flex-col gap-4 bg-neutral-100 p-4 pt-6 lg:p-8">

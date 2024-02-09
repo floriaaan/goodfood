@@ -1,24 +1,26 @@
+/* eslint-disable @tanstack/query/exhaustive-deps */
 "use client";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { useAuth } from "@/hooks";
-import { Status } from "@/types/global";
-import { MdDirectionsBike } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
-import { Order } from "@/types/order";
 import { fetchAPI } from "@/lib/fetchAPI";
+import { Status } from "@/types/global";
+import { Order } from "@/types/order";
+import { useQuery } from "@tanstack/react-query";
+import { MdDirectionsBike } from "react-icons/md";
 
 export const PendingOrderBanner = () => {
   const { user, session } = useAuth();
-  if (!user) return null;
 
   const { data: order } = useQuery<Order>({
-    queryKey: ["order", "user", user.id],
+    queryKey: ["order", "user", user?.id],
     queryFn: async () => {
-      const res = await fetchAPI(`/api/order/by-user/${user.id}`, session?.token);
+      const res = await fetchAPI(`/api/order/by-user/${user?.id}`, session?.token);
       const orders = await res.json();
       return orders.ordersList.findLast((order: Order) => order.status === Status.PENDING);
     },
+    enabled: !!user && !!session?.token,
   });
+  if (!user) return null;
   if (!order) return null;
 
   // If last order is older than 7 days, don't show the banner

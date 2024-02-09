@@ -1,10 +1,11 @@
 "use client";
+import { NotLogged } from "@/components/ui/not-logged";
 import { Sidebar } from "@/components/ui/user/sidebar";
 import { useAuth } from "@/hooks";
 
 export default function UserAccountLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  if (!user) return "Not authenticated";
+  if (!user) return <NotLogged />;
 
   return (
     <>
