@@ -24,7 +24,7 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
   const { user, session } = useAuth();
   const { isAuthenticated } = useBasket();
 
-  const { data: order } = useQuery<Order>({
+  const { data: order, isLoading } = useQuery<Order>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["order", "payment", paymentId],
     queryFn: async () => {
@@ -46,6 +46,7 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
     }
   };
 
+  if (isLoading) return <LargeComponentLoader />;
   if (!(isAuthenticated && user && session?.token)) return <NotLogged />;
   return (
     <>
