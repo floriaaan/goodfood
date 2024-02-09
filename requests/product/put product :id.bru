@@ -1,0 +1,46 @@
+meta {
+  name: change product
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/api/product/:id
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "restaurantId": "<string>",
+    "type": "BOISSONS",
+    "name": "<string>",
+    "image": "<string>",
+    "comment": "<string>",
+    "price": "<number>",
+    "preparation": "<string>",
+    "weight": "<string>",
+    "kilocalories": "<string>",
+    "nutriscore": "<string>",
+    "categories": [
+      {
+        "id": "<string>"
+      },
+      {
+        "id": "<string>"
+      }
+    ],
+    "allergens": [
+      {
+        "id": "<string>"
+      },
+      {
+        "id": "<string>"
+      }
+    ]
+  }
+}

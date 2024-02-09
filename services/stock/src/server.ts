@@ -1,18 +1,17 @@
 import "dotenv/config";
 import { resolve as resolvePath } from "path";
 
-import { loadSync } from "@grpc/proto-loader";
 import { loadPackageDefinition, Server } from "@grpc/grpc-js";
+import { loadSync } from "@grpc/proto-loader";
 
 import { log, utils } from "@stock/lib/log";
-import { options } from "@stock/resources/protoloader-options";
-import { serverInsecure } from "@stock/resources/grpc-credentials";
-import { addReflection } from "@stock/lib/reflection";
 import { createServerProxy } from "@stock/lib/proxy";
 import { logGRPC } from "@stock/middleware/log";
+import { serverInsecure } from "@stock/resources/grpc-credentials";
+import { options } from "@stock/resources/protoloader-options";
 
-import stockHandlers from "@stock/handlers/stock";
 import reportingHandlers from "@stock/handlers/reporting";
+import stockHandlers from "@stock/handlers/stock";
 
 const PORT = process.env.PORT || 50009;
 const ADDRESS = `0.0.0.0:${PORT}`;
@@ -36,7 +35,7 @@ server.use(logGRPC);
 
 server.bindAsync(ADDRESS, serverInsecure, () => {
   server.start();
-  addReflection(server, REFLECTION_PATH);
+  // addReflection(server, REFLECTION_PATH);
   const message =
     `---- ${utils.green("good")}${utils.yellow("food")} Stock Service ----` +
     `\n` +

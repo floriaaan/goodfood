@@ -1,15 +1,23 @@
+import { Address } from "@delivery/types";
 import { DeliveryPerson } from "@delivery/types/delivery-person";
 import { Status } from "@prisma/client";
 
+export type DeliveryAddress = Address & {
+  delivery_id: string;
+};
+
+export type RestaurantAddress = Omit<
+  Address & {
+    restaurant_id: string;
+  },
+  "id"
+>;
+
 export type DeliveryCreateInput = {
-  eta: string;
-  address: string;
-
-  status: Status;
-  delivery_person_id: string;
-
+  address: Omit<DeliveryAddress, "id" | "delivery_id">;
   user_id: string;
   restaurant_id: string;
+  restaurant_address: RestaurantAddress;
 };
 
 export type DeliveryId = {
@@ -20,7 +28,7 @@ export type Delivery = {
   id: string;
   eta: string;
 
-  address: string;
+  address: DeliveryAddress;
   status: Status;
 
   person: DeliveryPerson;
@@ -28,6 +36,7 @@ export type Delivery = {
 
   user_id: string;
   restaurant_id: string;
+  restaurant_address: RestaurantAddress;
 };
 
 export type UserId = {

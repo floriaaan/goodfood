@@ -1,0 +1,21 @@
+meta {
+  name: list near delivery persons
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/delivery-person/near?lat=40&lng=1&radius=10
+  body: none
+  auth: bearer
+}
+
+query {
+  lat: 40
+  lng: 1
+  radius: 10
+}
+
+auth:bearer {
+  token: {{token}}
+}

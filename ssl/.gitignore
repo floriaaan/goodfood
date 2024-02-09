@@ -1,0 +1,6 @@
+lets-encrypt/config/
+lets-encrypt/logs/
+lets-encrypt/work/
+
+self-signed/client.*
+self-signed/server.*

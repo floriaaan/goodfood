@@ -1,0 +1,15 @@
+meta {
+  name: list promotion codes by restaurant id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/promotion/by-restaurant/clr7vjrof0000rf2xvitq6c2t
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

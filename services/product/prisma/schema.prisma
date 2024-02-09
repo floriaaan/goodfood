@@ -12,16 +12,17 @@ model Product {
   name          String
   image         String
   comment       String
-  price         Int
+  price         Float
   preparation   String
   weight        String
   kilocalories  String
-  nutriscore    Int
+  nutriscore    String
   restaurant_id String
 
   type Product_type
   categories Category[]
   allergens  Allergen[]
+  recipe Recipe[]
 }
 
 model Category {
@@ -38,6 +39,14 @@ model Allergen {
   libelle String   @unique
 
   products Product[]
+}
+
+model Recipe {
+    id   String   @id @default(cuid())
+    product Product @relation(fields: [product_id], references: [id])
+    product_id String
+    ingredient_id String
+    quantity Int
 }
 
 enum Product_type {

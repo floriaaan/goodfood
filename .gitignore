@@ -42,6 +42,9 @@ terraform.rc
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+### IDEA ###
+.idea
+
 # Local History for Visual Studio Code
 .history/
 
@@ -81,5 +84,12 @@ terraform.rc
 # log service
 /services/log/goodfood-log
 
+# gateway service
+/services/gateway/src/proto/
+
 # expo cache files
 /apps/mobile/.expo
+
+# next.js
+/apps/web/.next
+/apps/web/next-env.d.ts

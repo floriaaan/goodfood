@@ -1,0 +1,25 @@
+meta {
+  name: list allergen
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/allergen
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "label": "Gluten"
+  }
+}

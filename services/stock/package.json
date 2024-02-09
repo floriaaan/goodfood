@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --minify",
     "test": "vitest",
     "coverage": "vitest --coverage",
     "prisma:generate": "prisma generate",
@@ -15,7 +15,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.8.14",
     "@grpc/proto-loader": "0.7.6",
-    "@prisma/client": "4.16.2",
+    "@prisma/client": "5.9.1",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
@@ -28,7 +28,7 @@
     "grpc-tools": "^1.12.4",
     "nodemon": "^2.0.22",
     "pkg": "^5.8.1",
-    "prisma": "4.16.2",
+    "prisma": "5.9.1",
     "ts-node": "10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "5.0.2",

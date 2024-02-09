@@ -17,7 +17,7 @@ export type Order = {
   id: string;
   payment_id: string;
   delivery_id: string;
-  delivery_type: DeliveryType
+  delivery_type: DeliveryType;
   restaurant_id: string;
   user: UserMinimum;
   basket_snapshot: Basket;
@@ -33,6 +33,14 @@ export type GetOrdersByUserRequest = {
 };
 
 export type GetOrdersByUserResponse = {
+  orders: ExtendedOrder[];
+};
+
+export type GetOrdersByRestaurantRequest = {
+  id: string;
+};
+
+export type GetOrdersByRestaurantResponse = {
   orders: ExtendedOrder[];
 };
 

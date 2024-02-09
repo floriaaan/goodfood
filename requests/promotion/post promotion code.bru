@@ -1,0 +1,28 @@
+meta {
+  name: create promotion code
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/promotion
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "code": "SUMMER",
+    "reduction": "-5.00",
+    "method": "VALUE",
+    "restaurantId": "clr7vjrof0000rf2xvitq6c2t"
+  }
+}

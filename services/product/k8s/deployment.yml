@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: goodfood-product
-          image: pierrelbg/goodfood-product:1.0.0
+          image: pierrelbg/goodfood-product:1.0.1
           resources:
             limits:
               memory: "128Mi"
@@ -25,6 +25,26 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: goodfood-product-configmap
-                  key: port
+                  key: PORT
+            - name: DATABASE_URL
+              valueFrom:
+               configMapKeyRef:
+                 name: goodfood-product-configmap
+                 key: DATABASE_URL
+            - name: AZURE_STORAGE_SAS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: AZURE_STORAGE_SAS_TOKEN
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: AMQP_URL
+            - name: AZURE_STORAGE_RESOURCE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: AZURE_STORAGE_RESOURCE_NAME
           ports:
             - containerPort: 50004

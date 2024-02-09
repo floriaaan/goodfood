@@ -1,24 +1,27 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using reporting.Models;
 
 public class ReportingContext : DbContext
 {
-    public DbSet<Metric> Metrics { get; set; }
-    public DbSet<Restaurant> Restaurants { get; set; }
-    public DbSet<RestaurantGroup> Groups { get; set; }
+    public DbSet<MetricObject> Metrics { get; set; }
+    public DbSet<RestaurantObject> Restaurants { get; set; }
+    public DbSet<RestaurantGroupObject> Groups { get; set; }
 
-    public ReportingContext()
+    private readonly IOptions<Config> _config;
+
+    public ReportingContext(IOptions<Config> config)
     {
-        Metrics = Set<Metric>();
-        Restaurants = Set<Restaurant>();
-        Groups = Set<RestaurantGroup>();
+        _config = config;
 
+        Metrics = Set<MetricObject>();
+        Restaurants = Set<RestaurantObject>();
+        Groups = Set<RestaurantGroupObject>();
     }
-
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         // TODO: Move to config
-        options.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=password");
+        options.UseNpgsql("Host=reporting-postgres;Port=5432;Database=postgres;Username=postgres;Password=password");
     }
 }

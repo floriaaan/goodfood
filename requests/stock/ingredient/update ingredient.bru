@@ -1,0 +1,30 @@
+meta {
+  name: update ingredient
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/api/stock/ingredient/restaurant/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "alertThreshold": 5,
+    "quantity": 30,
+    "productList": [
+      "clsahxeoz0002lj36ma65d20i"
+    ],
+    "unitPrice": 2,
+    "pricePerKilo": 1.5,
+    "restaurantId": "clsahhmnm000097zkxvkjmf33",
+    "ingredientId": 1,
+    "supplierId": 1
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "."
+    },
+    {
+      "path": "apps/web",
+      "name": "app/web"
+    },
+    {
+      "path": "apps/mobile",
+      "name": "app/mobile"
+    },
+    {
+      "path": "services/gateway"
+    },
+    {
+      "path": "services/notification"
+    },
+    {
+      "path": "services/proto"
+    },
+    {
+      "path": "services/delivery"
+    },
+    {
+      "path": "services/reporting"
+    },
+    {
+      "path": "services/order"
+    },
+    {
+      "path": "services/stock"
+    },
+    {
+      "path": "services/user"
+    },
+    {
+      "path": "services/payment"
+    },
+    {
+      "path": "services/log"
+    },
+    {
+      "path": "services/product"
+    },
+    {
+      "path": "services/promotions"
+    },
+    {
+      "path": "services/restaurant"
+    },
+    {
+      "path": "services/basket"
+    }
+  ],
+  "settings": {}
+}

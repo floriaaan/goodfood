@@ -1,8 +1,7 @@
-import { CategoryId } from "@product/types/Category"; 
+import {Category, CategoryId} from "@product/types/Category";
 import { Data } from "@product/types";
 import { log } from "@product/lib/log";
 import { ServerErrorResponse } from "@grpc/grpc-js";
-import { Allergen } from "@prisma/client";
 import prisma from "@product/lib/prisma";
 
 export const DeleteCategory = async (
@@ -12,7 +11,7 @@ export const DeleteCategory = async (
 	try {
 		const { id } = request;
 
-		if((await prisma.allergen.findFirst({where: {id: id}}) as Allergen | null) == null)
+		if((await prisma.category.findFirst({where: {id: id}}) as Category | null) == null)
 			throw(Error("La catégorie n'existe  pas") as ServerErrorResponse)
 		
 			await prisma.category.delete({ where : {id} });

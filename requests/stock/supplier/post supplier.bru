@@ -1,0 +1,26 @@
+meta {
+  name: create supplier
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/stock/supplier
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Jean Fourne",
+    "contact": "+33 6 12 34 56 78"
+  }
+}

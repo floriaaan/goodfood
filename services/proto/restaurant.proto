@@ -1,0 +1,74 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package com.goodfood.restaurant;
+
+message Restaurant {
+  string id = 1;
+
+  string name = 2;
+  optional string description = 3;
+
+  Address address = 4;
+
+  repeated string openingHours = 5;
+  optional string phone = 6;
+
+  repeated string userIds = 7;
+
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message Address {
+  optional string id = 1;
+
+  float lat = 2;
+  float lng = 3;
+
+  optional string street = 4;
+  optional string city = 5;
+  optional string zipcode = 6;
+  optional string country = 7;
+
+  optional string restaurantId = 8;
+}
+
+message RestaurantCreateInput{
+    string name = 1;
+    optional string description = 2;
+
+    Address address = 4;
+
+    repeated string openingHours = 5;
+    optional string phone = 6;
+
+    repeated string userIds = 7;
+}
+
+message RestaurantList {
+  repeated Restaurant restaurants = 1;
+}
+
+message ByLocationInput {
+  float lat = 1;
+  float lng = 2;
+}
+
+message RestaurantId {
+  string id = 1;
+}
+
+message RestaurantDeleteInput {
+  string id = 1;
+}
+
+
+service RestaurantService {
+  rpc CreateRestaurant (RestaurantCreateInput) returns (Restaurant) {}
+  rpc GetRestaurant (RestaurantId) returns (Restaurant) {}
+  rpc UpdateRestaurant (Restaurant) returns (Restaurant) {}
+  rpc DeleteRestaurant (RestaurantDeleteInput) returns (google.protobuf.Empty) {}
+  rpc GetRestaurants (google.protobuf.Empty) returns (RestaurantList) {}
+  rpc GetRestaurantsByLocation (ByLocationInput) returns (RestaurantList) {}
+}

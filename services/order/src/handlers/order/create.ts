@@ -2,7 +2,6 @@ import { prisma } from "@order/lib/prisma";
 import { log } from "@order/lib/log";
 import { CreateOrderRequest, Order } from "@order/types/order";
 import { Data } from "@order/types";
-import { parseStruct } from "@order/lib/struct";
 import { toGrpc } from "@order/lib/transformer";
 
 export const CreateOrder = async (
@@ -21,13 +20,13 @@ export const CreateOrder = async (
 
     const json = // (parseStruct(basket_snapshot.json) ||
       JSON.parse(basket_snapshot.string) as {
-        [key: string]: { count: number; price: number };
-      };
-
-    const total = Object.values(json).reduce((acc, cur) => acc + cur.price, 0);
+        user_id: number;
+        products_ids: string[]; // todo: change to product minimum ({count: number, id: string, price: number}}})
+        restaurant_id: string;
+    };
 
     const user_in_db = await prisma.userMinimum.findFirst({
-      where: { email: user.email },
+      where: { id: user.id },
     });
     const order = await prisma.order.create({
       data: {
@@ -36,12 +35,13 @@ export const CreateOrder = async (
         payment_id,
         user: user_in_db
           ? { connect: { id: user_in_db.id } }
-          : { create: { ...user, id: undefined } },
+          : { create: { ...user, id: user.id } },
         basket_snapshot: {
           create: {
             string: basket_snapshot.string,
             json,
-            total,
+            // todo: get total from basket_snapshot from product minimum
+            total: 0
           },
         },
         restaurant_id,

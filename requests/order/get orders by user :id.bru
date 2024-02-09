@@ -1,0 +1,15 @@
+meta {
+  name: list orders by user
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/order/by-user/716255a2-76da-4664-a10e-8dbdd95a4485
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
