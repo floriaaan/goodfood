@@ -30,6 +30,7 @@ const formSchema = z.object({
 
   unitPrice: z.coerce.number().min(0.01, "Veuillez entrer un prix unitaire"),
   pricePerKilo: z.coerce.number().min(0.01, "Veuillez entrer un prix au kilo"),
+  quantity: z.coerce.number(),
 
   alertThreshold: z.coerce.number().min(1, "Veuillez entrer un seuil d'alerte"),
 
@@ -63,6 +64,7 @@ export function IngredientRestaurantCreateEditForm({
 
           unitPrice: 0,
           pricePerKilo: 0,
+          quantity:0,
 
           alertThreshold: 0,
 
