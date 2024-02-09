@@ -15,13 +15,13 @@ export const RatingBanner = () => {
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-user/${user.id}`, session?.token);
       const orders = await res.json();
-      return orders.ordersList.findLast((order: Order) => order.delivery.status === Status.PENDING);
+      return orders.ordersList.findLast((order: Order) => order.status === Status.FULFILLED);
     },
   });
   if (!lastOrder) return null;
 
   // If last order is older than 7 days, don't show the banner
-  const lastOrderDate = new Date(lastOrder.created_at.toString());
+  const lastOrderDate = new Date(lastOrder.delivery.eta.toString());
   const today = new Date();
   const differenceInTime = today.getTime() - lastOrderDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
