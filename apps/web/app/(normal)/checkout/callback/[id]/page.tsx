@@ -1,20 +1,20 @@
 "use client";
 
-import { MdArrowBack, MdArrowForward, MdDirectionsWalk, MdShoppingBasket } from "react-icons/md";
-import { useAuth, useBasket } from "@/hooks";
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { fetchAPI } from "@/lib/fetchAPI";
-import { PaymentStatus } from "@/types/payment";
-import { Order } from "@/types/order";
-import { format } from "date-fns";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
 import { OrderStatusMap } from "@/app/(normal)/account/orders/[id]/map";
-import { useRouter } from "next/navigation";
-import { LargeComponentLoader } from "@/components/ui/loader/large-component";
-import React from "react";
+import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import { NotLogged } from "@/components/ui/not-logged";
+import { useAuth, useBasket } from "@/hooks";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { Order } from "@/types/order";
+import { PaymentStatus } from "@/types/payment";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { MdArrowBack, MdArrowForward, MdDirectionsWalk, MdShoppingBasket } from "react-icons/md";
 
 type PageProps = { params: { id: string } };
 export default function CheckoutCallbackPage({ params }: PageProps) {
@@ -22,11 +22,11 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
   const paymentId = decodeURIComponent(params.id);
 
   const { user, session } = useAuth();
-
   const { isAuthenticated } = useBasket();
 
   const { data: order } = useQuery<Order>({
-    queryKey: ["Order", "PaymentId", paymentId],
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["order", "payment", paymentId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-payment/${paymentId}`, session?.token);
       return await res.json();
@@ -40,12 +40,13 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
       });
       push("/"); // Redirect to home
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
       return;
     }
   };
 
-  if (!(isAuthenticated && user && session?.token)) return;
+  if (!(isAuthenticated && user && session?.token)) return <NotLogged />;
   return (
     <>
       <div className="flex h-full grow p-4 pb-12">

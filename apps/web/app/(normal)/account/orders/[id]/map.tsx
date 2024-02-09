@@ -3,7 +3,6 @@ import { Bow, Map, Marker, OrderPin, RestaurantPin, UserPin } from "@/components
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { useLocation } from "@/hooks";
 import { DeliveryType, Order } from "@/types/order";
-import { Delivery } from "@/types/delivery";
 
 export const OrderStatusMap = (order: Order) => {
   const delivery_person = order.delivery.deliveryPerson;
