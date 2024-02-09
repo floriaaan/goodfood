@@ -1,14 +1,14 @@
-import { SheetClose, SheetContent } from "@/components/ui/sheet";
-import { Restaurant } from "@/types/restaurant";
 import { RestaurantCreateEditForm, RestaurantCreateEditFormValues } from "@/components/admin/restaurant/form";
-import { useAdmin } from "@/hooks/useAdmin";
-import { toRestaurant, toUpdateRestaurant } from "@/lib/restaurant/toRestaurant";
-import { fetchAPI } from "@/lib/fetchAPI";
-import { useAuth } from "@/hooks";
+import { SheetClose, SheetContent } from "@/components/ui/sheet";
 import { toast } from "@/components/ui/use-toast";
-import { MdDone } from "react-icons/md";
+import { useAuth } from "@/hooks";
+import { useAdmin } from "@/hooks/useAdmin";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { toRestaurant, toUpdateRestaurant } from "@/lib/restaurant/toRestaurant";
+import { Restaurant } from "@/types/restaurant";
 import { ToastTitle } from "@radix-ui/react-toast";
 import { XIcon } from "lucide-react";
+import { MdDone } from "react-icons/md";
 
 export const RestaurantFormSheetContent = ({
   initialValues,
@@ -25,7 +25,6 @@ export const RestaurantFormSheetContent = ({
   const createRestaurant = async (restaurantInput: Restaurant) => {
     if (!restaurantInput || !isAuthenticated) return;
 
-    console.log(JSON.stringify({ restaurantInput }));
     const res = await fetchAPI("/api/restaurant", session?.token, {
       method: "POST",
       body: JSON.stringify(restaurantInput),
@@ -49,7 +48,6 @@ export const RestaurantFormSheetContent = ({
   const updateRestaurant = async (restaurantInput: Restaurant) => {
     if (!restaurantInput || !restaurantInput.id || !isAuthenticated) return;
 
-    console.log(JSON.stringify({ restaurantInput }));
     const res = await fetchAPI(`/api/restaurant/${restaurantInput.id}`, session?.token, {
       method: "PUT",
       body: JSON.stringify(restaurantInput),

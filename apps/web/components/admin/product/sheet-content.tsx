@@ -1,14 +1,14 @@
 import { ProductCreateEditForm, ProductCreateEditFormValues } from "@/components/admin/product/form";
 import { SheetClose, SheetContent } from "@/components/ui/sheet";
-import { Allergen, Category, Product, Recipe } from "@/types/product";
-import { useAdmin } from "@/hooks/useAdmin";
-import { useAuth } from "@/hooks";
-import { fetchAPI } from "@/lib/fetchAPI";
 import { toast } from "@/components/ui/use-toast";
-import { MdDone } from "react-icons/md";
+import { useAuth } from "@/hooks";
+import { useAdmin } from "@/hooks/useAdmin";
+import { fetchAPI } from "@/lib/fetchAPI";
+import { toProduct, toUpdateProduct } from "@/lib/product/toProduct";
+import { Allergen, Category, Product, Recipe } from "@/types/product";
 import { ToastTitle } from "@radix-ui/react-toast";
 import { XIcon } from "lucide-react";
-import { toProduct, toUpdateProduct } from "@/lib/product/toProduct";
+import { MdDone } from "react-icons/md";
 
 export const ProductFormSheetContent = ({
   initialValues,
@@ -25,7 +25,6 @@ export const ProductFormSheetContent = ({
   const createProduct = async (productInput: Product) => {
     if (!productInput || !isAuthenticated) return;
 
-    console.log(JSON.stringify(productInput));
     const res = await fetchAPI("/api/product", session?.token, {
       method: "POST",
       body: JSON.stringify(productInput),
@@ -100,7 +99,6 @@ export const ProductFormSheetContent = ({
       const recipeList = values.recipeList as Recipe[];
       if (!id) {
         const product = toProduct(values, categoryList, allergenList, recipeList);
-        console.log(product);
         createProduct(product);
       } else {
         const product = await getProduct(id);
@@ -110,7 +108,6 @@ export const ProductFormSheetContent = ({
       closeSheet();
       refetchProducts();
     } catch (err) {
-      console.log((err as Error).message ?? "Une erreur est survenue.");
       toast({
         className: "p-3",
         children: (
@@ -127,7 +124,7 @@ export const ProductFormSheetContent = ({
     }
   };
 
-  const onImageChange = (file: File) => {
+  const onImageChange = (_file: File) => {
     return new Promise<string>((resolve) => {
       setTimeout(() => {
         resolve("https://picsum.photos/200/300");

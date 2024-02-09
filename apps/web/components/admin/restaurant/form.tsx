@@ -5,9 +5,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { RestaurantDeleteAlert } from "@/components/admin/restaurant/delete-alert";
 import { Map, RestaurantPin } from "@/components/map";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -18,21 +25,14 @@ import {
   FormMessage,
   FormTextarea,
 } from "@/components/ui/form";
-import { MdArrowDropDown, MdDone, MdInfoOutline } from "react-icons/md";
-import { Restaurant } from "@/types/restaurant";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useAdmin } from "@/hooks/useAdmin";
+import { getAddress, searchAddress } from "@/lib/fetchers/externals/api-gouv";
 import { toName } from "@/lib/user";
-import { Marker } from "react-map-gl";
+import { Restaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { getAddress, searchAddress } from "@/lib/fetchers/externals/api-gouv";
-import { RestaurantDeleteAlert } from "@/components/admin/restaurant/delete-alert";
+import { MdArrowDropDown, MdDone, MdInfoOutline } from "react-icons/md";
+import { Marker } from "react-map-gl";
 
 // todo: check with restaurant create request
 const formSchema = z.object({
@@ -111,7 +111,6 @@ export function RestaurantCreateEditForm({
 
   async function handleLongLat(values: RestaurantCreateEditFormValues) {
     const data = await searchAddress(`${values.street} ${values.city} ${values.zipcode}`);
-    console.log(data);
     if (data.features.length > 1) return;
     setLongLat([data.features[0].geometry.coordinates[0], data.features[0].geometry.coordinates[1]]);
     form.setValue("longitude", data.features[0].geometry.coordinates[0]);
@@ -217,7 +216,7 @@ export function RestaurantCreateEditForm({
                     name="openingHours"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Heure d'ouverture</FormLabel>
+                        <FormLabel>{"Heure d'ouverture"}</FormLabel>
                         <FormControl>
                           <FormInput {...field} placeholder="12h-14h" />
                         </FormControl>

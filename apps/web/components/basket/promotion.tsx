@@ -11,7 +11,7 @@ import { MdCheck } from "react-icons/md";
 export const BasketPromotion = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [code, setCode] = useState<string>("");
-  const { promotion, checkPromotionCode } = useBasket();
+  const { checkPromotionCode } = useBasket();
 
   return (
     <div className="my-2 flex w-full flex-col gap-y-1 p-2">

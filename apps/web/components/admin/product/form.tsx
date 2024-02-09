@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { ProductDeleteAlert } from "@/components/admin/product/delete-alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,15 +27,13 @@ import {
 } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/form/form-select";
 import { SelectQuantity } from "@/components/ui/form/select-quantity";
-import { useAuth } from "@/hooks";
 import { useAdmin } from "@/hooks/useAdmin";
 import { cn } from "@/lib/utils";
-import { Product, ProductType, Recipe, ProductTypeLabels } from "@/types/product";
+import { Product, ProductType, ProductTypeLabels, Recipe } from "@/types/product";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
 import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
-import { ProductDeleteAlert } from "@/components/admin/product/delete-alert";
 
 // todo: check with product create request
 const formSchema = z.object({
@@ -102,8 +101,9 @@ export function ProductCreateEditForm({
 
   const image_inputRef = useRef<HTMLInputElement>(null);
   const [image_clientUrl, setImage_clientUrl] = useState<string | null>(initialValues?.image || null);
-  const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
-  const [image_error, setImage_error] = useState<string | null>(null);
+  // TODO: implement
+  // const [image_isUpdating, setImage_isUpdating] = useState<boolean>(false);
+  // const [image_error, setImage_error] = useState<string | null>(null);
 
   async function handler(values: ProductCreateEditFormValues) {
     // eslint-disable-next-line no-console
@@ -121,6 +121,7 @@ export function ProductCreateEditForm({
       "recipeList",
       ingredients.map((i) => ({ ingredientId: i.value, quantity: i.quantity })),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredients]);
 
   return (
@@ -150,7 +151,7 @@ export function ProductCreateEditForm({
 
           <button
             type="button"
-            disabled={image_isUpdating}
+            // disabled={image_isUpdating}
             onClick={() => {
               if (image_inputRef.current) (image_inputRef.current as { click: () => void })?.click();
             }}
