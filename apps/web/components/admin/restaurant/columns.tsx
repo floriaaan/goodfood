@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Address, Restaurant } from "@/types/restaurant";
 import { ColumnDef } from "@tanstack/react-table";
 import { MdArrowDropUp } from "react-icons/md";
-import {RestaurantActions} from "@/components/admin/restaurant/actions";
+import { RestaurantActions } from "@/components/admin/restaurant/actions";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -51,7 +51,7 @@ export const restaurants_columns: ColumnDef<Restaurant>[] = [
     cell: ({ row }) => {
       const restaurant = row.original;
 
-      return (<RestaurantActions {...restaurant} />);
+      return <RestaurantActions {...restaurant} />;
     },
   },
 ];

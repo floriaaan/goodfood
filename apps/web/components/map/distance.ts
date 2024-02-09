@@ -20,12 +20,7 @@ function toRadians(degrees: number) {
   return (degrees * Math.PI) / 180;
 }
 
-export function calculateDistance(
-  latitude1: number,
-  longitude1: number,
-  latitude2: number,
-  longitude2: number
-) {
+export function calculateDistance(latitude1: number, longitude1: number, latitude2: number, longitude2: number) {
   const radLat1 = toRadians(latitude1);
   const radLat2 = toRadians(latitude2);
   const radDeltaLat = toRadians(latitude2 - latitude1);
@@ -33,10 +28,7 @@ export function calculateDistance(
 
   const a =
     Math.sin(radDeltaLat / 2) * Math.sin(radDeltaLat / 2) +
-    Math.cos(radLat1) *
-      Math.cos(radLat2) *
-      Math.sin(radDeltaLon / 2) *
-      Math.sin(radDeltaLon / 2);
+    Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(radDeltaLon / 2) * Math.sin(radDeltaLon / 2);
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = EARTH_RADIUS_KM * c;

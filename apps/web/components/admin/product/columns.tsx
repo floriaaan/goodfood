@@ -72,14 +72,14 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
       );
     },
     accessorKey: "canMake",
-    cell: (cell) => (cell.getValue() as number)
+    cell: (cell) => cell.getValue() as number,
   },
   {
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;
 
-      return (<ProductActions {...product} />);
+      return <ProductActions {...product} />;
     },
   },
 ];
