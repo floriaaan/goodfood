@@ -1,11 +1,11 @@
 import { fetchAPI } from "@/lib/fetchAPI";
 import { toPrice } from "@/lib/product/toPrice";
 import { BasketSnapshot, DeliveryType, Order } from "@/types/order";
+import { Product } from "@/types/product";
 import { Restaurant } from "@/types/restaurant";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import fr from "date-fns/locale/fr";
-import { useQuery } from "@tanstack/react-query";
-import { Product } from "@/types/product";
 import { useEffect, useState } from "react";
 
 export const CheckoutReceipt = (order: Order) => {
@@ -19,6 +19,12 @@ export const CheckoutReceipt = (order: Order) => {
     },
   });
 
+  const getProduct = async (id: string): Promise<Product> => {
+    const res = await fetchAPI(`/api/product/${id}`, undefined);
+    return await res.json();
+  };
+
+  const basket: BasketSnapshot = JSON.parse(order.basketSnapshot.string);
   useEffect(() => {
     (async () => {
       const productsList = await Promise.all(
@@ -29,16 +35,9 @@ export const CheckoutReceipt = (order: Order) => {
       );
       setProductList(productsList);
     })();
-  }, []);
-
-  const getProduct = async (id: string): Promise<Product> => {
-    const res = await fetchAPI(`/api/product/${id}`, undefined);
-    return await res.json();
-  };
+  }, [basket.productsList]);
 
   if (!restaurant) return null;
-  const basket: BasketSnapshot = JSON.parse(order.basketSnapshot.string);
-
   return (
     <div className="flex w-96 flex-col bg-[url(/images/wrinkled-paper.jpg)] bg-center p-5 font-mono text-sm uppercase">
       <h2 className="my-5 bg-black bg-opacity-70 p-2 text-center text-5xl font-bold tracking-tighter text-white">
