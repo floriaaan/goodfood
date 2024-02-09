@@ -1,6 +1,6 @@
 "use client";
 
-import { Map, OrderPin, RestaurantPin } from "@/components/map";
+import { Map, RestaurantPin } from "@/components/map";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +9,7 @@ import { orders_columns } from "@/components/admin/order/columns";
 import { products_columns } from "@/components/admin/product/columns";
 import { promotions_columns } from "@/components/admin/promotion/columns";
 import { PromotionCreateSheet, PromotionRefreshSheet } from "@/components/admin/promotion/sheet";
-import {restaurants_columns} from "@/components/admin/restaurant/columns";
+import { restaurants_columns } from "@/components/admin/restaurant/columns";
 import { users_columns } from "@/components/admin/user/columns";
 import { UserCreateSheet } from "@/components/admin/user/sheet";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";

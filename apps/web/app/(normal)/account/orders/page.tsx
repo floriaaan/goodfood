@@ -20,7 +20,7 @@ export default function UserOrders() {
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-user/${session?.user?.id}`, session?.token);
       const body = await res.json();
-      return body;
+      return body.ordersList;
     },
     staleTime: 1000 * 60 * 5,
     enabled: isAuthenticated,

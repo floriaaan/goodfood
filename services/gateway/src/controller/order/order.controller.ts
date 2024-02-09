@@ -158,7 +158,6 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   orderService.getOrdersByUser(orderInput, async (error, response) => {
     if (error) return res.status(500).send({ error });
     const r = response.toObject();
-    console.log(r.ordersList);
     const ordersList = await Promise.all(
       r.ordersList.map(async (order) => {
         const payment = await getPayment(order.paymentId);
