@@ -1,6 +1,6 @@
 "use client";
-import { NotFound } from "@/components/ui/not-found";
+import { NotFoundPage } from "@/components/ui/not-found-page";
 
 export default function RootNotFound() {
-  return <NotFound className="h-screen" />;
+  return <NotFoundPage />;
 }
