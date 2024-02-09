@@ -1,0 +1,11 @@
+meta {
+  name: get metric by key
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/metric/:key
+  body: none
+  auth: none
+}

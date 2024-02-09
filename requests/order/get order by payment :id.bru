@@ -1,0 +1,15 @@
+meta {
+  name: get order by payment id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/order/by-payment/clsd26mjr0000sx1q21spouoh
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

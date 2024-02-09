@@ -1,0 +1,15 @@
+meta {
+  name: get near user delivery person
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/delivery-person/near/user
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

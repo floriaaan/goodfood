@@ -1,0 +1,132 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package com.goodfood.delivery;
+
+message Delivery {
+  string id = 1;
+  string eta = 2;
+
+  Address address = 3;
+  Status status = 4;
+
+  DeliveryPerson delivery_person = 5;
+  string delivery_person_id = 6;
+
+  string user_id = 7;
+
+  string restaurant_id = 8;
+  Address restaurant_address = 9;
+}
+
+message Address {
+  optional string id = 1;
+
+  float lat = 2;
+  float lng = 3;
+
+  optional string street = 4;
+  optional string city = 5;
+  optional string zipcode = 6;
+  optional string country = 7;
+
+}
+
+message DeliveryPerson {
+  string id = 1;
+  string user_id = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string phone = 5;
+  
+  Address address = 6;
+
+  repeated Delivery deliveries = 7;
+}
+
+enum Status {
+  PENDING = 0;
+  IN_PROGRESS = 1;
+  FULFILLED = 2;
+  REJECTED = 3;
+}
+
+service DeliveryService {
+  rpc CreateDelivery (DeliveryCreateInput) returns (Delivery) {}
+  rpc GetDelivery (DeliveryId) returns (Delivery) {}
+  rpc UpdateDelivery (Delivery) returns (Delivery) {}
+  rpc DeleteDelivery (DeliveryId) returns (google.protobuf.Empty) {}
+  rpc ListDeliveriesByUser (UserId) returns (DeliveryList) {}
+  rpc ListDeliveriesByRestaurant (RestaurantId) returns (DeliveryList) {}
+
+}
+
+service DeliveryPersonService {
+  rpc CreateDeliveryPerson (DeliveryPersonCreateInput) returns (DeliveryPerson) {}
+  rpc GetDeliveryPerson (DeliveryPersonId) returns (DeliveryPerson) {}
+  rpc GetDeliveryPersonByUser (DeliveryPersonUserId) returns (DeliveryPerson) {}
+  rpc UpdateDeliveryPerson (DeliveryPerson) returns (DeliveryPerson) {}
+  rpc DeleteDeliveryPerson (DeliveryPersonId) returns (google.protobuf.Empty) {}
+  rpc ListDeliveryPersons (google.protobuf.Empty) returns (DeliveryPersonList) {}
+  rpc ListNearDeliveryPersons (Location) returns (DeliveryPersonList) {}
+
+  rpc UpdateDeliveryPersonLocation (DeliveryPersonUpdateLocationInput) returns (DeliveryPerson) {}
+}
+
+
+message DeliveryId {
+  string id = 1;
+}
+
+message DeliveryCreateInput {
+  Address address = 1;
+
+  string user_id = 3;
+
+  string restaurant_id = 4;
+  Address restaurant_address = 5;
+}
+
+message UserId {
+  string id = 1;
+}
+
+message RestaurantId {
+  string id = 1;
+}
+
+message DeliveryList {
+  repeated Delivery deliveries = 1;
+}
+
+message DeliveryPersonList {
+  repeated DeliveryPerson delivery_persons = 1;
+}
+
+message DeliveryPersonId {
+  string id = 1;
+}
+
+message DeliveryPersonUserId {
+  string id = 1;
+}
+message DeliveryPersonCreateInput {
+  string user_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone = 4;
+  
+  Address address = 5;
+}
+
+message Location {
+  float latitude = 1;
+  float longitude = 2;
+
+  float radius_in_km = 3;
+}
+
+message DeliveryPersonUpdateLocationInput {
+  string delivery_person_id = 1;
+  Address address = 2;
+}

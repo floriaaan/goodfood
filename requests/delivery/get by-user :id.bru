@@ -1,0 +1,15 @@
+meta {
+  name: list deliveries by user
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/delivery/by-user
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

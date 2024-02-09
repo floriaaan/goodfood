@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-order
+  labels:
+    app: goodfood-order
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-order
+  template:
+    metadata:
+      labels:
+        app: goodfood-order
+    spec:
+      containers:
+        - name: goodfood-order
+          image: floriaaan/goodfood-order:1.0.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-order-configmap
+                  key: port
+          ports:
+            - containerPort: 50007

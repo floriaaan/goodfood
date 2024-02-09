@@ -1,0 +1,27 @@
+meta {
+  name: create category
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/category
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "label": "Frais",
+    "icon": "🥗",
+    "hexaColor": "#EAFBF5"
+  }
+}

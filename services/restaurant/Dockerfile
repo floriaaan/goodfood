@@ -1,0 +1,44 @@
+FROM node:18-alpine3.18  as builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy the application code
+COPY ./restaurant/ .
+
+# Get permision
+RUN chmod +x ./script.sh
+
+# Install dependencies
+RUN npm install
+
+# Copy the proto files  
+COPY ./proto ./proto/
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Build the application
+RUN npm run build
+
+
+# Create a new image with the application
+FROM node:18-alpine3.18 as runner
+
+# Set working directory
+WORKDIR /app
+
+# Copy the application package
+COPY --from=builder /app/dist .
+COPY --from=builder /app/prisma/ .
+COPY --from=builder /app/script.sh ./script.sh
+COPY --from=builder /app/proto/ /proto/
+COPY --from=builder /app/node_modules/.prisma /.prisma
+
+RUN chmod 755 ./script.sh
+
+# Expose the gRPC port
+EXPOSE 50005
+
+# Start the server
+CMD ["sh", "script.sh"]

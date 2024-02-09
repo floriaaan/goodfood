@@ -1,0 +1,15 @@
+meta {
+  name: get order by delivery id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/order/by-delivery/:deliveryId?deliveryId=<string>
+  body: none
+  auth: none
+}
+
+query {
+  deliveryId: <string>
+}

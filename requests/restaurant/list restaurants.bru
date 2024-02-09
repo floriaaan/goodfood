@@ -1,0 +1,17 @@
+meta {
+  name: list restaurants
+  type: http
+
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/restaurant/
+  body: none
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+

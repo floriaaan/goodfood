@@ -1,0 +1,25 @@
+meta {
+  name: change selected restaurant
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/api/basket/restaurant
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "restaurantId": "restaurant_id:1"
+  }
+}

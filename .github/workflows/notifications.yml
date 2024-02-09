@@ -1,0 +1,82 @@
+name: Notification Microservice CI/CD
+
+on:
+  push:
+    branches: [ notification ]
+  pull_request:
+    branches: [ dev, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          cache: "pnpm"
+          cache-dependency-path: services/notification/pnpm-lock.yaml
+      - name: Install dependencies
+        run: |
+          cd ./services/notification
+          pnpm install --frozen-lockfile
+      - name: Build
+        run: |
+          cd ./services/notification
+          pnpm build
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          cache: "pnpm"
+          cache-dependency-path: services/notification/pnpm-lock.yaml
+      - name: Install dependencies
+        run: |
+          cd ./services/notification
+          pnpm install --frozen-lockfile
+      - name: Execute tests
+        run: |
+          cd ./services/notification
+          pnpm test
+  
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [ build, test ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./services/
+          file: ./services/notification/Dockerfile
+          push: true
+          tags: floriaaan/goodfood-notification:latest

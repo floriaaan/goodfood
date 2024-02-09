@@ -1,0 +1,33 @@
+meta {
+  name: save basket
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/basket/save
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "basket": {
+      "products": [
+        {
+          "id": "p:1",
+          "quantity": 4
+        },
+        {
+          "id": "p:2",
+          "quantity": 3
+        }
+      ],
+      "restaurant_id": "restaurant_id:1"
+    }
+  }
+}

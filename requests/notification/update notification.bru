@@ -1,0 +1,29 @@
+meta {
+  name: update notification
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/notification/clrxst8x200042u298mb8x9r3
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "notification-title-updated",
+    "description": "notification-description-updated",
+    "icon": "notification-icon-updated",
+    "image": "notification-image-updated",
+    "callback_url": "notification-callback_url-updated"
+  }
+}
