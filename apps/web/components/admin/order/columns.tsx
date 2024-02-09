@@ -11,13 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet } from "@/components/ui/sheet";
+import { toPrice } from "@/lib/product/toPrice";
 import { cn } from "@/lib/utils";
 import { DeliveryType, Order } from "@/types/order";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import { MdArrowDropUp, MdCopyAll } from "react-icons/md";
-import { toPrice } from "@/lib/product/toPrice";
-import { format } from "date-fns";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -107,7 +107,7 @@ export const orders_columns: ColumnDef<Order>[] = [
   },
   {
     id: "actions",
-    cell: ({ row, getValue }) => {
+    cell: ({ row }) => {
       const o = row.original;
 
       return (
