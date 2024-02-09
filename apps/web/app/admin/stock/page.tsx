@@ -10,13 +10,15 @@ import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useAdmin } from "@/hooks/useAdmin";
 import { cn } from "@/lib/utils";
 import { LinkIcon, PlusIcon } from "lucide-react";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 export default function StockPage() {
-  const { restaurant, products, ingredients, ingredients_restaurant, suppliers, supply_orders } = useAdmin();
+  const { refetchProducts, restaurant, products, ingredients, ingredients_restaurant, suppliers, supply_orders } = useAdmin();
   const [ingredientSheetOpen, setIngredientSheetOpen] = useState(false);
   const [ingredientRestaurantSheetOpen, setIngredientRestaurantSheetOpen] = useState(false);
   const [supplierSheetOpen, setSupplierSheetOpen] = useState(false);
+
+  useEffect(() => refetchProducts, []);
 
   if (!restaurant) return null;
 
