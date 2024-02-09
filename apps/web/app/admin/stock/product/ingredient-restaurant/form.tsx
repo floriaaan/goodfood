@@ -64,7 +64,7 @@ export function IngredientRestaurantCreateEditForm({
 
           unitPrice: 0,
           pricePerKilo: 0,
-          quantity:0,
+          quantity: 0,
 
           alertThreshold: 0,
 
