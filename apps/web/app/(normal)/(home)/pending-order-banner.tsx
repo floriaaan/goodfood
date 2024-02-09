@@ -16,7 +16,7 @@ export const PendingOrderBanner = () => {
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-user/${user.id}`, session?.token);
       const orders = await res.json();
-      return orders.ordersList.findLast((order: Order) => order.delivery.status === Status.PENDING);
+      return orders.ordersList.findLast((order: Order) => order.status === Status.PENDING);
     },
   });
   if (!order) return null;

@@ -1,0 +1,24 @@
+meta {
+  name: update order
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/order
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "paymentId": "<string>",
+    "deliveryId": "<string>",
+    "deliveryType": "TAKEAWAY",
+    "restaurantId": "<string>"
+  }
+}
