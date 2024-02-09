@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocation } from "@/hooks";
 import { Status } from "@/types/global";
 import { Order } from "@/types/order";
 import { ColumnDef } from "@tanstack/react-table";
@@ -8,16 +9,12 @@ import { MdLink } from "react-icons/md";
 
 export const orders_columns: ColumnDef<Order>[] = [
   {
-    id: "restaurantId",
+    id: "",
     header: "",
     cell(props) {
       const restaurantId = props.getValue() as string;
       const { id } = props.row.original;
-      return (
-        <Link href={`/account/orders/${id}`} className="inline-flex items-center gap-1 hover:underline">
-          Commande au <b>{restaurantId}</b> <MdLink className="h-4 w-4 shrink-0" />
-        </Link>
-      );
+      return <RestaurantCell restaurantId={restaurantId} id={id} />;
     },
   },
   {
@@ -49,3 +46,14 @@ export const orders_columns: ColumnDef<Order>[] = [
     },
   },
 ];
+
+const RestaurantCell = ({ restaurantId, id }: { restaurantId: Order["restaurantId"]; id: Order["id"] }) => {
+  const { restaurants } = useLocation();
+  const restaurant = restaurants.find((r) => r.id === restaurantId);
+
+  return (
+    <Link href={`/account/orders/${id}`} className="inline-flex items-center gap-1 hover:underline">
+      Commande au <b>{restaurant?.name || restaurantId}</b> <MdLink className="h-4 w-4 shrink-0" />
+    </Link>
+  );
+};
