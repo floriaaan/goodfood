@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { ProductCreateEditFormValues } from "@/components/admin/product/form";
+import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,18 +10,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
-import { MdCopyAll, MdEdit, MdShoppingCart } from "react-icons/md";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
-import { ProductFormSheetContent } from "@/components/admin/product/sheet-content";
-import { ProductCreateEditFormValues } from "@/components/admin/product/form";
 import { Product } from "@/types/product";
+import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
+import { MdCopyAll, MdEdit, MdShoppingCart } from "react-icons/md";
 
 export const ProductActions = (product: Product) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger>
           <>

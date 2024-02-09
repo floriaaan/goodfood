@@ -1,10 +1,10 @@
 "use client";
 
+import { ProductActions } from "@/components/admin/product/actions";
 import { cn } from "@/lib/utils";
 import { ExtendedProduct } from "@/types/product";
 import { ColumnDef } from "@tanstack/react-table";
 import { MdArrowDropUp } from "react-icons/md";
-import { ProductActions } from "@/components/admin/product/actions";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -14,6 +14,7 @@ export const products_columns: ColumnDef<ExtendedProduct>[] = [
     accessorKey: "image",
     header: "Image",
     cell: (cell) => (
+      // eslint-disable-next-line @next/next/no-img-element
       <img src={cell.getValue() as string} alt={cell.row.original.name} className="h-12 w-12 shrink-0 object-cover" />
     ),
     size: 24,
