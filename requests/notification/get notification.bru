@@ -1,0 +1,19 @@
+meta {
+  name: get notification
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/notification/clrxst8x200042u298mb8x9r3
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}

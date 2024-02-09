@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Server\reporting.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Protobuf Include="..\proto\restaurant.proto" GrpcServices="Client" Link="Protos\restaurant.proto" />
+        <Protobuf Include="..\proto\order.proto" GrpcServices="Client" Link="Protos\order.proto" />
+        <Protobuf Include="..\proto\stock.proto" GrpcServices="Client" Link="Protos\stock.proto" />
+        <Protobuf Include="..\proto\payment.proto" GrpcServices="Client" Link="Protos\payment.proto" />
+
+        <PackageReference Include="Cronos" Version="0.8.0" />
+
+        <PackageReference Include="Google.Protobuf" Version="3.25.1" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
+        <PackageReference Include="Grpc.Tools" PrivateAssets="All" Version="2.52.0" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Restaurant {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  location  Float[]
+  address   Address?
+  addressId String?  @unique
+
+  openingHours String[]
+
+  phone String?
+
+  userIds String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Address {
+  id String @id @default(cuid())
+
+  lat Float
+  lng Float
+
+  street  String?
+  city    String?
+  zipcode String?
+  country String?
+
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId String     @unique
+}

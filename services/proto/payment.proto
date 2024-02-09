@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package com.goodfood.payment;
+
+
+message User {
+  string id = 1;
+
+  string name = 2;
+  string email = 3;
+}
+
+message Payment {
+  string id = 1;
+  string stripe_id = 8;
+
+  float total = 2;
+  string status = 3;
+
+  User user = 4;
+  string user_id = 5;
+
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+service PaymentService {
+  rpc GetPayment(GetPaymentRequest) returns (Payment) {}
+  rpc GetPaymentsByUser(GetPaymentsByUserRequest) returns (GetPaymentsByUserResponse) {}
+  rpc GetPaymentsByStripe(GetPaymentsByStripeRequest) returns (GetPaymentsByStripeResponse) {}
+  rpc UpdatePaymentStatus(UpdatePaymentStatusRequest) returns (Payment) {}
+}
+
+service StripeService {
+  rpc CreateCheckoutSession(CreateCheckoutSessionRequest) returns (CreateCheckoutSessionResponse) {}
+}
+
+message GetPaymentRequest {
+  string id = 1;
+}
+
+message GetPaymentsByUserRequest {
+  string id = 1;
+}
+
+message GetPaymentsByUserResponse {
+  repeated Payment payments = 1;
+}
+
+message GetPaymentsByStripeRequest {
+  string id = 1;
+}
+
+message GetPaymentsByStripeResponse {
+  repeated Payment payments = 1;
+}
+
+message CreateCheckoutSessionRequest {
+  float total = 1;
+  string user_id = 2;
+  string name = 3;
+  string email = 4;
+  string return_url_base = 5;
+}
+
+message CreateCheckoutSessionResponse {
+  Payment payment = 1;
+  string clientSecret = 2;
+}
+
+message UpdatePaymentStatusRequest {
+  string id = 1;
+  string status = 2;
+}

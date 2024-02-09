@@ -1,0 +1,15 @@
+meta {
+  name: list payments by user id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/payment/by-user/392cf4d1-ea39-4dbe-bc12-91f5a156c54f
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

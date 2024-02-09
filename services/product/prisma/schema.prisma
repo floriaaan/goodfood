@@ -1,0 +1,58 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  image         String
+  comment       String
+  price         Float
+  preparation   String
+  weight        String
+  kilocalories  String
+  nutriscore    String
+  restaurant_id String
+
+  type Product_type
+  categories Category[]
+  allergens  Allergen[]
+  recipe Recipe[]
+}
+
+model Category {
+  id         String   @id @default(cuid())
+  libelle    String
+  hexa_color String
+  icon       String
+
+  products Product[]
+}
+
+model Allergen {
+  id      String   @id @default(cuid())
+  libelle String   @unique
+
+  products Product[]
+}
+
+model Recipe {
+    id   String   @id @default(cuid())
+    product Product @relation(fields: [product_id], references: [id])
+    product_id String
+    ingredient_id String
+    quantity Int
+}
+
+enum Product_type {
+  ENTREES
+  PLATS
+  DESSERTS
+  BOISSONS
+  SNACKS
+}

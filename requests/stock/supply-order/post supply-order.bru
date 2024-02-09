@@ -1,0 +1,27 @@
+meta {
+  name: create supply order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/stock/supply/order
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "quantity": "25",
+    "ingredientRestaurantId": "1",
+    "supplierId": "1"
+  }
+}

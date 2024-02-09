@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodfood-product
+  labels:
+    app: goodfood-product
+spec:
+  selector:
+    matchLabels:
+      app: goodfood-product
+  template:
+    metadata:
+      labels:
+        app: goodfood-product
+    spec:
+      containers:
+        - name: goodfood-product
+          image: pierrelbg/goodfood-product:1.0.1
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: PORT
+            - name: DATABASE_URL
+              valueFrom:
+               configMapKeyRef:
+                 name: goodfood-product-configmap
+                 key: DATABASE_URL
+            - name: AZURE_STORAGE_SAS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: AZURE_STORAGE_SAS_TOKEN
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: AMQP_URL
+            - name: AZURE_STORAGE_RESOURCE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: goodfood-product-configmap
+                  key: AZURE_STORAGE_RESOURCE_NAME
+          ports:
+            - containerPort: 50004
