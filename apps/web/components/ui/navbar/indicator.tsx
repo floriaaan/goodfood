@@ -1,12 +1,12 @@
 "use client";
 
 import { useAuth, useBasket } from "@/hooks";
+import { fetchAPI } from "@/lib/fetchAPI";
 import { Status } from "@/types/global";
+import { Order } from "@/types/order";
+import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { MdReceipt, MdShoppingBasket } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
-import { Order } from "@/types/order";
-import { fetchAPI } from "@/lib/fetchAPI";
 
 const BasketIndicator = () => {
   const { basket } = useBasket();
@@ -31,16 +31,18 @@ const BasketIndicator = () => {
 
 const OrderIndicator = () => {
   const { user, session } = useAuth();
-  if (!user) return null;
 
   const { data: orders } = useQuery<Order[]>({
-    queryKey: ["order", "user", user.id],
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["order", "user", user?.id],
     queryFn: async () => {
-      const res = await fetchAPI(`/api/order/by-user/${user.id}`, session?.token);
+      const res = await fetchAPI(`/api/order/by-user/${user?.id}`, session?.token);
       const orders = await res.json();
       return orders.filter((order: Order) => order.delivery.status === Status.PENDING) || [];
     },
+    enabled: !!user && !!session?.token,
   });
+  if (!user) return null;
   if (!orders || orders.length === 0) return null;
 
   return (

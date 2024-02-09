@@ -1,12 +1,9 @@
-"use client";
-
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { MdHome } from "react-icons/md";
 
-export const NotFound = ({ className = "" }) => {
+export const NotFoundPage = () => {
   return (
-    <div className={cn("flex h-full flex-col items-center justify-center bg-white px-6 py-12", className)}>
+    <div className={"flex h-full w-full flex-col items-center justify-center bg-white px-6 py-12"}>
       <div className="container mx-auto lg:flex lg:items-center lg:gap-12">
         <div className="w-full lg:w-1/2">
           <p className="text-sm font-medium text-gf-green">
@@ -26,16 +23,6 @@ export const NotFound = ({ className = "" }) => {
               <MdHome className="h-4 w-4 shrink-0" />
               <span>Accueil</span>
             </Link>
-            {/* <a
-              suppressHydrationWarning
-              href={`mailto:${email}?cc=florian.leroux@enedis.fr&subject=%5BWEBAIS%5D%20-%20Bug%20rencontr%C3%A9%20&body=${encodeURIComponent(
-                "\n\n\n" + JSON.stringify({ title: message, asPath }, undefined, 2),
-              )}`}
-              className="justify-center w-1/2 btn-blue-clear"
-            >
-              <MailIcon className="w-4 h-4 shrink-0" />
-              <span>Contacter le {author}</span>
-            </a> */}
           </div>
         </div>
         <div className="relative mt-12 flex w-full justify-center lg:mt-0 lg:w-1/2">

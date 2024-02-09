@@ -30,7 +30,6 @@ export function SupplierCreateEditForm({
   initialValues,
   onSubmit,
   id,
-  closeSheet,
 }: {
   initialValues?: SupplierCreateEditFormValues;
   onSubmit: (values: SupplierCreateEditFormValues) => void;

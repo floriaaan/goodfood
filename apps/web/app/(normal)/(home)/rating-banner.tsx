@@ -1,27 +1,29 @@
 "use client";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { useAuth } from "@/hooks";
-import { Status } from "@/types/global";
-import { MdRateReview } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
-import { Order } from "@/types/order";
 import { fetchAPI } from "@/lib/fetchAPI";
+import { Status } from "@/types/global";
+import { Order } from "@/types/order";
+import { useQuery } from "@tanstack/react-query";
+import { MdRateReview } from "react-icons/md";
 export const RatingBanner = () => {
   const { user, session } = useAuth();
-  if (!user) return null;
 
   const { data: lastOrder } = useQuery<Order>({
-    queryKey: ["order", "user", user.id],
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["order", "user", user?.id],
     queryFn: async () => {
-      const res = await fetchAPI(`/api/order/by-user/${user.id}`, session?.token);
+      const res = await fetchAPI(`/api/order/by-user/${user?.id}`, session?.token);
       const orders = await res.json();
-      return orders.ordersList.findLast((order: Order) => order.delivery.status === Status.PENDING);
+      return orders.ordersList.findLast((order: Order) => order.status === Status.FULFILLED);
     },
+    enabled: !!user && !!session?.token,
   });
+  if (!user) return null;
   if (!lastOrder) return null;
 
   // If last order is older than 7 days, don't show the banner
-  const lastOrderDate = new Date(lastOrder.created_at.toString());
+  const lastOrderDate = new Date(lastOrder.delivery.eta.toString());
   const today = new Date();
   const differenceInTime = today.getTime() - lastOrderDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);

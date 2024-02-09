@@ -274,8 +274,8 @@ export const orderList: Order[] = [
     deliveryType: DeliveryType.DELIVERY,
     user: {
       id: "user_id:1",
-      first_name: "John",
-      last_name: "Doe",
+      firstName: "John",
+      lastName: "Doe",
       email: "john@doe.com",
       phone: "0612345678",
     },
@@ -339,8 +339,8 @@ export const orderList: Order[] = [
     deliveryType: DeliveryType.DELIVERY,
     user: {
       id: "user_id:1",
-      first_name: "John",
-      last_name: "Doe",
+      firstName: "John",
+      lastName: "Doe",
       email: "john@doe.com",
       phone: "0612345678",
     },

@@ -7,17 +7,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { orders_columns } from "@/components/admin/order/columns";
 import { products_columns } from "@/components/admin/product/columns";
+import { ProductCreateSheet, ProductRefreshSheet } from "@/components/admin/product/sheet";
 import { promotions_columns } from "@/components/admin/promotion/columns";
 import { PromotionCreateSheet, PromotionRefreshSheet } from "@/components/admin/promotion/sheet";
-import {restaurants_columns} from "@/components/admin/restaurant/columns";
+import { restaurants_columns } from "@/components/admin/restaurant/columns";
+import { RestaurantCreateSheet, RestaurantRefreshSheet } from "@/components/admin/restaurant/sheet";
 import { users_columns } from "@/components/admin/user/columns";
 import { UserCreateSheet } from "@/components/admin/user/sheet";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useEffect, useRef, useState } from "react";
 import { Marker, Popup } from "react-map-gl";
-import { RestaurantCreateSheet, RestaurantRefreshSheet } from "@/components/admin/restaurant/sheet";
-import { ProductCreateSheet, ProductRefreshSheet } from "@/components/admin/product/sheet";
 
 export default function AdminHome() {
   const { restaurant, selectRestaurant, restaurant_users, restaurants, extendedProducts, promotions, orders } =
@@ -49,13 +49,13 @@ export default function AdminHome() {
               }}
               mapRef={mapRef}
             >
-              {/*{orders*/}
-              {/*  .map((o) => o.delivery.person.location)*/}
-              {/*  .map((o, i) => (*/}
-              {/*    <Marker key={i} latitude={o[0]} longitude={o[1]}>*/}
-              {/*      <OrderPin />*/}
-              {/*    </Marker>*/}
-              {/*  ))}*/}
+              {orders
+                .map((o) => o.delivery.address)
+                .map((o, i) => (
+                  <Marker key={i} latitude={o.lat} longitude={o.lng}>
+                    <OrderPin />
+                  </Marker>
+                ))}
               {restaurants.map((r) => (
                 <Marker
                   key={r.id}

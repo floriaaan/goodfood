@@ -3,12 +3,12 @@
 import { PromotionCreateEditFormValues } from "@/components/admin/promotion/form";
 import { PromotionFormSheetContent } from "@/components/admin/promotion/sheet-content";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { Promotion } from "@/types/promotion";
