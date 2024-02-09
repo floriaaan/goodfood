@@ -2,14 +2,15 @@ import {Product} from "@product/types/Product";
 import {Data} from "@product/types";
 import {prisma} from "@product/lib/prisma";
 import {log} from "@product/lib/log";
-import {Product_type} from "@prisma/client";
+import {Product_type, Recipe} from "@prisma/client";
 import {ServerErrorResponse} from "@grpc/grpc-js";
+import * as console from "console";
 
 export const UpdateProduct = async (
     {request}: Data<Product>,
     callback: (err: ServerErrorResponse | null, response: any) => void
 ) => {
-    log.error(request);
+
     try {
         const {
             id,
@@ -24,8 +25,23 @@ export const UpdateProduct = async (
             restaurant_id,
             type,
             categories,
-            allergens
+            allergens,
+            recipe
         } = request;
+
+        const allRecipe = await prisma.recipe.findMany();
+        console.log("FullAllRecipe", allRecipe.map((ingredient) => ingredient.id + " " + ingredient.ingredient_id + " " + ingredient.quantity + " " + ingredient.product_id).join(", "));
+
+        const fullRecipe = await Promise.all(recipe.map(async (ingredient) => {
+            console.log("ingredient", ingredient.ingredient_id + " " + id);
+            const recipe = await prisma.recipe.findFirst({
+                where: {ingredient_id: ingredient.ingredient_id, product_id: id}
+            }) || {id: "", ingredient_id: ingredient.ingredient_id, product_id: id, quantity: ingredient.quantity} as unknown as Recipe;
+            console.log("recipe", recipe.id + " " + recipe.ingredient_id + " " + recipe.quantity + " " + recipe.product_id);
+            return recipe;
+        }) as unknown as Recipe[]);
+
+        console.log("fullRecipe", fullRecipe.map((ingredient) => ingredient.id + " " + ingredient.ingredient_id + " " + ingredient.quantity + " " + ingredient.product_id));
 
         const product = await prisma.product.update({
             where: {id},
@@ -45,6 +61,15 @@ export const UpdateProduct = async (
                 },
                 allergens: {
                     connect: allergens.map((allergen) => ({id: allergen.id}))
+                },
+                recipe: {
+                    connectOrCreate: fullRecipe.map((ingredient) => ({
+                        where: {id: ingredient.id},
+                        create: {
+                            ingredient_id: ingredient.ingredient_id,
+                            quantity: ingredient.quantity,
+                        }
+                    }))
                 }
             },
             include: {
