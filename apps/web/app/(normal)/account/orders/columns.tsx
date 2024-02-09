@@ -8,7 +8,6 @@ import { MdLink } from "react-icons/md";
 
 export const orders_columns: ColumnDef<Order>[] = [
   {
-    accessorFn: (order) => order.restaurantId,
     id: "restaurantId",
     header: "",
     cell(props) {
