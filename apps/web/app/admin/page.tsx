@@ -1,6 +1,6 @@
 "use client";
 
-import { Map, RestaurantPin } from "@/components/map";
+import { Map, OrderPin, RestaurantPin } from "@/components/map";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
