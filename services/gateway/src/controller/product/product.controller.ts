@@ -204,8 +204,8 @@ productRoutes.put("/api/product/:id", withCheck({ role: ["MANAGER", "ADMIN"] }),
 
   const categories = categoriesList.map((category: { id: string }) => new Category().setId(category.id));
   const allergens = allergensList.map((allergen: { id: string }) => new Allergen().setId(allergen.id));
-  const recipe = recipeList.map((ingredientList: { id: string; quantity: number }) =>
-    new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.id),
+  const recipe = recipeList.map((ingredientList: { ingredientId: string; quantity: number }) =>
+    new Recipe().setQuantity(ingredientList.quantity).setIngredientId(ingredientList.ingredientId),
   );
 
   const product = new Product()
