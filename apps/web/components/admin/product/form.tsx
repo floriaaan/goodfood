@@ -31,10 +31,10 @@ import { useAdmin } from "@/hooks/useAdmin";
 import { cn } from "@/lib/utils";
 import { Product, ProductType, Recipe, ProductTypeLabels } from "@/types/product";
 import Image from "next/image";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { GiCook, GiCookingPot, GiWeight } from "react-icons/gi";
 import { MdArrowDropDown, MdCloudUpload, MdDelete, MdDone, MdInfoOutline } from "react-icons/md";
-import {ProductDeleteAlert} from "@/components/admin/product/delete-alert";
+import { ProductDeleteAlert } from "@/components/admin/product/delete-alert";
 
 // todo: check with product create request
 const formSchema = z.object({
@@ -53,7 +53,7 @@ const formSchema = z.object({
   categoriesList: z.array(z.string()).optional(),
   allergensList: z.array(z.string()).optional(),
 
-  recipeList: z.array(z.object({ingredientId: z.string(), quantity: z.number()})).min(1),
+  recipeList: z.array(z.object({ ingredientId: z.string(), quantity: z.number() })).min(1),
 });
 
 export type ProductCreateEditFormValues = z.infer<typeof formSchema>;
@@ -77,27 +77,27 @@ export function ProductCreateEditForm({
     resolver: zodResolver(formSchema),
     defaultValues: initialValues
       ? {
-        ...initialValues,
-        price: initialValues.price.toString(),
-      }
+          ...initialValues,
+          price: initialValues.price.toString(),
+        }
       : {
-        name: "",
-        image: "https://picsum.photos/200/300",
-        comment: "",
-        price: "0.0",
-        preparation: "",
-        weight: "",
-        kilocalories: "",
-        nutriscore: "",
+          name: "",
+          image: "https://picsum.photos/200/300",
+          comment: "",
+          price: "0.0",
+          preparation: "",
+          weight: "",
+          kilocalories: "",
+          nutriscore: "",
 
-        type: ProductType.PLATS.toString(),
+          type: ProductType.PLATS.toString(),
 
-        restaurantId: restaurant?.id || "",
-        categoriesList: [],
-        allergensList: [],
+          restaurantId: restaurant?.id || "",
+          categoriesList: [],
+          allergensList: [],
 
-        recipeList: [],
-      },
+          recipeList: [],
+        },
   });
 
   const image_inputRef = useRef<HTMLInputElement>(null);
@@ -112,10 +112,15 @@ export function ProductCreateEditForm({
   }
 
   // ingredients are not included in the form
-  const [ingredients, setIngredients] = useState<{ value: string; quantity: number }[]>(form.getValues("recipeList").map((i: Recipe) => ({ value: i.ingredientId, quantity: i.quantity })));
+  const [ingredients, setIngredients] = useState<{ value: string; quantity: number }[]>(
+    form.getValues("recipeList").map((i: Recipe) => ({ value: i.ingredientId, quantity: i.quantity })),
+  );
 
   useEffect(() => {
-    form.setValue("recipeList", ingredients.map((i) => ({ ingredientId: i.value, quantity: i.quantity })));
+    form.setValue(
+      "recipeList",
+      ingredients.map((i) => ({ ingredientId: i.value, quantity: i.quantity })),
+    );
   }, [ingredients]);
 
   return (
@@ -347,10 +352,10 @@ export function ProductCreateEditForm({
                                 {field.value?.length === 0
                                   ? "Aucun allergène sélectionné"
                                   : field.value?.map((a) => (
-                                    <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
-                                      {allergens.find((al) => al.id.toString() === a)?.libelle}
-                                    </div>
-                                  ))}
+                                      <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                        {allergens.find((al) => al.id.toString() === a)?.libelle}
+                                      </div>
+                                    ))}
                                 <MdArrowDropDown className="absolute right-2 h-4 w-4" />
                               </div>
                             </DropdownMenuTrigger>
@@ -363,7 +368,7 @@ export function ProductCreateEditForm({
                                     form.setValue(
                                       "allergensList",
                                       checked
-                                        ? [...field.value || [], a.id.toString()]
+                                        ? [...(field.value || []), a.id.toString()]
                                         : field.value?.filter((o) => o !== a.id.toString()),
                                     );
                                   }}
@@ -389,14 +394,14 @@ export function ProductCreateEditForm({
                                 {field.value?.length === 0
                                   ? "Aucune catégorie sélectionnée"
                                   : field.value?.map((a) => {
-                                    const category = categories.find((al) => al.id.toString() === a);
-                                    if (!category) return null;
-                                    return (
-                                      <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
-                                        {`${category.icon} ${category.libelle}`}
-                                      </div>
-                                    );
-                                  })}
+                                      const category = categories.find((al) => al.id.toString() === a);
+                                      if (!category) return null;
+                                      return (
+                                        <div className="bg-gray-100 px-1 py-0.5 text-xs" key={a}>
+                                          {`${category.icon} ${category.libelle}`}
+                                        </div>
+                                      );
+                                    })}
                                 <MdArrowDropDown className="absolute right-2 h-4 w-4" />
                               </div>
                             </DropdownMenuTrigger>
@@ -409,7 +414,7 @@ export function ProductCreateEditForm({
                                     form.setValue(
                                       "categoriesList",
                                       checked
-                                        ? [...field.value || [], a.id.toString()]
+                                        ? [...(field.value || []), a.id.toString()]
                                         : field.value?.filter((o) => o !== a.id.toString()),
                                     );
                                   }}
@@ -455,8 +460,8 @@ export function ProductCreateEditForm({
                             &bull;
                             <strong>
                               {
-                                ingredients_restaurant.find((il) => il.ingredientId?.toString() === i.value?.toString())?.ingredient
-                                  .name
+                                ingredients_restaurant.find((il) => il.ingredientId?.toString() === i.value?.toString())
+                                  ?.ingredient.name
                               }{" "}
                               ({i.quantity})
                             </strong>
