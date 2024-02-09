@@ -28,6 +28,7 @@ import {
   MdHomeWork,
   MdKeyboardBackspace,
   MdListAlt,
+  MdManageAccounts,
   MdTableView,
   MdUnfoldMore,
 } from "react-icons/md";
@@ -156,6 +157,22 @@ export const Sidebar = () => {
               <LargeComponentLoader />
             </div>
           ))}
+
+        {isSuper && (
+          <>
+            <div className=" flex h-full w-full grow flex-col gap-2">
+              <Link
+                href="/admin/super"
+                className={cn(
+                  "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5 ",
+                  path === "/admin/super" && "bg-black bg-opacity-10",
+                )}
+              >
+                <MdManageAccounts className="h-5 w-5 shrink-0" /> Gestion des rôles
+              </Link>
+            </div>
+          </>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger className=" inline-flex w-full  cursor-pointer items-center justify-between bg-black/5 px-4 py-2 text-sm font-semibold">
             {(isAdmin || isManager) && isSupervision && <MdHomeWork className="h-5 w-5 shrink-0" />}

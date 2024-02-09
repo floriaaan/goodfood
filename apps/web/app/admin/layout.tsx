@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { user } = useAuth();
-  if (!user) return null;
+  if (!user) return "Unauthorized";
   if (user.role.code !== "MANAGER" && user.role.code !== "ADMIN") return "Unauthorized";
 
   return (
