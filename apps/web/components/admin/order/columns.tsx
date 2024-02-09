@@ -108,9 +108,7 @@ export const orders_columns: ColumnDef<Order>[] = [
   {
     id: "actions",
     cell: ({ row, getValue }) => {
-      const p = getValue() as Order["payment"];
-      const id = getValue() as Order["id"];
-      const restaurant = row.original;
+      const o = row.original;
 
       return (
         <Sheet>
@@ -123,14 +121,14 @@ export const orders_columns: ColumnDef<Order>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-y-1 p-2">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(restaurant.id)}>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(o.id)}>
                 <MdCopyAll className="h-4 w-4 shrink-0" />
                 {"Copier l'identifiant commande"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </DropdownMenuContent>
           </DropdownMenu>
-          <OrderFormSheetContent initialValues={{ ...p } as unknown as OrderCreateEditFormValues} id={id} />
+          <OrderFormSheetContent initialValues={{ ...o } as unknown as OrderCreateEditFormValues} id={o.id} />
         </Sheet>
       );
     },

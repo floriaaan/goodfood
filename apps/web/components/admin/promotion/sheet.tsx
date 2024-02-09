@@ -25,14 +25,14 @@ export const PromotionCreateSheet = () => {
 export const PromotionRefreshSheet = () => {
   const { refetchPromotions } = useAdmin();
 
-	return (
-		<Sheet>
-			<SheetTrigger asChild>
-				<Button onClick={refetchPromotions} className="w-fit bg-black px-6 text-white">
-					<MdRefresh className="h-4 w-4 shrink-0" />
-					Actualiser
-				</Button>
-			</SheetTrigger>
-		</Sheet>
-	);
-}
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button onClick={refetchPromotions} className="w-fit bg-black px-6 text-white">
+          <MdRefresh className="h-4 w-4 shrink-0" />
+          Actualiser
+        </Button>
+      </SheetTrigger>
+    </Sheet>
+  );
+};

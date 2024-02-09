@@ -11,13 +11,15 @@ import { useState } from "react";
 import { MdCheck, MdLock, MdRestaurant, MdShoppingBasket } from "react-icons/md";
 
 import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
-import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { orderList } from "@/constants/data";
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 import { TiLocationArrow } from "react-icons/ti";
 
+import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import { NotFoundResource } from "@/components/ui/not-found-resource";
+import { NotLogged } from "@/components/ui/not-logged";
 import { useAuth, useBasket, useLocation } from "@/hooks";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Payment } from "@/types/payment";
@@ -33,23 +35,24 @@ type PageProps = { params: { id: string } };
 export default function CheckoutPage({}: PageProps) {
   // decode url encoded params.id
   const { user, session } = useAuth();
-
   const { restaurants } = useLocation();
-
   const { isAuthenticated, isBasketEmpty, isRestaurantSelected, selectedRestaurant } = useBasket();
 
   const [deliveryType, setDeliveryType] = useState(DeliveryType.DELIVERY.toString());
 
   const [delivery_isModalOpen, setDelivery_isModalOpen] = useState(false);
   const [delivery_checkoutSessionSecret, setDelivery_checkoutSessionSecret] = useState("");
-
   const [takeaway_isModalOpen, setTakeaway_isModalOpen] = useState(false);
 
   // TODO: implement takeway order creation
-  const [hasCreatedOrder, setHasCreatedOrder] = useState(false);
-  const [order, setOrder] = useState<Order | null>(orderList[0]); // TODO: replace with real order
+  // const [hasCreatedOrder, setHasCreatedOrder] = useState(false);
+  const [
+    order,
+    // setOrder
+  ] = useState<Order | null>(orderList[0]); // TODO: replace with real order
 
-  const { data: payment } = useQuery<{ Payment: Payment; clientSecret: string }>({
+  useQuery<{ Payment: Payment; clientSecret: string }>({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["payment", "stripe"],
     queryFn: async () => {
       const res = await fetchAPI(`/api/payment/stripe`, session?.token, {
@@ -64,8 +67,8 @@ export default function CheckoutPage({}: PageProps) {
     },
   });
 
-  if (!user) return null;
-  if (!selectedRestaurant) return null;
+  if (!user) return <NotLogged />;
+  if (!selectedRestaurant) return <NotFoundResource reason="Aucun restaurant sélectionné" />;
 
   return (
     <div className="flex h-full grow p-4 pb-12">
@@ -75,7 +78,7 @@ export default function CheckoutPage({}: PageProps) {
             <h2 className="text-xl font-semibold">Paiement</h2>
             <small>Sélectionnez votre mode de paiement</small>
             <RadioGroup
-              disabled={hasCreatedOrder}
+              // disabled={hasCreatedOrder}
               onValueChange={setDeliveryType}
               defaultValue={DeliveryType.DELIVERY.toString()}
             >
@@ -118,7 +121,13 @@ export default function CheckoutPage({}: PageProps) {
                     <MdShoppingBasket className="h-4 w-4 shrink-0" />
                     Payer
                   </Button>
-                  <Dialog onOpenChange={setDelivery_isModalOpen} open={delivery_isModalOpen || hasCreatedOrder}>
+                  <Dialog
+                    onOpenChange={setDelivery_isModalOpen}
+                    open={
+                      delivery_isModalOpen
+                      //  || hasCreatedOrder
+                    }
+                  >
                     <DialogContent className="flex aspect-video max-h-screen w-screen items-center justify-center p-0">
                       <div id="checkout" className="w-full">
                         {delivery_checkoutSessionSecret ? (
@@ -154,7 +163,13 @@ export default function CheckoutPage({}: PageProps) {
                     <MdCheck className="h-4 w-4 shrink-0" />
                     Finaliser et payer sur place
                   </Button>
-                  <Dialog onOpenChange={setTakeaway_isModalOpen} open={takeaway_isModalOpen || hasCreatedOrder}>
+                  <Dialog
+                    onOpenChange={setTakeaway_isModalOpen}
+                    open={
+                      takeaway_isModalOpen
+                      //  || hasCreatedOrder
+                    }
+                  >
                     <DialogContent className="grid aspect-video h-auto max-w-4xl justify-center gap-2 md:grid-cols-2">
                       {order &&
                         (() => {

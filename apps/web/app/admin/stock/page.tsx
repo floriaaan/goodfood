@@ -6,6 +6,7 @@ import { IngredientSheetContent } from "@/app/admin/stock/product/ingredient/she
 import { SupplierCard } from "@/app/admin/stock/supplier/card";
 import { SupplierSheetContent } from "@/app/admin/stock/supplier/sheet-content";
 import { DataTable } from "@/components/ui/data-table";
+import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useAdmin } from "@/hooks/useAdmin";
 import { cn } from "@/lib/utils";
@@ -18,7 +19,7 @@ export default function StockPage() {
   const [ingredientRestaurantSheetOpen, setIngredientRestaurantSheetOpen] = useState(false);
   const [supplierSheetOpen, setSupplierSheetOpen] = useState(false);
 
-  if (!restaurant) return null;
+  if (!restaurant) return <LargeComponentLoader />;
 
   return (
     <div className="flex flex-col">

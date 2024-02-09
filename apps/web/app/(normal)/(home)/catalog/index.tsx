@@ -27,12 +27,14 @@ export const Catalog = () => {
         <CatalogContext.Provider value={{ type, setType }}>
           <section className="grid auto-rows-max gap-4 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3">
             <CatalogFilters />
-            {list.sort((a, b) =>
-            // if a is out of stock, it goes to the end
-            a.isOutOfStock === b.isOutOfStock ? 0 : a.isOutOfStock ? 1 : -1,
-          ).map((product) => (
-              <ProductCatalogListItem key={product.id} {...product} />
-            ))}
+            {list
+              .sort((a, b) =>
+                // if a is out of stock, it goes to the end
+                a.isOutOfStock === b.isOutOfStock ? 0 : a.isOutOfStock ? 1 : -1,
+              )
+              .map((product) => (
+                <ProductCatalogListItem key={product.id} {...product} />
+              ))}
             {list.length === 0 && (
               <div className="flex grow flex-col items-center justify-center gap-y-2 p-6 pb-12 sm:col-span-2 lg:col-span-3">
                 <MdClose className="h-8 w-8 shrink-0" />
