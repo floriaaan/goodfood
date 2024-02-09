@@ -5,8 +5,7 @@ import { useAuth, useBasket } from "@/hooks";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAPI } from "@/lib/fetchAPI";
-import { Payment, PaymentStatus } from "@/types/payment";
-import { Delivery } from "@/types/delivery";
+import { PaymentStatus } from "@/types/payment";
 import { Order } from "@/types/order";
 import { format } from "date-fns";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -14,6 +13,8 @@ import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
 import { OrderStatusMap } from "@/app/(normal)/account/orders/[id]/map";
 import { useRouter } from "next/navigation";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 type PageProps = { params: { id: string } };
 export default function CheckoutCallbackPage({ params }: PageProps) {
@@ -22,29 +23,22 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
 
   const { user, session } = useAuth();
 
-  const { isAuthenticated, isBasketEmpty, isRestaurantSelected } = useBasket();
+  const { isAuthenticated } = useBasket();
 
   const { data: order } = useQuery<Order>({
     queryKey: ["Order", "PaymentId", paymentId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-payment/${paymentId}`, session?.token);
-      const body = await res.json();
-      return body;
+      return await res.json();
     },
   });
 
   const validateOrder = async (order: Order) => {
     try {
-      const res = await fetchAPI(`/api/order/${order.id}`, session?.token, {
+      await fetchAPI(`/api/order/claim/${order.id}`, session?.token, {
         method: "PUT",
-        body: JSON.stringify({
-          status: "FULFILLED",
-          deliveryId: order.deliveryId,
-          paymentId: order.paymentId,
-          restaurantId: order.restaurantId,
-        }),
       });
-      // push("/"); // Redirect to home
+      push("/"); // Redirect to home
     } catch (e) {
       console.log(e);
       return;
@@ -99,14 +93,13 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
                     </div>
                   </div>
                   <OrderStatusMap {...order} />
-                  <button
-                    className="gf_shadow_green flex shrink-0 items-center justify-center border border-green-500 bg-gray-100 p-2 font-bold"
+                  <Button
                     onClick={() => {
                       validateOrder(order);
                     }}
                   >
                     Valider la réception
-                  </button>
+                  </Button>
                 </div>
               </>
             ) : (
