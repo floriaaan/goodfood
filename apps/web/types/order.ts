@@ -5,8 +5,8 @@ import { Basket, BasketItem } from "@/types/basket";
 
 export type UserMinimum = {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
 };

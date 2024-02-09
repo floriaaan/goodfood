@@ -10,12 +10,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Order } from "@/types/order";
+import { DeliveryType, Order } from "@/types/order";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { MdArrowDropUp, MdCopyAll, MdEdit } from "react-icons/md";
+import { MdArrowDropUp, MdCopyAll } from "react-icons/md";
+import { toPrice } from "@/lib/product/toPrice";
+import { format } from "date-fns";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -35,17 +37,17 @@ export const orders_columns: ColumnDef<Order>[] = [
       );
     },
     cell: ({ getValue }) => {
-      const p = getValue() as Order["user"];
+      const user = getValue() as Order["user"];
 
       return (
         <span>
-          {p.first_name} {p.last_name}
+          {user.firstName} {user.lastName}
         </span>
       );
     },
   },
   {
-    accessorKey: "delivery_type",
+    accessorKey: "deliveryType",
     header: ({ column }) => {
       return (
         <button
@@ -56,6 +58,10 @@ export const orders_columns: ColumnDef<Order>[] = [
           <MdArrowDropUp className={cn("ml-1 h-4 w-4", column.getIsSorted() === "asc" && "rotate-180")} />
         </button>
       );
+    },
+    cell: ({ getValue }) => {
+      const deliveryType = getValue() as Order["deliveryType"];
+      return <span>{deliveryType === DeliveryType.DELIVERY ? "Livraison" : "Emporter"}</span>;
     },
   },
   {
@@ -76,15 +82,34 @@ export const orders_columns: ColumnDef<Order>[] = [
 
       return (
         <span>
-          {p.total} - {p.status}
+          {toPrice(p.total)} - {p.status}
         </span>
       );
     },
   },
-
+  {
+    accessorKey: "delivery",
+    header: ({ column }) => {
+      return (
+        <button
+          className="inline-flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <MdArrowDropUp className={cn("ml-1 h-4 w-4", column.getIsSorted() === "asc" && "rotate-180")} />
+        </button>
+      );
+    },
+    cell: ({ getValue }) => {
+      const d = getValue() as Order["delivery"];
+      return <span>{format(new Date(d.eta), "eeee d MMMM yyyy à HH:mm")}</span>;
+    },
+  },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: ({ row, getValue }) => {
+      const p = getValue() as Order["payment"];
+      const id = getValue() as Order["id"];
       const restaurant = row.original;
 
       return (
@@ -103,16 +128,9 @@ export const orders_columns: ColumnDef<Order>[] = [
                 {"Copier l'identifiant commande"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-
-              <DropdownMenuItem>
-                <SheetTrigger className="inline-flex items-center gap-x-1">
-                  <MdEdit className="h-4 w-4 shrink-0" />
-                  Modifier/supprimer
-                </SheetTrigger>
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <OrderFormSheetContent initialValues={{ ...p } as unknown as OrderCreateEditFormValues} id={p.id} />
+          <OrderFormSheetContent initialValues={{ ...p } as unknown as OrderCreateEditFormValues} id={id} />
         </Sheet>
       );
     },
