@@ -256,7 +256,7 @@ userRoutes.put("/api/user/password", (req: Request, res: Response) => {
   });
 });
 
-userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: Request, res: Response) => {
+userRoutes.put("/api/user/:id/role", async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
         required: true,
@@ -281,7 +281,22 @@ userRoutes.put("/api/user/:id/role", withCheck({ role: "ADMIN" }), async (req: R
   const userId = await getUserIdFromToken(token);
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   const id = req.params.id;
-  if (id === userId) return res.status(403).json({ message: "Forbidden" });
+
+  // If user is admin, he can change the role of any user
+  // If user is not admin, he can only change his own role to delivery person
+  const isAdmin = await check(token, { role: "ADMIN" });
+  const isSimpleUser = (await check(token, { id })) && !isAdmin;
+
+  if (!isAdmin || (isSimpleUser && req.body.role !== "DELIVERY_PERSON"))
+    return res.status(403).json({
+      message: "You are not allowed to change the role of this user",
+      cause: {
+        isAdmin,
+        isSimpleUser,
+        role: req.body.role,
+      },
+    });
+
   // ----------------------------
 
   const roleInput = new changeRoleInput();
