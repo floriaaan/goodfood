@@ -10,7 +10,7 @@ export const CheckoutRecap = ({ deliveryType, address }: { deliveryType: string;
   const { total, eta, basket, products } = useBasket();
   const { street, city, zipcode } = address || {};
 
-  const address_displayed = `${street}, ${zipcode} ${city}`;
+  const address_displayed = `${street}, ${zipcode || ""} ${city || ""}`;
 
   return (
     <div id="SidebarRoot" className="flex w-full flex-col justify-end gap-1 border border-solid border-gray-100">
