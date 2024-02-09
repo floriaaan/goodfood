@@ -444,7 +444,7 @@ export function ProductCreateEditForm({
                     <SelectQuantity
                       options={ingredients_restaurant.map((i) => ({
                         label: i.ingredient.name,
-                        value: i.id?.toString(),
+                        value: i.ingredientId?.toString(),
                       }))}
                       placeholder="Ingrédient"
                       state={ingredients.map((i) => ({ value: i.value, quantity: i.quantity }))}
