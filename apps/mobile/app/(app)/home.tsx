@@ -9,10 +9,13 @@ import { RestaurantCard } from "@/components/restaurant/card";
 import { AppHeader } from "@/components/ui/header";
 import { CategoryHeader } from "@/components/ui/header/category";
 import { SearchInput } from "@/components/ui/input/search";
-import { productList, restaurantList } from "@/constants/data";
+import { useBasket } from "@/hooks/useBasket";
+import { useLocation } from "@/hooks/useLocation";
 
 export default function Index() {
   const [search, setSearch] = useState("");
+  const { products } = useBasket();
+  const { restaurants } = useLocation();
 
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
@@ -56,7 +59,7 @@ export default function Index() {
         <FlatList
           className="flex-grow-0 w-screen shrink-0"
           horizontal
-          data={productList}
+          data={products}
           renderItem={({ item }) => <ProductCard {...item} />}
         />
         <View className="w-full">
@@ -68,7 +71,7 @@ export default function Index() {
         </View>
         <FlatList
           className="flex-grow w-full shrink-0"
-          data={restaurantList}
+          data={restaurants}
           renderItem={({ item }) => <RestaurantCard {...item} />}
         />
       </SafeAreaView>

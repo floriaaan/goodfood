@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image, ImageSourcePropType, Text, TouchableOpacity, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 
-import { useBasket } from "@/hooks/basket";
+import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
 
 export const ProductBasketCard = ({ id, name, price, image }: Product) => {

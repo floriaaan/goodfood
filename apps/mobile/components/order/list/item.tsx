@@ -4,7 +4,8 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { Status } from "@/types";
+import { toName } from "@/lib/user";
+import { Status } from "@/types/global";
 import { Order } from "@/types/order";
 
 const ORDER_STATUS = {
@@ -30,7 +31,7 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
       )}
     >
       {item.status !== Status.REJECTED && item.status !== Status.FULFILLED && (
-        <Text className="font-bold text-base">{`Livraison estimée : ${format(
+        <Text className="text-base font-bold">{`Livraison estimée : ${format(
           new Date(item.delivery.eta),
           "dd MMMM yyyy à HH:mm",
           {
@@ -44,8 +45,8 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
           locale: fr,
         })}`}</Text>
       )}
-      <View className="flex flex-row space-x-2 justify-between">
-        <View className="flex flex-col grow gap-1">
+      <View className="flex flex-row justify-between space-x-2">
+        <View className="flex flex-col gap-1 grow">
           <View className="flex flex-row items-center">
             <MaterialCommunityIcons name="truck-delivery" size={16} color="black" />
             <Text className="ml-2 text-sm font-medium text-black">{ORDER_STATUS[item.status]}</Text>
@@ -65,9 +66,7 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
           </View>
           <View className="flex flex-row items-center">
             <MaterialCommunityIcons name="walk" size={16} color="black" />
-            <Text className="ml-2 text-sm font-medium text-black">
-              {item.delivery.person.first_name + " " + item.delivery.person.last_name}
-            </Text>
+            <Text className="ml-2 text-sm font-medium text-black">{toName(item.delivery.deliveryPerson)}</Text>
           </View>
         </View>
       </View>

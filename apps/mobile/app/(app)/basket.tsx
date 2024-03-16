@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,7 +7,7 @@ import { ProductBasketCard } from "@/components/product/basket";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
 import { productList } from "@/constants/data";
-import { useBasket } from "@/hooks/basket";
+import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
 
 export default function Basket() {

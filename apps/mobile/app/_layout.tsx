@@ -1,18 +1,16 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 
-import { AuthProvider } from "@/hooks/auth";
-import { NativeProvider } from "@/hooks/native";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { NativeProvider } from "@/hooks/useNative";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -37,27 +35,33 @@ export default function RootLayout() {
     if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
+  const colorScheme = useColorScheme();
+  const queryClient = new QueryClient();
   if (!loaded) return null;
 
-  return <RootLayoutNav />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <NativeProvider>
+        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+          <StatusBar style="auto" />
+          <AuthProvider>
+            <RootLayoutNav />
+          </AuthProvider>
+        </ThemeProvider>
+      </NativeProvider>
+    </QueryClientProvider>
+  );
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const { isAuthenticated } = useAuth();
 
   return (
-    <NativeProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <StatusBar style="auto" />
-        <AuthProvider>
-          <Stack
-            initialRouteName="(onboarding)/first"
-            screenOptions={{
-              headerShown: false,
-            }}
-          />
-        </AuthProvider>
-      </ThemeProvider>
-    </NativeProvider>
+    <Stack
+      initialRouteName={isAuthenticated ? "(app)/home" : "(onboarding)/first"}
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
   );
 }

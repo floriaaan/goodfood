@@ -6,12 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AuthLogin() {
-  const { setUser } = useAuth();
-  const [email, setEmail] = useState("jean.bon@courriel.fr");
-  const [password, setPassword] = useState("MotDePasse");
+  const { login } = useAuth();
+  const [email, setEmail] = useState("user@mail.com");
+  const [password, setPassword] = useState("password");
 
   return (
     <View className="flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
@@ -44,8 +44,11 @@ export default function AuthLogin() {
         <Button
           title="C'est parti !"
           onPress={() => {
-            setUser({ token: "token" });
-            router.push("/(app)/home");
+            login(email, password)
+              .then((r) => {
+                if (r.ok) router.push("/(app)/home");
+              })
+              .catch(console.error);
           }}
           icon="chevron-right"
         />

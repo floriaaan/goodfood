@@ -1,40 +1,46 @@
-import { Status } from "@/types";
+import { Basket, BasketItem } from "@/types/basket";
 import { Delivery } from "@/types/delivery";
+import { Status } from "@/types/global";
 import { Payment } from "@/types/payment";
 
 export type UserMinimum = {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
 };
 
-export type Basket = {
-  string: string;
-  json?: string | object | any;
-  total: number;
-};
-
 export enum DeliveryType {
-  TAKEAWAY = "TAKEAWAY",
-  DELIVERY = "DELIVERY",
+  DELIVERY = 0,
+  TAKEAWAY = 1,
 }
 
 export type Order = {
   id: string;
-  delivery_type: DeliveryType;
-  restaurant_id: string;
+  deliveryType: DeliveryType;
+  restaurantId: string;
   user: UserMinimum;
-  basket_snapshot: Basket;
+  basketSnapshot: {
+    string: string;
+    json?: string | object | BasketSnapshot;
+    total: number;
+  };
   status: Status;
 
-  payment_id: string;
+  paymentId: string;
   payment: Payment;
 
-  delivery_id: string;
+  deliveryId: string;
   delivery: Delivery;
 
   created_at: Date | string;
   updated_at: Date | string;
+};
+
+export type BasketSnapshot = Omit<Basket, "productsList"> & {
+  productsList: (BasketItem & {
+    price: number;
+    name: string;
+  })[];
 };

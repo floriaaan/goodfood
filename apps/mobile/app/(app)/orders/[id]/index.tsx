@@ -7,7 +7,7 @@ import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 
 import { orderList } from "@/constants/data";
-import { useNative } from "@/hooks/native";
+import { useNative } from "@/hooks/useNative";
 import { DeliveryType, Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
 
@@ -78,15 +78,15 @@ export default function OrderPage() {
           strokeColor="#008D5E"
         />
       </MapView>
-      <View key="header" className="flex flex-row items-center justify-between w-full absolute left-0 p-2 -mt-px">
+      <View key="header" className="absolute left-0 flex flex-row items-center justify-between w-full p-2 -mt-px">
         <TouchableOpacity
           onPress={() => navigate(`(app)`, { screen: "orders/index" })}
-          className=" flex items-center justify-center w-10 h-10 p-2 m-4 bg-black top-12"
+          className="flex items-center justify-center w-10 h-10 p-2 m-4 bg-black  top-12"
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} className=" flex items-center justify-center w-10 h-10 p-2 m-4 top-12">
-          <Image className="w-10 h-10  bg-white" source={require("@/assets/images/avatar.png")} />
+        <TouchableOpacity onPress={() => {}} className="flex items-center justify-center w-10 h-10 p-2 m-4  top-12">
+          <Image className="w-10 h-10 bg-white" source={require("@/assets/images/avatar.png")} />
         </TouchableOpacity>
       </View>
 

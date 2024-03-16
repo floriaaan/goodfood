@@ -1,9 +1,13 @@
 import { useRef } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
+
+import { RestaurantCard } from "@/components/restaurant/card";
+import { useLocation } from "@/hooks/useLocation";
 
 export const UserLocation = () => {
   const refRBSheet = useRef<RBSheet>(null);
+  const { restaurants } = useLocation();
 
   return (
     <>
@@ -13,7 +17,11 @@ export const UserLocation = () => {
       </TouchableOpacity>
       <RBSheet ref={refRBSheet} closeOnDragDown closeOnPressMask>
         <View className="absolute flex items-center flex-1 w-full h-full bg-white">
-          <Text>Awesome 🎉</Text>
+          <FlatList
+            className="flex-grow w-full shrink-0"
+            data={restaurants}
+            renderItem={({ item }) => <RestaurantCard {...item} />}
+          />
         </View>
       </RBSheet>
     </>

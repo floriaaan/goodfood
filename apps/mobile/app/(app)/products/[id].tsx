@@ -8,7 +8,7 @@ import { BasketHeader } from "@/components/basket/header";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
 import { productList } from "@/constants/data";
-import { useBasket } from "@/hooks/basket";
+import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
 
 export default function ProductPage() {
