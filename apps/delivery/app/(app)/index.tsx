@@ -3,13 +3,25 @@ import { useNative } from "@/hooks/useNative";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
-    Dimensions,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import MapView from "react-native-maps";
+
+const { height } = Dimensions.get("window");
+const BOTTOM_PANEL_HEIGHT_MINIMIZED = 450;
+const BOTTOM_PANEL_HEIGHT_MAXIMIZED = height - 350;
+
+const MARKER_DELTA_MINIMIZED =
+  (height - BOTTOM_PANEL_HEIGHT_MINIMIZED) /
+  (height + 2 * BOTTOM_PANEL_HEIGHT_MINIMIZED) /
+  100; // should be around 0.003
+const MARKER_DELTA_MAXIMIZED =
+  (height - BOTTOM_PANEL_HEIGHT_MAXIMIZED) / height / 100; // should be around 0.0055
+
 
 export default function Index() {
   const { location, locationPermission } = useNative();
@@ -30,7 +42,7 @@ export default function Index() {
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: user_location[0] - 0.003,
+          latitude: user_location[0] - MARKER_DELTA_MINIMIZED,
           longitude: user_location[1],
           latitudeDelta: 0.009,
           longitudeDelta: 0.009,
@@ -56,7 +68,7 @@ export default function Index() {
             onPress={() => {
               if (isBottomPanelMaximized) {
                 mapRef.current?.animateToRegion({
-                  latitude: user_location[0] - 0.003,
+                  latitude: user_location[0] - MARKER_DELTA_MINIMIZED,
                   longitude: user_location[1],
                   latitudeDelta: 0.009,
                   longitudeDelta: 0.009,
@@ -64,7 +76,7 @@ export default function Index() {
                 setIsBottomPanelMaximized(false);
               } else {
                 mapRef.current?.animateToRegion({
-                  latitude: user_location[0] - 0.0055,
+                  latitude: user_location[0] - MARKER_DELTA_MAXIMIZED,
                   longitude: user_location[1],
                   latitudeDelta: 0.009,
                   longitudeDelta: 0.009,
@@ -176,7 +188,7 @@ const styles = StyleSheet.create({
   bottom_panel: {
     width: "100%",
     backgroundColor: "black",
-    height: 350,
+    height: BOTTOM_PANEL_HEIGHT_MINIMIZED,
     flexDirection: "column",
     padding: 16,
     color: "white",

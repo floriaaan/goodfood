@@ -2,12 +2,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import {
-    Dimensions,
-    Image,
-    SafeAreaView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export const Header = () => {
@@ -19,7 +19,7 @@ export const Header = () => {
           style={styles.button}
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         >
-          <MaterialIcons name="menu" size={24} color="black" />
+          <MaterialIcons name="menu" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   button: {
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
     height: 50,
     width: 50,
   },
