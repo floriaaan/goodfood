@@ -10,8 +10,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function AuthLogin() {
   const { login } = useAuth();
-  const [email, setEmail] = useState("user@mail.com");
-  const [password, setPassword] = useState("password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <View className="flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
