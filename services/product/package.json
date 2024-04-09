@@ -28,7 +28,7 @@
     "amqplib": "^0.10.3",
     "base64-arraybuffer": "^1.0.2",
     "express": "^4.19.2",
-    "nodemon": "^1.14.9",
+    "nodemon": "^3.1.0",
     "pkg": "^5.8.1",
     "vite-tsconfig-paths": "^4.2.0"
   },
