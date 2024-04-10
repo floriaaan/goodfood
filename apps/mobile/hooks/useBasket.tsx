@@ -87,10 +87,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     [api_basket, local_basket, isAuthenticated],
   );
 
-  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(
-    //todo: remove hardcoded value
-    "clre4oqjv000014eblvk1mkyw",
-  );
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>();
 
   const { data: api_restaurant } = useQuery<Restaurant>({
     queryKey: ["restaurant", selectedRestaurantId],
@@ -268,8 +265,6 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
-
-  console.log(selectedRestaurantId, basket, products);
 
   return (
     <BasketContext.Provider

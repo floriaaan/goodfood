@@ -1,20 +1,25 @@
 import { useNavigation } from "expo-router";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { BasketHeader } from "@/components/basket/header";
 import { ProductBasketCard } from "@/components/product/basket";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
-import { productList } from "@/constants/data";
 import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
+import React, { useEffect, useState } from "react";
+import { BasketTaxes } from "@/app/(app)/basket/taxes";
 
-export default function Basket() {
-  const { basket } = useBasket();
-  const basketProductList = Object.keys(basket).map(
-    (id) => productList.find((product) => product.id === id) as Product,
-  );
+export default function Index() {
+  const { basket, products, refetch } = useBasket();
+  const [basketProductList, setBasketProductList] = useState<Product[]>([]);
+
+  useEffect(() => {
+    setBasketProductList(
+      basket.productsList.map((item) => products.find((product) => product.id === item.id)) as Product[],
+    );
+  }, [basket.productsList]);
+
   const { goBack } = useNavigation();
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
@@ -23,22 +28,28 @@ export default function Basket() {
         <View className="w-full">
           <AppHeader />
         </View>
-        <View className="w-full">
-          <BasketHeader />
-        </View>
-        <View className="w-full">
+
+        <ScrollView
+          className="w-full"
+          refreshControl={<RefreshControl refreshing={false} onRefresh={() => refetch()} />}
+        >
           <FlatList
             className="grow"
             data={basketProductList}
             renderItem={({ item }) => <ProductBasketCard {...item} />}
             ItemSeparatorComponent={() => <View className="h-2" />}
+            ListEmptyComponent={() => (
+              <View className="flex h-20 items-center justify-center">
+                <Text className="text-lg font-bold">Votre panier est vide</Text>
+              </View>
+            )}
             ListFooterComponent={() => (
               <View className="w-full">
-                <Text className="text-center text-black ">Footer</Text>
+                <BasketTaxes />
               </View>
             )}
           />
-        </View>
+        </ScrollView>
         <View className="absolute bottom-0">
           <View className="flex flex-row w-full space-x-4">
             <View className="">

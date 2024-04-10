@@ -14,14 +14,16 @@ export const ProductBasketCard = ({ id, name, price, image }: Product) => {
         <View className="flex flex-col justify-between h-full pt-1 pb-2 ml-2 grow">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-lg font-bold text-black">{name}</Text>
-            <Text className="text-sm text-black">{price.toFixed(2).replace(".", "€")}</Text>
+            <Text className="text-sm text-black">{price}</Text>
           </View>
           <View className="flex flex-row items-center ml-auto space-x-2">
             <TouchableOpacity onPress={() => removeProduct(id, 1)} className="p-2 border border-neutral-500">
               <MaterialCommunityIcons name="minus" size={16} color="black" />
             </TouchableOpacity>
             <View className="flex items-center justify-center p-2 border border-neutral-300">
-              <Text className="w-4 h-4 text-[14px] font-bold text-center text-black">{basket[id]}</Text>
+              <Text className="w-4 h-4 text-[14px] font-bold text-center text-black">
+                {basket.productsList.filter((p) => p.id === id)[0].quantity}
+              </Text>
             </View>
             <TouchableOpacity onPress={() => addProduct(id, 1)} className="p-2 border border-neutral-500">
               <MaterialCommunityIcons name="plus" size={16} color="black" />
@@ -37,12 +39,14 @@ const RightAction = ({ id }: { id: Product["id"] }) => {
   const { removeProduct, basket } = useBasket();
   return (
     <View className="flex flex-row justify-center w-20 h-full px-4 bg-red-100">
-      <TouchableOpacity
-        onPress={() => removeProduct(id, basket[id])}
-        className="flex items-center justify-center w-20 h-full"
-      >
-        <MaterialCommunityIcons name="delete" size={24} color="red" />
-      </TouchableOpacity>
+      <View className="flex flex-row justify-center w-screen h-full px-4 bg-red-100">
+        <TouchableOpacity
+          onPress={() => removeProduct(id, basket.productsList.filter((p) => p.id === id)[0].quantity || 0)}
+          className="flex items-center justify-center w-20 h-full"
+        >
+          <MaterialCommunityIcons name="delete" size={24} color="red" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

@@ -24,12 +24,13 @@ export default function OrderPage() {
     setOrder(orderList.find((o) => o.id === id));
   }, [id]);
 
-  const { delivery, delivery_type, payment } = order || {};
-  const { person, eta, address } = delivery || {};
+  const { delivery, deliveryType, payment } = order || {};
+  const { deliveryPerson, eta, address } = delivery || {};
 
-  const { location: delivery_location } = person || {
-    location: [0, 0],
-  };
+  const delivery_location =
+    deliveryPerson?.address.lat && deliveryPerson?.address.lng
+      ? [deliveryPerson?.address.lat, deliveryPerson?.address.lng]
+      : [0, 0];
   const { location } = useNative();
   const user_location =
     location?.coords.latitude && location?.coords.longitude
@@ -98,9 +99,9 @@ export default function OrderPage() {
           <MaterialCommunityIcons name="walk" size={24} color="white" />
           <View className="flex flex-col gap-y-1">
             <Text className="font-bold text-white">
-              {delivery_type === DeliveryType.DELIVERY ? "Je fais livrer ma commande" : "Je vais chercher ma commande"}
+              {deliveryType === DeliveryType.DELIVERY ? "Je fais livrer ma commande" : "Je vais chercher ma commande"}
             </Text>
-            <Text className="text-white">{address}</Text>
+            <Text className="text-white">{`${deliveryPerson?.address.street}, ${deliveryPerson?.address?.zipcode}`}</Text>
           </View>
         </View>
         <View className="flex flex-row items-center gap-x-4">

@@ -9,7 +9,7 @@ import { useBasket } from "@/hooks/useBasket";
 export const UserLocation = () => {
   const refRBSheet = useRef<RBSheet>(null);
   const { restaurants } = useLocation();
-  const { selectedRestaurantId, address, eta, selectedRestaurant } = useBasket();
+  const { address } = useBasket();
   const [addressDisplayed, setAddressDisplayed] = useState("Ajouter une adresse");
   useEffect(() => {
     if (address) setAddressDisplayed(`${address.street}, ${address.zipcode}`);
@@ -29,7 +29,9 @@ export const UserLocation = () => {
             <FlatList
               className="flex-grow w-full shrink-0"
               data={restaurants}
-              renderItem={({ item }) => <RestaurantCard restaurant={item} sheetRef={refRBSheet} />}
+              renderItem={({ item }) => (
+                <RestaurantCard restaurant={item} onClick={() => refRBSheet.current?.close()} />
+              )}
             />
           </View>
         </RBSheet>

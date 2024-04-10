@@ -7,7 +7,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BasketHeader } from "@/components/basket/header";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
-import { productList } from "@/constants/data";
 import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
 
@@ -15,15 +14,14 @@ export default function ProductPage() {
   const { goBack } = useNavigation();
 
   const { id } = useLocalSearchParams<"/(app)/products/[id]">();
-  const { addProduct, removeProduct } = useBasket();
+  const { addProduct, removeProduct, products } = useBasket();
 
   const [product, setProduct] = useState<Product | undefined>(undefined);
-  const { allergens, categories, comment, image, kilocalories, name, nutriscore, preparation, price, type, weight } =
+  const { categoriesList, comment, image, kilocalories, name, nutriscore, preparation, price, type, weight } =
     product || {};
-  //   if (!product) return null;
 
   useEffect(() => {
-    setProduct(productList.find((p) => p.id === id));
+    setProduct(products.find((p) => p.id === id));
   }, [id]);
 
   return (
@@ -37,15 +35,15 @@ export default function ProductPage() {
           <BasketHeader />
         </View>
         <View className="w-full">
-          <Image className="w-full h-52" source={image as ImageSourcePropType} />
-          <View className="absolute px-2 py-1 top-2 left-2" style={{ backgroundColor: categories?.[0].hexa_color }}>
+          <Image className="w-full h-52 bg-gray-300 dark:bg-neutral-800" source={image as ImageSourcePropType} />
+          <View className="absolute px-2 py-1 top-2 left-2" style={{ backgroundColor: categoriesList?.[0].hexaColor }}>
             <Text className="text-sm text-black">
-              {categories?.[0].icon + " "}
-              {categories?.[0].libelle}
+              {categoriesList?.[0].icon + " "}
+              {categoriesList?.[0].libelle}
             </Text>
           </View>
           <View className="absolute px-2 py-1 bg-gray-100 bottom-2 right-2">
-            <Text className="text-sm font-bold text-black">{price?.toFixed(2).replace(".", "€")}</Text>
+            <Text className="text-sm font-bold text-black">{price}</Text>
           </View>
         </View>
         <View className="flex flex-row items-center justify-between w-full">

@@ -9,13 +9,11 @@ export const ProductCard = (props: Product) => {
   };
   return (
     <TouchableOpacity
-      // don't transparent on press
-      // activeOpacity={0.8}
       key={props.id}
       className="relative flex flex-col mr-4 w-52"
       onPress={() => navigate("(app)", { screen: "products/[id]", params: { id: props.id } })}
     >
-      <Image className="w-full h-28" source={props.image as ImageSourcePropType} />
+      <Image className="w-full h-28 bg-gray-300 dark:bg-gray-800" source={props.image as ImageSourcePropType} />
       {props.categoriesList.length > 0 && (
         <View className="absolute flex flex-row space-x-1 top-2 left-2">
           {props.categoriesList.map((category) => (

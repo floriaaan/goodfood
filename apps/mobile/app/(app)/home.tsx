@@ -1,10 +1,11 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { BasketHeader } from "@/components/basket/header";
 import { ProductCard } from "@/components/product/card";
+import { Skeleton } from "@/components/product/skeleton";
 import { RestaurantCard } from "@/components/restaurant/card";
 import { AppHeader } from "@/components/ui/header";
 import { CategoryHeader } from "@/components/ui/header/category";
@@ -14,9 +15,8 @@ import { useLocation } from "@/hooks/useLocation";
 
 export default function Index() {
   const [search, setSearch] = useState("");
-  const { products } = useBasket();
-  const { restaurants } = useLocation();
-
+  const { products, selectedRestaurantId } = useBasket();
+  const { restaurants, loading } = useLocation();
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
       <View className="absolute bottom-0 left-0 w-screen bg-black h-96" />
@@ -56,12 +56,28 @@ export default function Index() {
             <Text className="ml-1 text-lg font-bold text-black">Snacks</Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          className="flex-grow-0 w-screen shrink-0"
-          horizontal
-          data={products}
-          renderItem={({ item }) => <ProductCard {...item} />}
-        />
+        <View>
+          {(!selectedRestaurantId || products.length <= 0) && (
+            <>
+              <Text className=" absolute  top-11 left-5 text-center  text-lg font-bold text-white z-40">
+                Veillez séléctionner un restaurant pour voir les produits
+              </Text>
+              <View className="absolute top-0 left-0 w-screen h-96 bg-black opacity-70 z-20 p-2" />
+            </>
+          )}
+          <FlatList
+            className="flex-grow-0 w-screen shrink-0"
+            horizontal
+            data={products}
+            renderItem={({ item }) => <ProductCard {...item} />}
+            ListEmptyComponent={
+              <>
+                <Skeleton />
+                <Skeleton />
+              </>
+            }
+          />
+        </View>
         <View className="w-full">
           <CategoryHeader
             title="Liste des restaurants"
@@ -71,8 +87,19 @@ export default function Index() {
         </View>
         <FlatList
           className="flex-grow w-full shrink-0"
-          data={restaurants}
-          renderItem={({ item }) => <RestaurantCard {...item} />}
+          data={[]}
+          renderItem={({ item }) => <RestaurantCard restaurant={item} onClick={() => {}} />}
+          ListEmptyComponent={() => {
+            return (
+              <View className="p-3">
+                {!loading ? (
+                  <ActivityIndicator size="large" />
+                ) : (
+                  <Text className="text-white">Aucun restaurant trouvé</Text>
+                )}
+              </View>
+            );
+          }}
         />
       </SafeAreaView>
     </View>

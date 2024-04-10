@@ -5,17 +5,15 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useNative } from "@/hooks/useNative";
 import { calculateDistance } from "@/lib/distance";
 import { useBasket } from "@/hooks/useBasket";
-import RBSheet from "react-native-raw-bottom-sheet";
-import { RefObject } from "react";
 import { Restaurant } from "@/types/restaurant";
 
 interface CardProps {
   restaurant: Restaurant;
-  sheetRef: RefObject<RBSheet>;
+  onClick: () => void;
 }
 
 export const RestaurantCard = (props: CardProps) => {
-  const { restaurant, sheetRef } = props;
+  const { restaurant, onClick } = props;
   const { location } = useNative();
   const { selectRestaurant } = useBasket();
   if (!restaurant) return null;
@@ -23,7 +21,7 @@ export const RestaurantCard = (props: CardProps) => {
     <TouchableOpacity
       className="flex flex-col p-3 mb-3 bg-neutral-900"
       onPress={() => {
-        sheetRef.current?.close();
+        onClick();
         selectRestaurant(restaurant.id);
       }}
     >
