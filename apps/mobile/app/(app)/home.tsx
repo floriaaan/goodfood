@@ -87,12 +87,12 @@ export default function Index() {
         </View>
         <FlatList
           className="flex-grow w-full shrink-0"
-          data={[]}
+          data={restaurants}
           renderItem={({ item }) => <RestaurantCard restaurant={item} onClick={() => {}} />}
           ListEmptyComponent={() => {
             return (
               <View className="p-3">
-                {!loading ? (
+                {loading ? (
                   <ActivityIndicator size="large" />
                 ) : (
                   <Text className="text-white">Aucun restaurant trouvé</Text>
