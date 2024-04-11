@@ -82,13 +82,15 @@ export default function Index() {
           <CategoryHeader
             title="Liste des restaurants"
             subtitle="On est ici, par là, un peu ici, un peu partout en fait !"
-            href="/restaurants"
+            href="restaurants/index"
           />
         </View>
         <FlatList
           className="flex-grow w-full shrink-0"
           data={restaurants}
-          renderItem={({ item }) => <RestaurantCard restaurant={item} onClick={() => {}} />}
+          renderItem={({ item }) => (
+            <RestaurantCard restaurant={item} onClick={() => {}} selected={selectedRestaurantId === item.id} />
+          )}
           ListEmptyComponent={() => {
             return (
               <View className="p-3">

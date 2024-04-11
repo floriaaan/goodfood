@@ -10,16 +10,17 @@ import { Restaurant } from "@/types/restaurant";
 interface CardProps {
   restaurant: Restaurant;
   onClick: () => void;
+  selected?: boolean;
 }
 
 export const RestaurantCard = (props: CardProps) => {
-  const { restaurant, onClick } = props;
+  const { restaurant, onClick, selected } = props;
   const { location } = useNative();
   const { selectRestaurant } = useBasket();
   if (!restaurant) return null;
   return (
     <TouchableOpacity
-      className="flex flex-col p-3 mb-3 bg-neutral-900"
+      className={classNames("flex flex-col p-3 mb-3 bg-neutral-900", selected && "border-2 border-green-500")}
       onPress={() => {
         onClick();
         selectRestaurant(restaurant.id);

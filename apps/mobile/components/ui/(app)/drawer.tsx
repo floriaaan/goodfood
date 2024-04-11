@@ -24,15 +24,15 @@ export const DrawerContent = (props: DrawerContentComponentProps) => {
         activeBackgroundColor="#008D5E33"
         activeTintColor="black"
         icon={({ color, size }) => <MaterialCommunityIcons name="account" color={color} size={size} />}
-        focused={routeName === "user"}
-        onPress={() => navigate("(app)", { screen: "user" })}
+        focused={routeName === "users/index"}
+        onPress={() => navigate("(app)", { screen: "users/index" })}
       />
       <DrawerItem
         label="Mes commandes"
         activeBackgroundColor="#008D5E33"
         activeTintColor="black"
         icon={({ color, size }) => <MaterialCommunityIcons name="basket" color={color} size={size} />}
-        focused={routeName === "orders"}
+        focused={routeName === "orders/index"}
         onPress={() => navigate("(app)", { screen: "orders/index" })}
       />
     </DrawerContentScrollView>

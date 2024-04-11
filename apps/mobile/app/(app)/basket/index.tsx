@@ -9,6 +9,7 @@ import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
 import React, { useEffect, useState } from "react";
 import { BasketTaxes } from "@/app/(app)/basket/taxes";
+import { BasketHeader } from "@/components/basket/header";
 
 export default function Index() {
   const { basket, products, refetch } = useBasket();
@@ -29,6 +30,10 @@ export default function Index() {
           <AppHeader />
         </View>
 
+        <View className="w-full">
+          <BasketHeader />
+        </View>
+
         <ScrollView
           className="w-full"
           refreshControl={<RefreshControl refreshing={false} onRefresh={() => refetch()} />}
@@ -36,7 +41,11 @@ export default function Index() {
           <FlatList
             className="grow"
             data={basketProductList}
-            renderItem={({ item }) => <ProductBasketCard {...item} />}
+            renderItem={({ item }) => (
+              <View className="pb-4">
+                <ProductBasketCard {...item} />
+              </View>
+            )}
             ItemSeparatorComponent={() => <View className="h-2" />}
             ListEmptyComponent={() => (
               <View className="flex h-20 items-center justify-center">

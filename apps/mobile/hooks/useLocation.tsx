@@ -12,11 +12,13 @@ const LocationContext = createContext({
   lng: NaN,
   restaurants: [] as Restaurant[],
   loading: true,
+  refetch: () => {},
 } as {
   lat: number;
   lng: number;
   restaurants: Restaurant[];
   loading: boolean;
+  refetch: () => void;
 });
 
 export const useLocation = () => {
@@ -29,7 +31,11 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
   const { location } = useNative();
   const { lat, lng } = { lat: location?.coords.latitude || NaN, lng: location?.coords.longitude || NaN };
 
-  const { data: restaurantList, isLoading } = useQuery<Restaurant[]>({
+  const {
+    data: restaurantList,
+    isLoading,
+    refetch,
+  } = useQuery<Restaurant[]>({
     queryKey: ["restaurant", `${lat}-${lng}`],
 
     queryFn: async () => {
@@ -51,6 +57,7 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
         lng,
         restaurants: restaurantList ?? [],
         loading: isLoading || !(lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng)),
+        refetch,
       }}
     >
       {children}
