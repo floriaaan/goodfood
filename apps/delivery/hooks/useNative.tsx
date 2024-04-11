@@ -1,16 +1,16 @@
 import * as Location from "expo-location";
 import {
-    ReactNode,
-    createContext,
-    useContext,
-    useEffect,
-    useState,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
 import { useColorScheme } from "react-native";
 
 type NativeContextType = {
   location: Location.LocationObject | null;
-    locationPermission: Location.LocationPermissionResponse | undefined;
+  locationPermission: Location.LocationPermissionResponse | undefined;
   setLocation: (location: Location.LocationObject | null) => void;
   theme: "light" | "dark";
 };
@@ -43,10 +43,7 @@ export const NativeProvider = ({ children }: { children: ReactNode }) => {
       setLocationPermission(permission);
       if (permission.status !== "granted") return;
 
-      const location = await Location.getCurrentPositionAsync({
-        mayShowUserSettingsDialog: true,
-        timeInterval: 1000,
-      });
+      const location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
   }, []);

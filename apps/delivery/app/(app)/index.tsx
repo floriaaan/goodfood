@@ -1,27 +1,32 @@
 import { Header } from "@/components/header";
+import { LargeLoader } from "@/components/loader/large";
+import { OrderListHeader } from "@/components/order/list-header";
+import { OrderListItem } from "@/components/order/list-item";
+import { orderList } from "@/constants/data";
 import { useNative } from "@/hooks/useNative";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
   Dimensions,
+  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
 const { height } = Dimensions.get("window");
-const BOTTOM_PANEL_HEIGHT_MINIMIZED = 450;
-const BOTTOM_PANEL_HEIGHT_MAXIMIZED = height - 350;
+const BOTTOM_PANEL_HEIGHT_MINIMIZED = 350;
+const BOTTOM_PANEL_HEIGHT_MAXIMIZED = height - 300;
 
-const MARKER_DELTA_MINIMIZED =
-  (height - BOTTOM_PANEL_HEIGHT_MINIMIZED) /
-  (height + 2 * BOTTOM_PANEL_HEIGHT_MINIMIZED) /
-  100; // should be around 0.003
-const MARKER_DELTA_MAXIMIZED =
-  (height - BOTTOM_PANEL_HEIGHT_MAXIMIZED) / height / 100; // should be around 0.0055
+const MARKER_DIFF_MINIMIZED =
+  (3.5 * BOTTOM_PANEL_HEIGHT_MINIMIZED) / height / 100;
 
+const MARKER_DIFF_MAXIMIZED =
+  (3.5 * BOTTOM_PANEL_HEIGHT_MAXIMIZED) / height / 100;
+
+const deltas = { latitudeDelta: 0.05, longitudeDelta: 0.05 };
 
 export default function Index() {
   const { location, locationPermission } = useNative();
@@ -34,7 +39,7 @@ export default function Index() {
 
   const [isBottomPanelMaximized, setIsBottomPanelMaximized] = useState(false);
 
-  if (user_location.every(isNaN)) return null;
+  if (user_location.every(isNaN)) return <LargeLoader />;
 
   return (
     <View style={styles.container}>
@@ -42,13 +47,28 @@ export default function Index() {
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: user_location[0] - MARKER_DELTA_MINIMIZED,
+          latitude: user_location[0] - MARKER_DIFF_MINIMIZED,
           longitude: user_location[1],
-          latitudeDelta: 0.009,
-          longitudeDelta: 0.009,
+          ...deltas,
         }}
         showsUserLocation
-      ></MapView>
+      >
+        {orderList.map((order) => {
+          const {
+            delivery: {
+              address: { lat, lng },
+            },
+          } = order;
+          return (
+            <Marker
+              key={order.id}
+              coordinate={{ latitude: lat, longitude: lng }}
+              title={`Commande pour ${order.user.firstName}`}
+              description={`Restaurant: ${order.restaurantId}`}
+            />
+          );
+        })}
+      </MapView>
       <Header />
 
       <View style={styles.bottom}>
@@ -68,18 +88,16 @@ export default function Index() {
             onPress={() => {
               if (isBottomPanelMaximized) {
                 mapRef.current?.animateToRegion({
-                  latitude: user_location[0] - MARKER_DELTA_MINIMIZED,
+                  latitude: user_location[0] - MARKER_DIFF_MINIMIZED,
                   longitude: user_location[1],
-                  latitudeDelta: 0.009,
-                  longitudeDelta: 0.009,
+                  ...deltas,
                 });
                 setIsBottomPanelMaximized(false);
               } else {
                 mapRef.current?.animateToRegion({
-                  latitude: user_location[0] - MARKER_DELTA_MAXIMIZED,
+                  latitude: user_location[0] - MARKER_DIFF_MAXIMIZED,
                   longitude: user_location[1],
-                  latitudeDelta: 0.009,
-                  longitudeDelta: 0.009,
+                  ...deltas,
                 });
                 setIsBottomPanelMaximized(true);
               }
@@ -103,10 +121,11 @@ export default function Index() {
                 mapRef.current?.animateToRegion({
                   latitude:
                     user_location[0] -
-                    (isBottomPanelMaximized ? 0.0055 : 0.003),
+                    (isBottomPanelMaximized
+                      ? MARKER_DIFF_MAXIMIZED
+                      : MARKER_DIFF_MINIMIZED),
                   longitude: user_location[1],
-                  latitudeDelta: 0.009,
-                  longitudeDelta: 0.009,
+                  ...deltas,
                 });
               }}
             >
@@ -118,15 +137,20 @@ export default function Index() {
           style={{
             ...styles.bottom_panel,
             height: isBottomPanelMaximized
-              ? Dimensions.get("window").height - 250
-              : 350,
+              ? BOTTOM_PANEL_HEIGHT_MAXIMIZED
+              : BOTTOM_PANEL_HEIGHT_MINIMIZED,
           }}
         >
           <Text style={{ color: "white", fontSize: 20, fontWeight: "700" }}>
             Vous êtes connecté.e
           </Text>
           <View
-            style={{ flexDirection: "row", marginTop: 4, alignItems: "center" }}
+            style={{
+              flexDirection: "row",
+              marginTop: 4,
+              alignItems: "center",
+              marginBottom: 16,
+            }}
           >
             <MaterialIcons
               name={
@@ -160,6 +184,13 @@ export default function Index() {
               }}
             ></View>
           </View>
+
+          <FlatList
+            data={orderList}
+            renderItem={({ item,index }) => <OrderListItem {...{item, index}} />}
+            keyExtractor={(item) => item.id}
+            ListHeaderComponent={OrderListHeader}
+          />
         </View>
       </View>
     </View>

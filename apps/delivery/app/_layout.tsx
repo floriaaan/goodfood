@@ -9,13 +9,14 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { NativeProvider } from "@/hooks/useNative";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "react-native";
 export { ErrorBoundary } from "expo-router";
 
-export const unstable_settings = { initialRouteName: "(app)" };
+export const unstable_settings = { initialRouteName: "(onboarding)/index" };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,7 +44,9 @@ export default function RootLayout() {
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <StatusBar style="auto" />
-          <RootLayoutNav />
+          <AuthProvider>
+            <RootLayoutNav />
+          </AuthProvider>
         </ThemeProvider>
       </NativeProvider>
     </QueryClientProvider>
@@ -51,9 +54,14 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <Stack>
-      <Stack.Screen name="(app)" options={{ headerShown: false }} />
-    </Stack>
+    <Stack
+      initialRouteName={isAuthenticated ? "(app)" : "(onboarding)/first"}
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
   );
 }

@@ -10,21 +10,33 @@ import {
   View,
 } from "react-native";
 
-export const Header = () => {
+export const Header = ({
+  hasBackButton = false,
+}: {
+  hasBackButton?: boolean;
+}) => {
   const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.header}>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+          onPress={() =>
+            hasBackButton
+              ? navigation.goBack()
+              : navigation.dispatch(DrawerActions.openDrawer())
+          }
         >
-          <MaterialIcons name="menu" size={24} color="white" />
+          <MaterialIcons
+            name={hasBackButton ? "arrow-back" : "menu"}
+            size={24}
+            color="white"
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          activeOpacity={0.7}
-          onPress={() => console.log("user")}
+          activeOpacity={1}
+          // onPress={() => console.log("user")}
         >
           <Image
             source={require("../assets/images/tmp/user.png")}
@@ -36,12 +48,12 @@ export const Header = () => {
   );
 };
 
-const PADDING = 32;
+const PADDING = 16;
 
 const styles = StyleSheet.create({
   header: {
     position: "absolute",
-    top: PADDING * 2 + 16,
+    top: PADDING * 2 + 32,
     left: PADDING,
     width: Dimensions.get("window").width - PADDING * 2,
   },
