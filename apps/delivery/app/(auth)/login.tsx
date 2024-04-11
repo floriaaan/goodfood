@@ -1,5 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -154,13 +154,7 @@ export default function AuthLogin() {
         </View>
         <Button
           title="C'est parti !"
-          onPress={() => {
-            login(email, password)
-              .then((r) => {
-                if (r.ok) router.push("/(app)/");
-              })
-              .catch(console.error);
-          }}
+          onPress={() => login(email, password)}
           icon="chevron-right"
         />
       </SafeAreaView>

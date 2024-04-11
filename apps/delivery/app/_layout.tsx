@@ -8,12 +8,14 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { NativeProvider } from "@/hooks/useNative";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "react-native";
+
 export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = { initialRouteName: "(onboarding)/index" };
@@ -44,9 +46,11 @@ export default function RootLayout() {
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <StatusBar style="auto" />
-          <AuthProvider>
-            <RootLayoutNav />
-          </AuthProvider>
+          <RootSiblingParent>
+            <AuthProvider>
+              <RootLayoutNav />
+            </AuthProvider>
+          </RootSiblingParent>
         </ThemeProvider>
       </NativeProvider>
     </QueryClientProvider>
