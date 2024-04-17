@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 
 import { useNative } from "@/hooks/useNative";
 import { fetchAPI } from "@/lib/fetchAPI";
@@ -13,12 +13,14 @@ const LocationContext = createContext({
   restaurants: [] as Restaurant[],
   loading: true,
   refetch: () => {},
+  refresh: () => {},
 } as {
   lat: number;
   lng: number;
   restaurants: Restaurant[];
   loading: boolean;
   refetch: () => void;
+  refresh: () => void;
 });
 
 export const useLocation = () => {
@@ -28,7 +30,7 @@ export const useLocation = () => {
 };
 
 export const LocationProvider = ({ children }: { children: React.ReactNode }) => {
-  const { location } = useNative();
+  const { location, refreshLocation } = useNative();
   const { lat, lng } = { lat: location?.coords.latitude || NaN, lng: location?.coords.longitude || NaN };
 
   const {
@@ -50,6 +52,11 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
     enabled: lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng),
   });
 
+  const refresh = async () => {
+    await refreshLocation();
+    await refetch();
+  };
+
   return (
     <LocationContext.Provider
       value={{
@@ -58,6 +65,7 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
         restaurants: restaurantList ?? [],
         loading: isLoading || !(lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng)),
         refetch,
+        refresh,
       }}
     >
       {children}
