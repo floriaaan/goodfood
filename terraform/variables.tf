@@ -15,6 +15,12 @@ variable "project_name" {
   default     = "gf-paf"
 }
 
+variable "project_name_minimized" {
+ type        = string
+ description = "The name of the project"
+ default     = "gfpaf"
+}
+
 variable "agent_count" {
   default = 3
 }

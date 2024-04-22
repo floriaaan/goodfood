@@ -1,23 +1,23 @@
 data "azurerm_client_config" "product-client-conf" {
 }
 
-data "azurerm_resource_group" "rg-goodfood" {
+data "azurerm_resource_group" "rg-gf-paf" {
   name     = "rg-${var.project_name}${var.environnment_suffix}"
 }
 
-data "azurerm_key_vault" "kv-goodfood-user" {
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+data "azurerm_key_vault" "kv-gf-paf-user" {
+  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
   name                = "kv-${var.project_name}${var.environnment_suffix}-user"
 }
 
 data "azurerm_key_vault_secret" "db-login" {
   name         = "db-login"
-  key_vault_id = data.azurerm_key_vault.kv-goodfood-user.id
+  key_vault_id = data.azurerm_key_vault.kv-gf-paf-user.id
 }
 
 data "azurerm_key_vault_secret" "db-password" {
   name         = "db-password"
-  key_vault_id = data.azurerm_key_vault.kv-goodfood-user.id
+  key_vault_id = data.azurerm_key_vault.kv-gf-paf-user.id
 }
 
 data "terraform_remote_state" "aks" {

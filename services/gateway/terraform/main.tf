@@ -62,8 +62,8 @@ resource "kubernetes_deployment" "kd-goodfood-gateway" {
 
           resources {
             limits = {
-              cpu    = "200m"
-              memory = "128Mi"
+              cpu    = "400m"
+              memory = "480Mi"
             }
           }
         }
@@ -80,12 +80,19 @@ resource "kubernetes_service" "ks-goodfood-gateway" {
     selector = {
       App = kubernetes_deployment.kd-goodfood-gateway.spec.0.template.0.metadata[0].labels.App
     }
+
     port {
-      name        = "grpc"
+      name        = "http"
       port        = 50000
       target_port = 50000
     }
+    external_ips = [
+      "10.0.12.23"
+    ]
     type = "LoadBalancer"
+  }
+  timeouts {
+    create = "1m"
   }
 }
 

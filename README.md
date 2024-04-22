@@ -70,16 +70,35 @@ The file hierarchy for this project is as follows:
 ### Terraform
 
 Create stuff in azure and put them in [environnement](terraform/env/dev-backend.tfvars):
- - Ressource groupe `resource_group_name = "The name"`
+ - Resource group `resource_group_name = "The name"`
  - Storage account `storage_account_name = "The name"`
  - Container in the storage account `container_name = "The name"`
 
 ```shell
 cd terraform
 terraform init --backend-config=env/dev-backend.tfvars
-terraform apply -var-file="env/dev.tfvars"
+terraform apply -var-file="env/dev.tfvars" -auto-approve
+```
+---
+
+Now you can deploy services:
+```shell
+cd services/product/terraform/
+terraform init --backend-config=env/dev-backend.tfvars
+terraform apply -var-file="env/dev.tfvars" -auto-approve
 ```
 
+```shell
+cd services/user/terraform/
+terraform init --backend-config=env/dev-backend.tfvars
+terraform apply -var-file="env/dev.tfvars" -auto-approve
+```
+
+```shell
+cd services/gateway/terraform/
+terraform init --backend-config=env/dev-backend.tfvars
+terraform apply -var-file="env/dev.tfvars" -auto-approve
+```
 ### Docker
 
 You can use Docker to run the microservices and the gateway.

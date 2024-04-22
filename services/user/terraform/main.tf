@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/time"
       version = "0.9.1"
     }
+    postgresql = {
+      source = "cyrilgdn/postgresql"
+      version = "1.22.0"
+    }
   }
   backend "azurerm" {}
 }
@@ -24,10 +28,20 @@ provider "azurerm" {
   features {}
 }
 
+provider "postgresql" {
+  host            = "${azurerm_postgresql_server.pg-goodfood-user.name}.postgres.database.azure.com"
+  port            = 5432
+  database        = "${azurerm_postgresql_database.db-goodfood-user.name}"
+  username        = "${azurerm_postgresql_server.pg-goodfood-user.administrator_login}@${azurerm_postgresql_server.pg-goodfood-user.name}"
+  password        = "${data.azurerm_key_vault_secret.db-password.value}"
+  sslmode         = "require"
+  connect_timeout = 15
+}
+
 resource "azurerm_postgresql_server" "pg-goodfood-user" {
   name                = "pg-${var.project_name}${var.environnment_suffix}-user"
-  location            = data.azurerm_resource_group.rg-goodfood.location
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  location            = data.azurerm_resource_group.rg-gf-paf.location
+  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
 
   sku_name = "B_Gen5_2"
 
@@ -47,7 +61,7 @@ resource "azurerm_postgresql_server" "pg-goodfood-user" {
 
 resource "azurerm_postgresql_database" "db-goodfood-user" {
   name                = "db-${var.project_name}${var.environnment_suffix}-user"
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
   server_name         = azurerm_postgresql_server.pg-goodfood-user.name
   charset             = "UTF8"
   collation           = "English_United States.1252"
@@ -55,10 +69,15 @@ resource "azurerm_postgresql_database" "db-goodfood-user" {
 
 resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-user" {
   name                = "allow-azure-resources"
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
   server_name         = azurerm_postgresql_server.pg-goodfood-user.name
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
+}
+
+resource "postgresql_extension" "pgext-goodfood-user" {
+  name = "pgcrypto"
+  database = azurerm_postgresql_database.db-goodfood-user.name
 }
 
 provider "kubernetes" {
@@ -100,9 +119,18 @@ resource "kubernetes_deployment" "kd-goodfood-user" {
             value = "50001"
           }
           env {
-            name = "DATABASE_URL"
+            name = "DB_URL"
             value = "postgresql://${azurerm_postgresql_server.pg-goodfood-user.administrator_login}@${azurerm_postgresql_server.pg-goodfood-user.name}:${data.azurerm_key_vault_secret.db-password.value}@${azurerm_postgresql_server.pg-goodfood-user.name}.postgres.database.azure.com:5432/${azurerm_postgresql_database.db-goodfood-user.name}"
           }
+          env {
+            name = "DEFAULT_USER_EMAIL"
+            value = "super.admin@mail.com"
+          }
+          env {
+              name = "DEFAULT_USER_PASSWORD"
+              value = "password"
+          }
+
           env {
             name = "AMQP_URL"
             value = "TODO"
@@ -112,6 +140,13 @@ resource "kubernetes_deployment" "kd-goodfood-user" {
             container_port = 50001
           }
 
+
+          resources {
+            limits = {
+              cpu    = "400m"
+              memory = "480Mi"
+            }
+          }
         }
       }
     }
@@ -120,7 +155,7 @@ resource "kubernetes_deployment" "kd-goodfood-user" {
 
 resource "kubernetes_service" "ks-goodfood-user" {
   metadata {
-    name = "goodfood-product"
+    name = "goodfood-user"
   }
   spec {
     selector = {

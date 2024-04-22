@@ -143,7 +143,7 @@ resource "kubernetes_deployment" "kd-goodfood-product" {
       spec {
         container {
           name  = "goodfood-product"
-          image = "pierrelbg/goodfood-product:latest"
+          image = "floriaaan/goodfood-product:latest"
 
           env {
             name = "PORT"
@@ -168,13 +168,6 @@ resource "kubernetes_deployment" "kd-goodfood-product" {
 
           port {
             container_port = 50004
-          }
-
-          resources {
-            limits = {
-              cpu    = "200m"
-              memory = "128Mi"
-            }
           }
         }
       }
@@ -210,7 +203,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "khpa-goodfood-product" {
 
     scale_target_ref {
       kind = "Deployment"
-      name = "goodfood-product"
+      name = "goodfood-user"
     }
 
     metric {
