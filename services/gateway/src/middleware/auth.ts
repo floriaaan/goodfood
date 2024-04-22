@@ -1,5 +1,5 @@
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export const ROLES = {
   ADMIN: "ADMIN",
@@ -12,15 +12,17 @@ export type Role = keyof typeof ROLES;
 
 const checkRole = async (token: string, expectedRole: Role | Role[]) => {
   const userId = await getUserIdFromToken(token);
+  console.log(userId);
   if (userId === undefined) return false;
   const user = await getUser(userId);
+  console.log(user?.getRole()?.getCode());
   if (user === undefined) return false;
 
   if (Array.isArray(expectedRole)) return expectedRole.includes(user.getRole()?.getCode() as Role);
   return user.getRole()?.getCode() === expectedRole;
 };
 
-const checkRight = async (token: string, expectedId: number) => {
+const checkRight = async (token: string, expectedId: string) => {
   const userId = await getUserIdFromToken(token);
   if (userId === undefined) return false;
   return userId === expectedId;
@@ -30,7 +32,7 @@ export const check = async (
   token: string,
   expect: {
     role?: Role | Role[];
-    id?: number;
+    id?: string;
   },
 ) => {
   const { role, id } = expect;
@@ -41,7 +43,7 @@ export const check = async (
 };
 
 export const withCheck =
-  (expect: { role?: Role | Role[]; id?: number }) => async (req: Request, res: Response, next: NextFunction) => {
+  (expect: { role?: Role | Role[]; id?: string }) => async (req: Request, res: Response, next: NextFunction) => {
     const { role, id } = expect;
     const token = req.headers.authorization?.split("Bearer ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });

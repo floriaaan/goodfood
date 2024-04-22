@@ -1,0 +1,19 @@
+meta {
+  name: get notifications by user id
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/notification/user/54ed8c99-ccc1-4ebb-8032-73f432ced687
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}

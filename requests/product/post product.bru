@@ -7,39 +7,43 @@ meta {
 post {
   url: {{baseUrl}}/api/product
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "restaurantId": "<string>",
-    "type": "BOISSONS",
-    "name": "<string>",
-    "image": "<string>",
-    "comment": "<string>",
-    "price": "<number>",
-    "preparation": "<string>",
-    "weight": "<string>",
-    "kilocalories": "<string>",
-    "nutriscore": "<string>",
-    "categories": [
+    "restaurantId": "clsdq4m750000t960nxit7omc",
+    "type": "PLATS",
+    "name": "Pork qué prik thaï",
+    "price": 8.5,
+    "preparation": "15 min",
+    "weight": "420g",
+    "kilocalories": "182 kcal",
+    "image": "/images/tmp/pork.png",
+    "comment": "Un sauté de porc épicé avec poivrons colorés, edamames et riz pour pimenter votre journée. Rassurez-vous, aucun porc épic n'a été blessé dans sa préparation !",
+    "nutriscore": "C",
+    "categoriesList": [
       {
-        "id": "<string>"
-      },
-      {
-        "id": "<string>"
+        "id": "clsdq4xv10001urpfcjt39xwn"
       }
     ],
-    "allergens": [
+    "allergensList": [
       {
-        "id": "<string>"
-      },
+        "id": "clsdq4ucy0000urpfle8r9h8x"
+      }
+    ],
+    "recipeList": [
       {
-        "id": "<string>"
+        "ingredientId": "1",
+        "quantity": 2
       }
     ]
   }

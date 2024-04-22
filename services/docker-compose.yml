@@ -1,6 +1,5 @@
 version: "3"
 services:
-
   # Gateway
 
   gateway:
@@ -13,8 +12,20 @@ services:
       - ./gateway/.env
     ports:
       - "50000:50000"
+      - "4242:4242"
     networks:
       - goodfood-network
+
+  #  Stripe service (for payment)
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: stripe-cli
+    command: "listen --forward-to gateway:4242/webhook"
+    networks:
+      - goodfood-network
+    environment:
+      STRIPE_API_KEY: sk_test_VePHdqKTYQjKNInc7u56JBrQ
 
   #  User service
 
@@ -89,7 +100,6 @@ services:
       - payment/.env.docker
     ports:
       - "50003"
-      - "4242:4242"
     networks:
       - goodfood-network
 
@@ -238,6 +248,9 @@ services:
       - "50008"
     networks:
       - goodfood-network
+    depends_on:
+      - delivery-redis
+      - delivery-postgres
 
   delivery-redis:
     image: redis:latest
@@ -295,30 +308,30 @@ services:
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
 
-  # Reporting service
-
-  reporting-service:
-    image: floriaaan/goodfood-reporting:latest
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: ./reporting/Dockerfile
-    ports:
-      - "50020"
-    networks:
-      - goodfood-network
-
-  reporting-postgres:
-    image: postgres:15.2
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - "51020:5432"
-    volumes:
-      - goodfood-reporting-volume:/var/lib/postgresql/data
-    networks:
-      - goodfood-network
+#  # Reporting service
+#
+#  reporting-service:
+#    image: floriaaan/goodfood-reporting:latest
+#    # restart: unless-stopped
+#    build:
+#      context: .
+#      dockerfile: ./reporting/Dockerfile
+#    ports:
+#      - "50020"
+#    networks:
+#      - goodfood-network
+#
+#  reporting-postgres:
+#    image: postgres:15.2
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=password
+#    ports:
+#      - "51020:5432"
+#    volumes:
+#      - goodfood-reporting-volume:/var/lib/postgresql/data
+#    networks:
+#      - goodfood-network
 
   # Log service
 
@@ -350,36 +363,36 @@ services:
     networks:
       - goodfood-network
 
-#  Notification service
+  #  Notification service
 
   notification-service:
-      image: goodfood-notification:1.0.0
-      restart: unless-stopped
-      build:
-        context: .
-        dockerfile: ./notification/Dockerfile
-      env_file:
+    image: goodfood-notification:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./notification/Dockerfile
+    env_file:
       - notification/.env.docker
-      ports:
+    ports:
       - "50022"
-      networks:
+    networks:
       - goodfood-network
 
   notification-postgres:
-      image: postgres:15.2
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: notification
-        PGDATA: /var/lib/postgresql/data/pgdata
-      ports:
+    image: postgres:15.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: notification
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
       - "51022:5432"
-      volumes:
+    volumes:
       - goodfood-notification-volume:/var/lib/postgresql/data
-      networks:
+    networks:
       - goodfood-network
 
-#  RabbitMQ
+  #  RabbitMQ
 
   event-broker:
     restart: always

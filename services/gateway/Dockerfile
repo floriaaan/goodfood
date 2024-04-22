@@ -1,4 +1,4 @@
-FROM node:18-alpine3.17  as builder
+FROM node:18-alpine3.18  as builder
 
 # Set working directory
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN npm run build
 
 
 # Create a new image with the application
-FROM node:18-alpine3.17 as runner
+FROM node:18-alpine3.18 as runner
 
 # Set working directory
 WORKDIR /app
@@ -31,6 +31,9 @@ COPY --from=builder /app/proto/ /proto/
 
 # Expose the gRPC port
 EXPOSE 50000
+
+# Expose the Webhook port
+EXPOSE 4242
 
 # Start the server
 CMD [ "node", "index.js"]

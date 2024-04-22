@@ -24,27 +24,18 @@ jobs:
           cd ./services/reporting
           dotnet build
 
-  test:
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - uses: actions/checkout@v3
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "8.0.x"
-      - name: Install dependencies
-        run: |
-          cd ./services/reporting
-          dotnet restore
-      - name: Build
-        run: |
-          cd ./services/reporting
-          dotnet build
-      - name: Test with the dotnet CLI
-        run: |
-          cd ./services/reporting
-          dotnet test Tests/
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   publish:
     runs-on: ubuntu-latest

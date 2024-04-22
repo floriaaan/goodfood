@@ -3,6 +3,7 @@ module goodfood-user
 go 1.19
 
 require (
+	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/protobuf v1.5.2
 	github.com/hhkbp2/go-logging v0.3.7

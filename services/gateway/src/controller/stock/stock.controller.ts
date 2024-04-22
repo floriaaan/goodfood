@@ -1,5 +1,5 @@
-import { Request, Response, Router } from "express";
-import { stockServiceClient } from "../../services/clients/stock.client";
+import { check, withCheck } from "@gateway/middleware/auth";
+import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
 import {
   CreateIngredientRequest,
   CreateIngredientRestaurantRequest,
@@ -25,22 +25,19 @@ import {
   UpdateSupplierRequest,
   UpdateSupplyOrderRequest,
 } from "@gateway/proto/stock_pb";
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { check, withCheck } from "@gateway/middleware/auth";
-import { getUserIdFromToken } from "@gateway/services/user.service";
 import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
-import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
+import { getUserIdFromToken } from "@gateway/services/user.service";
+import { Request, Response, Router } from "express";
+import { Empty } from "google-protobuf/google/protobuf/empty_pb";
+import { stockServiceClient } from "../../services/clients/stock.client";
 
 export const stockRoutes = Router();
 /**
  * Ingredient Routes
  */
 
-stockRoutes.get(
-  "/api/stock/supplier/:id",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /* #swagger.parameters['id'] = {
+stockRoutes.get("/api/stock/supplier/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /* #swagger.parameters['id'] = {
         in: 'path',
         required: true,
         type: 'integer'
@@ -50,15 +47,14 @@ stockRoutes.get(
         required: true,
         type: 'string'
     } */
-    const { id } = req.params;
-    const supplierRequest = new GetSupplierRequest().setId(Number(id));
+  const { id } = req.params;
+  const supplierRequest = new GetSupplierRequest().setId(Number(id));
 
-    stockServiceClient.getSupplier(supplierRequest, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  stockServiceClient.getSupplier(supplierRequest, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
 
 stockRoutes.get("/api/stock/supplier", withCheck({ role: ["MANAGER", "ADMIN"] }), (_: Request, res: Response) => {
   /*    #swagger.parameters['authorization'] = {
@@ -111,11 +107,8 @@ stockRoutes.get("/api/stock/ingredient", withCheck({ role: ["MANAGER", "ADMIN"] 
   });
 });
 
-stockRoutes.post(
-  "/api/stock/ingredient",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /*  #swagger.parameters['body'] = {
+stockRoutes.post("/api/stock/ingredient", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /*  #swagger.parameters['body'] = {
             in: 'body',
             required: true,
             schema: {
@@ -129,15 +122,14 @@ stockRoutes.post(
             type: 'string'
         }
      */
-    const { name, description } = req.body;
-    const ingredientRequest = new CreateIngredientRequest().setName(name).setDescription(description);
+  const { name, description } = req.body;
+  const ingredientRequest = new CreateIngredientRequest().setName(name).setDescription(description);
 
-    stockServiceClient.createIngredient(ingredientRequest, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(201).json(response.toObject());
-    });
-  },
-);
+  stockServiceClient.createIngredient(ingredientRequest, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(201).json(response.toObject());
+  });
+});
 
 stockRoutes.put(
   "/api/stock/ingredient/:id",
@@ -332,7 +324,7 @@ stockRoutes.post(
             schema: {
                 alertThreshold: 5,
                 quantity: 2,
-                productList: ["product_id:1", "product_id:2"],
+                inProductListList: ["product_id:1", "product_id:2"],
                 unitPrice: 2,
                 pricePerKilo: 1.5,
                 restaurantId: "restaurant_id:1",
@@ -354,11 +346,20 @@ stockRoutes.post(
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
     // ----------------------------
 
-    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId, supplierId } = req.body;
+    const {
+      alertThreshold,
+      quantity,
+      inProductListList,
+      unitPrice,
+      pricePerKilo,
+      restaurantId,
+      ingredientId,
+      supplierId,
+    } = req.body;
     const ingredientRestaurant = new CreateIngredientRestaurantRequest()
       .setAlertThreshold(alertThreshold)
       .setQuantity(quantity)
-      .setInProductListList(productList)
+      .setInProductListList(inProductListList)
       .setUnitPrice(unitPrice)
       .setPricePerKilo(pricePerKilo)
       .setRestaurantId(restaurantId)
@@ -403,7 +404,7 @@ stockRoutes.put(
         schema: {
           alertThreshold: 5,
           quantity: 2,
-          productList: ["product_id:1", "product_id:2"],
+          inProductListList: ["product_id:1", "product_id:2"],
           unitPrice: 2,
           pricePerKilo: 1.5,
           restaurantId: "restaurant_id:1",
@@ -425,12 +426,21 @@ stockRoutes.put(
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
     // ----------------------------
     const { id } = req.params;
-    const { alertThreshold, quantity, productList, unitPrice, pricePerKilo, restaurantId, ingredientId, supplierId } = req.body;
+    const {
+      alertThreshold,
+      quantity,
+      inProductListList,
+      unitPrice,
+      pricePerKilo,
+      restaurantId,
+      ingredientId,
+      supplierId,
+    } = req.body;
     const ingredientRestaurant = new UpdateIngredientRestaurantRequest()
       .setId(Number(id))
       .setAlertThreshold(alertThreshold)
       .setQuantity(quantity)
-      .setInProductListList(productList)
+      .setInProductListList(inProductListList)
       .setUnitPrice(unitPrice)
       .setPricePerKilo(pricePerKilo)
       .setRestaurantId(restaurantId)
@@ -526,11 +536,8 @@ stockRoutes.delete(
  * Supplier Routes
  */
 
-stockRoutes.get(
-  "/api/stock/supplier/:id",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /*  #swagger.parameters['id'] = {
+stockRoutes.get("/api/stock/supplier/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
            type: 'integer'
@@ -541,14 +548,13 @@ stockRoutes.get(
             type: 'string'
         }
      */
-    const { id } = req.params;
+  const { id } = req.params;
 
-    stockServiceClient.getSupplier(new GetSupplierRequest().setId(Number(id)), (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  stockServiceClient.getSupplier(new GetSupplierRequest().setId(Number(id)), (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
 
 stockRoutes.get("/api/stock/supplier", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
   /*    #swagger.parameters['authorization'] = {
@@ -587,11 +593,8 @@ stockRoutes.post("/api/stock/supplier", withCheck({ role: ["MANAGER", "ADMIN"] }
   });
 });
 
-stockRoutes.put(
-  "/api/stock/supplier/:id",
-  withCheck({ role: ["MANAGER", "ADMIN"] }),
-  (req: Request, res: Response) => {
-    /*  #swagger.parameters['id'] = {
+stockRoutes.put("/api/stock/supplier/:id", withCheck({ role: ["MANAGER", "ADMIN"] }), (req: Request, res: Response) => {
+  /*  #swagger.parameters['id'] = {
            in: 'path',
            required: true,
            type: 'integer'
@@ -610,16 +613,15 @@ stockRoutes.put(
             type: 'string'
         }
       */
-    const { id } = req.params;
-    const { name, contact } = req.body;
-    const supplierRequest = new UpdateSupplierRequest().setId(Number(id)).setName(name).setContact(contact);
+  const { id } = req.params;
+  const { name, contact } = req.body;
+  const supplierRequest = new UpdateSupplierRequest().setId(Number(id)).setName(name).setContact(contact);
 
-    stockServiceClient.updateSupplier(supplierRequest, (error, response) => {
-      if (error) return res.status(500).send({ error });
-      else return res.status(200).json(response.toObject());
-    });
-  },
-);
+  stockServiceClient.updateSupplier(supplierRequest, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
 
 stockRoutes.delete(
   "/api/stock/supplier/:id",

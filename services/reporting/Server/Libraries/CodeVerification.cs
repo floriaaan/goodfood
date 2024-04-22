@@ -30,11 +30,11 @@ public class CodeVerification
         { "outcomes_1w", typeof(decimal) },
         { "outcomes_1m", typeof(decimal) },
         { "outcomes_1y", typeof(decimal) },
-        { "top5_selling_1w", typeof(List<string>) },
-        { "top5_selling_1m", typeof(List<string>) },
-        { "affluence_1d", typeof(decimal) },
-        { "delivery_types_1d", typeof(List<string>) },
-        { "rejection_rate_1d", typeof(decimal) }
+        { "top5_selling_1w", typeof(string) },
+        { "top5_selling_1m", typeof(string) },
+        { "affluence_1d", typeof(string) },
+        { "delivery_types_1d", typeof(string) },
+        { "rejection_rate_1d", typeof(string) }
     };
 
     public static bool IsValid(string code)

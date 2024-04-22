@@ -1,37 +1,50 @@
-import {log} from "@basket/lib/log";
-import {Data} from "@basket/types";
-import {ProductRequest} from "@basket/types/basket";
+import { log } from "@basket/lib/log";
+import { Data } from "@basket/types";
 
 import client from "@basket/lib/redis";
-import {RedisBasket} from "@basket/types/redisBasket";
+import { AddProductRequest, Basket } from "@basket/types/basket";
 
 export const AddProduct = async (
-    {request}: Data<ProductRequest>,
-    callback: (err: any, response: any) => void
+  { request }: Data<AddProductRequest>,
+  callback: (err: any, response: Basket | null) => void
 ) => {
-    try {
-        const {product_id, user_id, restaurant_id} = request;
-        if (!product_id || !restaurant_id || !user_id) {
-            throw new Error("Invalid request");
-        }
-        const basket = await client.get(`user:${user_id}`);
+  try {
+    const { product_id, user_id, quantity, restaurant_id } = request;
+    if (!product_id || !quantity || !user_id)
+      throw new Error("Invalid request");
 
-        if (!basket) {
-            await client.set(`user:${user_id}`, JSON.stringify({products_ids: [product_id], restaurant_id}));
-            callback(null, {product_id, user_id});
-            return;
-        }
+    const basket = await client.get(`user:${user_id}`);
 
-        const storedBasket: RedisBasket = JSON.parse(basket);
-        const newBasket = {
-            products_ids: [...storedBasket.products_ids, product_id],
-            restaurant_id: storedBasket.restaurant_id
-        };
-        await client.set(`user:${user_id}`, JSON.stringify(newBasket));
+    if (!basket) {
+      if (!restaurant_id) throw new Error("Invalid request");
+      const newBasket = {
+        products: [{ id: product_id, quantity }],
+        restaurant_id,
+      };
 
-        callback(null, {user_id, ...newBasket});
-    } catch (error) {
-        log.error(error);
-        callback(error, null);
+      await client.set(`user:${user_id}`, JSON.stringify(newBasket));
+      callback(null, newBasket);
+      return;
     }
+
+    const storedBasket: Basket = JSON.parse(basket);
+    const productIndex = storedBasket.products.findIndex(
+      (p) => p.id === product_id
+    );
+    if (productIndex !== -1)
+      storedBasket.products[productIndex].quantity += quantity;
+    else storedBasket.products.push({ id: product_id, quantity });
+
+    const newBasket = {
+      ...storedBasket,
+      restaurant_id: restaurant_id || storedBasket.restaurant_id,
+    };
+
+    await client.set(`user:${user_id}`, JSON.stringify(newBasket));
+
+    callback(null, newBasket);
+  } catch (error) {
+    log.error(error);
+    callback(error, null);
+  }
 };

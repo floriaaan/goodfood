@@ -4,16 +4,21 @@ import { RestaurantId } from "@delivery/types/delivery";
 import { Data } from "@delivery/types";
 
 export const ListDeliveriesByRestaurant = async (
-  data: Data<RestaurantId>,
+  { request }: Data<RestaurantId>,
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { request } = data;
     const { id } = request;
 
     const deliveries = await prisma.delivery.findMany({
       where: { restaurant_id: id },
-      include: { delivery_person: true },
+      include: {
+        delivery_person: {
+          include: { address: true },
+        },
+        address: true,
+        restaurant_address: true,
+      },
     });
     callback(null, { deliveries });
   } catch (error) {

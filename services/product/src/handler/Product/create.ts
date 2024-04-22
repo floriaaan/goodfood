@@ -22,7 +22,8 @@ export const CreateProduct = async (
             restaurant_id,
             type,
             categories,
-            allergens
+            allergens,
+            recipe
         } = request;
 
         const product = await prisma.product.create({
@@ -42,11 +43,20 @@ export const CreateProduct = async (
                 },
                 allergens: {
                     connect: allergens.map((allergen) => ({id: allergen.id}))
+                },
+                recipe: {
+                  createMany: {
+                      data : recipe.map((ingredient) => ({
+                          ingredient_id: ingredient.ingredient_id,
+                          quantity: ingredient.quantity,
+                      })),
+                  }
                 }
             },
             include: {
                 categories: true,
                 allergens: true,
+                recipe: true
             }
         }) as unknown as Product;
 

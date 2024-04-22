@@ -1,0 +1,20 @@
+{
+  "extends": ["next", "prettier", "plugin:@tanstack/eslint-plugin-query/recommended"],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "root": true,
+  "rules": {
+    "no-console": "error",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "@tanstack/query/exhaustive-deps": "warn"
+  },
+  "globals": {
+    "JSX": "readonly"
+  }
+}

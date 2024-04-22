@@ -3,7 +3,7 @@ import { CreateCheckoutSessionRequest } from "@gateway/proto/payment_pb";
 import { stripeServiceClient } from "@gateway/services/clients/payment.client";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { basketServiceClient } from "@gateway/services/clients/basket.client";
-import { Basket, UserId } from "@gateway/proto/basket_pb";
+import { Basket, UserIdRequest } from "@gateway/proto/basket_pb";
 import { productServiceClient } from "@gateway/services/clients/product.client";
 import { Product, ProductId } from "@gateway/proto/product_pb";
 
@@ -15,9 +15,7 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
             in: 'body',
             required: true,
             schema: {
-                name: "John",
-                email: "mail",
-                total: 12
+                return_url_base: "http://localhost:3000",
             }
     } 
     #swagger.parameters['authorization'] = {
@@ -42,16 +40,16 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
   const email = user.getEmail();
 
   const basket: Basket.AsObject = await new Promise((resolve, reject) => {
-    basketServiceClient.getBasket(new UserId().setId(userId), (error, response) => {
+    basketServiceClient.getBasket(new UserIdRequest().setUserId(userId), (error, response) => {
       if (error) reject(error);
       else resolve(response.toObject());
     });
   });
 
   const products = await Promise.all(
-    basket.productsIdsList.map(async (product) => {
+    basket.productsList.map(async (product) => {
       return (await new Promise((resolve, reject) => {
-        productServiceClient.readProduct(new ProductId().setId(product), (error, response) => {
+        productServiceClient.readProduct(new ProductId().setId(product.id), (error, response) => {
           if (error) reject(error);
           else resolve(response.toObject());
         });
@@ -60,14 +58,15 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
   );
 
   const total = products.reduce((acc, product) => {
-    return acc + product.price;
+    return acc + product.price * (basket.productsList.find((p) => p.id === product.id)?.quantity || 1);
   }, 0);
 
   const createCheckoutSessionRequest = new CreateCheckoutSessionRequest()
     .setUserId(userId.toString())
     .setName(name)
     .setEmail(email)
-    .setTotal(total);
+    .setTotal(total)
+    .setReturnUrlBase(req.body.return_url_base);
   stripeServiceClient.createCheckoutSession(createCheckoutSessionRequest, (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());

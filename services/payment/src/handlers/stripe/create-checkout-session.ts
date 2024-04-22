@@ -7,37 +7,19 @@ import {
   CreateCheckoutSessionResponse,
 } from "@payment/types/stripe";
 
+const FEES_IN_EUR = 0.5;
+
 export const CreateCheckoutSession = async (
   { request }: Data<CreateCheckoutSessionRequest>,
   callback: (err: any, response: CreateCheckoutSessionResponse | null) => void
 ) => {
   try {
-    const { total, user_id, name, email } = request;
-
-    const { url, id } = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "paypal"],
-      line_items: [
-        {
-          price_data: {
-            currency: "eur",
-            product_data: {
-              name: "Panier - GoodFood",
-            },
-            unit_amount: total * 100,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      // todo: change this
-      success_url: "https://example.com/success",
-      cancel_url: "https://example.com/cancel",
-    });
-
-    const payment = await prisma.payment.create({
+    const { total, user_id, name, email, return_url_base } = request;
+    const totalWithFees = total + FEES_IN_EUR;
+    const newPayment = await prisma.payment.create({
       data: {
-        stripe_id: id,
-        total,
+        stripe_id: (Math.random()+1).toString(36).substring(2),
+        total: totalWithFees,
         user: {
           connectOrCreate: {
             where: { id: user_id },
@@ -48,10 +30,39 @@ export const CreateCheckoutSession = async (
       include: { user: true },
     });
 
-    callback(null, {
-      payment,
-      url: url as string,
+    const { client_secret, id } = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: "Panier - GoodFood",
+            },
+            unit_amount: totalWithFees * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      return_url: return_url_base + "/checkout/callback/" + newPayment.id,
+      ui_mode: 'embedded',
     });
+
+    const payment = await prisma.payment.update({
+      where: {
+        id: newPayment.id,
+      },
+      data: {
+        stripe_id: id,
+      },
+      include: { user: true },
+    })
+
+      callback(null, {
+        payment,
+        clientSecret: client_secret as string,
+      });
   } catch (error) {
     log.error(error);
     callback(error, null);

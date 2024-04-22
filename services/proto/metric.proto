@@ -2,8 +2,6 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "reporting";
-
 package com.goodfood.reporting;
 
 message Metric {
@@ -98,10 +96,11 @@ message GetRestaurantRequest {
 }
 
 message CreateRestaurantRequest {
-  string name = 1;
-  string key = 2;
-  string address = 3;
-  int32 group_id = 4;
+  string id = 1;
+  string name = 2;
+  string key = 3;
+  string address = 4;
+  int32 group_id = 5;
 }
 
 message UpdateRestaurantRequest {

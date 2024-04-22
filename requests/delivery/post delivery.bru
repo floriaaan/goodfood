@@ -7,18 +7,35 @@ meta {
 post {
   url: {{baseUrl}}/api/delivery
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   Content-Type: application/json
 }
 
+auth:bearer {
+  token: {{token}}
+}
+
 body:json {
   {
-    "eta": "<string>",
-    "address": "<string>",
-    "deliveryPersonId": "<string>",
-    "restaurantId": "<string>"
+    "address": {
+      "street": "23 rue Amiral Cécille",
+      "city": "Rouen",
+      "zipcode": "76100",
+      "country": "France",
+      "lat": 49.4337451,
+      "lng": 1.0830254
+    },
+    "restaurantId": "clr7vjrof0000rf2xvitq6c2t",
+    "restaurantAddress": {
+      "street": "15 passage de la Lucilline",
+      "city": "Rouen",
+      "zipcode": "76000",
+      "country": "France",
+      "lat": 49.4458862,
+      "lng": 1.0683189
+    }
   }
 }

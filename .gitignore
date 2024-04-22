@@ -84,6 +84,9 @@ terraform.rc
 # log service
 /services/log/goodfood-log
 
+# gateway service
+/services/gateway/src/proto/
+
 # expo cache files
 /apps/mobile/.expo
 
