@@ -21,7 +21,11 @@ export default function Index() {
     );
   }, [basket.productsList]);
 
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation() as {
+    navigate: (href: string, params?: any) => void;
+    goBack: () => void;
+  };
+
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
       <View className="absolute bottom-0 left-0 w-screen bg-black h-28" />
@@ -65,7 +69,11 @@ export default function Index() {
               <Button onPress={() => goBack()} icon="home" type="secondary" />
             </View>
             <View className="grow">
-              <Button icon="arrow-right" onPress={() => console.log("next step")} title="Étape suivante" />
+              <Button
+                icon="arrow-right"
+                onPress={() => navigate(`(app)`, { screen: "checkout/index" })}
+                title="Étape suivante"
+              />
             </View>
           </View>
         </View>
