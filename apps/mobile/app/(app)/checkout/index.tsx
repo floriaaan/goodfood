@@ -1,10 +1,12 @@
-import { View, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { AppHeader } from "@/components/ui/header";
-import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { Button } from "@/components/ui/button";
-import React, { useEffect } from "react";
 import { useNavigation } from "expo-router";
+import React, { useEffect } from "react";
+import { Text, View } from "react-native";
+import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import { Button } from "@/components/ui/button";
+import { AppHeader } from "@/components/ui/header";
+
 export default function Index() {
   const [activeStep, setActiveStep] = React.useState(1);
   useEffect(() => {
