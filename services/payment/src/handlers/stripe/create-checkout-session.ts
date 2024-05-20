@@ -6,7 +6,7 @@ import {
   CreateCheckoutSessionRequest,
   CreateCheckoutSessionResponse, CreatePaymentIntentRequest, CreatePaymentIntentResponse, SetupIntentResponse,
 } from "@payment/types/stripe";
-import Stripe from "stripe";
+
 
 const FEES_IN_EUR = 0.5;
 
@@ -70,7 +70,7 @@ export const CreateCheckoutSession = async (
   }
 };
 
-const CreateSetupIntent = async  (
+export const CreateSetupIntent = async  ({ request }: Data<undefined>,
   callback: (err: any, response: SetupIntentResponse | null) => void
 ) => {
   const customer = await stripe.customers.create();
@@ -90,7 +90,7 @@ const CreateSetupIntent = async  (
 };
 
 
-const CreatePaymentIntent = async  (
+export const CreatePaymentIntent = async  (
   { request }: Data<CreatePaymentIntentRequest>,
   callback: (err: any, response: CreatePaymentIntentResponse | null) => void
 ) => {
