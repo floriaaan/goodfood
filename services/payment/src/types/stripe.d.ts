@@ -12,3 +12,17 @@ export type CreateCheckoutSessionResponse = {
   payment: Payment;
   clientSecret: string;
 };
+
+export type SetupIntentResponse = {
+  setupIntent: string;
+  ephemeralKey: string;
+  customer: string;
+};
+
+export type CreatePaymentIntentRequest = {
+  amount: number;
+};
+
+export type CreatePaymentIntentResponse = {
+  clientSecret: string;
+};

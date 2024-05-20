@@ -4,8 +4,9 @@ import { Data } from "@payment/types";
 import { stripe } from "@payment/lib/stripe";
 import {
   CreateCheckoutSessionRequest,
-  CreateCheckoutSessionResponse,
+  CreateCheckoutSessionResponse, CreatePaymentIntentRequest, CreatePaymentIntentResponse, SetupIntentResponse,
 } from "@payment/types/stripe";
+import Stripe from "stripe";
 
 const FEES_IN_EUR = 0.5;
 
@@ -67,4 +68,39 @@ export const CreateCheckoutSession = async (
     log.error(error);
     callback(error, null);
   }
+};
+
+const CreateSetupIntent = async  (
+  callback: (err: any, response: SetupIntentResponse | null) => void
+) => {
+  const customer = await stripe.customers.create();
+  const ephemeralKey = await stripe.ephemeralKeys.create(
+    {customer: customer.id},
+    {apiVersion: '2022-08-01'}
+  );
+  const setupIntent = await stripe.setupIntents.create({
+    customer: customer.id,
+  });
+
+  return {
+    setupIntent: setupIntent.client_secret,
+    ephemeralKey: ephemeralKey.secret,
+    customer: customer.id
+  };
+};
+
+
+const CreatePaymentIntent = async  (
+  { request }: Data<CreatePaymentIntentRequest>,
+  callback: (err: any, response: CreatePaymentIntentResponse | null) => void
+) => {
+  const {amount } = request;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: 'eur',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+  return { clientSecret: paymentIntent.client_secret };
 };
