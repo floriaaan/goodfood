@@ -8,15 +8,18 @@ export const Button = ({
   className,
   icon,
   type = "primary",
+  disabled = false,
 }: {
   onPress: () => void;
   title?: string;
   className?: string;
   icon?: typeof Icon.defaultProps.name;
   type?: "primary" | "secondary";
+  disabled?: boolean;
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       onPress={onPress}
       className={classNames(
         type === "primary"
@@ -24,6 +27,7 @@ export const Button = ({
           : "bg-neutral-800 flex flex-row h-16 items-center",
         icon && !title ? "px-5" : "px-6",
         icon ? "justify-between" : "justify-center",
+        disabled && "bg-[#008D5E] opacity-75",
       )}
     >
       {icon && title && <View className="w-6" />}

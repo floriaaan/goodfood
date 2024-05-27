@@ -16,6 +16,7 @@ export default function Index() {
   const [basketProductList, setBasketProductList] = useState<Product[]>([]);
 
   useEffect(() => {
+    if (basket.productsList.length === 0) return;
     setBasketProductList(
       basket.productsList.map((item) => products.find((product) => product.id === item.id)) as Product[],
     );
@@ -25,7 +26,7 @@ export default function Index() {
     navigate: (href: string, params?: any) => void;
     goBack: () => void;
   };
-
+  console.log(basketProductList[0]);
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
       <View className="absolute bottom-0 left-0 w-screen bg-black h-28" />
@@ -70,8 +71,9 @@ export default function Index() {
             </View>
             <View className="grow">
               <Button
+                disabled={basketProductList.length <= 0 || !basketProductList[0]}
                 icon="arrow-right"
-                onPress={() => navigate(`(app)`, { screen: "checkout/index" })}
+                onPress={() => navigate(`(app)`, { screen: "checkout/selection/index" })}
                 title="Étape suivante"
               />
             </View>
