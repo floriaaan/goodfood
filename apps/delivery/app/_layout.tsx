@@ -63,9 +63,7 @@ function RootLayoutNav() {
   return (
     <Stack
       initialRouteName={isAuthenticated ? "(app)" : "(onboarding)/first"}
-      screenOptions={{
-        headerShown: false,
-      }}
+      screenOptions={{ headerShown: false }}
     />
   );
 }

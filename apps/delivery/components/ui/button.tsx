@@ -7,16 +7,19 @@ export const Button = ({
   className,
   icon,
   type = "primary",
+  disabled,
 }: {
   onPress: () => void;
   title?: string;
   className?: string;
   icon?: typeof Icon.defaultProps.name;
   type?: "primary" | "secondary";
+  disabled?: boolean;
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
+      disabled={disabled}
       style={[
         { height: "auto", flexDirection: "row", alignItems: "center" },
         type === "primary"
@@ -26,6 +29,7 @@ export const Button = ({
         icon
           ? { justifyContent: "space-between" }
           : { justifyContent: "center" },
+          disabled && { opacity: 0.2},
       ]}
     >
       {icon && title && <View style={{ width: 24, height: 24 }} />}

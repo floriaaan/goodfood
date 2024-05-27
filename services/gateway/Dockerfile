@@ -1,4 +1,4 @@
-FROM node:18-alpine3.18  as builder
+FROM node:18-alpine  as builder
 
 # Set working directory
 WORKDIR /app
@@ -13,14 +13,14 @@ RUN npm install
 COPY ./proto ./proto/
 
 # Generate the proto files
-RUN npm run build:proto
+# RUN npm run build:proto
 
 # Build the application
 RUN npm run build
 
 
 # Create a new image with the application
-FROM node:18-alpine3.18 as runner
+FROM node:18-alpine as runner
 
 # Set working directory
 WORKDIR /app

@@ -13,13 +13,17 @@ import { Session } from "@/types/session";
 export const fetchAPI = async (
   url: string,
   token: Session["token"] | null | undefined = "",
-  options?: RequestInit,
+  options?: RequestInit
 ): Promise<Response> => {
   const API_URL = process.env.EXPO_PUBLIC_API_URL as string;
   // Throw an error if the API URL is not defined
   if (!API_URL) throw new Error("API URL is not provided");
 
-  console.log(`fetching: ${API_URL}${url}`);
+  console.log(
+    `fetching: ${API_URL}${url}, token is ${
+      token ? "provided" : "not provided"
+    }`
+  );
 
   // Send the request to the specified URL with the provided options and user credentials
   return fetch(API_URL + url, {

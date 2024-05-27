@@ -3,12 +3,13 @@ import { DrawerActions } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import {
   Dimensions,
-  Image,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
+
+import { Image } from "expo-image";
 
 export const Header = ({
   hasBackButton = false,
@@ -39,7 +40,7 @@ export const Header = ({
           // onPress={() => console.log("user")}
         >
           <Image
-            source={require("../assets/images/tmp/user.png")}
+            source={require("@/assets/images/tmp/user.png")}
             style={styles.full}
           />
         </TouchableOpacity>

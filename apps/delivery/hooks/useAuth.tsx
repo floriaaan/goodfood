@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import Toast from "react-native-root-toast";
 
+import { useNative } from "@/hooks/useNative";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { getCookie, setCookie } from "@/lib/storage";
 import { User } from "@/types/user";
@@ -46,6 +47,8 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { location, updateFrequency } = useNative();
+
   const [session, setSession] = useState<Session | null>(null);
   const loadSession = async () => {
     const token = await getCookie("gf-token");
@@ -89,6 +92,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         body: JSON.stringify({ email, password }),
       });
       const body = await res.json();
+      console.log(body)
 
       if (!res.ok || res.status !== 200) {
         if (body.error && body.error.details === "Invalid credentials")
@@ -110,10 +114,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(body);
       setCookie("gf-token", body.token);
       setCookie("gf-user", JSON.stringify(body.user));
+      updateLocation();
       router.push("/(app)/");
       return res;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       Toast.show(
         "Une erreur est survenue lors de la connexion. Veuillez réessayer.",
         { duration: Toast.durations.LONG }
@@ -126,8 +131,45 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setSession(null);
     setCookie("gf-token", null);
     setCookie("gf-user", null);
-    router.dismissAll();
+
+    router.canDismiss() ? router.dismiss() : router.push("/(auth)/login");
   };
+
+  const updateLocation = async () => {
+    if (!location || !user) return;
+    // fetch api to update location
+    try {
+      const res = await fetchAPI(
+        `/api/delivery-person/${session?.user?.id}/location`,
+        session?.token,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            address: {
+              lat: location.coords.latitude,
+              lng: location.coords.longitude,
+            },
+          }),
+        }
+      );
+      console.log(await res.json());
+      if (!res.ok) {
+        console.error("Failed to update location");
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    // debounce to update delivery person location
+    if (!location || !user) return;
+    // fetch api to update location
+    const interval = setInterval(() => updateLocation(), updateFrequency);
+
+    return () => clearInterval(interval);
+  }, [updateFrequency, user, location]);
 
   return (
     <AuthContext.Provider

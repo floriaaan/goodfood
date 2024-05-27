@@ -2,8 +2,9 @@ import { useNative } from "@/hooks/useNative";
 import { calculateDistance } from "@/lib/distance";
 import { Order } from "@/types/order";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export const OrderListItem = ({
   item,
@@ -16,6 +17,7 @@ export const OrderListItem = ({
     navigate: (href: string, params?: any) => void;
   };
 
+
   const { delivery } = item;
   const {
     address: { lat, lng },
@@ -26,6 +28,12 @@ export const OrderListItem = ({
     location?.coords.latitude && location?.coords.longitude
       ? [location?.coords.latitude, location?.coords.longitude]
       : [NaN, NaN];
+
+  const restaurant_location: [number, number] =
+    item.restaurant?.address?.lat && item.restaurant?.address?.lng
+      ? [item.restaurant?.address?.lat, item.restaurant?.address?.lng]
+      : [NaN, NaN];
+
 
   return (
     <TouchableOpacity onPress={() => navigate("order/[id]", { id: item.id })}>
@@ -56,7 +64,7 @@ export const OrderListItem = ({
                 fontWeight: "700",
               }}
             >
-              {item.restaurantId}
+              {item.restaurant?.name}
             </Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -68,7 +76,10 @@ export const OrderListItem = ({
                 marginLeft: 4,
               }}
             >
-              distance
+              {restaurant_location.every(isNaN)
+                ? "calcul en cours.."
+                : calculateDistance([lat, lng], restaurant_location).toFixed(2) +
+                  " km"}
             </Text>
           </View>
         </View>
@@ -133,7 +144,7 @@ export const OrderListItem = ({
           >
             <MaterialIcons name="access-time" size={12} color="white" />
             <Text style={{ color: "white", fontSize: 12, marginLeft: 4 }}>
-              {`Passée le ${new Date(item.created_at.toString()).toLocaleString(
+              {`Passée le ${new Date(item.payment.createdAt.toString()).toLocaleString(
                 "fr-FR",
                 {
                   day: "numeric",

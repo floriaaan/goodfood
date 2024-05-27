@@ -236,8 +236,8 @@ export const orderList: Order[] = [
       stripe_id: "stripe_id:1",
       total: 8.5,
       status: PaymentStatus.APPROVED,
-      created_at: "2023-08-07T10:20:00.000Z",
-      updated_at: "2023-08-07T10:20:00.000Z",
+      createdAt: "2023-08-07T10:20:00.000Z",
+      updatedAt: "2023-08-07T10:20:00.000Z",
       user_id: "user_id:1",
       user: {
         id: "user_id:1",
@@ -292,8 +292,8 @@ export const orderList: Order[] = [
     },
     status: Status.PENDING,
     restaurantId: "restaurant_id:1",
-    created_at: new Date("2000-01-01T12:00:00.000Z"),
-    updated_at: new Date("2000-01-01T12:00:00.000Z"),
+    createdAt: new Date("2000-01-01T12:00:00.000Z"),
+    updatedAt: new Date("2000-01-01T12:00:00.000Z"),
   },
   {
     id: "order_id:2",
@@ -303,8 +303,8 @@ export const orderList: Order[] = [
       stripe_id: "stripe_id:2",
       total: 8.5,
       status: PaymentStatus.PENDING,
-      created_at: "2023-08-07T10:20:00.000Z",
-      updated_at: "2023-08-07T10:20:00.000Z",
+      createdAt: "2023-08-07T10:20:00.000Z",
+      updatedAt: "2023-08-07T10:20:00.000Z",
       user_id: "user_id:1",
       user: {
         id: "user_id:1",
@@ -357,8 +357,8 @@ export const orderList: Order[] = [
     },
     status: Status.FULFILLED,
     restaurantId: "restaurant_id:2",
-    created_at: new Date("2023-11-17T12:00:00.000Z"),
-    updated_at: new Date("2023-11-17T12:00:00.000Z"),
+    createdAt: new Date("2023-11-17T12:00:00.000Z"),
+    updatedAt: new Date("2023-11-17T12:00:00.000Z"),
   },
 ];
 

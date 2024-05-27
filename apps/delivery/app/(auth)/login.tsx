@@ -1,12 +1,13 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
+import { Image } from "expo-image";
 
 export default function AuthLogin() {
   const { login } = useAuth();

@@ -1,14 +1,16 @@
 import { useAuth } from "@/hooks/useAuth";
+import { DataProvider } from "@/hooks/useData";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 import { Drawer } from "expo-router/drawer";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Layout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    // <GestureHandlerRootView style={{ flex: 1 }}>
+    <DataProvider>
       {/* @ts-ignore */}
       <Drawer drawerContent={(props) => <DrawerContent {...props} />}>
         <Drawer.Screen
@@ -25,16 +27,30 @@ export default function Layout() {
         <Drawer.Screen
           name="order/[id]"
           options={{
-            drawerLabel: "Orders",
+            drawerLabel: "Order",
             drawerIcon: ({ color, size }) => (
               <MaterialIcons name="list" {...{ color, size }} />
             ),
-            title: "orders",
+            title: "order",
             headerShown: false,
           }}
         />
+
+<Drawer.Screen
+          name="settings"
+          options={{
+            drawerLabel: "Paramètres",
+            drawerIcon: ({ color, size }) => (
+              <MaterialIcons name="settings" {...{ color, size }} />
+            ),
+            title: "Paramètres",
+            headerShown: false,
+          }}
+        />
+
       </Drawer>
-    </GestureHandlerRootView>
+    </DataProvider>
+    // </GestureHandlerRootView>
   );
 }
 
@@ -68,9 +84,7 @@ function DrawerContent({ ...props }: typeof DrawerContentScrollView) {
               <MaterialIcons name="account-circle" {...{ color, size }} />
             )}
             label="Profil"
-            onPress={() =>
-              navigation.navigate("profile", { id: user?.id })
-            }
+            onPress={() => navigation.navigate("profile", { id: user?.id })}
           />
         </View>
         <View>

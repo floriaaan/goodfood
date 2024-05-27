@@ -13,6 +13,8 @@ type NativeContextType = {
   locationPermission: Location.LocationPermissionResponse | undefined;
   setLocation: (location: Location.LocationObject | null) => void;
   theme: "light" | "dark";
+  updateFrequency: number;
+  setUpdateFrequency: (frequency: number) => void;
 };
 
 const NativeContext = createContext<NativeContextType>({
@@ -20,6 +22,8 @@ const NativeContext = createContext<NativeContextType>({
   locationPermission: undefined,
   setLocation: () => {},
   theme: "light",
+  updateFrequency: 60 * 1000, // WARNING: every 60 seconds, there will be a call to mapbox API for every order in the list to update ETA
+  setUpdateFrequency: () => {},
 });
 
 export const useNative = () => {
@@ -37,6 +41,8 @@ export const NativeProvider = ({ children }: { children: ReactNode }) => {
   const [locationPermission, setLocationPermission] =
     useState<Location.LocationPermissionResponse>();
 
+  const [updateFrequency, setUpdateFrequency] = useState(60 * 1000);
+
   useEffect(() => {
     (async () => {
       const permission = await Location.requestForegroundPermissionsAsync();
@@ -48,6 +54,8 @@ export const NativeProvider = ({ children }: { children: ReactNode }) => {
     })();
   }, []);
 
+  
+
   return (
     <NativeContext.Provider
       value={{
@@ -55,6 +63,8 @@ export const NativeProvider = ({ children }: { children: ReactNode }) => {
         locationPermission,
         setLocation,
         theme,
+        updateFrequency,
+        setUpdateFrequency,
       }}
     >
       {children}

@@ -1,6 +1,8 @@
+import { useData } from "@/hooks/useData";
 import { Text, View } from "react-native";
 
 export const OrderListHeader = () => {
+  const { orders } = useData();
   return (
     <View
       style={{
@@ -27,7 +29,7 @@ export const OrderListHeader = () => {
             fontWeight: "800",
           }}
         >
-          2
+          {orders.length}
         </Text>
       </View>
     </View>

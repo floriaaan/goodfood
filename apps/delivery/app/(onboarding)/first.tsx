@@ -1,8 +1,9 @@
 import { useRouter } from "expo-router";
-import { Dimensions, Image, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
+import { Image } from "expo-image";
 
 export default function Onboarding() {
   const router = useRouter();

@@ -1,4 +1,3 @@
-import { log } from "@gateway/lib/log/log";
 import { check, withCheck } from "@gateway/middleware/auth";
 import { GetNotificationsByUserIdRequest, Notification } from "@gateway/proto/notification_pb";
 import {
@@ -199,7 +198,6 @@ userRoutes.post("/api/user/login", (req: Request, res: Response) => {
   const inInput = new logInInput().setEmail(email).setPassword(password);
 
   userServiceClient.logIn(inInput, (error, response) => {
-    log.debug("logIn", { error, response });
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });

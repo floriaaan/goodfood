@@ -2,6 +2,7 @@ import { Basket, BasketItem } from "@/types/basket";
 import { Delivery } from "@/types/delivery";
 import { Status } from "@/types/global";
 import { Payment } from "@/types/payment";
+import { Restaurant } from "@/types/restaurant";
 
 export type UserMinimum = {
   id: string;
@@ -20,6 +21,7 @@ export type Order = {
   id: string;
   deliveryType: DeliveryType;
   restaurantId: string;
+  restaurant?: Restaurant
   user: UserMinimum;
   basketSnapshot: {
     string: string;
@@ -34,8 +36,8 @@ export type Order = {
   deliveryId: string;
   delivery: Delivery;
 
-  created_at: Date | string;
-  updated_at: Date | string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 };
 
 export type BasketSnapshot = Omit<Basket, "productsList"> & {

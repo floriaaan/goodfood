@@ -2,19 +2,23 @@ import { Header } from "@/components/header";
 import { LargeLoader } from "@/components/loader/large";
 import { OrderListHeader } from "@/components/order/list-header";
 import { OrderListItem } from "@/components/order/list-item";
-import { orderList } from "@/constants/data";
+import { useData } from "@/hooks/useData";
 import { useNative } from "@/hooks/useNative";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import React, { useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+
+
 
 const { height } = Dimensions.get("window");
 const BOTTOM_PANEL_HEIGHT_MINIMIZED = 350;
@@ -30,6 +34,7 @@ const deltas = { latitudeDelta: 0.05, longitudeDelta: 0.05 };
 
 export default function Index() {
   const { location, locationPermission } = useNative();
+  const { orders, refetchOrders, isOrdersLoading } = useData();
   const user_location =
     location?.coords.latitude && location?.coords.longitude
       ? [location?.coords.latitude, location?.coords.longitude]
@@ -53,7 +58,7 @@ export default function Index() {
         }}
         showsUserLocation
       >
-        {orderList.map((order) => {
+        {orders.map((order) => {
           const {
             delivery: {
               address: { lat, lng },
@@ -64,8 +69,13 @@ export default function Index() {
               key={order.id}
               coordinate={{ latitude: lat, longitude: lng }}
               title={`Commande pour ${order.user.firstName}`}
-              description={`Restaurant: ${order.restaurantId}`}
-            />
+              description={`Restaurant: ${order.restaurant?.name}`}
+            >
+              <Image
+                source={require("@/assets/images/user_icon.png")}
+                style={{ width: 26, height: 26 }}
+              />
+            </Marker>
           );
         })}
       </MapView>
@@ -186,10 +196,34 @@ export default function Index() {
           </View>
 
           <FlatList
-            data={orderList}
-            renderItem={({ item,index }) => <OrderListItem {...{item, index}} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={isOrdersLoading}
+                onRefresh={refetchOrders}
+                colors={["#fff"]} // set the color to white
+                tintColor={"#fff"} // set the tint color to white
+              />
+            }
+            data={orders}
+            renderItem={({ item, index }) => (
+              <OrderListItem {...{ item, index }} />
+            )}
             keyExtractor={(item) => item.id}
             ListHeaderComponent={OrderListHeader}
+            ListEmptyComponent={() => (
+              <View
+                style={{
+                  flex: 1,
+                  height: 200,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white" }}>
+                  Aucune commande pour le moment
+                </Text>
+              </View>
+            )}
           />
         </View>
       </View>

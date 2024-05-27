@@ -22,5 +22,6 @@ export function calculateDistance([lat1, lng1]: [number, number], [lat2, lng2]: 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadiusKm * c;
 
+
   return distance;
 }
