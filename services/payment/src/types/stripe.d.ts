@@ -20,9 +20,12 @@ export type SetupIntentResponse = {
 };
 
 export type CreatePaymentIntentRequest = {
+  userMail: string;
   amount: number;
 };
 
 export type CreatePaymentIntentResponse = {
-  clientSecret: string;
+  setupIntent?: string;
+  ephemeralKey?: string;
+  customer: string;
 };

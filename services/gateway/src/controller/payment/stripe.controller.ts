@@ -96,7 +96,7 @@ stripeRoutes.post("/api/payment/stripe/create-intent", async (req: Request, res:
   const total = await reduceProductFromStock(userId.toString());
   if (!total || total <= 0) return res.status(400).send({ error: "No products in basket" });
 
-  const createPaymentIntentRequest = new CreatePaymentIntentRequest().setAmount(total);
+  const createPaymentIntentRequest = new CreatePaymentIntentRequest().setAmount(total).setUsermail(user.getEmail());
 
   stripeServiceClient.createPaymentIntent(createPaymentIntentRequest, (error, response) => {
     if (error) return res.status(500).send({ error });

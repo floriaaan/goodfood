@@ -82,8 +82,11 @@ message SetupIntentResponse {
   string customer = 3;
 }
 message CreatePaymentIntentRequest {
-  float amount = 1;
+  string userMail = 1;
+  float amount = 2;
 }
 message CreatePaymentIntentResponse {
-  string clientSecret = 1;
+  optional string setupIntent = 1;
+  optional string ephemeralKey = 2;
+  string customer = 3;
 }

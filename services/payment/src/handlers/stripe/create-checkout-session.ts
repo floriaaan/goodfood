@@ -94,13 +94,27 @@ export const CreatePaymentIntent = async  (
   { request }: Data<CreatePaymentIntentRequest>,
   callback: (err: any, response: CreatePaymentIntentResponse | null) => void
 ) => {
-  const {amount } = request;
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount,
-    currency: 'eur',
-    automatic_payment_methods: {
-      enabled: true,
-    },
-  });
-  return { clientSecret: paymentIntent.client_secret };
+
+  try {
+    const {amount } = request;// Use an existing Customer ID if this is a returning customer.
+    const customer = await stripe.customers.create({email: request.userMail});
+    const ephemeralKey = await stripe.ephemeralKeys.create(
+      {customer: customer.id},
+      {apiVersion: '2024-04-10'}
+    );
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100,
+      currency: 'eur',
+      customer: customer.id,
+    });
+
+    callback(null, {
+      setupIntent: paymentIntent.client_secret ? paymentIntent.client_secret: undefined,
+      ephemeralKey: ephemeralKey.secret,
+      customer: customer.id
+    });
+  } catch (error) {
+    log.error(error);
+  }
 };
