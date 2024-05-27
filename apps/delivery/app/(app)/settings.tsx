@@ -16,31 +16,7 @@ export default function Settings() {
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>
-        {/* <View style={styles.header}>
-          <View style={styles.headerAction}>
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-            >
-              <MaterialCommunityIcons
-                color="#000"
-                name="arrow-left"
-                size={24}
-              />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.headerTitle}>Settings</Text>
-          <View style={[styles.headerAction, { alignItems: "flex-end" }]}>
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-            >
-              <MaterialCommunityIcons color="#000" name="more" size={24} />
-            </TouchableOpacity>
-          </View>
-        </View> */}
+        
         <View>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Préférences</Text>

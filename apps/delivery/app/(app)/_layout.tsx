@@ -36,7 +36,7 @@ export default function Layout() {
           }}
         />
 
-<Drawer.Screen
+        <Drawer.Screen
           name="settings"
           options={{
             drawerLabel: "Paramètres",
@@ -47,7 +47,17 @@ export default function Layout() {
             headerShown: false,
           }}
         />
-
+        <Drawer.Screen
+          name="profile"
+          options={{
+            drawerLabel: "Profil",
+            drawerIcon: ({ color, size }) => (
+              <MaterialIcons name="account-circle" {...{ color, size }} />
+            ),
+            title: "Profil",
+            headerShown: false,
+          }}
+        />
       </Drawer>
     </DataProvider>
     // </GestureHandlerRootView>

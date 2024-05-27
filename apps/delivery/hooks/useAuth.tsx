@@ -92,7 +92,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         body: JSON.stringify({ email, password }),
       });
       const body = await res.json();
-      console.log(body)
 
       if (!res.ok || res.status !== 200) {
         if (body.error && body.error.details === "Invalid credentials")
@@ -152,7 +151,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }),
         }
       );
-      console.log(await res.json());
       if (!res.ok) {
         console.error("Failed to update location");
         return;
