@@ -1,5 +1,8 @@
 FROM node:18-alpine  as builder
 
+# Use a non-root user
+USER node
+
 # Set working directory
 WORKDIR /app
 
@@ -21,6 +24,9 @@ RUN npm run build
 
 # Create a new image with the application
 FROM node:18-alpine as runner
+
+# Use a non-root user
+USER node
 
 # Set working directory
 WORKDIR /app
