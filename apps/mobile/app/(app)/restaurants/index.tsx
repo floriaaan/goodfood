@@ -1,11 +1,12 @@
+import { useNavigation } from "expo-router";
+import React from "react";
 import { ActivityIndicator, FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AppHeader } from "@/components/ui/header";
-import React from "react";
-import { useLocation } from "@/hooks/useLocation";
+
 import { RestaurantCard } from "@/components/restaurant/card";
+import { AppHeader } from "@/components/ui/header";
 import { useBasket } from "@/hooks/useBasket";
-import { useNavigation } from "expo-router";
+import { useLocation } from "@/hooks/useLocation";
 
 const Restaurants = () => {
   const { restaurants, loading, refetch } = useLocation();

@@ -1,20 +1,13 @@
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import CheckoutScreen from "@/components/checkout/CheckoutScreen";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
-import { useAuth } from "@/hooks/useAuth";
-import { fetchAPI } from "@/lib/fetchAPI";
-import { Payment } from "@/types/payment";
 
 export default function Index() {
-  const { session } = useAuth();
-
   const { goBack, navigate } = useNavigation() as {
     navigate: (href: string, params?: any) => void;
     goBack: () => void;

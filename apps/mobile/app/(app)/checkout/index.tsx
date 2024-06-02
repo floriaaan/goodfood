@@ -1,5 +1,3 @@
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";

@@ -2,12 +2,7 @@ import { Request, Response, Router } from "express";
 import { CreateCheckoutSessionRequest, CreatePaymentIntentRequest } from "@gateway/proto/payment_pb";
 import { stripeServiceClient } from "@gateway/services/clients/payment.client";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
-import { basketServiceClient } from "@gateway/services/clients/basket.client";
-import { Basket, UserIdRequest } from "@gateway/proto/basket_pb";
-import { productServiceClient } from "@gateway/services/clients/product.client";
-import { Product, ProductId } from "@gateway/proto/product_pb";
 import { reduceProductFromStock } from "@gateway/lib/payment";
-import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 
 export const stripeRoutes = Router();
 
@@ -49,26 +44,6 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
     .setTotal(total)
     .setReturnUrlBase(req.body.return_url_base);
   stripeServiceClient.createCheckoutSession(createCheckoutSessionRequest, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
-});
-
-stripeRoutes.post("/api/payment/stripe/setup-intent", async (req: Request, res: Response) => {
-  /* #swagger.parameters['authorization'] = {
-        in: 'header',
-        required: true,
-        type: 'string'
-    }
-    */
-  // Auth check and :id check ---
-  const { authorization } = req.headers;
-  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
-  const token = authorization.split("Bearer ")[1];
-  const userId = await getUserIdFromToken(token);
-  if (!userId) return res.status(401).json({ message: "Unauthorized" });
-
-  stripeServiceClient.createSetupIntent(new Empty(), (error, response) => {
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });

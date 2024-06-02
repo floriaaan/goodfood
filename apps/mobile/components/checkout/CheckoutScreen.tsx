@@ -1,16 +1,22 @@
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useStripe } from "@stripe/stripe-react-native";
-import { Alert, Button, Text, TouchableOpacity } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
+import { Alert, Text, TouchableOpacity } from "react-native";
 
+import { user } from "@/constants/data";
 import { useAuth } from "@/hooks/useAuth";
 import { fetchAPI } from "@/lib/fetchAPI";
-import { user } from "@/constants/data";
-import { useQuery } from "@tanstack/react-query";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import React from "react";
+import { useNavigation } from "expo-router";
 
 export default function CheckoutScreen() {
   const { session } = useAuth();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+  const { goBack, navigate } = useNavigation() as {
+    navigate: (href: string, params?: any) => void;
+    goBack: () => void;
+  };
 
   const { data: paymentIntent, isLoading } = useQuery<{
     setupintent: string;
@@ -46,7 +52,7 @@ export default function CheckoutScreen() {
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
-      Alert.alert("Success", "Your order is confirmed!");
+      navigate(`(app)`, { screen: "delivery/index" });
     }
   };
 
