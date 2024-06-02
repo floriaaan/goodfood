@@ -381,6 +381,7 @@ orderRoutes.put("/api/order/claim/:id", async (req: Request, res: Response) => {
   if (userId !== order.user?.id && userRole !== "DELIVERY_PERSON")
     return res.status(401).send({ error: "Unauthorized: user is not the delivery person nor the order owner" });
 
+  // TODO: check if user is deliveryPerson of this order, to avoid if customer is also delivery_person
   if (userRole === "DELIVERY_PERSON") {
     const { code } = req.body;
     // convert order id (string) to a number, get the last 4 digits, and compare with code
