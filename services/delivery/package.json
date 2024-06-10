@@ -19,7 +19,7 @@
     "client:delivery-listByUser": "ts-node ./src/client/delivery/list-by-user.ts"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.8.13",
+    "@grpc/grpc-js": "^1.9.15",
     "@grpc/proto-loader": "0.7.6",
     "@prisma/client": "5.8.0",
     "amqplib": "^0.10.3",
