@@ -8,6 +8,7 @@ import { BasketHeader } from "@/components/basket/header";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
 import { useBasket } from "@/hooks/useBasket";
+import { toPrice } from "@/lib/product/toPrice";
 import { Product } from "@/types/product";
 
 export default function ProductPage() {
@@ -35,15 +36,22 @@ export default function ProductPage() {
           <BasketHeader />
         </View>
         <View className="w-full">
-          <Image className="w-full h-52 bg-gray-300 dark:bg-neutral-800" source={image as ImageSourcePropType} />
-          <View className="absolute px-2 py-1 top-2 left-2" style={{ backgroundColor: categoriesList?.[0].hexaColor }}>
-            <Text className="text-sm text-black">
-              {categoriesList?.[0].icon + " "}
-              {categoriesList?.[0].libelle}
-            </Text>
+          <Image className="w-full bg-gray-300 h-52 dark:bg-neutral-800" source={image as ImageSourcePropType} />
+          <View className="absolute flex flex-row space-x-2 top-2 left-2">
+            {categoriesList?.map((category, index) => {
+              return (
+                <View key={index} className="px-2 py-1 " style={{ backgroundColor: category.hexaColor }}>
+                  <Text className="text-sm text-black">
+                    {category.icon + " "}
+                    {category.libelle}
+                  </Text>
+                </View>
+              );
+            })}
           </View>
+
           <View className="absolute px-2 py-1 bg-gray-100 bottom-2 right-2">
-            <Text className="text-sm font-bold text-black">{price}</Text>
+            <Text className="text-sm font-bold text-black">{toPrice(price || "0")}</Text>
           </View>
         </View>
         <View className="flex flex-row items-center justify-between w-full">
@@ -51,7 +59,7 @@ export default function ProductPage() {
 
           <MaterialCommunityIcons name="chat-question" size={24} color="white" />
         </View>
-        <View className="w-full">
+        <View className="w-full h-full max-h-36">
           <Text className="text-[14px] text-justify text-white">{comment}</Text>
         </View>
         <View className="flex flex-row items-center justify-around w-full p-4 bg-neutral-800">
@@ -72,7 +80,13 @@ export default function ProductPage() {
             <Button onPress={() => goBack()} icon="close" type="secondary" />
           </View>
           <View className="grow">
-            <Button onPress={() => addProduct(id, 1)} title="Je prends ça" />
+            <Button
+              onPress={() => {
+                addProduct(id, 1);
+                goBack();
+              }}
+              title="Je prends ça"
+            />
           </View>
         </View>
       </SafeAreaView>

@@ -1,8 +1,12 @@
-import { Request, Response, Router } from "express";
-import { CreateCheckoutSessionRequest, CreatePaymentIntentRequest } from "@gateway/proto/payment_pb";
+import { reduceProductFromStock } from "@gateway/lib/payment";
+import {
+  CreateCheckoutSessionRequest,
+  CreatePaymentIntentRequest,
+  CreatePaymentIntentResponse,
+} from "@gateway/proto/payment_pb";
 import { stripeServiceClient } from "@gateway/services/clients/payment.client";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
-import { reduceProductFromStock } from "@gateway/lib/payment";
+import { Request, Response, Router } from "express";
 
 export const stripeRoutes = Router();
 
@@ -73,8 +77,14 @@ stripeRoutes.post("/api/payment/stripe/create-intent", async (req: Request, res:
 
   const createPaymentIntentRequest = new CreatePaymentIntentRequest().setAmount(total).setUsermail(user.getEmail());
 
-  stripeServiceClient.createPaymentIntent(createPaymentIntentRequest, (error, response) => {
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json(response.toObject());
-  });
+  const payment = (await new Promise((resolve, reject) => {
+    stripeServiceClient.createPaymentIntent(createPaymentIntentRequest, (error, response) => {
+      if (error) reject(error);
+      else resolve(response.toObject());
+    });
+  })) as CreatePaymentIntentResponse.AsObject;
+
+  if (!payment) return res.status(500).send({ error: "Error creating payment intent" });
+
+  return res.status(200).json({ ...payment });
 });

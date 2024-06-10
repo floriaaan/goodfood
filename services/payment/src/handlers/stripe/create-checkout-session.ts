@@ -1,12 +1,13 @@
-import { prisma } from "@payment/lib/prisma";
 import { log } from "@payment/lib/log";
-import { Data } from "@payment/types";
+import { prisma } from "@payment/lib/prisma";
 import { stripe } from "@payment/lib/stripe";
+import { Data } from "@payment/types";
 import {
   CreateCheckoutSessionRequest,
-  CreateCheckoutSessionResponse, CreatePaymentIntentRequest, CreatePaymentIntentResponse, SetupIntentResponse,
+  CreateCheckoutSessionResponse,
+  CreatePaymentIntentRequest,
+  CreatePaymentIntentResponse
 } from "@payment/types/stripe";
-
 
 const FEES_IN_EUR = 0.5;
 
@@ -19,7 +20,7 @@ export const CreateCheckoutSession = async (
     const totalWithFees = total + FEES_IN_EUR;
     const newPayment = await prisma.payment.create({
       data: {
-        stripe_id: (Math.random()+1).toString(36).substring(2),
+        stripe_id: (Math.random() + 1).toString(36).substring(2),
         total: totalWithFees,
         user: {
           connectOrCreate: {
@@ -47,7 +48,7 @@ export const CreateCheckoutSession = async (
       ],
       mode: "payment",
       return_url: return_url_base + "/checkout/callback/" + newPayment.id,
-      ui_mode: 'embedded',
+      ui_mode: "embedded",
     });
 
     const payment = await prisma.payment.update({
@@ -58,61 +59,63 @@ export const CreateCheckoutSession = async (
         stripe_id: id,
       },
       include: { user: true },
-    })
+    });
 
-      callback(null, {
-        payment,
-        clientSecret: client_secret as string,
-      });
+    callback(null, {
+      payment,
+      clientSecret: client_secret as string,
+    });
   } catch (error) {
     log.error(error);
     callback(error, null);
   }
 };
 
-export const CreateSetupIntent = async  ({ request }: Data<undefined>,
-  callback: (err: any, response: SetupIntentResponse | null) => void
-) => {
-  const customer = await stripe.customers.create();
-  const ephemeralKey = await stripe.ephemeralKeys.create(
-    {customer: customer.id},
-    {apiVersion: '2022-08-01'}
-  );
-  const setupIntent = await stripe.setupIntents.create({
-    customer: customer.id,
-  });
-
-  return {
-    setupIntent: setupIntent.client_secret,
-    ephemeralKey: ephemeralKey.secret,
-    customer: customer.id
-  };
-};
-
-
-export const CreatePaymentIntent = async  (
+export const CreatePaymentIntent = async (
   { request }: Data<CreatePaymentIntentRequest>,
   callback: (err: any, response: CreatePaymentIntentResponse | null) => void
 ) => {
-
   try {
-    const {amount } = request;// Use an existing Customer ID if this is a returning customer.
-    const customer = await stripe.customers.create({email: request.userMail});
+    const { amount } = request; // Use an existing Customer ID if this is a returning customer.
+
+    const customer = await stripe.customers.create({ email: request.userMail });
     const ephemeralKey = await stripe.ephemeralKeys.create(
-      {customer: customer.id},
-      {apiVersion: '2024-04-10'}
+      { customer: customer.id },
+      { apiVersion: "2024-04-10" }
     );
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100,
-      currency: 'eur',
+      currency: "eur",
       customer: customer.id,
     });
 
+    const payment = await prisma.payment.create({
+      data: {
+        stripe_id: paymentIntent.id,
+        total: amount,
+        user: {
+          connectOrCreate: {
+            where: { id: request.userMail },
+            create: {
+              id: request.userMail,
+              email: request.userMail,
+              name: request.userMail,
+            },
+          },
+        },
+      },
+      include: { user: true },
+    });
+
     callback(null, {
-      setupIntent: paymentIntent.client_secret ? paymentIntent.client_secret: undefined,
+      setupIntent: paymentIntent.client_secret
+        ? paymentIntent.client_secret
+        : undefined,
       ephemeralKey: ephemeralKey.secret,
-      customer: customer.id
+      customer: customer.id,
+      payment,
+      paymentId: payment.id,
     });
   } catch (error) {
     log.error(error);

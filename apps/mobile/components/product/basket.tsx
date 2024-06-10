@@ -3,6 +3,7 @@ import { Image, ImageSourcePropType, Text, TouchableOpacity, View } from "react-
 import { Swipeable } from "react-native-gesture-handler";
 
 import { useBasket } from "@/hooks/useBasket";
+import { toPrice } from "@/lib/product/toPrice";
 import { Product } from "@/types/product";
 
 export const ProductBasketCard = ({ id, name, price, image }: Product) => {
@@ -16,7 +17,7 @@ export const ProductBasketCard = ({ id, name, price, image }: Product) => {
           <View className="flex flex-col justify-between h-full pt-1 pb-2 ml-2 grow">
             <View className="flex flex-row items-center justify-between">
               <Text className="text-lg font-bold text-black">{name}</Text>
-              <Text className="text-sm text-black">{price}</Text>
+              <Text className="text-sm text-black">{toPrice(price)}</Text>
             </View>
             <View className="flex flex-row items-center ml-auto space-x-2">
               <TouchableOpacity onPress={() => removeProduct(id, 1)} className="p-2 border border-neutral-500">

@@ -24,7 +24,7 @@ type AuthContextType = {
   session: Session | null;
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<Response>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 
   refetchUser: () => void;
@@ -79,17 +79,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const user = useMemo(() => (session && api_user ? api_user : session?.user ?? null), [api_user, session]);
 
   const login = async (email: string, password: string) => {
-    const res = await fetchAPI("/api/user/login", undefined, {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-    const body = await res.json();
-    if (!res.ok || res.status !== 200) return res;
+    try {
+      const res = await fetchAPI("/api/user/login", undefined, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      const body = await res.json();
+      if (!res.ok || res.status !== 200) throw new Error(body.error);
 
-    setSession(body);
-    setCookie("gf-token", body.token);
-    setCookie("gf-user", JSON.stringify(body.user));
-    return res;
+      setSession(body);
+      setCookie("gf-token", body.token);
+      setCookie("gf-user", JSON.stringify(body.user));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const logout = () => {

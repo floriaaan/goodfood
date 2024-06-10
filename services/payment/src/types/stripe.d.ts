@@ -1,4 +1,4 @@
-import {Payment} from "@payment/types/payment";
+import { Payment } from "@payment/types/payment";
 
 export type CreateCheckoutSessionRequest = {
   total: number;
@@ -28,4 +28,6 @@ export type CreatePaymentIntentResponse = {
   setupIntent?: string;
   ephemeralKey?: string;
   customer: string;
+  payment: Payment;
+  paymentId: string;
 };

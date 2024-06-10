@@ -89,4 +89,6 @@ message CreatePaymentIntentResponse {
   optional string setupIntent = 1;
   optional string ephemeralKey = 2;
   string customer = 3;
+  string paymentId = 4;
+  Payment payment = 5;
 }

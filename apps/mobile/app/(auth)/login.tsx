@@ -10,8 +10,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function AuthLogin() {
   const { login, isAuthenticated } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user@mail.com");
+  const [password, setPassword] = useState("password");
 
   useEffect(() => {
     if (isAuthenticated) router.push("/(app)/home");
@@ -49,9 +49,7 @@ export default function AuthLogin() {
           title="C'est parti !"
           onPress={() => {
             login(email, password)
-              .then((r) => {
-                if (r.ok) router.push("/(app)/home");
-              })
+              .then(() => router.push("/(app)/home"))
               .catch(console.error);
           }}
           icon="chevron-right"

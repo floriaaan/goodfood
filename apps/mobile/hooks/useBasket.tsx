@@ -252,14 +252,18 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     )
       return;
     (async () => {
-      const directions = await getDirections(
-        { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },
-        { lat: address.lat, lng: address.lng },
-      );
-      if (!directions) return;
-      const duration_in_seconds = directions.routes[0].duration;
-      const eta = formatEta(duration_in_seconds);
-      setEta(eta);
+      try {
+        const directions = await getDirections(
+          { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },
+          { lat: address.lat, lng: address.lng },
+        );
+        if (!directions || !directions.routes || !directions.routes[0]) return;
+        const duration_in_seconds = directions.routes[0].duration;
+        const eta = formatEta(duration_in_seconds);
+        setEta(eta);
+      } catch (e) {
+        console.error(e);
+      }
     })();
   }, [selectedRestaurantId, address, selectedRestaurant]);
 

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { BasketHeader } from "@/components/basket/header";
@@ -59,10 +59,10 @@ export default function Index() {
         <View>
           {(!selectedRestaurantId || products.length <= 0) && (
             <>
-              <Text className=" absolute  top-11 left-5 text-center  text-lg font-bold text-white z-40">
+              <Text className="absolute z-40 text-lg font-bold text-center text-white top-11 left-5">
                 Veillez séléctionner un restaurant pour voir les produits
               </Text>
-              <View className="absolute top-0 left-0 w-screen h-96 bg-black opacity-70 z-20 p-2" />
+              <View className="absolute top-0 left-0 z-20 w-screen p-2 bg-black h-96 opacity-70" />
             </>
           )}
           <FlatList
@@ -86,7 +86,7 @@ export default function Index() {
           />
         </View>
         <FlatList
-          className="flex-grow w-full shrink-0"
+          className="flex-grow w-full shrink-0 max-h-48"
           data={restaurants}
           renderItem={({ item }) => (
             <RestaurantCard restaurant={item} onClick={() => {}} selected={selectedRestaurantId === item.id} />

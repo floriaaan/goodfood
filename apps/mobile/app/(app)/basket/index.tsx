@@ -1,15 +1,15 @@
 import { useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { BasketTaxes } from "@/app/(app)/basket/taxes";
+import { BasketHeader } from "@/components/basket/header";
 import { ProductBasketCard } from "@/components/product/basket";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
 import { useBasket } from "@/hooks/useBasket";
 import { Product } from "@/types/product";
-import React, { useEffect, useState } from "react";
-import { BasketTaxes } from "@/app/(app)/basket/taxes";
-import { BasketHeader } from "@/components/basket/header";
 
 export default function Index() {
   const { basket, products, refetch } = useBasket();
@@ -26,7 +26,7 @@ export default function Index() {
     navigate: (href: string, params?: any) => void;
     goBack: () => void;
   };
-  console.log(basketProductList[0]);
+
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
       <View className="absolute bottom-0 left-0 w-screen bg-black h-28" />
@@ -53,7 +53,7 @@ export default function Index() {
             )}
             ItemSeparatorComponent={() => <View className="h-2" />}
             ListEmptyComponent={() => (
-              <View className="flex h-20 items-center justify-center">
+              <View className="flex items-center justify-center h-20">
                 <Text className="text-lg font-bold">Votre panier est vide</Text>
               </View>
             )}
