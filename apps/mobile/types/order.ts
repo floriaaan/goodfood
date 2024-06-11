@@ -34,8 +34,8 @@ export type Order = {
   deliveryId: string;
   delivery: Delivery;
 
-  created_at: Date | string;
-  updated_at: Date | string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 };
 
 export type BasketSnapshot = Omit<Basket, "productsList"> & {

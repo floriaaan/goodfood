@@ -14,60 +14,17 @@ import {
   UpdateOrderRequest,
   UserMinimum,
 } from "@gateway/proto/order_pb";
+import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
 import { User } from "@gateway/proto/user_pb";
 import { getBasketByUser } from "@gateway/services/basket.service";
+import { restaurantServiceClient } from "@gateway/services/clients";
+import { getDelivery } from "@gateway/services/delivery.service";
+import { getPayment } from "@gateway/services/payment.service";
 import { getUser, getUserIdFromToken } from "@gateway/services/user.service";
 import { Request, Response, Router } from "express";
 import orderService from "../../services/clients/order.client";
-import { restaurantServiceClient } from "@gateway/services/clients";
-import { Restaurant, RestaurantId } from "@gateway/proto/restaurant_pb";
-import { getPayment } from "@gateway/services/payment.service";
-import { getDelivery } from "@gateway/services/delivery.service";
 
 export const orderRoutes = Router();
-
-orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['authorization'] = {
-        in: 'header',
-        required: true,
-        type: 'string'
-    }
-     #swagger.parameters['id'] = {
-           in: 'path',
-           required: true,
-           type: 'string'
-     } */
-
-  // Auth check and :id check ---
-  const { authorization } = req.headers;
-  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
-  const token = authorization.split("Bearer ")[1];
-  const userId = await getUserIdFromToken(token);
-  if (!userId) return res.status(401).json({ message: "Unauthorized" });
-  // ----------------------------
-
-  const { id } = req.params;
-  const orderId = new GetOrderRequest();
-  orderId.setId(id);
-
-  try {
-    const order: Order.AsObject = await new Promise((resolve, reject) => {
-      orderService.getOrder(orderId, (error, response) => {
-        if (error) reject(error);
-        else resolve(response.toObject());
-      });
-    });
-
-    if (!order) return res.status(404).send({ error: "Order not found" });
-    if (order.user?.id !== userId.toString() || !(await check(token, { role: "ADMIN" })))
-      return res.status(401).send({ error: "Unauthorized" });
-    const payment = await getPayment(order.paymentId);
-    const delivery = await getDelivery(order.deliveryId);
-    return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
-  } catch (error) {
-    return res.status(500).send({ error });
-  }
-});
 
 orderRoutes.post("/api/order", async (req: Request, res: Response) => {
   /* #swagger.parameters['body'] = {
@@ -149,9 +106,17 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   const token = authorization.split("Bearer ")[1];
 
   const { userId } = req.params;
-  if (!userId) return res.status(401).json({ message: "Unauthorized" });
-  if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: userId })))
-    return res.status(401).send({ error: "Unauthorized" });
+  if (!userId) return res.status(401).json({ message: "Unauthorized: userId not found" });
+  if (
+    // !(await check(token, { role: "ADMIN" })) || !(await check(token, { id: userId }))
+    // This is the original code, but it's not correct. It should be:
+    // not ADMIN
+    // or
+    // the user id in the token is the same as the user id in the request
+    !(await check(token, { role: "ADMIN" })) &&
+    !(await check(token, { id: userId }))
+  )
+    return res.status(401).send({ error: `Unauthorized: ${userId} is nor the user id in the token` });
   // ----------------------------
 
   const orderInput = new GetOrdersByUserRequest().setId(userId);
@@ -160,9 +125,13 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
     const r = response.toObject();
     const ordersList = await Promise.all(
       r.ordersList.map(async (order) => {
-        const payment = await getPayment(order.paymentId);
-        const delivery = await getDelivery(order.deliveryId);
-        return { ...order, payment: payment?.toObject(), delivery: delivery?.toObject() };
+        const payment = order.paymentId ? await getPayment(order.paymentId) : undefined;
+        const delivery = order.deliveryId ? await getDelivery(order.deliveryId) : undefined;
+        return {
+          ...order,
+          payment: payment?.toObject(),
+          delivery: delivery?.toObject(),
+        };
       }),
     );
     return res.status(200).json({ ordersList });
@@ -431,4 +400,47 @@ orderRoutes.delete("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
+});
+
+orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+    }
+     #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } */
+
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  // ----------------------------
+
+  const { id } = req.params;
+  const orderId = new GetOrderRequest();
+  orderId.setId(id);
+
+  try {
+    const order: Order.AsObject = await new Promise((resolve, reject) => {
+      orderService.getOrder(orderId, (error, response) => {
+        if (error) reject(error);
+        else resolve(response.toObject());
+      });
+    });
+
+    if (!order) return res.status(404).send({ error: "Order not found" });
+    if (order.user?.id !== userId.toString() || !(await check(token, { role: "ADMIN" })))
+      return res.status(401).send({ error: "Unauthorized" });
+    const payment = await getPayment(order.paymentId);
+    const delivery = await getDelivery(order.deliveryId);
+    return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
+  } catch (error) {
+    return res.status(500).send({ error });
+  }
 });
