@@ -14,7 +14,7 @@
     "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
-    "@grpc/grpc-js": "1.8.14",
+    "@grpc/grpc-js": "1.8.22",
     "@grpc/proto-loader": "0.7.6",
     "@prisma/client": "4.16.2",
     "amqplib": "^0.10.3",
