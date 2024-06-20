@@ -3,7 +3,7 @@ output "Kubernetes-deployment-id"{
 }
 
 output "Postgres-server-id" {
-  value = azurerm_postgresql_server.pg-goodfood-user.id
+  value = azurerm_postgresql_flexible_server.pg-goodfood-user.id
 }
 
 output "lb_ip" {

@@ -10,7 +10,7 @@ data "terraform_remote_state" "aks" {
 
   config = {
     resource_group_name  = "rg-gf-paf-dev"
-    storage_account_name = "sagoodfood"
+    storage_account_name = "sagoodfoodpaf"
     container_name       = "tfstate"
     key                  = "main-dev.tfstate"
   }
@@ -21,7 +21,7 @@ data "terraform_remote_state" "aks-user" {
 
   config = {
     resource_group_name  = "rg-gf-paf-dev"
-    storage_account_name = "sagoodfood"
+    storage_account_name = "sagoodfoodpaf"
     container_name       = "tfstate"
     key                  = "user-dev.tfstate"
   }

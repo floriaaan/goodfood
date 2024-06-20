@@ -24,45 +24,34 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_postgresql_server" "pg-goodfood-product" {
-  name                = "pg-${var.project_name}${var.environnment_suffix}-product"
-  location            = data.azurerm_resource_group.rg-gf-paf.location
-  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
+resource "azurerm_postgresql_flexible_server" "pg-goodfood-product" {
+  name                   = "pg-${var.project_name}${var.environnment_suffix}-product"
+  resource_group_name    = data.azurerm_resource_group.rg-gf-paf.name
+  location               = data.azurerm_resource_group.rg-gf-paf.location
+  version                = "16"
+  administrator_login    = data.azurerm_key_vault_secret.db-login.value
+  administrator_password = data.azurerm_key_vault_secret.db-password.value
+  storage_mb             = 32768
+  sku_name               = "GP_Standard_D4s_v3"
+}
 
-  sku_name = "B_Gen5_2"
-
-  storage_mb                   = 5120
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = false
-  auto_grow_enabled            = true
-
-  administrator_login          = data.azurerm_key_vault_secret.db-login.value
-  administrator_login_password = data.azurerm_key_vault_secret.db-password.value
-  version                      = "11"
-
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2" 
+resource "azurerm_postgresql_flexible_server_database" "db-goodfood-product" {
+  name      = "db-${var.project_name}${var.environnment_suffix}-product"
+  server_id = azurerm_postgresql_flexible_server.pg-goodfood-product.id
+  collation = "en_US.utf8"
+  charset   = "utf8"
 
 }
 
-resource "azurerm_postgresql_database" "db-goodfood-product" {
-  name                = "db-${var.project_name}${var.environnment_suffix}-product"
-  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
-  server_name         = azurerm_postgresql_server.pg-goodfood-product.name
-  charset             = "UTF8"
-  collation           = "English_United States.1252"
-}
-
-resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-product" {
+resource "azurerm_postgresql_flexible_server_firewall_rule" "pgfw-goodfood-product" {
   name                = "allow-azure-resources"
-  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
-  server_name         = azurerm_postgresql_server.pg-goodfood-product.name
+  server_id         = azurerm_postgresql_flexible_server.pg-goodfood-product.id
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
 }
 
 resource "azurerm_storage_account" "stac-goodfood-product" {
-  name                     = "stacgoodfoodproductdev"
+  name                     = "sagoodfoodproductdev"
   resource_group_name      = data.azurerm_resource_group.rg-gf-paf.name
   location                 = data.azurerm_resource_group.rg-gf-paf.location
   account_tier             = "Standard"
@@ -151,7 +140,8 @@ resource "kubernetes_deployment" "kd-goodfood-product" {
           }
           env {
             name = "DATABASE_URL"
-            value = "postgresql://${azurerm_postgresql_server.pg-goodfood-product.administrator_login}@${azurerm_postgresql_server.pg-goodfood-product.name}:${azurerm_postgresql_server.pg-goodfood-product.administrator_login_password}@${azurerm_postgresql_server.pg-goodfood-product.name}.postgres.database.azure.com:5432/${azurerm_postgresql_database.db-goodfood-product.name}"
+            value = "postgresql://${data.azurerm_key_vault_secret.db-login.value}:${data.azurerm_key_vault_secret.db-password.value}@${azurerm_postgresql_flexible_server.pg-goodfood-product.name}.postgres.database.azure.com:5432/${azurerm_postgresql_flexible_server_database.db-goodfood-product.name}?sslmode=require"
+            //value = "host=pg-gf-pafdev-product.postgres.database.azure.com port=5432 dbname=${azurerm_postgresql_database.db-goodfood-product.name} user=${azurerm_postgresql_server.pg-goodfood-product.administrator_login}@pg-gf-pafdev-product password=${azurerm_postgresql_server.pg-goodfood-product.administrator_login_password} sslmode=require"
           }
           env {
             name = "AZURE_STORAGE_SAS_TOKEN"
@@ -173,6 +163,9 @@ resource "kubernetes_deployment" "kd-goodfood-product" {
       }
     }
   }
+  timeouts {
+    create = "1m"
+  }
 }
 
 resource "kubernetes_service" "ks-goodfood-product" {
@@ -189,6 +182,9 @@ resource "kubernetes_service" "ks-goodfood-product" {
       target_port = 50004
     }
     type = "LoadBalancer"
+  }
+  timeouts {
+    create = "1m"
   }
 }
 

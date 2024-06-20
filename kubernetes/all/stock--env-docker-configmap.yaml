@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  AMQP_URL: "amqp://guest:guest@event-broker"
+  DATABASE_URL: "postgres://postgres:password@stock-postgres:5432/postgres"
+  PORT: "50009"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    service: stock-service-stock--env-docker
+  name: stock--env-docker

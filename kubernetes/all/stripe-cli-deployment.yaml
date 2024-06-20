@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: stripe-cli
+  name: stripe-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: stripe-cli
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: stripe-cli
+    spec:
+      containers:
+        - args:
+            - listen
+            - --forward-to
+            - gateway:4242/webhook
+          env:
+            - name: STRIPE_API_KEY
+              value: sk_test_VePHdqKTYQjKNInc7u56JBrQ
+          image: stripe/stripe-cli
+          name: stripe-cli
+          resources: {}
+      restartPolicy: Always
+

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: stock-service
+  name: stock-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: stock-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: stock-service
+    spec:
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: stock--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: stock--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: stock--env-docker
+          image: goodfood-stock:1.0.0
+          name: stock-service
+          ports:
+            - containerPort: 50009
+          resources: {}
+      restartPolicy: Always
+

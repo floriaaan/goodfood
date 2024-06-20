@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: delivery-postgres
+  name: delivery-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: delivery-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: delivery-postgres
+    spec:
+      containers:
+        - env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_DB
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:latest
+          name: delivery-postgres
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: goodfood-delivery-volume
+      restartPolicy: Always
+      volumes:
+        - name: goodfood-delivery-volume
+          persistentVolumeClaim:
+            claimName: goodfood-delivery-volume
+

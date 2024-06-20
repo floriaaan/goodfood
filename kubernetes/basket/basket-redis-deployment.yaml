@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-redis-deployment
+  labels:
+    service: basket-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: basket-redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: basket-redis
+    spec:
+      containers:
+        - args:
+            - redis-server
+            - --appendonly
+            - "yes"
+          env:
+            - name: REDIS_PASSWORD
+              value: password
+            - name: REDIS_USERNAME
+              value: redis
+          image: redis:latest
+          name: basket-redis
+          ports:
+            - containerPort: 6379
+          resources: {}
+          volumeMounts:
+            - mountPath: /data
+              name: goodfood-basket-volume
+      restartPolicy: Always
+      volumes:
+        - name: goodfood-basket-volume
+          persistentVolumeClaim:
+            claimName: goodfood-basket-volume
+

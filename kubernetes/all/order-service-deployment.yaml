@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: order-service
+  name: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: order-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: order-service
+    spec:
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: order--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: order--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: order--env-docker
+          image: goodfood-order:1.0.0
+          name: order-service
+          ports:
+            - containerPort: 50007
+          resources: {}
+      restartPolicy: Always
+

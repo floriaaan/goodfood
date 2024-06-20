@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  DATABASE_URL: "postgresql://postgres@pg-gf-pafdev-product:3X%F2gH6vK8iMTKJ^A@pg-gf-pafdev-product.postgres.database.azure.com:5432/db-gf-pafdev-product?sslmode=require"
+  DB_URL: "postgresql://postgres@pg-gf-pafdev-product:3X%F2gH6vK8iMTKJ^A@pg-gf-pafdev-product.postgres.database.azure.com:5432/db-gf-pafdev-product"
+  DEFAULT_USER_EMAIL: "super.admin@mail.com"
+  DEFAULT_USER_PASSWORD: "password"
+  JWT_SECRET_KEY: "example"
+  LOG_FILE_PATH: "./logs/app.log"
+  PORT: "50001"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    service: user-service-user-dev-env
+  name: user-dev-env

@@ -45,7 +45,7 @@ resource "azurerm_app_service_plan" "asp-goodfood" {
 
 # web App
 resource "azurerm_app_service" "as-goodfood" {
-  name = "as-${var.project_name}-${var.environnment_suffix}"
+  name = "appservice-${var.project_name}-${var.environnment_suffix}"
   location = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
   app_service_plan_id = azurerm_app_service_plan.asp-goodfood.id
@@ -75,8 +75,8 @@ resource "null_resource" "docker_push" {
   provisioner "local-exec" {
     command = <<-EOT
         docker login ${azurerm_container_registry.acr-goodfood.login_server} -u ${azurerm_container_registry.acr-goodfood.admin_username} -p ${azurerm_container_registry.acr-goodfood.admin_password}
-        docker pull floriaaan/goodfood-web:latest
-        docker tag floriaaan/goodfood-web:latest ${azurerm_container_registry.acr-goodfood.login_server}/goodfood-web
+        docker pull pierrelbg/goodfood-web:latest
+        docker tag pierrelbg/goodfood-web:latest ${azurerm_container_registry.acr-goodfood.login_server}/goodfood-web
         docker push ${azurerm_container_registry.acr-goodfood.login_server}/goodfood-web
       EOT
   }
@@ -197,7 +197,7 @@ resource "azurerm_kubernetes_cluster" "aks-goodfood" {
     admin_username = "ubuntu"
 
     ssh_key {
-      key_data = jsondecode(azapi_resource_action.ssh_public_key_gen-goodfood.output).publicKey
+      key_data = azapi_resource_action.ssh_public_key_gen-goodfood.output.publicKey
     }
   }
   network_profile {
@@ -210,7 +210,7 @@ resource "azurerm_kubernetes_cluster" "aks-goodfood" {
 
 
 resource "azurerm_key_vault" "kv-goodfood-user" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-user"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}user"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -238,7 +238,7 @@ resource "azurerm_key_vault" "kv-goodfood-user" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-payment" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-payment"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}payment"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -266,7 +266,7 @@ resource "azurerm_key_vault" "kv-goodfood-payment" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-product" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-product"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}product"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -294,7 +294,7 @@ resource "azurerm_key_vault" "kv-goodfood-product" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-restaurant" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-restaurant"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}restau"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -322,7 +322,7 @@ resource "azurerm_key_vault" "kv-goodfood-restaurant" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-promotions" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-promotions"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}promo"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -350,7 +350,7 @@ resource "azurerm_key_vault" "kv-goodfood-promotions" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-order" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-order"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}order"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -378,7 +378,7 @@ resource "azurerm_key_vault" "kv-goodfood-order" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-delivery" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-delivery"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}delivery"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -406,7 +406,7 @@ resource "azurerm_key_vault" "kv-goodfood-delivery" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-stock" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-stock"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}stock"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -434,7 +434,7 @@ resource "azurerm_key_vault" "kv-goodfood-stock" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-log" {
-  name                       = "kv-${var.project_name}-${var.environnment_suffix}-log"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}log"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -462,7 +462,7 @@ resource "azurerm_key_vault" "kv-goodfood-log" {
 }
 
 resource "azurerm_key_vault" "kv-goodfood-notification" {
-  name                       = "kv${var.project_name}${var.environnment_suffix}notification"
+  name                       = "keyvault${var.project_name_minimized}${var.environnment_suffix}notif"
   location                   = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name        = data.azurerm_resource_group.rg-goodfood.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id

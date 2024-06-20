@@ -3,7 +3,7 @@ output "Kubernetes-deployment-id"{
 }
 
 output "Postgres-server-id" {
-  value = azurerm_postgresql_server.pg-goodfood-product.id
+  value = azurerm_postgresql_flexible_server.pg-goodfood-product.id
 }
 
 output "Storage_account-id"{

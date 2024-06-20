@@ -2,12 +2,12 @@ data "azurerm_client_config" "product-client-conf" {
 }
 
 data "azurerm_resource_group" "rg-gf-paf" {
-  name     = "rg-${var.project_name}${var.environnment_suffix}"
+  name     = "rg-gf-paf-dev"
 }
 
 data "azurerm_key_vault" "kv-gf-paf-user" {
   resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
-  name                = "kv-${var.project_name}${var.environnment_suffix}-user"
+  name                = "keyvaultgfpaf${var.environnment_suffix}user"
 }
 
 data "azurerm_key_vault_secret" "db-login" {
@@ -25,7 +25,7 @@ data "terraform_remote_state" "aks" {
 
   config = {
     resource_group_name  = "rg-gf-paf-dev"
-    storage_account_name = "sagoodfood"
+    storage_account_name = "sagoodfoodpaf"
     container_name       = "tfstate"
     key                  = "main-dev.tfstate"
   }

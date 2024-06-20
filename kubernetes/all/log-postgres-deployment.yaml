@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: log-postgres
+  name: log-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: log-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: log-postgres
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:15.2
+          name: log-postgres
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: goodfood-log-volume
+      restartPolicy: Always
+      volumes:
+        - name: goodfood-log-volume
+          persistentVolumeClaim:
+            claimName: goodfood-log-volume
+

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: delivery-service
+  name: delivery-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: delivery-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: delivery-service
+    spec:
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: delivery--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: delivery--env-docker
+            - name: MAPBOX_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  key: MAPBOX_TOKEN
+                  name: delivery--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: delivery--env-docker
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_HOST
+                  name: delivery--env-docker
+          image: goodfood-delivery:1.0.0
+          name: delivery-service
+          ports:
+            - containerPort: 50008
+          resources: {}
+      restartPolicy: Always
+

@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: gateway
+  name: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: gateway
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: gateway
+    spec:
+      containers:
+        - env:
+            - name: GATEWAY_BASKET_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_BASKET_URL
+                  name: gateway--env
+            - name: GATEWAY_DELIVERY_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_DELIVERY_URL
+                  name: gateway--env
+            - name: GATEWAY_LOG_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_LOG_URL
+                  name: gateway--env
+            - name: GATEWAY_NOTIFICATION_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_NOTIFICATION_URL
+                  name: gateway--env
+            - name: GATEWAY_ORDER_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_ORDER_URL
+                  name: gateway--env
+            - name: GATEWAY_PAYMENT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_PAYMENT_URL
+                  name: gateway--env
+            - name: GATEWAY_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_PORT
+                  name: gateway--env
+            - name: GATEWAY_PRODUCT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_PRODUCT_URL
+                  name: gateway--env
+            - name: GATEWAY_PROMOTION_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_PROMOTION_URL
+                  name: gateway--env
+            - name: GATEWAY_REPORTING_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_REPORTING_URL
+                  name: gateway--env
+            - name: GATEWAY_RESTAURANT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_RESTAURANT_URL
+                  name: gateway--env
+            - name: GATEWAY_STOCK_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_STOCK_URL
+                  name: gateway--env
+            - name: GATEWAY_USER_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: GATEWAY_USER_URL
+                  name: gateway--env
+          image: goodfood-gateway:1.0.0
+          name: gateway
+          ports:
+            - containerPort: 50000
+            - containerPort: 4242
+          resources: {}
+      restartPolicy: Always
+

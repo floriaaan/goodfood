@@ -59,13 +59,6 @@ resource "kubernetes_deployment" "kd-goodfood-gateway" {
           port {
             container_port = 50000
           }
-
-          resources {
-            limits = {
-              cpu    = "400m"
-              memory = "480Mi"
-            }
-          }
         }
       }
     }
@@ -86,9 +79,6 @@ resource "kubernetes_service" "ks-goodfood-gateway" {
       port        = 50000
       target_port = 50000
     }
-    external_ips = [
-      "10.0.12.23"
-    ]
     type = "LoadBalancer"
   }
   timeouts {

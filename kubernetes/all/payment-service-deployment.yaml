@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: payment-service
+  name: payment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: payment-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: payment-service
+    spec:
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: payment--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: payment--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: payment--env-docker
+            - name: STRIPE_API_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: STRIPE_API_KEY
+                  name: payment--env-docker
+            - name: STRIPE_API_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  key: STRIPE_API_SECRET
+                  name: payment--env-docker
+            - name: STRIPE_WEBHOOK_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  key: STRIPE_WEBHOOK_ENDPOINT
+                  name: payment--env-docker
+            - name: STRIPE_WEBHOOK_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: STRIPE_WEBHOOK_PORT
+                  name: payment--env-docker
+            - name: STRIPE_WEBHOOK_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  key: STRIPE_WEBHOOK_SECRET
+                  name: payment--env-docker
+          image: goodfood-payment:1.0.0
+          name: payment-service
+          ports:
+            - containerPort: 50003
+          resources: {}
+      restartPolicy: Always
+

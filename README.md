@@ -108,7 +108,21 @@ To do so, you will need to have Docker installed on your system.
 You can then run the following command to start the microservices and the gateway:
 
 ```shell
-docker-compose up -f services/docker-compose.yml -d --build
+docker-compose -f services/docker-compose.yml up -d --build
+```
+
+### Kubernetes
+
+You can use Kubernetes to run the microservices and the gateway.
+For that create the secret for the docker registry:
+```shell
+kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+```
+    
+Then you can deploy the services:
+```shell
+cd services/gateway/k8s
+kubectl apply -f ./all
 ```
 
 ### Development
