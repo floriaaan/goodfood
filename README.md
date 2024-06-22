@@ -131,8 +131,15 @@ kubectl get secret registry-credential --output="jsonpath={.data.\.dockerconfigj
 Then you can deploy the services:
 ```shell
 cd kubernetes
- kubectl apply -f ./delivery,./gateway,./generic,./log,./notification,./order,./payment,./product,./promotion,./restaurant,./stock,./user
+kubectl apply -f ./basket,./delivery,./gateway,./generic,./log,./notification,./order,./payment,./product,./promotion,./restaurant,./stock,./user
 ```
+
+To request the gateway you need to port-forward it:
+```shell
+kubectl port-forward <gateway-pode-name> 50000:50000
+```
+
+Then you can run your web application. Make sure to change the URL in the web application environment file to http://localhost:50000.
 
 ### Development
 
