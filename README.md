@@ -113,16 +113,24 @@ docker-compose -f services/docker-compose.yml up -d --build
 
 ### Kubernetes
 
-You can use Kubernetes to run the microservices and the gateway.
-For that create the secret for the docker registry:
 ```shell
-kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+cd kubernetes
 ```
-    
+
+You can use Kubernetes to run the microservices and the gateway.
+For that create the secret for the docker registry (take care of replacing the placeholders):
+```shell
+kubectl create secret docker-registry registry-credential --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-password> --docker-email=<your-email>
+```
+
+Then make the secret usable by the service account:
+```shell
+kubectl get secret registry-credential --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+```
+
 Then you can deploy the services:
 ```shell
-cd services/gateway/k8s
-kubectl apply -f ./all
+kubectl apply -f ./product
 ```
 
 ### Development

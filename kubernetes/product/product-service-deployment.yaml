@@ -17,7 +17,7 @@ spec:
         service: product-service
     spec:
       imagePullSecrets:
-        - name: regcred
+        - name: registry-credential
       containers:
         - env:
             - name: AMQP_URL
@@ -45,7 +45,7 @@ spec:
                 configMapKeyRef:
                   key: PORT
                   name: product--env-docker
-          image: floriaaan/goodfood-product:1.0.0
+          image: floriaaan/goodfood-product:latest
           name: product-service
           ports:
             - containerPort: 50004
