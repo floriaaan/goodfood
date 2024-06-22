@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    service: goodfood-basket
-  name: goodfood-basket
+    service: log-service
+  name: log-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: goodfood-basket
+      service: log-service
   strategy: {}
   template:
     metadata:
       labels:
         network/goodfood-network: "true"
-        service: goodfood-basket
+        service: log-service
     spec:
       imagePullSecrets:
         - name: registry-credential
@@ -24,21 +24,21 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: AMQP_URL
-                  name: basket--env-docker
+                  name: log--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: log--env-docker
             - name: PORT
               valueFrom:
                 configMapKeyRef:
                   key: PORT
-                  name: basket--env-docker
-            - name: REDIS_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: REDIS_URL
-                  name: basket--env-docker
-          image: floriaaan/goodfood-basket:1.0.0
-          name: goodfood-basket
+                  name: log--env-docker
+          image: floriaaan/goodfood-log:latest
+          name: log-service
           ports:
-            - containerPort: 50002
+            - containerPort: 50021
           resources: {}
       restartPolicy: Always
 

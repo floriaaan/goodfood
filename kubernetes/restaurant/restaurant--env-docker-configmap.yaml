@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  AMQP_URL: "amqp://guest:guest@event-broker"
+  DATABASE_URL: "postgresql://postgres:password@restaurant-postgres.default.svc.cluster.local:51005/postgres"
+  PORT: "50005"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    service: restaurant-service-restaurant--env-docker
+  name: restaurant--env-docker

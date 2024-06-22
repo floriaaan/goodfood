@@ -130,7 +130,8 @@ kubectl get secret registry-credential --output="jsonpath={.data.\.dockerconfigj
 
 Then you can deploy the services:
 ```shell
-kubectl apply -f ./product
+cd kubernetes
+ kubectl apply -f ./delivery,./gateway,./generic,./log,./notification,./order,./payment,./product,./promotion,./restaurant,./stock,./user
 ```
 
 ### Development

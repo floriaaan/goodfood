@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: notification-postgres
+  name: notification-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: notification-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: notification-postgres
+    spec:
+      imagePullSecrets:
+        - name: registry-credential
+      containers:
+        - env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_DB
+              value: notification
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:15.2
+          name: notification-postgres
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: goodfood-notification-volume
+      restartPolicy: Always
+      volumes:
+        - name: goodfood-notification-volume
+          persistentVolumeClaim:
+            claimName: goodfood-notification-volume
+
