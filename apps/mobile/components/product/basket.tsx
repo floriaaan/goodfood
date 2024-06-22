@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Image, ImageSourcePropType, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 
 import { useBasket } from "@/hooks/useBasket";
@@ -13,7 +13,12 @@ export const ProductBasketCard = ({ id, name, price, image }: Product) => {
     item && (
       <Swipeable renderRightActions={() => <RightAction id={id} />}>
         <View className="flex flex-row items-center justify-between w-full h-20 pr-2 bg-neutral-100">
-          <Image source={image as ImageSourcePropType} className="w-20 h-20" />
+          <Image
+            source={{
+              uri: image,
+            }}
+            className="w-20 h-20"
+          />
           <View className="flex flex-col justify-between h-full pt-1 pb-2 ml-2 grow">
             <View className="flex flex-row items-center justify-between">
               <Text className="text-lg font-bold text-black">{name}</Text>

@@ -26,9 +26,11 @@ export const BasketHeader = () => {
         />
         <Text className="ml-2 text-2xl font-bold text-black uppercase">Panier</Text>
       </View>
-      <View className="bg-[#B6E8D8] h-8 px-2 flex items-center justify-center">
-        <Text className="text-xl font-bold text-[#008D5E]">{total}</Text>
-      </View>
+      {total !== "0€00" && (
+        <View className="bg-[#B6E8D8] h-8 px-2 flex items-center justify-center">
+          <Text className="text-xl font-bold text-[#008D5E]">{total}</Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

@@ -1,14 +1,16 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { StripeProvider } from "@stripe/stripe-react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
+import { RootSiblingParent } from "react-native-root-siblings";
+
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { NativeProvider } from "@/hooks/useNative";
-import { StripeProvider } from "@stripe/stripe-react-native";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -42,16 +44,18 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NativeProvider>
-        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-          <StatusBar style="auto" />
-          <AuthProvider>
-            <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
-              <RootLayoutNav />
-            </StripeProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </NativeProvider>
+      <RootSiblingParent>
+        <NativeProvider>
+          <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+            <StatusBar style="auto" />
+            <AuthProvider>
+              <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
+                <RootLayoutNav />
+              </StripeProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </NativeProvider>
+      </RootSiblingParent>
     </QueryClientProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, ImageSourcePropType, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { BasketHeader } from "@/components/basket/header";
@@ -14,16 +14,19 @@ import { Product } from "@/types/product";
 export default function ProductPage() {
   const { goBack } = useNavigation();
 
+  // @ts-ignore
   const { id } = useLocalSearchParams<"/(app)/products/[id]">();
-  const { addProduct, removeProduct, products } = useBasket();
+  const { addProduct, products } = useBasket();
 
   const [product, setProduct] = useState<Product | undefined>(undefined);
-  const { categoriesList, comment, image, kilocalories, name, nutriscore, preparation, price, type, weight } =
+  const { categoriesList, comment, image, kilocalories, name, nutriscore, preparation, price, type, canMake, weight } =
     product || {};
 
   useEffect(() => {
     setProduct(products.find((p) => p.id === id));
   }, [id]);
+
+  console.log(product?.canMake);
 
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
@@ -36,7 +39,12 @@ export default function ProductPage() {
           <BasketHeader />
         </View>
         <View className="w-full">
-          <Image className="w-full bg-gray-300 h-52 dark:bg-neutral-800" source={image as ImageSourcePropType} />
+          <Image
+            className="w-full bg-gray-300 h-52 dark:bg-neutral-800"
+            source={{
+              uri: image,
+            }}
+          />
           <View className="absolute flex flex-row space-x-2 top-2 left-2">
             {categoriesList?.map((category, index) => {
               return (
@@ -53,6 +61,16 @@ export default function ProductPage() {
           <View className="absolute px-2 py-1 bg-gray-100 bottom-2 right-2">
             <Text className="text-sm font-bold text-black">{toPrice(price || "0")}</Text>
           </View>
+          {canMake &&
+            (canMake > 0 ? (
+              <View className="absolute px-2 py-1 bg-gray-100 bottom-2 left-2">
+                <Text className="text-sm font-bold text-black">Disponible</Text>
+              </View>
+            ) : (
+              <View className="absolute px-2 py-1 bg-red-100 bottom-2 left-2">
+                <Text className="text-sm font-bold text-red-700">Indisponible</Text>
+              </View>
+            ))}
         </View>
         <View className="flex flex-row items-center justify-between w-full">
           <Text className="text-2xl font-bold text-white">{name}</Text>
