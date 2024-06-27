@@ -9,7 +9,7 @@ import { Restaurant } from "@/types/restaurant";
 
 interface CardProps {
   restaurant: Restaurant;
-  onClick: () => void;
+  onClick?: () => void;
   selected?: boolean;
   className?: string;
 }
@@ -26,10 +26,7 @@ export const RestaurantCard = (props: CardProps) => {
         selected && "border-2 border-green-500",
         className,
       )}
-      onPress={() => {
-        onClick();
-        selectRestaurant(restaurant.id);
-      }}
+      onPress={onClick ? onClick : () => selectRestaurant(restaurant.id)}
     >
       <View className="flex flex-row justify-between w-full">
         <View className="flex flex-row items-center">

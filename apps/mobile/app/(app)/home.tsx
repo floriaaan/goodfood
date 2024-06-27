@@ -98,9 +98,7 @@ export default function Index() {
         <FlatList
           className="flex-grow w-full shrink-0 max-h-48"
           data={restaurants}
-          renderItem={({ item }) => (
-            <RestaurantCard restaurant={item} onClick={() => {}} selected={selectedRestaurantId === item.id} />
-          )}
+          renderItem={({ item }) => <RestaurantCard restaurant={item} onClick={() => {}} />}
           ListEmptyComponent={() => {
             return (
               <View className="p-3">

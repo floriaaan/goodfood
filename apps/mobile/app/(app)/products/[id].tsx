@@ -19,14 +19,11 @@ export default function ProductPage() {
   const { addProduct, products } = useBasket();
 
   const [product, setProduct] = useState<Product | undefined>(undefined);
-  const { categoriesList, comment, image, kilocalories, name, nutriscore, preparation, price, type, canMake, weight } =
-    product || {};
+  const { categoriesList, comment, image, kilocalories, name, price, canMake, weight } = product || {};
 
   useEffect(() => {
     setProduct(products.find((p) => p.id === id));
   }, [id]);
-
-  console.log(product?.canMake);
 
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
