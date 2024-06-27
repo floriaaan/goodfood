@@ -63,13 +63,24 @@ export default function Index() {
           <CategoryLink icon="muffin" title="Desserts" type="DESSERTS" marginRight={16} fixMarginLeft={32} />
           <CategoryLink icon="food-apple" title="Snacks" type="SNACKS" marginRight={0} fixMarginLeft={48} />
         </View>
-        <View>
+        <View className="w-full">
           {(!selectedRestaurantId || products.length <= 0) && (
             <>
-              <Text className="absolute z-40 text-lg font-bold text-center text-white top-12 left-5">
-                Veuillez séléctionner un restaurant pour voir les produits
-              </Text>
-              <View className="absolute top-0 left-0 z-20 w-screen p-2 bg-black h-96 opacity-70" />
+              {!selectedRestaurantId && (
+                <View className="absolute z-40 flex flex-col items-center justify-center w-full h-full ">
+                  <MaterialCommunityIcons name="food-off" size={48} color="white" />
+                  <Text className="mt-2 text-lg font-bold text-center text-white">
+                    Veuillez séléctionner un restaurant pour voir les produits
+                  </Text>
+                </View>
+              )}
+              {products.length <= 0 && (
+                <View className="absolute z-40 flex flex-col items-center justify-center w-full h-full ">
+                  <MaterialCommunityIcons name="food-off" size={48} color="white" />
+                  <Text className="mt-2 text-lg font-bold text-center text-white">Aucun produit trouvé</Text>
+                </View>
+              )}
+              <View className="absolute top-0 left-0 z-20 w-screen p-2 bg-black opacity-90 h-96" />
             </>
           )}
           <FlatList

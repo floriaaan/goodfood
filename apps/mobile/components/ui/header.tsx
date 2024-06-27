@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { DrawerActions } from "@react-navigation/native";
 import { Link, useNavigation } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import Popover from "react-native-popover-view/dist/Popover";
@@ -6,7 +7,7 @@ import Popover from "react-native-popover-view/dist/Popover";
 import { UserLocation } from "@/components/user/location";
 import { useAuth } from "@/hooks/useAuth";
 
-export const AppHeader = () => {
+export const AppHeader = ({ hasBackButton = false }) => {
   const navigation = useNavigation();
   const { user, logout } = useAuth();
   if (user)
@@ -14,12 +15,9 @@ export const AppHeader = () => {
       <View key="header" className="z-50 flex flex-row items-center justify-between w-full">
         <TouchableOpacity
           className="flex items-center justify-center w-10 h-10 "
-          onPress={() => {
-            // @ts-ignore
-            navigation.openDrawer();
-          }}
+          onPress={() => (hasBackButton ? navigation.goBack() : navigation.dispatch(DrawerActions.openDrawer()))}
         >
-          <MaterialCommunityIcons name="menu" size={32} color="black" />
+          <MaterialCommunityIcons name={hasBackButton ? "chevron-left" : "menu"} size={24} color="black" />
         </TouchableOpacity>
         <UserLocation />
         <Popover
@@ -30,12 +28,7 @@ export const AppHeader = () => {
           }
         >
           <View className="flex flex-col gap-4 p-4 w-96">
-            <Link
-              href="(app)/users/"
-              style={{
-                width: "100%",
-              }}
-            >
+            <Link href="(app)/users/" style={{ width: "100%" }}>
               <View className="flex flex-row items-center">
                 <MaterialCommunityIcons name="account" size={24} color="black" />
                 <Text className="ml-1 text-black">Mon compte</Text>

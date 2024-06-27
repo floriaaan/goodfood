@@ -9,12 +9,12 @@ import MapViewDirections from "react-native-maps-directions";
 
 import { AppHeader } from "@/components/ui/header";
 import { useAuth } from "@/hooks/useAuth";
-import { useBasket } from "@/hooks/useBasket";
 import { calculateDistance } from "@/lib/distance";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Status } from "@/types/global";
 import { Order } from "@/types/order";
 import { PaymentStatus } from "@/types/payment";
+import { Restaurant } from "@/types/restaurant";
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_APIKEY || "";
 
@@ -39,7 +39,17 @@ export default function OrderPage() {
   const orders = useMemo(() => api_orders || [], [api_orders]);
   const order = orders.find((order) => order.id === id);
 
-  const { selectedRestaurant: restaurant } = useBasket();
+  const { data: restaurant } = useQuery<Restaurant>({
+    queryKey: ["restaurant", order?.restaurantId],
+    queryFn: async () => {
+      const res = await fetchAPI(`/api/restaurant/${order?.restaurantId}`, session?.token);
+      const body = await res.json();
+      return body;
+    },
+    staleTime: 1000 * 60 * 5,
+    enabled: isAuthenticated && order?.restaurantId !== undefined,
+  });
+
   const { delivery, payment } = order || {};
   const { eta, address } = delivery || {};
 
@@ -50,7 +60,7 @@ export default function OrderPage() {
   const restaurant_location: [number, number] =
     restaurant_address?.lat !== undefined && restaurant_address?.lng !== undefined
       ? [restaurant_address.lat, restaurant_address.lng]
-      : [NaN, NaN];
+      : [0, 0];
 
   const delivery_person_location: [number, number] =
     order?.delivery.deliveryPerson.address?.lat && order?.delivery.deliveryPerson.address?.lng
@@ -99,7 +109,7 @@ export default function OrderPage() {
 
   return (
     <View style={{ flex: 1, height: "100%", width: "100%" }}>
-      <MapView style={{ flex: 1, height: "100%", width: "100%" }} region={region}>
+      <MapView userInterfaceStyle="light" style={{ flex: 1, height: "100%", width: "100%" }} region={region}>
         {!delivery_person_location.every(isNaN) && (
           <Marker
             coordinate={{
@@ -168,18 +178,20 @@ export default function OrderPage() {
       </MapView>
       <BlurView
         intensity={300}
-        className="absolute top-0 flex items-center justify-center w-full px-4 pt-16 pb-4 shadow-2xl"
+        className="absolute top-0 flex items-center justify-center w-full px-6 pt-[71px] pb-4 shadow-2xl"
+        tint="light"
       >
-        <AppHeader />
+        <AppHeader hasBackButton />
       </BlurView>
       <BlurView
         intensity={300}
+        tint="light"
         style={{
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
-          padding: 16,
+          padding: 24,
           flexDirection: "column",
           gap: 16,
           paddingBottom: 24,
