@@ -58,6 +58,7 @@ const Restaurants = () => {
               </View>
             );
           }}
+          ItemSeparatorComponent={() => <View className="h-2 mt-2 border-t border-gray-200" />}
         />
       </SafeAreaView>
     </View>

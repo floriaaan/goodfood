@@ -54,7 +54,7 @@ export default function Index() {
             )}
             ItemSeparatorComponent={() => <View className="h-2" />}
             ListEmptyComponent={() => (
-              <View className="flex items-center justify-center h-20">
+              <View className="flex items-center justify-center h-20 pb-4">
                 <Text className="text-lg font-bold">Votre panier est vide</Text>
               </View>
             )}
@@ -68,8 +68,9 @@ export default function Index() {
         <View className="absolute bottom-0">
           <View className="w-full h-16 bg-white border-t border-neutral-200">
             {selectedRestaurant !== null && !isOpenNow(selectedRestaurant?.openinghoursList) && (
-              <View className="flex items-center justify-center h-full">
-                <Text className="text-red-600">Le restaurant est fermé</Text>
+              <View className="flex flex-col items-center justify-center h-full">
+                <Text className="text-red-600">Le restaurant {selectedRestaurant.name} est fermé</Text>
+                <Text className="text-xs text-red-800">{selectedRestaurant.openinghoursList.join(" / ")}</Text>
               </View>
             )}
           </View>

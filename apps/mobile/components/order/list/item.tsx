@@ -27,7 +27,7 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
       }}
       key={item.id}
       className={classNames(
-        "relative flex flex-col w-full py-4 bg-white gap-y-2",
+        "relative flex flex-col w-full py-2 px-2 bg-neutral-100 gap-y-2",
         item.status === Status.FULFILLED && "opacity-50",
       )}
     >
