@@ -1,8 +1,9 @@
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { StepIndicator } from "@/components/basket/step-indicator";
 import CheckoutScreen from "@/components/checkout/CheckoutScreen";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
@@ -23,13 +24,23 @@ export default function Index() {
         <View className="w-full">
           <AppHeader />
         </View>
+        <View className="w-full ">
+          <StepIndicator steps={["RÉCAP.", "RÉCUP.", "PAIEMENT"]} currentStep={3} />
+        </View>
         <View className="flex flex-col gap-2">
           <CheckoutScreen />
         </View>
         <View className="absolute bottom-0">
           <View className="flex flex-row w-full space-x-4">
             <View className="">
-              <Button onPress={() => goBack()} icon="home" type="secondary" />
+              <Button
+                onPress={() => navigate("(app)", { screen: "checkout/selection/index" })}
+                icon="chevron-left"
+                type="secondary"
+              />
+            </View>
+            <View className="grow">
+              <Button onPress={() => navigate("(app)/home")} type="secondary" title="Retour à l'accueil" />
             </View>
           </View>
         </View>

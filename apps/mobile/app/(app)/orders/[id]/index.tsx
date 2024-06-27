@@ -172,22 +172,22 @@ export default function OrderPage() {
       >
         <AppHeader />
       </BlurView>
-      <View
+      <BlurView
+        intensity={300}
         style={{
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
           padding: 16,
-          backgroundColor: "black",
           flexDirection: "column",
           gap: 16,
-          paddingBottom: 48,
+          paddingBottom: 24,
         }}
       >
         {order.status !== Status.FULFILLED ? (
           eta && (
-            <Text style={{ color: "white", fontSize: 24, fontWeight: "800" }}>{`Arrivée estimée à ${
+            <Text style={{ color: "black", fontSize: 24, fontWeight: "800" }}>{`Arrivée estimée à ${
               new Date(eta).toLocaleString("fr-FR", {
                 hour: "numeric",
                 minute: "numeric",
@@ -195,7 +195,7 @@ export default function OrderPage() {
             }`}</Text>
           )
         ) : (
-          <Text style={{ color: "white", fontSize: 24, fontWeight: "800" }}>Commande livrée 🧑‍🍳</Text>
+          <Text style={{ color: "black", fontSize: 24, fontWeight: "800" }}>Commande livrée 🧑‍🍳</Text>
         )}
         <View
           style={{
@@ -205,7 +205,7 @@ export default function OrderPage() {
             gap: 8,
           }}
         >
-          <MaterialCommunityIcons name="silverware-fork-knife" size={24} color="white" />
+          <MaterialCommunityIcons name="silverware-fork-knife" size={24} color="black" />
           <View
             style={{
               flexDirection: "column",
@@ -214,7 +214,7 @@ export default function OrderPage() {
           >
             <Text
               style={{
-                color: "white",
+                color: "black",
                 fontSize: 16,
                 fontWeight: "700",
               }}
@@ -223,7 +223,7 @@ export default function OrderPage() {
             </Text>
             <Text
               style={{
-                color: "white",
+                color: "black",
                 fontSize: 12,
               }}
             >{`${restaurant?.name}`}</Text>
@@ -237,7 +237,7 @@ export default function OrderPage() {
             gap: 8,
           }}
         >
-          <MaterialCommunityIcons name="account" size={24} color="white" />
+          <MaterialCommunityIcons name="account" size={24} color="black" />
           <View
             style={{
               flexDirection: "column",
@@ -246,7 +246,7 @@ export default function OrderPage() {
           >
             <Text
               style={{
-                color: "white",
+                color: "black",
                 fontSize: 16,
                 fontWeight: "700",
               }}
@@ -255,7 +255,7 @@ export default function OrderPage() {
             </Text>
             <Text
               style={{
-                color: "white",
+                color: "black",
                 fontSize: 12,
               }}
             >{`${delivery?.deliveryPerson.firstName} ${delivery?.deliveryPerson.lastName} (${delivery?.deliveryPerson.phone})`}</Text>
@@ -266,13 +266,12 @@ export default function OrderPage() {
             flexDirection: "row",
             alignItems: "center",
             gap: 8,
-            marginBottom: 16,
           }}
         >
           <MaterialCommunityIcons
             name={payment?.status === PaymentStatus.APPROVED ? "basket-check-outline" : "basket-remove-outline"}
             size={24}
-            color="white"
+            color="black"
           />
           <View
             style={{
@@ -282,7 +281,7 @@ export default function OrderPage() {
           >
             <Text
               style={{
-                color: "white",
+                color: "black",
                 fontSize: 16,
                 fontWeight: "700",
               }}
@@ -302,7 +301,7 @@ export default function OrderPage() {
             marginBottom: 16,
           }}
         >
-          <MaterialCommunityIcons name="lock-outline" size={24} color="white" />
+          <MaterialCommunityIcons name="lock-outline" size={24} color="black" />
           <View
             style={{
               flexDirection: "column",
@@ -310,11 +309,11 @@ export default function OrderPage() {
               flexGrow: 1,
             }}
           >
-            <Text style={{ color: "white", fontSize: 16, fontWeight: "700" }}>Code de validation</Text>
-            <Text style={{ color: "white", fontSize: 48, fontWeight: "900" }}>{lastFourDigits}</Text>
+            <Text style={{ color: "black", fontSize: 16, fontWeight: "700" }}>Code de validation</Text>
+            <Text style={{ color: "black", fontSize: 48, fontWeight: "900" }}>{lastFourDigits}</Text>
           </View>
         </View>
-      </View>
+      </BlurView>
     </View>
   );
 }
