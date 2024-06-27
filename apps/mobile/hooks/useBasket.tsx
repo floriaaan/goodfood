@@ -34,7 +34,7 @@ type BasketContextData = {
   removeProduct: (id: string, quantity: number) => void;
 
   refetch: () => void;
-  checkout: () => void;
+  // checkout: () => void;
 
   // RESTAURANT
   selectedRestaurant: Restaurant | null;
@@ -199,12 +199,12 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const checkout = () => {
-    // if (!user) return push("/auth/login");
-    if (!address || !selectedRestaurantId || Object.values(basket as Basket).filter(Boolean).length === 0) return;
+  // const checkout = () => {
+  //   // if (!user) return push("/auth/login");
+  //   if (!address || !selectedRestaurantId || Object.values(basket as Basket).filter(Boolean).length === 0) return;
 
-    // push("/checkout");
-  };
+  //   // push("/checkout");
+  // };
 
   const [address, setAddress] = useState<Address>(
     mainaddress ?? {
@@ -255,7 +255,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         // setBasket,
         addProduct,
         removeProduct,
-        checkout,
+        // checkout,
         refetch,
 
         products: products ?? [],

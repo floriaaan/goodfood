@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
 
 export default function Index() {
-  const { goBack, navigate } = useNavigation() as {
+  const { navigate } = useNavigation() as {
     navigate: (href: string, params?: any) => void;
     goBack: () => void;
   };

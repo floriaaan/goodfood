@@ -7,12 +7,9 @@ import { StepIndicator } from "@/components/basket/step-indicator";
 import CheckoutScreen from "@/components/checkout/CheckoutScreen";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
-import { useAuth } from "@/hooks/useAuth";
 
 export default function Index() {
-  const { session } = useAuth();
-
-  const { goBack, navigate } = useNavigation() as {
+  const { navigate } = useNavigation() as {
     navigate: (href: string, params?: any) => void;
     goBack: () => void;
   };

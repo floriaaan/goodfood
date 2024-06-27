@@ -14,7 +14,7 @@ export default function CheckoutScreen() {
   const { selectedRestaurantId } = useBasket();
   const { initPaymentSheet, presentPaymentSheet, handleURLCallback } = useStripe();
 
-  const { goBack, navigate } = useNavigation() as {
+  const { navigate } = useNavigation() as {
     navigate: (href: string, params?: any) => void;
     goBack: () => void;
   };
@@ -104,14 +104,6 @@ export default function CheckoutScreen() {
   };
 
   return (
-    // <TouchableOpacity
-    //   className="flex flex-row items-center h-16 px-6 text-sm border cursor-pointer "
-    //   disabled={isLoading}
-    //   onPress={openPaymentSheet}
-    // >
-    //   <Icon name="credit-card-outline" size={18} />
-    //   <Text className="pl-1 text-sm font-bold">Payer ma commande</Text>
-    // </TouchableOpacity>
     <Button
       onPress={openPaymentSheet}
       title="Payer ma commande"

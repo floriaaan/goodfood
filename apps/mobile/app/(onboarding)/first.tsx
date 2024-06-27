@@ -1,9 +1,9 @@
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Onboarding() {

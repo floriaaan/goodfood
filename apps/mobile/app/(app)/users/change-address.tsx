@@ -9,13 +9,11 @@ import { BackButton } from "@/components/ui/button/back";
 import { AppHeader } from "@/components/ui/header";
 import { SearchInput } from "@/components/ui/input/search";
 import { useAuth } from "@/hooks/useAuth";
-import { useNative } from "@/hooks/useNative";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Prediction, getPlaceDetails, getPlacesSuggestions } from "@/lib/fetchers/externals/google-maps";
 
 const ChangeAddressPage = () => {
   const { user, session } = useAuth();
-  const { location } = useNative();
 
   const [search, setSearch] = useState(user?.mainaddress.street || "");
   const timeout = useRef<NodeJS.Timer>();

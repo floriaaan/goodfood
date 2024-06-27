@@ -1,7 +1,5 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 
 import { useNative } from "@/hooks/useNative";
 import { fetchAPI } from "@/lib/fetchAPI";
