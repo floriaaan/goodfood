@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
-import { router, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
+
 import { useAuth } from "@/hooks/useAuth";
 
 export const DrawerContent = (props: DrawerContentComponentProps) => {
@@ -45,7 +46,6 @@ export const DrawerContent = (props: DrawerContentComponentProps) => {
         focused={routeName === "login"}
         onPress={() => {
           logout();
-          router.push("/(auth)/login");
         }}
       />
     </DrawerContentScrollView>

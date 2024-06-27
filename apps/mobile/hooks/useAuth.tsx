@@ -2,6 +2,7 @@
  * TODO: add default restaurant from mainAddress (the nearest one)
  */
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { fetchAPI } from "@/lib/fetchAPI";
@@ -99,6 +100,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setSession(null);
     setCookie("gf-token", null);
     setCookie("gf-user", null);
+
+    router.replace("/(auth)/login");
   };
 
   return (
