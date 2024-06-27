@@ -1,10 +1,10 @@
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useStripe } from "@stripe/stripe-react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import React from "react";
-import { Alert, Linking, Text, TouchableOpacity } from "react-native";
+import { Alert, Linking } from "react-native";
 
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useBasket } from "@/hooks/useBasket";
 import { fetchAPI } from "@/lib/fetchAPI";
@@ -104,13 +104,20 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <TouchableOpacity
-      className="flex flex-row items-center h-16 px-6 text-sm border cursor-pointer "
-      disabled={isLoading}
+    // <TouchableOpacity
+    //   className="flex flex-row items-center h-16 px-6 text-sm border cursor-pointer "
+    //   disabled={isLoading}
+    //   onPress={openPaymentSheet}
+    // >
+    //   <Icon name="credit-card-outline" size={18} />
+    //   <Text className="pl-1 text-sm font-bold">Payer ma commande</Text>
+    // </TouchableOpacity>
+    <Button
       onPress={openPaymentSheet}
-    >
-      <Icon name="credit-card-outline" size={18} />
-      <Text className="pl-1 text-sm font-bold">Payer ma commande</Text>
-    </TouchableOpacity>
+      title="Payer ma commande"
+      icon="credit-card-outline"
+      disabled={isLoading}
+      textClassName="text-white font-bold text-[18px] text-center uppercase"
+    />
   );
 }

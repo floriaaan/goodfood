@@ -39,7 +39,7 @@ stripeRoutes.post("/api/payment/stripe", async (req: Request, res: Response) => 
 
   const name = `${user.getFirstName()} ${user.getLastName()}`;
   const email = user.getEmail();
-  const total = await reduceProductFromStock(userId.toString());
+  const total = (await reduceProductFromStock(userId.toString())) + 0.5; // TODO: 0.5€ delivery fee
 
   const createCheckoutSessionRequest = new CreateCheckoutSessionRequest()
     .setUserId(userId.toString())
@@ -72,7 +72,7 @@ stripeRoutes.post("/api/payment/stripe/create-intent", async (req: Request, res:
   if (!user?.getFirstName() || !user.getLastName() || !user.getEmail())
     return res.status(400).send({ error: "User is missing information" });
 
-  const total = await reduceProductFromStock(userId.toString());
+  const total = (await reduceProductFromStock(userId.toString())) + 0.5; // TODO: 0.5€ delivery fee;
   if (!total || total <= 0) return res.status(400).send({ error: "No products in basket" });
 
   const createPaymentIntentRequest = new CreatePaymentIntentRequest().setAmount(total).setUsermail(user.getEmail());

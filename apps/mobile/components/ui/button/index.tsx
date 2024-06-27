@@ -9,6 +9,7 @@ export const Button = ({
   icon,
   type = "primary",
   disabled = false,
+  textClassName,
 }: {
   onPress: () => void;
   title?: string;
@@ -16,6 +17,7 @@ export const Button = ({
   icon?: typeof Icon.defaultProps.name;
   type?: "primary" | "secondary";
   disabled?: boolean;
+  textClassName?: string;
 }) => {
   return (
     <TouchableOpacity
@@ -32,7 +34,7 @@ export const Button = ({
       )}
     >
       {icon && title && <View className="w-6" />}
-      <Text className="text-white font-bold text-[24px] text-center uppercase">{title}</Text>
+      <Text className={textClassName || "text-white font-bold text-[24px] text-center uppercase"}>{title}</Text>
       {icon && <Icon name={icon} size={24} color="#fff" />}
     </TouchableOpacity>
   );
