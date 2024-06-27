@@ -1,10 +1,12 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import classNames from "classnames";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-root-toast";
 
 import { useBasket } from "@/hooks/useBasket";
 import { useNative } from "@/hooks/useNative";
 import { calculateDistance } from "@/lib/distance";
+import { isOpenNow } from "@/lib/restaurant";
 import { Restaurant } from "@/types/restaurant";
 
 interface CardProps {
@@ -19,6 +21,7 @@ export const RestaurantCard = (props: CardProps) => {
   const { location } = useNative();
   const { selectRestaurant } = useBasket();
   if (!restaurant) return null;
+
   return (
     <TouchableOpacity
       className={classNames(
@@ -26,7 +29,14 @@ export const RestaurantCard = (props: CardProps) => {
         selected && "border-2 border-green-500",
         className,
       )}
-      onPress={onClick ? onClick : () => selectRestaurant(restaurant.id)}
+      onPress={
+        onClick
+          ? onClick
+          : () => {
+              if (!isOpenNow(restaurant.openinghoursList)) return Toast.show("Le restaurant est fermé");
+              selectRestaurant(restaurant.id);
+            }
+      }
     >
       <View className="flex flex-row justify-between w-full">
         <View className="flex flex-row items-center">
@@ -46,7 +56,12 @@ export const RestaurantCard = (props: CardProps) => {
         )}
       </View>
       <View className="flex flex-row items-center mt-1">
-        <View className={classNames("w-2 h-2 mr-2 rounded-full", "bg-green-500")} />
+        <View
+          className={classNames(
+            "w-2 h-2 mr-2 rounded-full",
+            isOpenNow(restaurant.openinghoursList) ? "bg-green-500" : "bg-red-600",
+          )}
+        />
         <Text className="text-xs text-white">{restaurant.openinghoursList.join(" / ")}</Text>
       </View>
     </TouchableOpacity>

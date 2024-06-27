@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,6 +11,7 @@ import { AppHeader } from "@/components/ui/header";
 import { CategoryHeader } from "@/components/ui/header/category";
 import { useBasket } from "@/hooks/useBasket";
 import { useLocation } from "@/hooks/useLocation";
+import { isOpenNow } from "@/lib/restaurant";
 
 export default function Index() {
   const { products, selectedRestaurantId } = useBasket();
@@ -97,8 +98,21 @@ export default function Index() {
         </View>
         <FlatList
           className="flex-grow w-full shrink-0 max-h-48"
-          data={restaurants}
-          renderItem={({ item }) => <RestaurantCard restaurant={item} onClick={() => {}} />}
+          data={restaurants.sort((a, b) =>
+            isOpenNow(a.openinghoursList) === isOpenNow(b.openinghoursList)
+              ? 0
+              : isOpenNow(a.openinghoursList)
+              ? -1
+              : 1,
+          )}
+          renderItem={({ item }) => (
+            <RestaurantCard
+              restaurant={item}
+              onClick={() => {
+                router.push(`(app)/restaurants/${item.id}`);
+              }}
+            />
+          )}
           ListEmptyComponent={() => {
             return (
               <View className="p-3">

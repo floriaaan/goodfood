@@ -27,7 +27,8 @@ export const Button = ({
           : "bg-neutral-800 flex flex-row h-16 items-center",
         icon && !title ? "px-5" : "px-6",
         icon ? "justify-between" : "justify-center",
-        disabled && "bg-[#89a89d]",
+        disabled && "bg-[#656565]",
+        className,
       )}
     >
       {icon && title && <View className="w-6" />}

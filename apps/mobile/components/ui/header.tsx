@@ -11,9 +11,9 @@ export const AppHeader = () => {
   const { user, logout } = useAuth();
   if (user)
     return (
-      <View key="header" className="flex flex-row items-center justify-between w-full ">
+      <View key="header" className="z-50 flex flex-row items-center justify-between w-full">
         <TouchableOpacity
-          className="flex items-center justify-center w-10 h-10 bg-white"
+          className="flex items-center justify-center w-10 h-10 "
           onPress={() => {
             // @ts-ignore
             navigation.openDrawer();

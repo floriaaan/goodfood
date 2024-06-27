@@ -3,11 +3,13 @@ import { Link } from "expo-router";
 import { useRef } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
+import Toast from "react-native-root-toast";
 
 import { RestaurantCard } from "@/components/restaurant/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useBasket } from "@/hooks/useBasket";
 import { useLocation } from "@/hooks/useLocation";
+import { isOpenNow } from "@/lib/restaurant";
 
 export const UserLocation = () => {
   const refRBSheet = useRef<RBSheet>(null);
@@ -39,10 +41,16 @@ export const UserLocation = () => {
             </View>
           )}
 
-          {!isBasketEmpty && eta ? (
-            <Text className="text-xs text-black/60">Arivée prévue : {eta}</Text>
+          {selectedRestaurant && isOpenNow(selectedRestaurant?.openinghoursList) ? (
+            <>
+              {!isBasketEmpty && eta ? (
+                <Text className="text-xs text-black/60">Arivée prévue : {eta}</Text>
+              ) : (
+                <Text className="text-xs text-black/60">Passez votre commande</Text>
+              )}
+            </>
           ) : (
-            <Text className="text-xs text-black/60">Passez votre commande</Text>
+            <Text className="text-xs text-red-500">Fermé: ({selectedRestaurant?.openinghoursList.join(" / ")})</Text>
           )}
         </View>
         <MaterialCommunityIcons name="chevron-down" size={24} color="black" />
@@ -76,11 +84,22 @@ export const UserLocation = () => {
               </Text>
               <FlatList
                 className="flex-grow w-full h-64 shrink-0"
-                data={restaurants}
+                data={restaurants.sort((a, b) =>
+                  isOpenNow(a.openinghoursList) === isOpenNow(b.openinghoursList)
+                    ? 0
+                    : isOpenNow(a.openinghoursList)
+                    ? -1
+                    : 1,
+                )}
                 renderItem={({ item }) => (
                   <RestaurantCard
                     restaurant={item}
                     onClick={() => {
+                      if (!isOpenNow(item.openinghoursList))
+                        Toast.show("Le restaurant est fermé", {
+                          position: Toast.positions.TOP,
+                          containerStyle: { backgroundColor: "red", zIndex: 9999 },
+                        });
                       refRBSheet.current?.close();
                       selectRestaurant(item.id);
                     }}

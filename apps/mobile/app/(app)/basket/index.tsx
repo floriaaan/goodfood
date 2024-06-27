@@ -9,10 +9,11 @@ import { ProductBasketCard } from "@/components/product/basket";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/ui/header";
 import { useBasket } from "@/hooks/useBasket";
+import { isOpenNow } from "@/lib/restaurant";
 import { Product } from "@/types/product";
 
 export default function Index() {
-  const { basket, products, refetch } = useBasket();
+  const { basket, products, refetch, selectedRestaurant } = useBasket();
   const [basketProductList, setBasketProductList] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -65,13 +66,25 @@ export default function Index() {
           />
         </ScrollView>
         <View className="absolute bottom-0">
+          <View className="w-full h-16 bg-white border-t border-neutral-200">
+            {selectedRestaurant !== null && !isOpenNow(selectedRestaurant?.openinghoursList) && (
+              <View className="flex items-center justify-center h-full">
+                <Text className="text-red-600">Le restaurant est fermé</Text>
+              </View>
+            )}
+          </View>
+
           <View className="flex flex-row w-full space-x-4">
             <View className="">
               <Button onPress={() => goBack()} icon="home" type="secondary" />
             </View>
             <View className="grow">
               <Button
-                disabled={basketProductList.length <= 0 || !basketProductList[0]}
+                disabled={
+                  basketProductList.length <= 0 ||
+                  !basketProductList[0] ||
+                  (selectedRestaurant !== null && !isOpenNow(selectedRestaurant?.openinghoursList))
+                }
                 icon="arrow-right"
                 onPress={() => navigate(`(app)`, { screen: "checkout/selection/index" })}
                 title="Étape suivante"
