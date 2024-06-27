@@ -77,7 +77,10 @@ export default function ProductListPage() {
           data={filteredProducts}
           renderItem={({ item }) => <ProductCard width="w-full" className="border border-black" {...item} />}
           ListEmptyComponent={
-            <Text className="p-12 text-lg font-bold text-center text-black">Aucun produit trouvé</Text>
+            <View className="flex flex-col items-center justify-center w-full h-full py-16 ">
+              <MaterialCommunityIcons name="food-off" size={48} color="black" />
+              <Text className="mt-2 text-lg font-bold text-center text-black">Aucun produit trouvé</Text>
+            </View>
           }
         />
       </SafeAreaView>

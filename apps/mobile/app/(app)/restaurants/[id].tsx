@@ -50,7 +50,7 @@ export default function RestaurantPage() {
         userInterfaceStyle="light"
         style={{ flex: 1, height: "100%", width: "100%" }}
         region={{
-          latitude: restaurant_location[0],
+          latitude: restaurant_location[0] - 0.0025,
           longitude: restaurant_location[1],
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
@@ -94,6 +94,34 @@ export default function RestaurantPage() {
           <View style={{ flexDirection: "column", gap: 4 }}>
             <Text style={{ color: "black", fontSize: 16, fontWeight: "700" }}>Restaurant</Text>
             <Text style={{ color: "black", fontSize: 12 }}>{`${restaurant?.name}`}</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8, gap: 8 }}>
+          <MaterialCommunityIcons name="map-marker" size={24} color="black" />
+          <View style={{ flexDirection: "column", gap: 4 }}>
+            <Text style={{ color: "black", fontSize: 16, fontWeight: "700" }}>Adresse</Text>
+            <Text
+              style={{ color: "black", fontSize: 12 }}
+            >{`${restaurant_address?.street} ${restaurant_address?.zipcode} ${restaurant_address?.city}`}</Text>
+          </View>
+        </View>
+
+        {restaurant?.phone && (
+          <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8, gap: 8 }}>
+            <MaterialCommunityIcons name="phone" size={24} color="black" />
+            <View style={{ flexDirection: "column", gap: 4 }}>
+              <Text style={{ color: "black", fontSize: 16, fontWeight: "700" }}>Téléphone</Text>
+              <Text style={{ color: "black", fontSize: 12 }}>{`${restaurant?.phone}`}</Text>
+            </View>
+          </View>
+        )}
+
+        <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8, gap: 8 }}>
+          <MaterialCommunityIcons name="clock" size={24} color="black" />
+          <View style={{ flexDirection: "column", gap: 4 }}>
+            <Text style={{ color: "black", fontSize: 16, fontWeight: "700" }}>Horaires</Text>
+            <Text style={{ color: "black", fontSize: 12 }}>{`${restaurant?.openinghoursList.join(" / ")}`}</Text>
           </View>
         </View>
 

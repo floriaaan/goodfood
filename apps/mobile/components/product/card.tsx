@@ -18,7 +18,12 @@ export const ProductCard = ({
   return (
     <TouchableOpacity
       key={props.id}
-      className={classNames("relative flex flex-col mr-4", width || "w-52", className)}
+      className={classNames(
+        "relative flex flex-col mr-4",
+        width || "w-52",
+        className,
+        props.canMake ? "opacity-100" : "opacity-50",
+      )}
       onPress={() => navigate("(app)", { screen: "products/[id]", params: { id: props.id } })}
     >
       <Image
