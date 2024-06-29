@@ -1,7 +1,7 @@
-import { prisma } from "@delivery/lib/prisma";
 import { log } from "@delivery/lib/log";
-import { Delivery } from "@delivery/types/delivery";
+import { prisma } from "@delivery/lib/prisma";
 import { Data } from "@delivery/types";
+import { Delivery } from "@delivery/types/delivery";
 
 export const UpdateDelivery = async (
   { request }: Data<Delivery>,
@@ -14,15 +14,27 @@ export const UpdateDelivery = async (
       status,
       delivery_person_id,
       id,
-      restaurant_address,
-      restaurant_id,
     } = request;
+
+    const old = await prisma.delivery.findUnique({
+      where: { id },
+      include: {
+        delivery_person: {
+          include: { address: true },
+        },
+        address: true,
+        restaurant_address: true,
+      },
+    });
+    if (!old) {
+      throw new Error("Delivery not found");
+    }
 
     const delivery = await prisma.delivery.update({
       where: { id },
       data: {
-        eta: new Date(eta), // todo: calculate new eta but avoid changing the original eta the most possible
-        address: {
+        eta: eta ? new Date(eta): old.eta, // todo: calculate new eta but avoid changing the original eta the most possible
+        address: address ? {
           update: {
             street: address.street,
             city: address.city,
@@ -31,23 +43,9 @@ export const UpdateDelivery = async (
             lat: address.lat,
             lng: address.lng,
           },
-        },
-        restaurant_address: {
-          connectOrCreate: {
-            where: { id: restaurant_id },
-            create: {
-              id: restaurant_id,
-              street: restaurant_address.street,
-              city: restaurant_address.city,
-              zipcode: restaurant_address.zipcode,
-              country: restaurant_address.country,
-              lat: restaurant_address.lat,
-              lng: restaurant_address.lng,
-            },
-          },
-        },
-        status,
-        delivery_person: { connect: { id: delivery_person_id } },
+        }: undefined,
+        status: status || old.status,
+        delivery_person_id: delivery_person_id || old.delivery_person_id,
       },
       include: {
         delivery_person: {

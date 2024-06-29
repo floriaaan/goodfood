@@ -130,7 +130,6 @@ export const getDirections = async (
     lng: number;
   }[]
 ) => {
-  // @ts-expect-error // issue with node fetch and typescript
   const response = await fetch(
     `https://api.mapbox.com/directions/v5/mapbox/driving/${points
       .map((p) => p.lng + "," + p.lat)

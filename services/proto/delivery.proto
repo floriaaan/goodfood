@@ -57,6 +57,7 @@ service DeliveryService {
   rpc UpdateDelivery (Delivery) returns (Delivery) {}
   rpc DeleteDelivery (DeliveryId) returns (google.protobuf.Empty) {}
   rpc ListDeliveriesByUser (UserId) returns (DeliveryList) {}
+  rpc ListDeliveriesByDeliveryPerson (DeliveryPersonId) returns (DeliveryList) {}
   rpc ListDeliveriesByRestaurant (RestaurantId) returns (DeliveryList) {}
 
 }
