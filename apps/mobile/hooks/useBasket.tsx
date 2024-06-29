@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import Toast from "react-native-root-toast";
 
 import { useAuth } from "@/hooks/useAuth";
 import { formatEta } from "@/lib/eta";
@@ -33,7 +34,7 @@ type BasketContextData = {
   removeProduct: (id: string, quantity: number) => void;
 
   refetch: () => void;
-  checkout: () => void;
+  // checkout: () => void;
 
   // RESTAURANT
   selectedRestaurant: Restaurant | null;
@@ -65,6 +66,7 @@ export const useBasket = () => {
 export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, session, isAuthenticated } = useAuth();
   const { mainaddress } = user || {};
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>();
 
   const [taxes] = useState<Taxes>({
     delivery: 0,
@@ -76,6 +78,8 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     queryFn: async () => {
       const res = await fetchAPI("/api/basket", session?.token);
       const body = await res.json();
+      if (body.restaurantId) setSelectedRestaurantId(body.restaurantId);
+
       return body;
     },
     placeholderData: DEFAULT_BASKET,
@@ -85,11 +89,6 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const basket: Basket = useMemo(
     () => (isAuthenticated ? (api_basket && api_basket.productsList ? api_basket : DEFAULT_BASKET) : local_basket),
     [api_basket, local_basket, isAuthenticated],
-  );
-
-  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(
-    //todo: remove hardcoded value
-    "clre4oqjv000014eblvk1mkyw",
   );
 
   const { data: api_restaurant } = useQuery<Restaurant>({
@@ -128,6 +127,8 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   const products = useMemo(() => api_products ?? [], [api_products]);
 
   const total = useMemo(() => {
+    if (basket.productsList.length === 0 || !basket?.productsList) return toPrice(0);
+
     return toPrice(
       basket.productsList.reduce((acc, { id, quantity }) => {
         const product = products.find((p) => p.id === id);
@@ -140,98 +141,70 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [basket, taxes, products]);
 
   const addProduct = async (id: string, quantity: number) => {
-    if (!products || products.length === 0) return;
-    const p = products.find((p) => p.id === id);
-    if (!p) return;
+    try {
+      if (!products || products.length === 0) return;
+      const p = products.find((p) => p.id === id);
+      if (!p) return;
 
-    // if (p.isOutOfStock)
-    //   return toast({
-    //     className: "p-3",
-    //     children: (
-    //       <div className="inline-flex items-end justify-between w-full gap-2">
-    //         <div className="inline-flex gap-2 shrink-0">
-    //           <XIcon className="w-6 h-6 text-green-500" />
-    //           <div className="flex flex-col w-full grow">
-    //             <ToastTitle>Le produit est victime de son succès !</ToastTitle>
-    //             <small className="text-xs font-bold">
-    //               Le produit <strong>{p.name}</strong> est en rupture de stock
-    //             </small>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     ),
-    //   });
+      if (p.isOutOfStock)
+        return Toast.show(`Produit ${p.name} est en rupture de stock ❌`, {
+          duration: Toast.durations.LONG,
+        });
 
-    let ok = !isAuthenticated; // if not authenticated, add product to basket without calling api
-    if (isAuthenticated) {
-      const res = await fetchAPI("/api/basket", session?.token, {
-        method: "POST",
-        body: JSON.stringify({ productId: id, quantity }),
-      });
-      ok = res.ok;
-      refetch();
-      // No need to update basket, it will be updated by the query
-    } else {
-      // We are not authenticated, so we update the basket locally
-      setLocalBasket((prev) => {
-        // TODO: fix react strict mode issue
-        const productsList = Object.values(prev.productsList);
-        const p_index = productsList.findIndex((p) => p.id === id);
-        if (p_index !== -1) productsList[p_index].quantity += quantity;
-        else productsList.push({ id, quantity });
-        return { ...prev, productsList } as Basket;
-      });
+      let ok = !isAuthenticated; // if not authenticated, add product to basket without calling api
+      if (isAuthenticated) {
+        const res = await fetchAPI("/api/basket", session?.token, {
+          method: "POST",
+          body: JSON.stringify({ productId: id, quantity }),
+        });
+        ok = res.ok;
+        refetch();
+        // No need to update basket, it will be updated by the query
+      } else {
+        // We are not authenticated, so we update the basket locally
+        setLocalBasket((prev) => {
+          // TODO: fix react strict mode issue
+          const productsList = Object.values(prev.productsList);
+          const p_index = productsList.findIndex((p) => p.id === id);
+          if (p_index !== -1) productsList[p_index].quantity += quantity;
+          else productsList.push({ id, quantity });
+          return { ...prev, productsList } as Basket;
+        });
+      }
+
+      if (ok)
+        return Toast.show(`Produit ${p.name} ajouté au panier ✅`, {
+          duration: Toast.durations.LONG,
+        });
+    } catch (e) {
+      console.error(e);
     }
-
-    // if (ok)
-    //   toast({
-    //     className: "p-3",
-    //     children: (
-    //       <div className="inline-flex items-end justify-between w-full gap-2">
-    //         <div className="inline-flex gap-2 shrink-0">
-    //           <Image
-    //             src={p.image as string}
-    //             width={60}
-    //             height={60}
-    //             alt={p.name}
-    //             className="aspect-square h-[60px] w-[60px] shrink-0 object-cover"
-    //           />
-    //           <div className="flex flex-col w-full grow">
-    //             <ToastTitle>Produit ajouté au panier</ToastTitle>
-    //             <small className="text-sm font-bold">{p.name}</small>
-    //             <ToastDescription className="text-xs">
-    //               Vous pouvez modifier la quantité dans votre panier
-    //             </ToastDescription>
-    //           </div>
-    //         </div>
-
-    //         <div className="flex items-end justify-end shrink-0">
-    //           <ToastAction altText="Undo" onClick={() => removeProduct(id, quantity)}>
-    //             Annuler
-    //           </ToastAction>
-    //         </div>
-    //       </div>
-    //     ),
-    //   });
   };
 
   const removeProduct = async (id: string, quantity: number) => {
     if (isAuthenticated) {
-      // todo: call api to remove product
-      await fetchAPI("/api/basket/remove", session?.token, {
-        method: "PUT",
-        body: JSON.stringify({ productId: id, quantity }),
-      });
-      refetch();
+      try {
+        // todo: call api to remove product
+        await fetchAPI("/api/basket/remove", session?.token, {
+          method: "PUT",
+          body: JSON.stringify({ productId: id, quantity }),
+        });
+        refetch();
+        Toast.show(`Produit retiré du panier ✅`, {
+          duration: Toast.durations.LONG,
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
-  const checkout = () => {
-    // if (!user) return push("/auth/login");
-    if (!address || !selectedRestaurantId || Object.values(basket as Basket).filter(Boolean).length === 0) return;
+  // const checkout = () => {
+  //   // if (!user) return push("/auth/login");
+  //   if (!address || !selectedRestaurantId || Object.values(basket as Basket).filter(Boolean).length === 0) return;
 
-    // push("/checkout");
-  };
+  //   // push("/checkout");
+  // };
 
   const [address, setAddress] = useState<Address>(
     mainaddress ?? {
@@ -255,21 +228,23 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
     )
       return;
     (async () => {
-      const directions = await getDirections(
-        { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },
-        { lat: address.lat, lng: address.lng },
-      );
-      if (!directions) return;
-      const duration_in_seconds = directions.routes[0].duration;
-      const eta = formatEta(duration_in_seconds);
-      setEta(eta);
+      try {
+        const directions = await getDirections(
+          { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },
+          { lat: address.lat, lng: address.lng },
+        );
+        if (!directions || !directions.routes || !directions.routes[0]) return;
+        const duration_in_seconds = directions.routes[0].duration;
+        const eta = formatEta(duration_in_seconds);
+        setEta(eta);
+      } catch (e) {
+        console.error(e);
+      }
     })();
   }, [selectedRestaurantId, address, selectedRestaurant]);
 
   const isBasketEmpty = Object.values(basket as Basket).filter(Boolean).length === 0;
   const isRestaurantSelected = selectedRestaurantId !== null;
-
-  console.log(selectedRestaurantId, basket, products);
 
   return (
     <BasketContext.Provider
@@ -280,7 +255,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         // setBasket,
         addProduct,
         removeProduct,
-        checkout,
+        // checkout,
         refetch,
 
         products: products ?? [],

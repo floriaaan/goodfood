@@ -46,6 +46,10 @@ message Order {
   Status status = 6;
 
   string restaurant_id = 7;
+
+  // Timestamps
+  string created_at = 9;
+  string updated_at = 10;
 }
 
 service OrderService {

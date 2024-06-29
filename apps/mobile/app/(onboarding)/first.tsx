@@ -1,11 +1,18 @@
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Onboarding() {
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) router.push("/(app)/home");
+  }, []);
   return (
     <View className="flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-black">
       <Image

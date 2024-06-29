@@ -5,12 +5,14 @@ import { useColorScheme } from "react-native";
 type NativeContextType = {
   location: Location.LocationObject | null;
   setLocation: (location: Location.LocationObject | null) => void;
+  refreshLocation: () => void;
   theme: "light" | "dark";
 };
 
 const NativeContext = createContext<NativeContextType>({
   location: null,
   setLocation: () => {},
+  refreshLocation: () => {},
   theme: "light",
 });
 
@@ -34,11 +36,20 @@ export const NativeProvider = ({ children }: { children: ReactNode }) => {
     })();
   }, []);
 
+  const refreshLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") return;
+
+    const location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+  };
+
   return (
     <NativeContext.Provider
       value={{
         location,
         setLocation,
+        refreshLocation,
         theme,
       }}
     >

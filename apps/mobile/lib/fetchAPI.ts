@@ -22,6 +22,8 @@ export const fetchAPI = async (
   // // Throw an error if the user is not defined
   // if (!token) throw new Error("Token is not provided");
 
+  console.log(`${new Date().toISOString()}: ${API_URL + url}, token provided: ${token !== ""}`);
+
   // Send the request to the specified URL with the provided options and user credentials
   return fetch(API_URL + url, {
     headers: {
