@@ -13,7 +13,7 @@ RUN npm install
 COPY ./proto ./proto/
 
 # Generate the proto files
-# RUN npm run build:proto
+RUN npm run build:proto
 
 # Build the application
 RUN npm run build
