@@ -1,18 +1,19 @@
-import { Request, Response, Router } from "express";
-import { deliveryServiceClient } from "@gateway/services/clients/delivery.client";
+import { check, withCheck } from "@gateway/middleware/auth";
 import {
   Address,
   Delivery,
   DeliveryCreateInput,
   DeliveryId,
+  DeliveryPersonId,
   RestaurantId,
   Status,
   UserId,
 } from "@gateway/proto/delivery_pb";
-import { getUserIdFromToken } from "@gateway/services/user.service";
-import { check, withCheck } from "@gateway/middleware/auth";
-import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
 import { Restaurant, RestaurantId as restaurant_pb_RestaurantId } from "@gateway/proto/restaurant_pb";
+import { deliveryServiceClient } from "@gateway/services/clients/delivery.client";
+import { restaurantServiceClient } from "@gateway/services/clients/restaurant.client";
+import { getUserIdFromToken } from "@gateway/services/user.service";
+import { Request, Response, Router } from "express";
 
 export const deliveryRoutes = Router();
 
@@ -60,6 +61,37 @@ deliveryRoutes.get("/api/delivery/by-user", async (req: Request, res: Response) 
     if (error) return res.status(500).send({ error });
     else return res.status(200).json(response.toObject());
   });
+});
+
+deliveryRoutes.get("/api/delivery/by-delivery-person", async (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+    } 
+    #swagger.parameters['id'] = {
+           in: 'path',
+           required: true,
+           type: 'string'
+     } 
+    */
+
+  // Auth check and :id check ---
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: "Unauthorized" });
+  const token = authorization.split("Bearer ")[1];
+  const userId = await getUserIdFromToken(token);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+  // ----------------------------
+
+  deliveryServiceClient.listDeliveriesByDeliveryPerson(
+    new DeliveryPersonId().setId(userId.toString()),
+    (error, response) => {
+      if (error) return res.status(500).send({ error });
+      else return res.status(200).json(response.toObject());
+    },
+  );
 });
 
 deliveryRoutes.get("/api/delivery/:id", async (req: Request, res: Response) => {
