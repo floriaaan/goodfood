@@ -1,8 +1,6 @@
 import { log, utils } from "@gateway/lib/log/log";
-import { stripe, STRIPE_ENDPOINT_SECRET } from "@gateway/lib/stripe";
+import { STRIPE_ENDPOINT_SECRET, stripe } from "@gateway/lib/stripe";
 import { Address } from "@gateway/proto/delivery_pb";
-import express from "express";
-import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
 import { getBasketByUser, resetBasketByUser } from "@gateway/services/basket.service";
 import { createDelivery } from "@gateway/services/delivery.service";
 import { createOrder } from "@gateway/services/order.service";
@@ -10,6 +8,8 @@ import { updatePaymentStatus } from "@gateway/services/payment.service";
 import { getRestaurant } from "@gateway/services/restaurant.service";
 import { updateQuantityFromBasket } from "@gateway/services/stock.service";
 import { getUser } from "@gateway/services/user.service";
+import { PaymentStatus } from "@gateway/webhook/PaymentStatus";
+import express from "express";
 
 const app = express();
 
@@ -86,7 +86,8 @@ app.post(STRIPE_WEBHOOK_ENDPOINT, express.raw({ type: "application/json" }), asy
 
     default:
       // Unexpected event type
-      console.log(`Unhandled event type ${event.type}.`);
+      // console.log(`Unhandled event type ${event.type}.`);
+      break;
   }
 
   // Return a 200 response to acknowledge receipt of the event

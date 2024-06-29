@@ -11,7 +11,15 @@ export const UpdateDeliveryPersonLocation = async (
   callback: (err: any, response: any) => void
 ) => {
   try {
-    const { delivery_person_id, address } = request;
+    const { delivery_person_id: input_id, address } = request;
+
+    const { id: delivery_person_id } =
+      await prisma.deliveryPerson.findFirstOrThrow({
+        where: {
+          OR: [{ id: input_id }, { user_id: input_id }],
+        },
+      });
+
 
     const deliveries_in_progress = await prisma.delivery.findMany({
       where: { delivery_person_id, status: Status.IN_PROGRESS },
