@@ -11,7 +11,7 @@ export const getDirections = async (
   },
 ) => {
   const response = await fetch(
-    `https://api.mapbox.com/directions/v5/mapbox/driving/${pointA.lng},${pointA.lat};${pointB.lng},${pointB.lat}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
+    `https://api.mapbox.com/directions/v5/mapbox/driving/${pointA.lng},${pointA.lat};${pointB.lng},${pointB.lat}?access_token=${process.env.EXPO_PUBLIC_MAPBOX_TOKEN}`,
   );
 
   const res = await response.json();

@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Text, TouchableOpacity, View } from "react-native";
 
+import { toPrice } from "@/lib/product/toPrice";
 import { toName } from "@/lib/user";
 import { Status } from "@/types/global";
 import { Order } from "@/types/order";
@@ -26,11 +27,11 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
       }}
       key={item.id}
       className={classNames(
-        "relative flex flex-col w-full py-4 bg-white gap-y-2",
+        "relative flex flex-col w-full py-2 px-2 bg-neutral-100 gap-y-2",
         item.status === Status.FULFILLED && "opacity-50",
       )}
     >
-      {item.status !== Status.REJECTED && item.status !== Status.FULFILLED && (
+      {item.status !== Status.REJECTED && item.status !== Status.FULFILLED && item.delivery.eta && (
         <Text className="text-base font-bold">{`Livraison estimée : ${format(
           new Date(item.delivery.eta),
           "dd MMMM yyyy à HH:mm",
@@ -41,7 +42,7 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
       )}
       {item.status === Status.REJECTED && <Text className="font-bold">Commande annulée</Text>}
       {item.status === Status.FULFILLED && (
-        <Text className="font-bold">{`Livrée le ${format(new Date(item.updated_at), "dd MMMM yyyy à HH:mm", {
+        <Text className="font-bold">{`Livrée le ${format(new Date(item.updatedAt), "dd MMMM yyyy à HH:mm", {
           locale: fr,
         })}`}</Text>
       )}
@@ -54,7 +55,7 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
           <View className="flex flex-row items-center">
             <MaterialCommunityIcons name="calendar" size={16} color="black" />
             <Text className="ml-2 text-sm font-medium text-black">
-              {format(new Date(item.created_at), "dd MMMM yyyy à HH:mm", {
+              {format(new Date(item.createdAt), "dd MMMM yyyy à HH:mm", {
                 locale: fr,
               })}
             </Text>
@@ -62,11 +63,15 @@ export const OrderListItem = ({ item, navigate }: { item: Order; navigate: (href
         </View>
         <View className="flex flex-col gap-1">
           <View className="flex flex-row items-center justify-end">
-            <Text className="ml-2 text-sm font-extrabold text-black">{item.payment.total.toFixed(2)} €</Text>
+            <Text className="ml-2 text-sm font-extrabold text-black">
+              {item.payment ? toPrice(item.payment?.total) : "inconnu"}
+            </Text>
           </View>
           <View className="flex flex-row items-center">
             <MaterialCommunityIcons name="walk" size={16} color="black" />
-            <Text className="ml-2 text-sm font-medium text-black">{toName(item.delivery.deliveryPerson)}</Text>
+            <Text className="ml-2 text-sm font-medium text-black">
+              {item.delivery?.deliveryPerson ? toName(item.delivery.deliveryPerson) : "Inconnu"}
+            </Text>
           </View>
         </View>
       </View>

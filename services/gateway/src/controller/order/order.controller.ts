@@ -107,9 +107,17 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
   const token = authorization.split("Bearer ")[1];
 
   const { userId } = req.params;
-  if (!userId) return res.status(401).json({ message: "Unauthorized" });
-  if (!(await check(token, { role: "ADMIN" })) || !(await check(token, { id: userId })))
-    return res.status(401).send({ error: "Unauthorized" });
+  if (!userId) return res.status(401).json({ message: "Unauthorized: userId not found" });
+  if (
+    // !(await check(token, { role: "ADMIN" })) || !(await check(token, { id: userId }))
+    // This is the original code, but it's not correct. It should be:
+    // not ADMIN
+    // or
+    // the user id in the token is the same as the user id in the request
+    !(await check(token, { role: "ADMIN" })) &&
+    !(await check(token, { id: userId }))
+  )
+    return res.status(401).send({ error: `Unauthorized: ${userId} is nor the user id in the token` });
   // ----------------------------
 
   const orderInput = new GetOrdersByUserRequest().setId(userId);
@@ -118,9 +126,13 @@ orderRoutes.get("/api/order/by-user/:userId", async (req: Request, res: Response
     const r = response.toObject();
     const ordersList = await Promise.all(
       r.ordersList.map(async (order) => {
-        const payment = await getPayment(order.paymentId);
-        const delivery = await getDelivery(order.deliveryId);
-        return { ...order, payment: payment?.toObject(), delivery: delivery?.toObject() };
+        const payment = order.paymentId ? await getPayment(order.paymentId) : undefined;
+        const delivery = order.deliveryId ? await getDelivery(order.deliveryId) : undefined;
+        return {
+          ...order,
+          payment: payment?.toObject(),
+          delivery: delivery?.toObject(),
+        };
       }),
     );
     return res.status(200).json({ ordersList });
@@ -440,6 +452,63 @@ orderRoutes.delete("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request
   });
 });
 
+orderRoutes.put("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+            status :{'$ref': '#/definitions/Status'},
+            deliveryId: "delivery_id:1",
+            paymentId: "payment_id:1",
+            restaurantId :"restaurant_id:1"
+        }
+    }
+    #swagger.parameters['authorization'] = {
+        in: 'header',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'string'
+    } */
+  const { id } = req.params;
+  const { status, deliveryId, paymentId, restaurantId } = req.body;
+  const orderInput = new UpdateOrderRequest()
+    .setId(id)
+    .setStatus(status)
+    .setDeliveryId(deliveryId)
+    .setPaymentId(paymentId)
+    .setRestaurantId(restaurantId);
+  orderService.updateOrder(orderInput, async (error, response) => {
+    const order = response.toObject();
+    const payment = await getPayment(order.paymentId);
+    const delivery = await getDelivery(order.deliveryId);
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
+  });
+});
+
+orderRoutes.delete("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
+  /* #swagger.parameters['authorization'] = {
+)        in: 'header',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['id'] = {
+        in: 'path',
+        required: true,
+        type: 'string'
+    } */
+  const { id } = req.params;
+  const orderInput = new DeleteOrderRequest().setId(id);
+  orderService.deleteOrder(orderInput, (error, response) => {
+    if (error) return res.status(500).send({ error });
+    else return res.status(200).json(response.toObject());
+  });
+});
+
 orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
   /* #swagger.parameters['authorization'] = {
         in: 'header',
@@ -481,42 +550,4 @@ orderRoutes.get("/api/order/:id", async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(500).send({ error });
   }
-});
-
-orderRoutes.put("/api/order/:id", withCheck({ role: "ADMIN" }), (req: Request, res: Response) => {
-  /* #swagger.parameters['body'] = {
-        in: 'body',
-        required: true,
-        schema: {
-            status :{'$ref': '#/definitions/Status'},
-            deliveryId: "delivery_id:1",
-            paymentId: "payment_id:1",
-            restaurantId :"restaurant_id:1"
-        }
-    }
-    #swagger.parameters['authorization'] = {
-        in: 'header',
-        required: true,
-        type: 'string'
-    }
-    #swagger.parameters['id'] = {
-        in: 'path',
-        required: true,
-        type: 'string'
-    } */
-  const { id } = req.params;
-  const { status, deliveryId, paymentId, restaurantId } = req.body;
-  const orderInput = new UpdateOrderRequest()
-    .setId(id)
-    .setStatus(status)
-    .setDeliveryId(deliveryId)
-    .setPaymentId(paymentId)
-    .setRestaurantId(restaurantId);
-  orderService.updateOrder(orderInput, async (error, response) => {
-    const order = response.toObject();
-    const payment = await getPayment(order.paymentId);
-    const delivery = await getDelivery(order.deliveryId);
-    if (error) return res.status(500).send({ error });
-    else return res.status(200).json({ ...order, payment: payment?.toObject(), delivery: delivery?.toObject() });
-  });
 });

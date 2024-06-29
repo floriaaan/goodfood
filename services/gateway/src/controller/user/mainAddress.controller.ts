@@ -1,8 +1,8 @@
-import { Request, Response, Router } from "express";
-import { mainAddressServiceClient } from "@gateway/services/clients/user.client";
-import { MainAddress, MainAddressId, MainAddressUpdateInput } from "@gateway/proto/user_pb";
-import { getUserIdFromToken } from "@gateway/services/user.service";
 import { check } from "@gateway/middleware/auth";
+import { MainAddress, MainAddressId, MainAddressUpdateInput } from "@gateway/proto/user_pb";
+import { mainAddressServiceClient } from "@gateway/services/clients/user.client";
+import { getUserIdFromToken } from "@gateway/services/user.service";
+import { Request, Response, Router } from "express";
 
 export const mainAddressRoutes = Router();
 

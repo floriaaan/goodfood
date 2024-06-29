@@ -260,6 +260,7 @@ export const orderList: Order[] = [
       },
       status: Status.PENDING,
       restaurant_id: "restaurant_id:1",
+
       deliveryPerson: {
         id: "delivery_person_id:1",
         firstName: "John",
