@@ -24,7 +24,7 @@ export default function Index() {
         <View className="w-full ">
           <StepIndicator steps={["RÉCAP.", "RÉCUP.", "PAIEMENT"]} currentStep={3} />
         </View>
-        <View className="flex flex-col gap-2">
+        <View className="flex flex-col w-full gap-2">
           <CheckoutScreen />
         </View>
         <View className="absolute bottom-0">

@@ -2,7 +2,7 @@ import { useStripe } from "@stripe/stripe-react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import React from "react";
-import { Alert, Linking } from "react-native";
+import { Alert, Linking, View } from "react-native";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -67,7 +67,6 @@ export default function CheckoutScreen() {
     } else {
       try {
         const paymentId = paymentIntent?.paymentid;
-        console.log("paymentId", paymentId);
 
         const delivery_req = await fetchAPI("/api/delivery", session?.token, {
           method: "POST",
@@ -77,7 +76,6 @@ export default function CheckoutScreen() {
           }),
         });
         const { id: deliveryId } = await delivery_req.json();
-        console.log("deliveryId", deliveryId);
 
         const order_req = await fetchAPI("/api/order", session?.token, {
           method: "POST",
@@ -89,7 +87,6 @@ export default function CheckoutScreen() {
           }),
         });
         const { id: orderId } = await order_req.json();
-        console.log("orderId", orderId);
 
         // get id of order related to payment
         // navigate(`(app)`, { screen: "delivery/index" });
@@ -104,12 +101,14 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <Button
-      onPress={openPaymentSheet}
-      title="Payer ma commande"
-      icon="credit-card-outline"
-      disabled={isLoading}
-      textClassName="text-white font-bold text-[18px] text-center uppercase"
-    />
+    <View className="w-full">
+      <Button
+        onPress={openPaymentSheet}
+        title="Payer ma commande"
+        icon="credit-card-outline"
+        disabled={isLoading}
+        textClassName="text-white font-bold text-[18px] text-center uppercase"
+      />
+    </View>
   );
 }

@@ -85,7 +85,7 @@ const ChangeAddressPage = () => {
 };
 
 const Suggestion = (suggestion: Prediction) => {
-  const { user, session } = useAuth();
+  const { user, session, refetchUser } = useAuth();
   if (!user || !session) return null;
   return (
     <TouchableOpacity
@@ -102,14 +102,15 @@ const Suggestion = (suggestion: Prediction) => {
               country: details.country || "France",
             }),
           });
-          console.log(await res.json());
 
-          if (res.ok)
+          if (res.ok) {
             Toast.show("Adresse modifiée avec succès", {
               duration: Toast.durations.LONG,
               position: Toast.positions.BOTTOM,
               backgroundColor: "#4CAF50",
             });
+            refetchUser();
+          }
         } catch (e) {
           console.log(e);
           Toast.show("Erreur lors de la modification de l'adresse", {
