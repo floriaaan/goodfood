@@ -113,8 +113,10 @@ docker-compose -f services/docker-compose.yml up -d --build
 
 ### Kubernetes
 
+To create the kubernetes cluster you need to run the following command:
 ```shell
 cd kubernetes
+kind create cluster --config kind-config.yaml
 ```
 
 You can use Kubernetes to run the microservices and the gateway.
