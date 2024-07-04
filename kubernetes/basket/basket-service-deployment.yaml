@@ -35,7 +35,7 @@ spec:
                 configMapKeyRef:
                   key: REDIS_URL
                   name: basket--env-docker
-          image: floriaaan/goodfood-basket:1.0.0
+          image: floriaaan/goodfood-basket:latest
           name: goodfood-basket
           ports:
             - containerPort: 50002
