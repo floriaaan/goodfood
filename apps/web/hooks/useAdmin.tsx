@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { createPersistedState } from "@/lib/use-persisted-state";
 import { Order } from "@/types/order";
-import {Allergen, Category, ExtendedProduct, Product} from "@/types/product";
+import { Allergen, Category, ExtendedProduct, Product } from "@/types/product";
 import { Promotion } from "@/types/promotion";
 import { Restaurant } from "@/types/restaurant";
 import { Ingredient, IngredientRestaurant, Supplier, SupplyOrder } from "@/types/stock";
@@ -213,15 +213,15 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await fetchAPI(`/api/product/by-restaurant/${selectedRestaurantId}`, token);
       const body = await res.json();
       body.productsList = body.productsList.map((p: ExtendedProduct) => {
-        var detail = (p.comment == "" ? "Description, " : "") +
+        var detail =
+          (p.comment == "" ? "Description, " : "") +
           (p.preparation == "" ? "Preparation, " : "") +
           (p.weight == "" ? "Poids, " : "") +
           (p.kilocalories == "" ? "Kilocalories, " : "") +
           (p.nutriscore == "" ? "Nutriscore, " : "") +
           (p.categoriesList?.length == 0 ? "Catégories, " : "") +
-          (p.allergensList?.length == 0 ? "Allergènes, " : "")
-        ;
-        detail = detail != "" ? "(" +  detail.slice(0, -2) + ")" : "";
+          (p.allergensList?.length == 0 ? "Allergènes, " : "");
+        detail = detail != "" ? "(" + detail.slice(0, -2) + ")" : "";
 
         const ok = "✅ Tout est ok !";
         const attention = "⚠️ " + detail.split(",").length + " élément(s) manquant(s) !";
@@ -229,7 +229,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
         const comment = detail == "" ? ok : attention;
 
         console.log(body.productsList);
-        return { ...p, additional_information: [comment, detail] }
+        return { ...p, additional_information: [comment, detail] };
       });
       return body.productsList;
     },
@@ -238,7 +238,6 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     enabled: !!selectedRestaurantId,
   });
   const extendedProducts = useMemo(() => api_extendedProducts ?? [], [api_extendedProducts]);
-
 
   const {
     data: api_orders,
