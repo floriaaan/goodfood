@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # only run this job when the branch is main
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
