@@ -29,6 +29,8 @@ spec:
               value: sk_test_VePHdqKTYQjKNInc7u56JBrQ
           image: stripe/stripe-cli
           name: stripe-cli
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 
