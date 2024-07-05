@@ -243,7 +243,7 @@ export function ProductCreateEditForm({
                           </FormControl>
                           <SelectContent>
                             {Object.entries(ProductTypeLabels).map(([value, label]) => (
-                              <SelectItem key={value} value={ProductType[parseInt(value)]}>
+                              <SelectItem key={value} value={value}>
                                 {label}
                               </SelectItem>
                             ))}
