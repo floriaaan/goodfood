@@ -1,21 +1,21 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Link, router } from "expo-router";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { BasketHeader } from "@/components/basket/header";
 import { ProductCard } from "@/components/product/card";
+import { Skeleton } from "@/components/product/skeleton";
 import { RestaurantCard } from "@/components/restaurant/card";
 import { AppHeader } from "@/components/ui/header";
 import { CategoryHeader } from "@/components/ui/header/category";
-import { SearchInput } from "@/components/ui/input/search";
 import { useBasket } from "@/hooks/useBasket";
 import { useLocation } from "@/hooks/useLocation";
+import { isOpenNow } from "@/lib/restaurant";
 
 export default function Index() {
-  const [search, setSearch] = useState("");
-  const { products } = useBasket();
-  const { restaurants } = useLocation();
+  const { products, selectedRestaurantId } = useBasket();
+  const { restaurants, loading } = useLocation();
 
   return (
     <View className="relative flex flex-col justify-between w-screen h-screen p-6 pb-16 bg-white">
@@ -28,53 +28,159 @@ export default function Index() {
           <BasketHeader />
         </View>
         <View className="w-full">
-          <SearchInput
-            value={search}
-            onChangeText={setSearch}
-            label="Rechercher un produit"
-            placeholder="Goodwich au pesto verde"
-          />
+          <Link
+            href={{
+              pathname: "/(app)/products/list/",
+            }}
+            style={{
+              width: "100%",
+              height: 48,
+              backgroundColor: "rgba(0,0,0,0.05)",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flex: 1,
+                justifyContent: "center",
+                width: "100%",
+                paddingTop: 6,
+                marginLeft: 72,
+              }}
+            >
+              <MaterialCommunityIcons name="magnify" size={24} />
+              <Text className="ml-1 text-lg font-bold text-black ">Rechercher un produit</Text>
+            </View>
+          </Link>
         </View>
 
         <View className="flex flex-row items-center">
-          <TouchableOpacity className="flex flex-row items-center justify-center w-1/2 h-12 mr-2 bg-black/5">
-            <MaterialCommunityIcons name="bowl-mix" size={24} />
-            <Text className="ml-1 text-lg font-bold text-black">Entrées</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex flex-row items-center justify-center w-1/2 h-12 ml-2 bg-black/5">
-            <MaterialCommunityIcons name="food" size={24} />
-            <Text className="ml-1 text-lg font-bold text-black">Plats</Text>
-          </TouchableOpacity>
+          <CategoryLink icon="bowl-mix" title="Entrées" type="ENTREES" marginRight={16} fixMarginLeft={32} />
+          <CategoryLink icon="food" title="Plats" type="PLATS" marginRight={0} fixMarginLeft={48} />
         </View>
         <View className="flex flex-row items-center">
-          <TouchableOpacity className="flex flex-row items-center justify-center w-1/2 h-12 mr-2 bg-black/5">
-            <MaterialCommunityIcons name="muffin" size={24} />
-            <Text className="ml-1 text-lg font-bold text-black">Desserts</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex flex-row items-center justify-center w-1/2 h-12 ml-2 bg-black/5">
-            <MaterialCommunityIcons name="food-apple" size={24} />
-            <Text className="ml-1 text-lg font-bold text-black">Snacks</Text>
-          </TouchableOpacity>
+          <CategoryLink icon="muffin" title="Desserts" type="DESSERTS" marginRight={16} fixMarginLeft={32} />
+          <CategoryLink icon="food-apple" title="Snacks" type="SNACKS" marginRight={0} fixMarginLeft={48} />
         </View>
-        <FlatList
-          className="flex-grow-0 w-screen shrink-0"
-          horizontal
-          data={products}
-          renderItem={({ item }) => <ProductCard {...item} />}
-        />
+        <View className="w-full">
+          {(!selectedRestaurantId || products.length <= 0) && (
+            <>
+              {!selectedRestaurantId && (
+                <View className="absolute z-40 flex flex-col items-center justify-center w-full h-full ">
+                  <MaterialCommunityIcons name="food-off" size={48} color="white" />
+                  <Text className="mt-2 text-lg font-bold text-center text-white">
+                    Veuillez séléctionner un restaurant pour voir les produits
+                  </Text>
+                </View>
+              )}
+              {products.length <= 0 && (
+                <View className="absolute z-40 flex flex-col items-center justify-center w-full h-full ">
+                  <MaterialCommunityIcons name="food-off" size={48} color="white" />
+                  <Text className="mt-2 text-lg font-bold text-center text-white">Aucun produit trouvé</Text>
+                </View>
+              )}
+              <View className="absolute top-0 left-0 z-20 w-screen p-2 bg-black opacity-90 h-96" />
+            </>
+          )}
+          <FlatList
+            className="flex-grow-0 w-screen shrink-0"
+            horizontal
+            data={products}
+            renderItem={({ item }) => <ProductCard {...item} />}
+            ListEmptyComponent={
+              products.length === 0 ? (
+                <>
+                  <Skeleton />
+                  <Skeleton />
+                </>
+              ) : (
+                <></>
+              )
+            }
+          />
+        </View>
         <View className="w-full">
           <CategoryHeader
             title="Liste des restaurants"
             subtitle="On est ici, par là, un peu ici, un peu partout en fait !"
-            href="/restaurants"
+            href="restaurants/index"
           />
         </View>
         <FlatList
-          className="flex-grow w-full shrink-0"
-          data={restaurants}
-          renderItem={({ item }) => <RestaurantCard {...item} />}
+          className="flex-grow w-full shrink-0 max-h-48"
+          data={restaurants.sort((a, b) =>
+            isOpenNow(a.openinghoursList) === isOpenNow(b.openinghoursList)
+              ? 0
+              : isOpenNow(a.openinghoursList)
+              ? -1
+              : 1,
+          )}
+          renderItem={({ item }) => (
+            <RestaurantCard
+              restaurant={item}
+              onClick={() => {
+                router.push(`(app)/restaurants/${item.id}`);
+              }}
+            />
+          )}
+          ListEmptyComponent={() => {
+            return (
+              <View className="p-3">
+                {loading ? (
+                  <ActivityIndicator size="large" />
+                ) : (
+                  <Text className="text-white">Aucun restaurant trouvé</Text>
+                )}
+              </View>
+            );
+          }}
         />
       </SafeAreaView>
     </View>
   );
 }
+
+const CategoryLink = ({
+  icon,
+  title,
+  type,
+  marginRight = 0,
+  fixMarginLeft,
+}: {
+  icon: string;
+  title: string;
+  type: string;
+  marginRight: number;
+  fixMarginLeft: number;
+}) => {
+  return (
+    <Link
+      href={{
+        pathname: "/(app)/products/list/",
+        params: { type },
+      }}
+      style={{
+        width: "50%",
+        height: 48,
+        marginRight,
+        backgroundColor: "rgba(0,0,0,0.05)",
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "center",
+          width: "100%",
+          marginLeft: fixMarginLeft,
+        }}
+      >
+        {/* @ts-ignore */}
+        <MaterialCommunityIcons name={icon} size={24} />
+        <Text className="mt-1.5 ml-1 text-lg font-bold text-black">{title}</Text>
+      </View>
+    </Link>
+  );
+};

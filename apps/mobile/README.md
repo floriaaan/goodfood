@@ -28,9 +28,8 @@ You can use the following tools to help you with the setup:
 3. Run `npm install` to install the necessary dependencies. **(make sure to use "npm install" and not "pnpm install")**
 4. Run `npm run start` or `npx expo start` to start the microservice. **(make sure to use "npm run start" and not "pnpm run start")**
 
-
 ### 2. Running the app on a physical or virtual device
+
 To test the app on a physical device, scan the QR code displayed in the Expo Developer Tools using the Expo Go app on your Android or iOS device.
 
 To test the app on a virtual device, follow the instructions provided in the Expo Developer Tools to launch the app on an Android Emulator or iOS Simulator.
-

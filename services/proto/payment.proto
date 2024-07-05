@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 
 package com.goodfood.payment;
 
@@ -33,6 +34,8 @@ service PaymentService {
 
 service StripeService {
   rpc CreateCheckoutSession(CreateCheckoutSessionRequest) returns (CreateCheckoutSessionResponse) {}
+  rpc CreateSetupIntent(google.protobuf.Empty) returns (CreateCheckoutSessionResponse) {}
+  rpc CreatePaymentIntent(CreatePaymentIntentRequest) returns (CreatePaymentIntentResponse) {}
 }
 
 message GetPaymentRequest {
@@ -71,4 +74,21 @@ message CreateCheckoutSessionResponse {
 message UpdatePaymentStatusRequest {
   string id = 1;
   string status = 2;
+}
+
+message SetupIntentResponse {
+  string setupIntent = 1;
+  string ephemeralKey = 2;
+  string customer = 3;
+}
+message CreatePaymentIntentRequest {
+  string userMail = 1;
+  float amount = 2;
+}
+message CreatePaymentIntentResponse {
+  optional string setupIntent = 1;
+  optional string ephemeralKey = 2;
+  string customer = 3;
+  string paymentId = 4;
+  Payment payment = 5;
 }

@@ -14,14 +14,14 @@
     "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
-    "@grpc/grpc-js": "1.8.14",
+    "@grpc/grpc-js": "1.8.22",
     "@grpc/proto-loader": "0.7.6",
     "@prisma/client": "5.1.1",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "grpc-server-reflection": "^0.1.5",
-    "protobufjs": "7.2.2",
+    "protobufjs": "7.2.6",
     "stripe": "14.11.0"
   },
   "devDependencies": {

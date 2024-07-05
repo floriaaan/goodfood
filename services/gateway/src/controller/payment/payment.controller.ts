@@ -3,7 +3,6 @@ import { GetPaymentRequest, GetPaymentsByUserRequest, Payment } from "@gateway/p
 import { paymentServiceClient } from "@gateway/services/clients/payment.client";
 import { getUserIdFromToken } from "@gateway/services/user.service";
 import { check } from "@gateway/middleware/auth";
-import { log } from "@gateway/lib/log/log";
 
 export const paymentRoutes = Router();
 

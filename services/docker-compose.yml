@@ -1,4 +1,3 @@
-version: "3"
 services:
   # Gateway
 
@@ -256,6 +255,7 @@ services:
     image: redis:latest
     ports:
       - "6379"
+      - "52008:6379"
     volumes:
       - goodfood-delivery-volume:/data
     networks:
