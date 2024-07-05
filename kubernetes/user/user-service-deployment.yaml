@@ -16,6 +16,7 @@ spec:
         network/goodfood-network: "true"
         service: user-service
     spec:
+      automountServiceAccountToken: false
       imagePullSecrets:
         - name: registry-credential
       containers:

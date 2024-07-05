@@ -17,6 +17,7 @@ spec:
         network/goodfood-network: "true"
         service: delivery-postgres
     spec:
+      automountServiceAccountToken: false
       imagePullSecrets:
         - name: registry-credential
       containers:
@@ -33,7 +34,10 @@ spec:
           name: delivery-postgres
           ports:
             - containerPort: 5432
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
+              ephemeral-storage: "2Gi"
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: goodfood-delivery-volume

@@ -16,6 +16,7 @@ spec:
         network/goodfood-network: "true"
         service: stripe-cli
     spec:
+      automountServiceAccountToken: false
       imagePullSecrets:
         - name: registry-credential
       containers:

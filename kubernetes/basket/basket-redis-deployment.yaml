@@ -17,6 +17,7 @@ spec:
         network/goodfood-network: "true"
         service: basket-redis
     spec:
+      automountServiceAccountToken: false
       containers:
         - args:
             - redis-server
@@ -31,7 +32,10 @@ spec:
           name: basket-redis
           ports:
             - containerPort: 6379
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
+              ephemeral-storage: "2Gi"
           volumeMounts:
             - mountPath: /data
               name: goodfood-basket-volume

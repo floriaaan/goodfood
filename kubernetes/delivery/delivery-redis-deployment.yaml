@@ -17,6 +17,7 @@ spec:
         network/goodfood-network: "true"
         service: delivery-redis
     spec:
+      automountServiceAccountToken: false
       imagePullSecrets:
         - name: registry-credential
       containers:
@@ -33,7 +34,10 @@ spec:
           name: delivery-redis
           ports:
             - containerPort: 6379
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
+              ephemeral-storage: "2Gi"
           volumeMounts:
             - mountPath: /data
               name: goodfood-delivery-volume

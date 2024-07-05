@@ -16,6 +16,7 @@ spec:
         network/goodfood-network: "true"
         service: goodfood-basket
     spec:
+      automountServiceAccountToken: false
       imagePullSecrets:
         - name: registry-credential
       containers:

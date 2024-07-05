@@ -16,6 +16,7 @@ spec:
         network/goodfood-network: "true"
         service: gateway
     spec:
+      automountServiceAccountToken: false
       imagePullSecrets:
         - name: registry-credential
       containers:
@@ -90,6 +91,9 @@ spec:
           ports:
             - containerPort: 50000
             - containerPort: 4242
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
+              ephemeral-storage: "2Gi"
       restartPolicy: Always
 
