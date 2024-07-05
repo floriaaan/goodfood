@@ -50,6 +50,8 @@ spec:
           name: notification-service
           ports:
             - containerPort: 50022
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

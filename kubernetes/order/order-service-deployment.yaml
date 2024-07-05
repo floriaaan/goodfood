@@ -40,6 +40,8 @@ spec:
           name: order-service
           ports:
             - containerPort: 50007
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

@@ -40,6 +40,8 @@ spec:
           name: goodfood-basket
           ports:
             - containerPort: 50002
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

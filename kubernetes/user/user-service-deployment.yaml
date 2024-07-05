@@ -60,6 +60,8 @@ spec:
           name: user-service
           ports:
             - containerPort: 50001
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

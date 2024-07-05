@@ -50,6 +50,8 @@ spec:
           name: delivery-service
           ports:
             - containerPort: 50008
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

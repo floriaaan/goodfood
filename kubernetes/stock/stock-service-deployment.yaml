@@ -40,6 +40,8 @@ spec:
           name: stock-service
           ports:
             - containerPort: 50009
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

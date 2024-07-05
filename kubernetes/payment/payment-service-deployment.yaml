@@ -65,6 +65,8 @@ spec:
           name: payment-service
           ports:
             - containerPort: 50003
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

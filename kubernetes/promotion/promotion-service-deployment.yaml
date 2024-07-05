@@ -40,6 +40,8 @@ spec:
           name: promotion-service
           ports:
             - containerPort: 50006
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 

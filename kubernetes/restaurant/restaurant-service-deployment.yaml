@@ -40,6 +40,8 @@ spec:
           name: restaurant-service
           ports:
             - containerPort: 50005
-          resources: {}
+          resources:
+            limits:
+              memory: 100Mi
       restartPolicy: Always
 
