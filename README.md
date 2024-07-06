@@ -142,6 +142,10 @@ kubectl port-forward <gateway-pode-name> 50000:50000
 ```
 
 Then you can run your web application. Make sure to change the URL in the web application environment file to http://localhost:50000.
+If you need to redeploy your services after merge a new version of a services use
+```shell
+kubectl rollout restart deployment --namespace=default
+```
 
 ### Development
 

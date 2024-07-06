@@ -21,12 +21,13 @@ spec:
         - name: registry-credential
       containers:
         - image: rabbitmq:3-management
+          imagePullPolicy: Always
           name: event-broker
           ports:
             - containerPort: 5672
             - containerPort: 15672
           resources:
             limits:
-              memory: 100Mi
+              memory: 500Mi
       restartPolicy: Always
 

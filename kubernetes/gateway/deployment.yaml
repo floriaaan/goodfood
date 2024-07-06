@@ -87,13 +87,14 @@ spec:
                   key: GATEWAY_USER_URL
                   name: gateway--env
           image: floriaaan/goodfood-gateway:latest
+          imagePullPolicy: Always
           name: gateway
           ports:
             - containerPort: 50000
             - containerPort: 4242
           resources:
             limits:
-              memory: 100Mi
+              memory: 500Mi
               ephemeral-storage: "2Gi"
       restartPolicy: Always
 

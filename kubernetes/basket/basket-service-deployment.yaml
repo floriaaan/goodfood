@@ -37,11 +37,12 @@ spec:
                   key: REDIS_URL
                   name: basket--env-docker
           image: floriaaan/goodfood-basket:latest
+          imagePullPolicy: Always
           name: goodfood-basket
           ports:
             - containerPort: 50002
           resources:
             limits:
-              memory: 100Mi
+              memory: 500Mi
       restartPolicy: Always
 

@@ -37,11 +37,12 @@ spec:
                   key: PORT
                   name: stock--env-docker
           image: floriaaan/goodfood-stock:latest
+          imagePullPolicy: Always
           name: stock-service
           ports:
             - containerPort: 50009
           resources:
             limits:
-              memory: 100Mi
+              memory: 500Mi
       restartPolicy: Always
 
