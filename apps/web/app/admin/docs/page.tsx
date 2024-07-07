@@ -2,14 +2,16 @@
 import { RedocStandalone } from "redoc";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAPI } from "@/lib/fetchAPI";
+import { useAuth } from "@/hooks";
 
 export default function Docs() {
+  const { user, session } = useAuth();
+
   const { data: doc, isLoading } = useQuery({
     queryKey: ["docs"],
     queryFn: async () => {
-      const res = await fetchAPI(`/docs`);
-      const body = await res.json();
-      return body;
+      const res = await fetchAPI(`/docs`, session?.token);
+      return await res.json();
     },
   });
 

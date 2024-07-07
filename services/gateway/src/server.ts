@@ -132,7 +132,7 @@ app.use(
   // #swagger.tags = ['Health Check']
 );
 
-app.use("/docs", (__req, res) => {
+app.use("/docs", withCheck({ role: ["ADMIN"] }), (__req, res) => {
   return res.send(require("./lib/swagger/swagger-output.json"));
 });
 
