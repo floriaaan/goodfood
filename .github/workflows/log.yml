@@ -63,3 +63,15 @@ jobs:
           file: ./services/log/Dockerfile
           push: true
           tags: floriaaan/goodfood-log:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, test, publish]
+
+    steps:
+      - name: Install Kubectl
+        uses: azure/setup-kubectl@v3
+      - name: Setup Cluster Authentication
+        run: cat ${{ secrets.KUBECONFIG }} > /tmp/kubeconfig
+      - name: Deploying log
+        run: kubectl --kubeconfig=/tmp/kubeconfig rollout restart deployment log-service

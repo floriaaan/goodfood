@@ -122,7 +122,7 @@ kind create cluster --config kind-config.yaml
 You can use Kubernetes to run the microservices and the gateway.
 For that create the secret for the docker registry (take care of replacing the placeholders):
 ```shell
-kubectl create secret docker-registry registry-credential --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-password> --docker-email=<your-email>
+kubectl create secret docker-registry registry-credential --docker-server=https://hub.docker.com --docker-username=PierreLbg --docker-password=3o6gzWTiA#Vc%3 --docker-email=pierre.lebigre@outlook.fr
 ```
 
 Then make the secret usable by the service account:
@@ -134,11 +134,6 @@ Then you can deploy the services:
 ```shell
 cd kubernetes
 kubectl apply -f ./basket,./delivery,./gateway,./generic,./log,./notification,./order,./payment,./product,./promotion,./restaurant,./stock,./user
-```
-
-To request the gateway you need to port-forward it:
-```shell
-kubectl port-forward <gateway-pode-name> 50000:50000
 ```
 
 Then you can run your web application. Make sure to change the URL in the web application environment file to http://localhost:50000.

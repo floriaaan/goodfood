@@ -38,10 +38,10 @@ spec:
               ephemeral-storage: "2Gi"
           volumeMounts:
             - mountPath: /data
-              name: goodfood-basket-volume
+              name: basket-service-volume
       restartPolicy: Always
       volumes:
-        - name: goodfood-basket-volume
+        - name: basket-service-volume
           persistentVolumeClaim:
-            claimName: goodfood-basket-volume
+            claimName: basket-service-volume
 

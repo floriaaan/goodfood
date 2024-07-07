@@ -24,7 +24,7 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_redis_enterprise_cluster" "redis-goodfood-basket" {
+resource "azurerm_redis_enterprise_cluster" "redis-basket-service" {
   name                = "rec-${var.project_name}-${var.environnment_suffix}-${var.service-name}"
   location            = data.azurerm_resource_group.rg-goodfood.location
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
@@ -32,22 +32,22 @@ resource "azurerm_redis_enterprise_cluster" "redis-goodfood-basket" {
   sku_name = "EnterpriseFlash_F300-3"
 }
 
-resource "azurerm_redis_enterprise_database" "db-goodfood-basket" {
+resource "azurerm_redis_enterprise_database" "db-basket-service" {
   name                = "rec-${var.project_name}-${var.environnment_suffix}-${var.service-name}"
 
-  cluster_id        = azurerm_redis_enterprise_cluster.redis-goodfood-basket.id
+  cluster_id        = azurerm_redis_enterprise_cluster.redis-basket-service.id
   client_protocol   = "Encrypted"
   clustering_policy = "EnterpriseCluster"
   eviction_policy   = "NoEviction"
   port              = 10000
 
   linked_database_id = [
-    "${azurerm_redis_enterprise_cluster.redis-goodfood-basket.id}/databases/default"
+    "${azurerm_redis_enterprise_cluster.redis-basket-service.id}/databases/default"
   ]
 
   linked_database_group_nickname = "tftestGeoGroup"
 }
-
+/*
 resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-product" {
   name                = "allow-azure-resources"
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
@@ -219,4 +219,4 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "khpa-goodfood-product" {
       }
     }
   }
-}
+}*/

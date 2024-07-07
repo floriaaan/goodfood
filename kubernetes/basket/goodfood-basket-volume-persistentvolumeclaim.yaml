@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    service: goodfood-basket-volume
-  name: goodfood-basket-volume
+    service: basket-service-volume
+  name: basket-service-volume
 spec:
   accessModes:
     - ReadWriteOnce

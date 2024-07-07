@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    service: goodfood-basket
-  name: goodfood-basket
+    service: basket-service
+  name: basket-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: goodfood-basket
+      service: basket-service
   strategy: {}
   template:
     metadata:
       labels:
         network/goodfood-network: "true"
-        service: goodfood-basket
+        service: basket-service
     spec:
       automountServiceAccountToken: false
       imagePullSecrets:
@@ -36,9 +36,9 @@ spec:
                 configMapKeyRef:
                   key: REDIS_URL
                   name: basket--env-docker
-          image: floriaaan/goodfood-basket:latest
+          image: floriaaan/basket-service:latest
           imagePullPolicy: Always
-          name: goodfood-basket
+          name: basket-service
           ports:
             - containerPort: 50002
           resources:

@@ -1,11 +1,10 @@
 apiVersion: v1
 data:
-  AMQP_URL: "amqp://guest:guest@event-broker"
-  DATABASE_URL: "postgresql://postgres:password@order-postgres.default.svc.cluster.local:51007/postgres"
+  AMQP_URL: ""
+  DATABASE_URL: ""
   PORT: "50007"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     service: order-service-order--env-docker
   name: order--env-docker
