@@ -88,7 +88,9 @@ jobs:
     steps:
       - name: Install Kubectl
         uses: azure/setup-kubectl@v3
+      - name: Show Cluster Authentication
+        run: echo "${{ secrets.KUBECONFIG }}"
       - name: Setup Cluster Authentication
-        run: cat ${{ secrets.KUBECONFIG }} > /tmp/kubeconfig
+        run: cat "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
       - name: Deploying delivery
         run: kubectl --kubeconfig=/tmp/kubeconfig rollout restart deployment delivery-service
