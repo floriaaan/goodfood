@@ -4,7 +4,7 @@ data "azurerm_resource_group" "rg-goodfood" {
 
 data "azurerm_key_vault" "kv-goodfood-stock" {
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
-  name = "kv-${var.project_name}"
+  name = "keyvault-${var.project_name}"
 }
 
 data "azurerm_key_vault_secret" "stock-db-login" {

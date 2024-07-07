@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  AMQP_URL: "amqp://guest:guest@event-broker"
+  DATABASE_URL: "postgresql://postgres:password@promotion-postgres.default.svc.cluster.local:51006/postgres"
+  PORT: "50006"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    service: promotion-service-promotions--env-docker
+  name: promotions--env-docker

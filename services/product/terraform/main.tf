@@ -17,53 +17,43 @@ terraform {
       version = "0.9.1"
     }
   }
+  backend "azurerm" {}
 }
 
 provider "azurerm" {
   features {}
 }
 
-resource "azurerm_postgresql_server" "pg-goodfood-product" {
-  name                = "pg-goodfood-product-${var.environnment_suffix}"
-  location            = data.azurerm_resource_group.rg-goodfood.location
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+resource "azurerm_postgresql_flexible_server" "pg-goodfood-product" {
+  name                   = "pg-${var.project_name}${var.environnment_suffix}-product"
+  resource_group_name    = data.azurerm_resource_group.rg-gf-paf.name
+  location               = data.azurerm_resource_group.rg-gf-paf.location
+  version                = "16"
+  administrator_login    = data.azurerm_key_vault_secret.db-login.value
+  administrator_password = data.azurerm_key_vault_secret.db-password.value
+  storage_mb             = 32768
+  sku_name               = "GP_Standard_D4s_v3"
+}
 
-  sku_name = "B_Gen5_2"
-
-  storage_mb                   = 5120
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = false
-  auto_grow_enabled            = true
-
-  administrator_login          = data.azurerm_key_vault_secret.product-db-login.value
-  administrator_login_password = data.azurerm_key_vault_secret.product-db-password.value
-  version                      = "11"
-
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2" 
+resource "azurerm_postgresql_flexible_server_database" "db-goodfood-product" {
+  name      = "db-${var.project_name}${var.environnment_suffix}-product"
+  server_id = azurerm_postgresql_flexible_server.pg-goodfood-product.id
+  collation = "en_US.utf8"
+  charset   = "utf8"
 
 }
 
-resource "azurerm_postgresql_database" "db-goodfood-product" {
-  name                = "db-goodfood-product-${var.environnment_suffix}"
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
-  server_name         = azurerm_postgresql_server.pg-goodfood-product.name
-  charset             = "UTF8"
-  collation           = "English_United States.1252"
-}
-
-resource "azurerm_postgresql_firewall_rule" "pgfw-goodfood-product" {
+resource "azurerm_postgresql_flexible_server_firewall_rule" "pgfw-goodfood-product" {
   name                = "allow-azure-resources"
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
-  server_name         = azurerm_postgresql_server.pg-goodfood-product.name
+  server_id         = azurerm_postgresql_flexible_server.pg-goodfood-product.id
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
 }
 
 resource "azurerm_storage_account" "stac-goodfood-product" {
-  name                     = "stacgoodfoodproduct${var.environnment_suffix}"
-  resource_group_name      = data.azurerm_resource_group.rg-goodfood.name
-  location                 = data.azurerm_resource_group.rg-goodfood.location
+  name                     = "sagoodfoodproductdev"
+  resource_group_name      = data.azurerm_resource_group.rg-gf-paf.name
+  location                 = data.azurerm_resource_group.rg-gf-paf.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
 
@@ -98,7 +88,7 @@ resource "azapi_resource" "ssh_public_key-goodfood-product" {
   type      = "Microsoft.Compute/sshPublicKeys@2022-11-01"
   name      = random_pet.ssh_key_name-goodfood-product.id
   location  = "westus3"
-  parent_id = data.azurerm_resource_group.rg-goodfood.id
+  parent_id = data.azurerm_resource_group.rg-gf-paf.id
 }
 
 resource "azapi_resource_action" "ssh_public_key_gen-goodfood-product" {
@@ -110,30 +100,117 @@ resource "azapi_resource_action" "ssh_public_key_gen-goodfood-product" {
   response_export_values = ["publicKey"]
 }
 
-resource "azurerm_kubernetes_cluster" "aks-goodfood-product" {
-  name                = "aks-goodfood-product-${var.environnment_suffix}"
-  location            = data.azurerm_resource_group.rg-goodfood.location
-  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
-  dns_prefix          = "goodfood-product"
+provider "kubernetes" {
+  host = data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.host
 
-  identity {
-    type = "SystemAssigned"
-  }
+  client_certificate     = base64decode(data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.client_certificate)
+  client_key             = base64decode(data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.cluster_ca_certificate)
+}
 
-  default_node_pool {
-    name       = "agentpool"
-    vm_size    = "Standard_D2_v2"
-    node_count = 1
-  }
-  linux_profile {
-    admin_username = "ubuntu"
-
-    ssh_key {
-      key_data = jsondecode(azapi_resource_action.ssh_public_key_gen-goodfood-product.output).publicKey
+resource "kubernetes_deployment" "kd-goodfood-product" {
+  metadata {
+    name = "goodfood-product"
+    labels = {
+      App = "goodfood-product"
     }
   }
-  network_profile {
-    network_plugin    = "kubenet"
-    load_balancer_sku = "standard"
+
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        App = "goodfood-product"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          App = "goodfood-product"
+        }
+      }
+      spec {
+        container {
+          name  = "goodfood-product"
+          image = "floriaaan/goodfood-product:latest"
+
+          env {
+            name = "PORT"
+            value = "50004"
+          }
+          env {
+            name = "DATABASE_URL"
+            value = "postgresql://${data.azurerm_key_vault_secret.db-login.value}:${data.azurerm_key_vault_secret.db-password.value}@${azurerm_postgresql_flexible_server.pg-goodfood-product.name}.postgres.database.azure.com:5432/${azurerm_postgresql_flexible_server_database.db-goodfood-product.name}?sslmode=require"
+            //value = "host=pg-gf-pafdev-product.postgres.database.azure.com port=5432 dbname=${azurerm_postgresql_database.db-goodfood-product.name} user=${azurerm_postgresql_server.pg-goodfood-product.administrator_login}@pg-gf-pafdev-product password=${azurerm_postgresql_server.pg-goodfood-product.administrator_login_password} sslmode=require"
+          }
+          env {
+            name = "AZURE_STORAGE_SAS_TOKEN"
+            value = data.azurerm_storage_account_blob_container_sas.sa-goodfood.sas
+          }
+          env {
+            name = "AZURE_STORAGE_RESOURCE_NAME"
+            value = azurerm_storage_account.stac-goodfood-product.name
+          }
+          env {
+            name = "AMQP_URL"
+            value = "TODO"
+          }
+
+          port {
+            container_port = 50004
+          }
+        }
+      }
+    }
+  }
+  timeouts {
+    create = "1m"
+  }
+}
+
+resource "kubernetes_service" "ks-goodfood-product" {
+  metadata {
+    name = "goodfood-product"
+  }
+  spec {
+    selector = {
+      App = kubernetes_deployment.kd-goodfood-product.spec.0.template.0.metadata[0].labels.App
+    }
+    port {
+      name        = "grpc"
+      port        = 50004
+      target_port = 50004
+    }
+    type = "LoadBalancer"
+  }
+  timeouts {
+    create = "1m"
+  }
+}
+
+resource "kubernetes_horizontal_pod_autoscaler_v2" "khpa-goodfood-product" {
+  metadata {
+    name = "goodfood-product-hpa"
+  }
+
+  spec {
+    min_replicas = 1
+    max_replicas = 3
+
+    scale_target_ref {
+      kind = "Deployment"
+      name = "goodfood-user"
+    }
+
+    metric {
+      type = "Resource"
+      resource{
+        name = "cpu"
+        target {
+          type = "Utilization"
+          average_utilization = 50
+        }
+      }
+    }
   }
 }

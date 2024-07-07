@@ -29,7 +29,7 @@ services:
   #  User service
 
   user-service:
-    image: goodfood-user:1.0.0
+    image: floriaaan/goodfood-user:1.0.0
     restart: unless-stopped
     build:
       context: .

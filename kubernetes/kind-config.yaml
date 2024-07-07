@@ -1,0 +1,10 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+  extraPortMappings:
+  - containerPort: 30001  # The nodePort value from your service
+    hostPort: 50000       # The port you want to open on your host
+    listenAddress: "127.0.0.1"  # Optional: Specify the host interface
+    protocol: TCP

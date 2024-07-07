@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: goodfood-basket
+  name: goodfood-basket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: goodfood-basket
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: goodfood-basket
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: registry-credential
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: basket--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: basket--env-docker
+            - name: REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_URL
+                  name: basket--env-docker
+          image: floriaaan/goodfood-basket:latest
+          imagePullPolicy: Always
+          name: goodfood-basket
+          ports:
+            - containerPort: 50002
+          resources:
+            limits:
+              memory: 500Mi
+      restartPolicy: Always
+
