@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: promotion-service
+  name: promotion-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: promotion-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: promotion-service
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: registry-credential
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: promotions--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: promotions--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: promotions--env-docker
+          image: floriaaan/goodfood-promotions:latest
+          imagePullPolicy: Always
+          name: promotion-service
+          ports:
+            - containerPort: 50006
+          resources:
+            limits:
+              memory: 500Mi
+      restartPolicy: Always
+

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: order-service
+  name: order-service
+spec:
+  ports:
+    - name: "50007"
+      port: 50007
+      targetPort: 50007
+  selector:
+    service: order-service
+status:
+  loadBalancer: {}

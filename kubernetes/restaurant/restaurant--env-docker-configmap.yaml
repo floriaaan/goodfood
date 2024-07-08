@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  AMQP_URL: ""
+  DATABASE_URL: ""
+  PORT: "50005"
+kind: ConfigMap
+metadata:
+  labels:
+    service: restaurant-service-restaurant--env-docker
+  name: restaurant--env-docker

@@ -1,4 +1,4 @@
-variable "environnment_suffix" {
+ variable "environnment_suffix" {
   type        = string
   description = "The suffix to append to the environment name"
 }
@@ -12,7 +12,13 @@ variable "location" {
 variable "project_name" {
   type        = string
   description = "The name of the project"
-  default     = "goodfood"
+  default     = "gf-paf"
+}
+
+variable "project_name_minimized" {
+ type        = string
+ description = "The name of the project"
+ default     = "gfpaf"
 }
 
 variable "agent_count" {
@@ -26,12 +32,15 @@ variable "aks_service_principal_app_id" {
 variable "aks_service_principal_client_secret" {
   default = ""
 }
+
 variable "ssh_public_key" {
   default = "~/.ssh/id_rsa.pub"
 }
+
 variable "db_password" {
   type = string
 }
+
 variable "db_username" {
   type = string
 }

@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  AMQP_URL: ""
+  PORT: "50002"
+  REDIS_URL: ""
+kind: ConfigMap
+metadata:
+  labels:
+    service: basket-service-basket--env-docker
+  name: basket--env-docker

@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  AMQP_URL: ""
+  DATABASE_URL: ""
+  PORT: "50007"
+kind: ConfigMap
+metadata:
+  labels:
+    service: order-service-order--env-docker
+  name: order--env-docker
