@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: restaurant-service
+  name: restaurant-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: restaurant-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: restaurant-service
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: registry-credential
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: restaurant--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: restaurant--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: restaurant--env-docker
+          image: floriaaan/goodfood-restaurant:latest
+          imagePullPolicy: Always
+          name: restaurant-service
+          ports:
+            - containerPort: 50005
+          resources:
+            limits:
+              memory: 1000Mi
+      restartPolicy: Always
+

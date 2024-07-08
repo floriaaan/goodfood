@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: user-postgres
+  name: user-postgres
+spec:
+  ports:
+    - name: "51001"
+      port: 51001
+      targetPort: 5432
+  selector:
+    service: user-postgres
+status:
+  loadBalancer: {}

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: goodfood-basket
+  name: basket-service
 spec:
   selector:
-    app: goodfood-basket
+    app: basket-service
   ports:
     - name: "grpc"
       port: 50002

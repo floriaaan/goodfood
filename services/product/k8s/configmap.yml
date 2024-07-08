@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: goodfood-product-configmap
-  labels:
-    app: goodfood-product
-data:

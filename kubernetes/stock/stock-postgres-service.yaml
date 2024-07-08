@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: stock-postgres
+  name: stock-postgres
+spec:
+  ports:
+    - name: "51009"
+      port: 51009
+      targetPort: 5432
+  selector:
+    service: stock-postgres
+status:
+  loadBalancer: {}

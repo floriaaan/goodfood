@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  AMQP_URL: ""
+  DATABASE_URL: ""
+  PLUNK_PROJECT_NAME: ""
+  PLUNK_PUBLIC_KEY: ""
+  PORT: "50022"
+kind: ConfigMap
+metadata:
+  labels:
+    service: notification-service-notification--env-docker
+  name: notification--env-docker
