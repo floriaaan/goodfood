@@ -108,14 +108,14 @@ const PasswordStrength = ({ password }: { password: string }) => {
           passwordScore === 0 && password !== ""
             ? "w-10 bg-red-500"
             : passwordScore === 1
-            ? "w-1/4 bg-yellow-500"
-            : passwordScore === 2
-            ? "w-1/2 bg-green-500"
-            : passwordScore === 3
-            ? "w-3/4 bg-green-500"
-            : passwordScore === 4
-            ? "w-full animate-pulse bg-blue-500"
-            : "w-0",
+              ? "w-1/4 bg-yellow-500"
+              : passwordScore === 2
+                ? "w-1/2 bg-green-500"
+                : passwordScore === 3
+                  ? "w-3/4 bg-green-500"
+                  : passwordScore === 4
+                    ? "w-full animate-pulse bg-blue-500"
+                    : "w-0",
         ].join(" ")}
       ></div>
     </div>

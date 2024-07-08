@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: log-service
+  name: log-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: log-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: log-service
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: registry-credential
+      containers:
+        - env:
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AMQP_URL
+                  name: log--env-docker
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_URL
+                  name: log--env-docker
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: log--env-docker
+          image: floriaaan/goodfood-log:latest
+          imagePullPolicy: Always
+          name: log-service
+          ports:
+            - containerPort: 50021
+          resources:
+            limits:
+              memory: 500Mi
+      restartPolicy: Always
+

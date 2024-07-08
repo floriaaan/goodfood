@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: goodfood-basket
+  name: basket-service
   labels:
-    app: goodfood-basket
+    app: basket-service
 spec:
   selector:
     matchLabels:
-      app: goodfood-basket
+      app: basket-service
   template:
     metadata:
       labels:
-        app: goodfood-basket
+        app: basket-service
     spec:
       containers:
-        - name: goodfood-basket
-          image: floriaaan/goodfood-basket:1.0.0
+        - name: basket-service
+          image: floriaaan/basket-service:1.0.0
           imagePullPolicy: Always
           resources:
             limits:
@@ -25,7 +25,7 @@ spec:
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: goodfood-basket-configmap
+                  name: basket-service-configmap
                   key: port
           ports:
             - containerPort: 50002

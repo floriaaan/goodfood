@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: event-broker
+  name: event-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: event-broker
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        network/goodfood-network: "true"
+        service: event-broker
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: registry-credential
+      containers:
+        - image: rabbitmq:3-management
+          imagePullPolicy: Always
+          name: event-broker
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          resources:
+            limits:
+              memory: 500Mi
+      restartPolicy: Always
+

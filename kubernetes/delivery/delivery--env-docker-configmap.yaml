@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  AMQP_URL: ""
+  DATABASE_URL: ""
+  MAPBOX_TOKEN: ""
+  PORT: "50008"
+  REDIS_HOST: "delivery-redis"
+kind: ConfigMap
+metadata:
+  labels:
+    service: delivery-service-delivery--env-docker
+  name: delivery--env-docker

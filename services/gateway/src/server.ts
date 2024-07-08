@@ -130,6 +130,10 @@ app.use(
   // #swagger.tags = ['Health Check']
 );
 
+app.use("/docs", (__req, res) => {
+  return res.send(require("./lib/swagger/swagger-output.json"));
+});
+
 app.listen(PORT, () => {
   const message = `---- ${utils.green("good")}${utils.yellow("food")} Gateway ----\nstarted on: ${utils.bold(
     `0.0.0.0:${PORT}`,

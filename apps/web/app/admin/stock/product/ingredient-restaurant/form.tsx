@@ -87,8 +87,9 @@ export function IngredientRestaurantCreateEditForm({
           <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto px-4 pt-16">
             <h2 className="line-clamp-2 text-2xl font-bold">
               {id
-                ? `Liaison de ${ingredients.find((i) => i.id === form.getValues("ingredientId"))
-                    ?.name} à ${restaurants.find((r) => r.id === form.getValues("restaurantId"))?.name}`
+                ? `Liaison de ${
+                    ingredients.find((i) => i.id === form.getValues("ingredientId"))?.name
+                  } à ${restaurants.find((r) => r.id === form.getValues("restaurantId"))?.name}`
                 : "Lier un ingrédient à un restaurant"}
             </h2>
             <Accordion type="single" defaultValue="links" collapsible>
