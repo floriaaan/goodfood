@@ -93,4 +93,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: kubectl rollout restart deployment product-service
+          script: |
+                    ls -al
+                    kubectl rollout restart deployment product-service
