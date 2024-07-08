@@ -89,6 +89,12 @@ jobs:
     steps:
       - name: Install Kubectl
         uses: azure/setup-kubectl@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.20.3
+      - name: Install Kind
+        run: go install sigs.k8s.io/kind@v0.23.0
       - name: Setup Cluster Authentication
         env:
           KUBECONFIG_DATA: ${{ secrets.KUBECONFIG }}
