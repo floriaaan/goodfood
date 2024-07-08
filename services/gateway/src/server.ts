@@ -17,7 +17,6 @@ import { stockPersonRoutes } from "@gateway/controller/stock/stockPerson.control
 import { mainAddressRoutes } from "@gateway/controller/user/mainAddress.controller";
 import { userRoutes } from "@gateway/controller/user/user.controller";
 import { log, utils } from "@gateway/lib/log/log";
-import swaggerUi from "swagger-ui-express";
 
 import { health_checkRoutes } from "@gateway/handlers/health-check";
 
@@ -26,7 +25,6 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
-import { withCheck } from "@gateway/middleware/auth";
 
 export const app = express();
 app.use(cors());
