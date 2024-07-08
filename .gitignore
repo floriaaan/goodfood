@@ -93,6 +93,3 @@ terraform.rc
 # next.js
 /apps/web/.next
 /apps/web/next-env.d.ts
-
-#Kubernetes
-**/*.env.yaml

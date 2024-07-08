@@ -1,23 +1,23 @@
 data "azurerm_client_config" "product-client-conf" {
 }
 
-data "azurerm_resource_group" "rg-gf-paf" {
+data "azurerm_resource_group" "rg-goodfood" {
   name     = "rg-${var.project_name}-${var.environnment_suffix}"
 }
 
-data "azurerm_key_vault" "kv-gf-paf-product" {
-  resource_group_name = data.azurerm_resource_group.rg-gf-paf.name
-  name                = "keyvault${var.project_name_minimized}${var.environnment_suffix}${var.service-name}"
+data "azurerm_key_vault" "kv-goodfood-product" {
+  resource_group_name = data.azurerm_resource_group.rg-goodfood.name
+  name                = "kv-${var.project_name}-product"
 }
 
-data "azurerm_key_vault_secret" "db-login" {
-  name         = "db-login"
-  key_vault_id = data.azurerm_key_vault.kv-gf-paf-product.id
+data "azurerm_key_vault_secret" "product-db-login" {
+  name         = "product-db-login"
+  key_vault_id = data.azurerm_key_vault.kv-goodfood-product.id
 }
 
-data "azurerm_key_vault_secret" "db-password" {
-  name         = "db-password"
-  key_vault_id = data.azurerm_key_vault.kv-gf-paf-product.id
+data "azurerm_key_vault_secret" "product-db-password" {
+  name         = "product-db-password"
+  key_vault_id = data.azurerm_key_vault.kv-goodfood-product.id
 }
 
 data "azurerm_storage_account_blob_container_sas" "sa-goodfood" {
@@ -38,20 +38,4 @@ data "azurerm_storage_account_blob_container_sas" "sa-goodfood" {
     delete = true
     list   = true
   }
-}
-
-data "terraform_remote_state" "aks" {
-  backend = "azurerm"
-
-  config = {
-    resource_group_name  = "rg-gf-paf-dev"
-    storage_account_name = "sagoodfoodpaf"
-    container_name       = "tfstate"
-    key                  = "main-dev.tfstate"
-  }
-}
-
-data "azurerm_kubernetes_cluster" "aks_cluster" {
-  name                = data.terraform_remote_state.aks.outputs.kubernetes_cluster_name
-  resource_group_name = data.terraform_remote_state.aks.outputs.resource_group_name
 }

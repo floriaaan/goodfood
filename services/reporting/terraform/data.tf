@@ -4,7 +4,7 @@ data "azurerm_resource_group" "rg-goodfood" {
 
 data "azurerm_key_vault" "kv-goodfood-reporting" {
   resource_group_name = data.azurerm_resource_group.rg-goodfood.name
-  name = "keyvault-${var.project_name}"
+  name = "kv-${var.project_name}"
 }
 
 data "azurerm_key_vault_secret" "reporting-db-login" {

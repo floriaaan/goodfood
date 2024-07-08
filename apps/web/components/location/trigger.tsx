@@ -15,8 +15,8 @@ export const LocationFullTrigger = ({ className }: { className?: string }) => {
   const address_displayed = isAddressDefined
     ? `${street}, ${zipcode} ${city}, ${country}`
     : isAuthenticated
-      ? "Ajouter une adresse"
-      : "Se connecter";
+    ? "Ajouter une adresse"
+    : "Se connecter";
 
   return (
     <div

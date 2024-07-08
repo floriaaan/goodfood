@@ -31,7 +31,6 @@ import {
   MdManageAccounts,
   MdTableView,
   MdUnfoldMore,
-  MdDocumentScanner,
 } from "react-icons/md";
 
 export const Sidebar = () => {
@@ -112,18 +111,6 @@ export const Sidebar = () => {
                   <MdDoneAll className="h-5 w-5 shrink-0" />
                   État de l’application
                 </Link>
-                {isAdmin && (
-                  <Link
-                    href="/admin/docs"
-                    className={cn(
-                      "inline-flex items-center gap-x-2 px-4 py-2 text-sm font-semibold hover:bg-black hover:bg-opacity-5",
-                      path === "/admin/docs" && "bg-black bg-opacity-10",
-                    )}
-                  >
-                    <MdDocumentScanner className="h-5 w-5 shrink-0" />
-                    Documentation technique
-                  </Link>
-                )}
               </div>
             </>
           ) : (

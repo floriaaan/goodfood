@@ -4,16 +4,16 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - basket-service-volume:/data
+      - goodfood-basket-volume:/data
     networks:
-      - basket-service-network
+      - goodfood-basket-network
     command: redis-server --appendonly yes
     environment:
       REDIS_USERNAME: redis
       REDIS_PASSWORD: password
 
 volumes:
-  basket-service-volume:
+  goodfood-basket-volume:
 
 networks:
-  basket-service-network:
+  goodfood-basket-network:

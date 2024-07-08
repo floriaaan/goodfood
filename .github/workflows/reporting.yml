@@ -55,15 +55,3 @@ jobs:
           file: ./services/reporting/Dockerfile
           push: true
           tags: floriaaan/goodfood-reporting:latest
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build, test, publish]
-
-    steps:
-      - name: Install Kubectl
-        uses: azure/setup-kubectl@v3
-      - name: Setup Cluster Authentication
-        run: cat ${{ secrets.KUBECONFIG }} > /tmp/kubeconfig
-      - name: Deploying reporting
-        run: kubectl --kubeconfig=/tmp/kubeconfig rollout restart deployment reporting-service

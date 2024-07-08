@@ -63,16 +63,3 @@ jobs:
           file: ./services/log/Dockerfile
           push: true
           tags: floriaaan/goodfood-log:latest
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build, test, publish]
-    steps:
-      - name: Deploying log
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: kubectl rollout restart deployment log-service

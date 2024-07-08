@@ -35,12 +35,12 @@ export const orders_columns: ColumnDef<Order>[] = [
           {status === Status.FULFILLED
             ? "Commande livrée"
             : status === Status.PENDING
-              ? "Commande en cours"
-              : status === Status.REJECTED
-                ? "Commande annulée"
-                : status === Status.IN_PROGRESS
-                  ? "Commande en cours de livraison"
-                  : ""}
+            ? "Commande en cours"
+            : status === Status.REJECTED
+            ? "Commande annulée"
+            : status === Status.IN_PROGRESS
+            ? "Commande en cours de livraison"
+            : ""}
         </span>
       );
     },

@@ -5,7 +5,7 @@
     "description": "The Gateway API for the Microservices",
     "version": "1.0.0"
   },
-  "host": "https://lfbn-rou-1-183-87.w83-114.abo.wanadoo.fr:50000",
+  "host": "localhost:50000",
   "basePath": "/",
   "schemes": [
     "http"
