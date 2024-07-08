@@ -85,13 +85,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build, test, publish]
     steps:
-      - name: executing remote ssh commands using password
+      - name: Deploying basket
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: whoami
-      - name: Deploying basket
-        run: kubectl rollout restart deployment product
+          script: kubectl rollout restart deployment basket-service
