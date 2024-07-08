@@ -53,6 +53,6 @@ spec:
             - containerPort: 50004
           resources:
             limits:
-              memory: 500Mi
+              memory: 1000Mi
       restartPolicy: Always
 

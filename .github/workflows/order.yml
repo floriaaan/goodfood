@@ -80,3 +80,15 @@ jobs:
           file: ./services/order/Dockerfile
           push: true
           tags: floriaaan/goodfood-order:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, test, publish]
+
+    steps:
+      - name: Install Kubectl
+        uses: azure/setup-kubectl@v3
+      - name: Setup Cluster Authentication
+        run: cat ${{ secrets.KUBECONFIG }} > /tmp/kubeconfig
+      - name: Deploying order
+        run: kubectl --kubeconfig=/tmp/kubeconfig rollout restart deployment order-service

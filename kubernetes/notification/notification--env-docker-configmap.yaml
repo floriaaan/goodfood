@@ -1,13 +1,12 @@
 apiVersion: v1
 data:
-  AMQP_URL: "amqp://guest:guest@event-broker"
-  DATABASE_URL: "postgresql://postgres:password@notification-postgres.default.svc.cluster.local:51022/postgres"
-  PLUNK_PROJECT_NAME: "goodfood"
-  PLUNK_PUBLIC_KEY: "exemple"
+  AMQP_URL: ""
+  DATABASE_URL: ""
+  PLUNK_PROJECT_NAME: ""
+  PLUNK_PUBLIC_KEY: ""
   PORT: "50022"
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     service: notification-service-notification--env-docker
   name: notification--env-docker
