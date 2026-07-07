@@ -1,0 +1,17 @@
+services:
+  gateway-mock:
+    image: goodfood-gateway-mock:1.0.0
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./gateway-mock/Dockerfile
+    environment:
+      GATEWAY_PORT: 50000
+      JWT_SECRET: mock-secret
+    ports:
+      - "50000:50000"
+    networks:
+      - goodfood-network
+
+networks:
+  goodfood-network:

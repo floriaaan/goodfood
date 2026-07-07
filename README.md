@@ -55,6 +55,8 @@ The file hierarchy for this project is as follows:
     │       │   └── (...) # k8s files
     │       └── terraform/
     │           └── (...) # terraform files
+    ├── gateway-mock/
+    │       └── (...) # mocked gateway, no microservice dependency
     ├── user/
     ├── order/
     ├── delivery/
@@ -111,6 +113,20 @@ You can then run the following command to start the microservices and the gatewa
 docker-compose -f services/docker-compose.yml up -d --build
 ```
 
+### Frontend-only development (mocked gateway)
+
+If you only want to work on `apps/web` without booting any microservice, run the mocked
+gateway instead — see [`services/gateway-mock/README.md`](services/gateway-mock/README.md):
+
+```shell
+docker compose -f services/docker-compose.mock.yml up --build
+```
+
+It serves the same REST paths as the real gateway on `:50000` (matching `apps/web`'s default
+`NEXT_PUBLIC_API_URL`), backed by deterministic in-memory fixtures. Test accounts (password
+`password`): `admin@goodfood.com` (ADMIN), `manager@goodfood.com` (MANAGER),
+`user@goodfood.com` (USER), `delivery@goodfood.com` (DELIVERY_PERSON).
+
 ### Kubernetes
 
 To create the kubernetes cluster you need to run the following command:
@@ -122,7 +138,7 @@ kind create cluster --config kind-config.yaml
 You can use Kubernetes to run the microservices and the gateway.
 For that create the secret for the docker registry (take care of replacing the placeholders):
 ```shell
-kubectl create secret docker-registry registry-credential --docker-server=https://hub.docker.com --docker-username=PierreLbg --docker-password=3o6gzWTiA#Vc%3 --docker-email=pierre.lebigre@outlook.fr
+kubectl create secret docker-registry registry-credential --docker-server=https://hub.docker.com --docker-username=<DOCKER_USERNAME> --docker-password=<DOCKER_PASSWORD> --docker-email=<DOCKER_EMAIL>
 ```
 
 Then make the secret usable by the service account:
