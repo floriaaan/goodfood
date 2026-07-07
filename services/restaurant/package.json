@@ -15,14 +15,14 @@
 		"typescript": "^5.1.6"
 	},
 	"dependencies": {
-		"@grpc/grpc-js": "^1.9.15",
+		"@grpc/grpc-js": "^1.9.16",
 		"@grpc/proto-loader": "^0.7.8",
 		"@prisma/client": "5.8.0",
 		"amqplib": "^0.10.3",
 		"dotenv": "^16.3.1",
-		"esbuild": "^0.18.15",
+		"esbuild": "^0.28.1",
 		"geolib": "^3.3.4",
-		"nodemon": "^3.0.1",
+		"nodemon": "^3.1.14",
 		"path": "^0.12.7",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.2.0"
