@@ -1,0 +1,34 @@
+version: "3"
+
+tasks:
+  install:
+    desc: Installe les dépendances
+    cmds:
+      - npm install
+
+  dev:
+    desc: Lance la gateway mockée en local (watch, hors Docker)
+    cmds:
+      - npm install
+      - npm run dev
+
+  build:
+    desc: Build la gateway mockée (esbuild)
+    cmds:
+      - npm install
+      - npm run build
+
+  docker:up:
+    desc: Lance la gateway mockée via Docker (front sans aucun microservice)
+    cmds:
+      - docker compose -f ../docker-compose.mock.yml up -d --build
+
+  docker:down:
+    desc: Arrête la gateway mockée
+    cmds:
+      - docker compose -f ../docker-compose.mock.yml down
+
+  docker:logs:
+    desc: Logs de la gateway mockée
+    cmds:
+      - docker compose -f ../docker-compose.mock.yml logs -f --tail=200

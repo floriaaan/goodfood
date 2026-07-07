@@ -1,0 +1,169 @@
+version: "3"
+
+vars:
+  COMPOSE: services/docker-compose.yml
+  COMPOSE_MOCK: services/docker-compose.mock.yml
+  COMPOSE_LOG: docker-compose.log.yml
+  # Backend microservices, without the gateway (and stripe-cli, which forwards to it).
+  # Useful to run these in Docker while iterating on the gateway itself with `task gateway:dev`.
+  SERVICES_ONLY: >-
+    user-service user-postgres
+    basket-service basket-redis
+    payment-service payment-postgres
+    product-service product-postgres
+    restaurant-service restaurant-postgres
+    promotion-service promotion-postgres
+    order-service order-postgres
+    delivery-service delivery-redis delivery-postgres
+    stock-service stock-postgres
+    log-service log-postgres
+    notification-service notification-postgres
+    event-broker
+
+# Chaque microservice a son propre Taskfile.yml (dev/build/test/docker:up/down/logs).
+# Ex: task basket:dev · task user:docker:logs · task gateway:proto · task gateway-mock:docker:up
+includes:
+  gateway: services/gateway
+  gateway-mock: services/gateway-mock
+  user: services/user
+  basket: services/basket
+  delivery: services/delivery
+  notification: services/notification
+  order: services/order
+  payment: services/payment
+  product: services/product
+  promotions: services/promotions
+  restaurant: services/restaurant
+  stock: services/stock
+  log: services/log
+  reporting: services/reporting
+  proto: services/proto
+
+tasks:
+  default:
+    desc: Liste les tasks disponibles
+    cmds:
+      - task --list
+    silent: true
+
+  # -- Stack complète (gateway + tous les microservices) --
+
+  up:
+    desc: Lance la stack complète (gateway + tous les microservices)
+    cmds:
+      - docker compose -f {{.COMPOSE}} up -d --build
+
+  down:
+    desc: Arrête la stack complète
+    cmds:
+      - docker compose -f {{.COMPOSE}} down
+
+  restart:
+    desc: Redémarre la stack complète
+    cmds:
+      - task: down
+      - task: up
+
+  ps:
+    desc: Liste les containers de la stack complète
+    cmds:
+      - docker compose -f {{.COMPOSE}} ps
+
+  logs:
+    desc: 'Logs de la stack complète (ex: task logs -- user-service)'
+    cmds:
+      - docker compose -f {{.COMPOSE}} logs -f --tail=200 {{.CLI_ARGS}}
+
+  # -- Microservices seuls (sans la gateway) --
+
+  services:up:
+    desc: Lance uniquement les microservices, sans la gateway
+    cmds:
+      - docker compose -f {{.COMPOSE}} up -d --build {{.SERVICES_ONLY}}
+
+  services:down:
+    desc: Arrête les microservices lancés par services:up
+    cmds:
+      - docker compose -f {{.COMPOSE}} stop {{.SERVICES_ONLY}}
+
+  services:logs:
+    desc: 'Logs des microservices seuls (ex: task services:logs -- order-service)'
+    cmds:
+      - docker compose -f {{.COMPOSE}} logs -f --tail=200 {{.CLI_ARGS | default .SERVICES_ONLY}}
+
+  # -- Gateway réelle seule (à coupler avec services:up) --
+
+  gateway:up:
+    desc: Lance uniquement la gateway (build via Docker)
+    cmds:
+      - docker compose -f {{.COMPOSE}} up -d --build gateway stripe-cli
+
+  gateway:down:
+    desc: Arrête la gateway
+    cmds:
+      - docker compose -f {{.COMPOSE}} stop gateway stripe-cli
+
+  gateway:logs:
+    desc: Logs de la gateway
+    cmds:
+      - docker compose -f {{.COMPOSE}} logs -f --tail=200 gateway
+
+  # (dev/build/test/proto de la gateway réelle: voir task gateway:dev, gateway:proto, etc. — includes ci-dessus)
+
+  # -- Gateway mockée (front sans aucun microservice) --
+
+  mock:up:
+    desc: Lance la gateway mockée (front sans aucun microservice)
+    cmds:
+      - docker compose -f {{.COMPOSE_MOCK}} up -d --build
+
+  mock:down:
+    desc: Arrête la gateway mockée
+    cmds:
+      - docker compose -f {{.COMPOSE_MOCK}} down
+
+  mock:restart:
+    desc: Redémarre la gateway mockée
+    cmds:
+      - task: mock:down
+      - task: mock:up
+
+  mock:logs:
+    desc: Logs de la gateway mockée
+    cmds:
+      - docker compose -f {{.COMPOSE_MOCK}} logs -f --tail=200
+
+  # -- Frontend --
+
+  web:dev:
+    desc: Lance le front en local (Next.js dev server)
+    dir: apps/web
+    cmds:
+      - pnpm install
+      - pnpm dev
+
+  # -- Log service + RabbitMQ standalone (docker-compose.log.yml) --
+
+  log:up:
+    desc: Lance le service de log + RabbitMQ en standalone
+    cmds:
+      - docker compose -f {{.COMPOSE_LOG}} up -d --build
+
+  log:down:
+    desc: Arrête le service de log + RabbitMQ standalone
+    cmds:
+      - docker compose -f {{.COMPOSE_LOG}} down
+
+  log:logs:
+    desc: Logs du service de log standalone
+    cmds:
+      - docker compose -f {{.COMPOSE_LOG}} logs -f --tail=200
+
+  # -- Nettoyage --
+
+  clean:
+    desc: Arrête toutes les stacks (complète, mock, log) et supprime volumes/orphelins
+    cmds:
+      - docker compose -f {{.COMPOSE}} down -v --remove-orphans
+      - docker compose -f {{.COMPOSE_MOCK}} down -v --remove-orphans
+      - docker compose -f {{.COMPOSE_LOG}} down -v --remove-orphans

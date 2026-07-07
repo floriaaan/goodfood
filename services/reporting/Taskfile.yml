@@ -1,0 +1,21 @@
+version: "3"
+
+# Reporting est un service .NET en cours de développement, désactivé (commenté) dans
+# services/docker-compose.yml — pas de tasks docker:* tant qu'il n'y est pas réactivé.
+
+tasks:
+  dev:
+    desc: Lance le service en local (hors Docker)
+    dir: Server
+    cmds:
+      - dotnet run
+
+  build:
+    desc: Build la solution
+    cmds:
+      - dotnet build reporting.sln
+
+  test:
+    desc: Lance les tests
+    cmds:
+      - dotnet test reporting.sln

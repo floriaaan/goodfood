@@ -1,0 +1,48 @@
+version: "3"
+
+tasks:
+  install:
+    desc: Installe les dépendances
+    cmds:
+      - npm install
+
+  proto:
+    desc: Génère les fichiers gRPC à partir des .proto
+    cmds:
+      - npm install
+      - npm run build:proto
+
+  dev:
+    desc: Lance la gateway en local (watch, hors Docker) — coupler avec `task services:up`
+    cmds:
+      - npm install
+      - npm run build:proto
+      - npm run dev
+
+  build:
+    desc: Build la gateway (esbuild)
+    cmds:
+      - npm install
+      - npm run build:proto
+      - npm run build
+
+  test:
+    desc: Lance les tests
+    cmds:
+      - npm install
+      - npm test
+
+  docker:up:
+    desc: Lance la gateway réelle (+ stripe-cli) via Docker
+    cmds:
+      - docker compose -f ../docker-compose.yml up -d --build gateway stripe-cli
+
+  docker:down:
+    desc: Arrête la gateway réelle
+    cmds:
+      - docker compose -f ../docker-compose.yml stop gateway stripe-cli
+
+  docker:logs:
+    desc: Logs de la gateway
+    cmds:
+      - docker compose -f ../docker-compose.yml logs -f --tail=200 gateway

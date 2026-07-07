@@ -1,0 +1,40 @@
+version: "3"
+
+tasks:
+  install:
+    desc: Installe les dépendances
+    cmds:
+      - npm install
+
+  dev:
+    desc: Lance le service en local (watch, hors Docker)
+    cmds:
+      - npm install
+      - npm run dev
+
+  build:
+    desc: Build le service (esbuild)
+    cmds:
+      - npm install
+      - npm run build
+
+  test:
+    desc: Lance les tests
+    cmds:
+      - npm install
+      - npm test
+
+  docker:up:
+    desc: Lance le service (+ ses dépendances) via Docker
+    cmds:
+      - docker compose -f ../docker-compose.yml up -d --build product-service product-postgres
+
+  docker:down:
+    desc: Arrête le service (+ ses dépendances)
+    cmds:
+      - docker compose -f ../docker-compose.yml stop product-service product-postgres
+
+  docker:logs:
+    desc: Logs du service
+    cmds:
+      - docker compose -f ../docker-compose.yml logs -f --tail=200 product-service

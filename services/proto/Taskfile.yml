@@ -1,0 +1,11 @@
+version: "3"
+
+# Pas un service exécutable : définitions .proto partagées, consommées par chaque service Node/gRPC
+# via son propre symlink `proto -> ../proto/` et son script `build:proto` (ex: `task gateway:proto`).
+
+tasks:
+  default:
+    desc: "Ce dossier ne s'exécute pas seul — voir task <service>:proto (ex. task gateway:proto)"
+    cmds:
+      - 'echo "Régénère les stubs depuis le service consommateur, ex: task gateway:proto"'
+    silent: true

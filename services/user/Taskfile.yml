@@ -1,0 +1,32 @@
+version: "3"
+
+tasks:
+  dev:
+    desc: Lance le service en local (hors Docker) — coupler avec `task services:up`
+    cmds:
+      - go run .
+
+  build:
+    desc: Build le binaire Go
+    cmds:
+      - go build -o bin/user .
+
+  test:
+    desc: Lance les tests
+    cmds:
+      - go test ./...
+
+  docker:up:
+    desc: Lance le service (+ sa base) via Docker
+    cmds:
+      - docker compose -f ../docker-compose.yml up -d --build user-service user-postgres
+
+  docker:down:
+    desc: Arrête le service (+ sa base)
+    cmds:
+      - docker compose -f ../docker-compose.yml stop user-service user-postgres
+
+  docker:logs:
+    desc: Logs du service
+    cmds:
+      - docker compose -f ../docker-compose.yml logs -f --tail=200 user-service
