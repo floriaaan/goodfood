@@ -13,27 +13,27 @@
     "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
-    "@grpc/grpc-js": "1.8.22",
+    "@grpc/grpc-js": "1.9.16",
     "@grpc/proto-loader": "0.7.6",
     "@prisma/client": "5.9.1",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
-    "protobufjs": "7.2.5"
+    "protobufjs": "7.6.5"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
     "@types/node": "18.15.9",
-    "esbuild": "^0.17.18",
-    "grpc-tools": "^1.12.4",
-    "nodemon": "^2.0.22",
+    "esbuild": "^0.28.1",
+    "grpc-tools": "^1.13.1",
+    "nodemon": "^3.1.14",
     "pkg": "^5.8.1",
     "prisma": "5.9.1",
     "ts-node": "10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "5.0.2",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^0.29.8"
+    "vitest": "^3.2.6"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
