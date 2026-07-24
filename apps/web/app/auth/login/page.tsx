@@ -1,3 +1,5 @@
+"use client";
+
 import { LoginForm } from "@/app/auth/login/form";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/icon/logo";

@@ -23,12 +23,23 @@ import { NotLogged } from "@/components/ui/not-logged";
 import { useAuth, useBasket, useLocation } from "@/hooks";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Payment } from "@/types/payment";
-import { Player } from "@lottiefiles/react-lottie-player";
 import { useQuery } from "@tanstack/react-query";
 import { HomeIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+// lottie-web (used by the Player) touches `document` as soon as it's imported, which crashes
+// during server-side prerendering; load it client-side only.
+const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player), {
+  ssr: false,
+});
+
+// loadStripe() injects a <script> tag as a side effect of being called, which crashes when this
+// module is evaluated during server-side prerendering (no `document`); only load it in the browser.
+const stripePromise =
+  typeof window !== "undefined"
+    ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
+    : Promise.resolve(null);
 
 type PageProps = { params: { id: string } };
 

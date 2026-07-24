@@ -44,7 +44,7 @@ export const CheckoutReceipt = (order: Order) => {
         GF-
         {restaurant.name
           .split(" ")
-          .map((s) => s[0].toUpperCase())
+          .map((s: string) => s[0].toUpperCase())
           .join("")}
         -{order.id.slice(-4)}
       </h2>

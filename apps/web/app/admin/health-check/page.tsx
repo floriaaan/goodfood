@@ -5,16 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { CheckCircle, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
+type HealthCheckStatus = Record<string, { responseTime: number; ok: boolean }>;
+
 export default function HealthCheckPage() {
-  const { data: health_check, isLoading } = useQuery<
-    Record<
-      string,
-      {
-        responseTime: number;
-        ok: boolean;
-      }
-    >
-  >({
+  const { data: health_check, isLoading } = useQuery<HealthCheckStatus>({
     queryKey: ["health_check"],
     queryFn: async () => {
       const res = await fetchAPI(`/api/health-check`);
@@ -53,7 +47,7 @@ export default function HealthCheckPage() {
         <div className="flex flex-col gap-4 p-2 lg:p-8">
           {!isLoading ? (
             <div className="grid w-full grid-cols-2 gap-4">
-              {Object.entries(health_check ?? {}).map(([name, { ok, responseTime }]) => (
+              {Object.entries(health_check ?? ({} as HealthCheckStatus)).map(([name, { ok, responseTime }]) => (
                 <div
                   key={name}
                   className="inline-flex items-center justify-between gap-1 border border-gray-200 p-4 text-gray-600"
