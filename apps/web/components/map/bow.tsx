@@ -1,5 +1,7 @@
-import { Layer, Source } from "react-map-gl/mapbox";
+import { useEffect, useState } from "react";
+import { Layer, Source } from "@/components/map/gl";
 import { calculateDistance } from "@/components/map/distance";
+import { getDirections } from "@/lib/fetchers/externals/mapbox";
 
 type Marker = {
   latitude: number;
@@ -24,25 +26,48 @@ function getBezierPoints(markerA: Marker, markerB: Marker, midPoint: Marker, num
   return points;
 }
 
-export const Bow = ({ markerA, markerB }: BowProps) => {
-  // Calculate the midpoint
+// Used while the real route is loading, and as a fallback if the routing API errors out (no
+// network, rate-limited demo server, etc.): an arced line between the two points instead of
+// nothing on screen.
+function getBezierCoordinates(markerA: Marker, markerB: Marker): [number, number][] {
   const midPoint = {
     latitude: (markerA.latitude + markerB.latitude) / 2,
     longitude: (markerA.longitude + markerB.longitude) / 2,
   };
-
-  // Add or subtract from the latitude or longitude to create a curve
   midPoint.latitude += getBowHeight({ markerA, markerB });
+  return getBezierPoints(markerA, markerB, midPoint, 15).map((point) => [point.longitude, point.latitude]);
+}
 
-  // Generate the points along the Bézier curve
-  const points = getBezierPoints(markerA, markerB, midPoint, 15);
+export const Bow = ({ markerA, markerB }: BowProps) => {
+  const [routeCoordinates, setRouteCoordinates] = useState<[number, number][] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    // Clear the previous route immediately so a stale path between the old markers isn't shown
+    // while the new one is loading; the bezier fallback below covers the gap until it resolves.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRouteCoordinates(null);
+    (async () => {
+      const directions = await getDirections(
+        { lat: markerA.latitude, lng: markerA.longitude },
+        { lat: markerB.latitude, lng: markerB.longitude },
+      );
+      const coordinates = directions?.routes?.[0]?.geometry?.coordinates as [number, number][] | undefined;
+      if (!cancelled && coordinates?.length) setRouteCoordinates(coordinates);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [markerA.latitude, markerA.longitude, markerB.latitude, markerB.longitude]);
+
+  const coordinates = routeCoordinates ?? getBezierCoordinates(markerA, markerB);
 
   return (
     <Source
       type="geojson"
       data={{
         type: "LineString",
-        coordinates: points.map((point) => [point.longitude, point.latitude]),
+        coordinates,
       }}
     >
       <Layer

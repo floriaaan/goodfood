@@ -1,6 +1,6 @@
 "use client";
 
-import { Map, OrderPin, RestaurantPin } from "@/components/map";
+import { Map, Marker, OrderPin, Popup, RestaurantPin } from "@/components/map";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,7 +17,6 @@ import { UserCreateSheet } from "@/components/admin/user/sheet";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useEffect, useRef, useState } from "react";
-import { Marker, Popup } from "react-map-gl/mapbox";
 
 export default function AdminHome() {
   const { restaurant, selectRestaurant, restaurant_users, restaurants, extendedProducts, promotions, orders } =

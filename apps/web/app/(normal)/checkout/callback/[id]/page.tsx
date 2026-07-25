@@ -14,8 +14,10 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { use } from "react";
+import { use, useState } from "react";
 import { MdArrowBack, MdArrowForward, MdDirectionsWalk, MdShoppingBasket } from "react-icons/md";
+
+const MAX_ORDER_LOOKUP_ATTEMPTS = 10;
 
 type PageProps = { params: Promise<{ id: string }> };
 export default function CheckoutCallbackPage({ params }: PageProps) {
@@ -25,14 +27,28 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
   const { user, session } = useAuth();
   const { isAuthenticated } = useBasket();
 
-  const { data: order, isLoading } = useQuery<Order>({
+  // The order for a just-created payment can take a beat to be queryable (e.g. the checkout page's
+  // own request is still in flight), so a single lookup can 404 even though the order is about to
+  // exist. Poll a few times before treating it as genuinely missing instead of failing immediately.
+  const [attempts, setAttempts] = useState(0);
+  const {
+    data: order,
+    isLoading,
+    isFetching,
+  } = useQuery<Order | null>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["order", "payment", paymentId],
     queryFn: async () => {
       const res = await fetchAPI(`/api/order/by-payment/${paymentId}`, session?.token);
+      if (!res.ok) {
+        setAttempts((n) => n + 1);
+        return null;
+      }
       return await res.json();
     },
+    refetchInterval: (query) => (query.state.data || attempts >= MAX_ORDER_LOOKUP_ATTEMPTS ? false : 1000),
   });
+  const gaveUpLookingForOrder = !order && !isLoading && !isFetching && attempts >= MAX_ORDER_LOOKUP_ATTEMPTS;
 
   const validateOrder = async (order: Order) => {
     try {
@@ -73,7 +89,7 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
                       <div className="flex w-full flex-col items-start">
                         <div className="text-sm font-semibold">Je fais livrer ma commande</div>
                         <div className="text-xs">
-                          {user?.mainaddress.street} à {format(new Date(order.delivery.eta), "HH:mm")}
+                          {order.delivery.address.street} à {format(new Date(order.delivery.eta), "HH:mm")}
                         </div>
                       </div>
                     </div>
@@ -105,6 +121,13 @@ export default function CheckoutCallbackPage({ params }: PageProps) {
                   </Button>
                 </div>
               </>
+            ) : gaveUpLookingForOrder ? (
+              <div className="flex h-64 w-64 flex-col items-center justify-center gap-2 text-center">
+                <span className="text-sm font-semibold">Commande introuvable</span>
+                <small className="text-xs text-gray-500">
+                  {"La commande n'a pas pu être retrouvée. Réessayez depuis votre panier."}
+                </small>
+              </div>
             ) : (
               <div className="h-64 w-64">
                 <LargeComponentLoader />

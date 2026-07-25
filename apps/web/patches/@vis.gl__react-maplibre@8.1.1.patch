@@ -1,0 +1,18 @@
+diff --git a/dist/maplibre/maplibre.js b/dist/maplibre/maplibre.js
+index cc918b3f47fbf783f9ec06579c37172f286cdac6..a034bdc2f21138f526ff273f12e7b63a326323c9 100644
+--- a/dist/maplibre/maplibre.js
++++ b/dist/maplibre/maplibre.js
+@@ -104,6 +104,13 @@ class Maplibre {
+             if (this._internalUpdate) {
+                 return;
+             }
++            // Guard against a resize/camera event firing on a map instance that's already been
++            // torn down (e.g. a queued ResizeObserver callback resolving after unmount, notably
++            // under React Strict Mode's dev-only double-mount): `this._map.transform` is undefined
++            // once the underlying maplibre-gl Map has been removed.
++            if (!this._propsedCameraUpdate && !this._map?.transform) {
++                return;
++            }
+             e.viewState = this._propsedCameraUpdate || transformToViewState(this._map.transform);
+             // @ts-ignore
+             const cb = this.props[cameraEvents[e.type]];

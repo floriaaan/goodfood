@@ -30,7 +30,6 @@
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-query-devtools": "^5.101.4",
     "@tanstack/react-table": "^8.21.3",
-    "@types/mapbox-gl": "^3.5.0",
     "@types/node": "26.1.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
@@ -43,6 +42,7 @@
     "geolib": "^3.3.14",
     "lucide-react": "^1.26.0",
     "mapbox-gl": "^3.27.0",
+    "maplibre-gl": "^5.24.0",
     "next": "16.2.11",
     "nextjs-toploader": "^3.9.17",
     "postcss": "8.5.23",
@@ -80,7 +80,10 @@
       "core-js",
       "esbuild",
       "unrs-resolver"
-    ]
+    ],
+    "patchedDependencies": {
+      "@vis.gl/react-maplibre@8.1.1": "patches/@vis.gl__react-maplibre@8.1.1.patch"
+    }
   },
   "packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531"
 }

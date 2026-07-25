@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { RestaurantDeleteAlert } from "@/components/admin/restaurant/delete-alert";
-import { Map, RestaurantPin } from "@/components/map";
+import { Map, Marker, RestaurantPin } from "@/components/map";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +32,6 @@ import { Restaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { MdArrowDropDown, MdDone, MdInfoOutline } from "react-icons/md";
-import { Marker } from "react-map-gl/mapbox";
 
 // todo: check with restaurant create request
 const formSchema = z.object({

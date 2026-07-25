@@ -295,7 +295,7 @@ export const BasketProvider = ({ children }: { children: React.ReactNode }) => {
         { lat: selectedRestaurant.address.lat, lng: selectedRestaurant.address.lng },
         { lat: address.lat, lng: address.lng },
       );
-      if (!directions) return;
+      if (!directions?.routes?.[0]) return;
       const duration_in_seconds = directions.routes[0].duration;
       const eta = formatEta(duration_in_seconds);
       setEta(eta);

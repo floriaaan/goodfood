@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { DeliveryType, Order } from "@/types/order";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdCheck, MdLock, MdRestaurant, MdShoppingBasket } from "react-icons/md";
 
 import { CheckoutReceipt } from "@/app/(normal)/checkout/receipt";
@@ -23,7 +23,6 @@ import { NotLogged } from "@/components/ui/not-logged";
 import { useAuth, useBasket, useLocation } from "@/hooks";
 import { fetchAPI } from "@/lib/fetchAPI";
 import { Payment } from "@/types/payment";
-import { useQuery } from "@tanstack/react-query";
 import { HomeIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -54,7 +53,8 @@ export default function CheckoutPage({}: PageProps) {
   const { push } = useRouter();
   const { user, session } = useAuth();
   const { restaurants } = useLocation();
-  const { isAuthenticated, isBasketEmpty, isRestaurantSelected, selectedRestaurant, basket, products } = useBasket();
+  const { isAuthenticated, isBasketEmpty, isRestaurantSelected, selectedRestaurant, basket, products, address } =
+    useBasket();
 
   const [deliveryType, setDeliveryType] = useState(DeliveryType.DELIVERY.toString());
 
@@ -74,10 +74,18 @@ export default function CheckoutPage({}: PageProps) {
     return product ? acc + product.price * quantity : acc;
   }, 0);
 
-  const { data: paymentData } = useQuery<Payment & { clientsecret: string }>({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ["payment", "stripe"],
-    queryFn: async () => {
+  // Creating a payment is a one-shot side effect (the mock backend allocates a new payment record,
+  // and a real one would create a PaymentIntent), not cacheable data — modeling it as a useQuery
+  // meant it silently re-fired (and created ANOTHER payment) on every remount, e.g. React Strict
+  // Mode's dev-only double-invoke, leaving `paymentData` pointing at a different payment than the
+  // one actually used a moment later. The ref guards against firing more than once per page visit.
+  const [paymentData, setPaymentData] = useState<(Payment & { clientsecret: string }) | null>(null);
+  const hasCreatedPayment = useRef(false);
+
+  useEffect(() => {
+    if (hasCreatedPayment.current) return;
+    hasCreatedPayment.current = true;
+    (async () => {
       const res = await fetchAPI(`/api/payment/stripe`, session?.token, {
         method: "POST",
         body: JSON.stringify({
@@ -86,10 +94,11 @@ export default function CheckoutPage({}: PageProps) {
         }),
       });
       const body = await res.json();
+      setPaymentData(body);
       setDelivery_checkoutSessionSecret(body.clientsecret);
-      return body;
-    },
-  });
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Stripe's embedded checkout needs a real publishable key, which mock backends don't provide.
   // Skip straight to the next step instead: create the order for the payment we just mocked and
@@ -102,6 +111,7 @@ export default function CheckoutPage({}: PageProps) {
         deliveryType: Number(deliveryType),
         restaurantId: selectedRestaurant.id,
         paymentId: paymentData.id,
+        deliveryAddress: address,
         basketSnapshot: {
           string: JSON.stringify(basket),
           json: {
@@ -274,7 +284,9 @@ export default function CheckoutPage({}: PageProps) {
             <CheckoutRecap
               deliveryType={deliveryType}
               address={
-                deliveryType === DeliveryType.DELIVERY.toString() ? user.mainaddress : selectedRestaurant.address
+                deliveryType === DeliveryType.DELIVERY.toString()
+                  ? (address ?? user.mainaddress)
+                  : selectedRestaurant.address
               }
             />
             <small className="mt-2 inline-flex flex-wrap items-center justify-center gap-1 text-center text-[10px] leading-3 text-gray-500">

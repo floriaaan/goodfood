@@ -247,15 +247,38 @@ route("GET", "/api/order/:id", ({ params }) => {
 
 route("POST", "/api/order", ({ body, auth }) => {
   const fallbackUser = users.find((u) => u.role.code === "USER")!;
+  const restaurantId = (body?.restaurantId as string) ?? restaurants[0].id;
+  const userId = (body?.userId as string) ?? auth?.id ?? fallbackUser.id;
+
+  // Reuse an explicit deliveryId if one was passed; otherwise create a fresh delivery from the
+  // address the caller is actually delivering to (falling back to the user's saved address),
+  // rather than always pointing at the same seeded delivery record.
+  let deliveryId = body?.deliveryId as string | undefined;
+  if (!deliveryId) {
+    const orderingUser = users.find((u) => u.id === userId) ?? fallbackUser;
+    const deliveryAddress = (body?.deliveryAddress as (typeof deliveries)[number]["address"]) ?? orderingUser.mainaddress;
+    const delivery = {
+      id: `delivery-${deliveries.length + 1}`,
+      eta: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+      address: deliveryAddress,
+      status: Status.PENDING,
+      delivery_person_id: "user-delivery",
+      user_id: userId,
+      restaurant_id: restaurantId,
+    };
+    deliveries.push(delivery);
+    deliveryId = delivery.id;
+  }
+
   const order = {
     id: `order-${orders.length + 1}`,
     deliveryType: (body?.deliveryType as DeliveryType) ?? DeliveryType.DELIVERY,
-    restaurantId: (body?.restaurantId as string) ?? restaurants[0].id,
-    userId: (body?.userId as string) ?? auth?.id ?? fallbackUser.id,
+    restaurantId,
+    userId,
     basketSnapshot: (body?.basketSnapshot as Order["basketSnapshot"]) ?? { string: "{}", json: {}, total: 0 },
     status: (body?.status as Status) ?? Status.PENDING,
     paymentId: (body?.paymentId as string) ?? payments[0].id,
-    deliveryId: (body?.deliveryId as string) ?? deliveries[0].id,
+    deliveryId,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
