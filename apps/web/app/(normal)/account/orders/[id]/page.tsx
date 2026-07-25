@@ -11,13 +11,14 @@ import { PaymentStatus } from "@/types/payment";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Link from "next/link";
+import { use } from "react";
 import { MdArrowBack, MdArrowForward, MdDirectionsWalk, MdShoppingBasket } from "react-icons/md";
 
-type PageProps = { params: { id: string } };
+type PageProps = { params: Promise<{ id: string }> };
 
 export default function UserOrders({ params }: PageProps) {
   // decode url encoded params.id
-  const id = decodeURIComponent(params.id);
+  const id = decodeURIComponent(use(params).id);
   const { session, isAuthenticated } = useAuth();
   const {
     data: order,

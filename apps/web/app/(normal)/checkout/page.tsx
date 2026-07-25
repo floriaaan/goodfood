@@ -27,6 +27,7 @@ import { useQuery } from "@tanstack/react-query";
 import { HomeIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // lottie-web (used by the Player) touches `document` as soon as it's imported, which crashes
 // during server-side prerendering; load it client-side only.
@@ -34,20 +35,26 @@ const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then((mo
   ssr: false,
 });
 
+// Both mock backends (the in-app router and the standalone gateway-mock service) leave the
+// publishable key empty since there's no real Stripe account behind them; loading Stripe with an
+// empty key throws. Use its presence as the single source of truth for whether real payment is
+// possible, rather than any one particular mock flag.
+const STRIPE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const CAN_USE_STRIPE = !!STRIPE_PUBLISHABLE_KEY;
+
 // loadStripe() injects a <script> tag as a side effect of being called, which crashes when this
 // module is evaluated during server-side prerendering (no `document`); only load it in the browser.
 const stripePromise =
-  typeof window !== "undefined"
-    ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
-    : Promise.resolve(null);
+  typeof window !== "undefined" && CAN_USE_STRIPE ? loadStripe(STRIPE_PUBLISHABLE_KEY) : Promise.resolve(null);
 
 type PageProps = { params: { id: string } };
 
 export default function CheckoutPage({}: PageProps) {
   // decode url encoded params.id
+  const { push } = useRouter();
   const { user, session } = useAuth();
   const { restaurants } = useLocation();
-  const { isAuthenticated, isBasketEmpty, isRestaurantSelected, selectedRestaurant } = useBasket();
+  const { isAuthenticated, isBasketEmpty, isRestaurantSelected, selectedRestaurant, basket, products } = useBasket();
 
   const [deliveryType, setDeliveryType] = useState(DeliveryType.DELIVERY.toString());
 
@@ -62,7 +69,12 @@ export default function CheckoutPage({}: PageProps) {
     // setOrder
   ] = useState<Order | null>(orderList[0]); // TODO: replace with real order
 
-  useQuery<{ Payment: Payment; clientSecret: string }>({
+  const basketTotal = basket.productsList.reduce((acc, { id, quantity }) => {
+    const product = products.find((p) => p.id === id);
+    return product ? acc + product.price * quantity : acc;
+  }, 0);
+
+  const { data: paymentData } = useQuery<Payment & { clientsecret: string }>({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["payment", "stripe"],
     queryFn: async () => {
@@ -70,6 +82,7 @@ export default function CheckoutPage({}: PageProps) {
         method: "POST",
         body: JSON.stringify({
           return_url_base: "http://localhost:3000",
+          total: basketTotal,
         }),
       });
       const body = await res.json();
@@ -77,6 +90,35 @@ export default function CheckoutPage({}: PageProps) {
       return body;
     },
   });
+
+  // Stripe's embedded checkout needs a real publishable key, which mock backends don't provide.
+  // Skip straight to the next step instead: create the order for the payment we just mocked and
+  // move on to the confirmation page, as if Stripe had redirected us there.
+  const skipStripeCheckout = async () => {
+    if (!selectedRestaurant || !paymentData) return;
+    const res = await fetchAPI("/api/order", session?.token, {
+      method: "POST",
+      body: JSON.stringify({
+        deliveryType: Number(deliveryType),
+        restaurantId: selectedRestaurant.id,
+        paymentId: paymentData.id,
+        basketSnapshot: {
+          string: JSON.stringify(basket),
+          json: {
+            restaurantId: basket.restaurantId,
+            productsList: basket.productsList.map((item) => {
+              const product = products.find((p) => p.id === item.id);
+              return { ...item, price: product?.price ?? 0, name: product?.name ?? "" };
+            }),
+          },
+          total: basketTotal,
+        },
+      }),
+    });
+    if (!res.ok) return;
+    const order = await res.json();
+    push(`/checkout/callback/${order.paymentId}`);
+  };
 
   if (!user) return <NotLogged />;
   if (!selectedRestaurant) return <NotFoundResource reason="Aucun restaurant sélectionné" />;
@@ -123,14 +165,17 @@ export default function CheckoutPage({}: PageProps) {
                   {/* DELIVERY */}
                   <Button
                     className="h-16 w-full"
+                    disabled={!CAN_USE_STRIPE && !paymentData}
                     onClick={() => {
-                      // TODO: stripe
-                      // setHasCreatedOrder(true);
+                      if (!CAN_USE_STRIPE) {
+                        skipStripeCheckout();
+                        return;
+                      }
                       setDelivery_isModalOpen(true);
                     }}
                   >
                     <MdShoppingBasket className="h-4 w-4 shrink-0" />
-                    Payer
+                    {CAN_USE_STRIPE ? "Payer" : "Suivant"}
                   </Button>
                   <Dialog
                     onOpenChange={setDelivery_isModalOpen}

@@ -14,12 +14,13 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { use } from "react";
 import { MdArrowBack, MdArrowForward, MdDirectionsWalk, MdShoppingBasket } from "react-icons/md";
 
-type PageProps = { params: { id: string } };
+type PageProps = { params: Promise<{ id: string }> };
 export default function CheckoutCallbackPage({ params }: PageProps) {
   const { push } = useRouter();
-  const paymentId = decodeURIComponent(params.id);
+  const paymentId = decodeURIComponent(use(params).id);
 
   const { user, session } = useAuth();
   const { isAuthenticated } = useBasket();
