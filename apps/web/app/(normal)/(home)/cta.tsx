@@ -12,6 +12,8 @@ export const CTA = () => {
   const [headlineIndex, setHeadlineIndex] = useState<number | null>(null);
 
   useEffect(() => {
+    // Randomized client-side only, after mount, to avoid an SSR/client hydration mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHeadlineIndex(Math.floor(Math.random() * headlines.length));
   }, []);
 

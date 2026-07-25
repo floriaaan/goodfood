@@ -31,6 +31,7 @@ export default function HealthCheckPage() {
         clearInterval(timer);
       };
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setElapsedTime(0);
     }
   }, [isLoading]);

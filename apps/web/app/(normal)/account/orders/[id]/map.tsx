@@ -12,10 +12,10 @@ export const OrderStatusMap = (order: Order) => {
   const { restaurants } = useLocation();
   const restaurant = restaurants.find((r) => r.id === order.restaurantId);
   const { address: r_location } = restaurant || {};
-  const [r_lat, r_lng] = [r_location?.lat, r_location?.lng] || [0, 0];
+  const [r_lat, r_lng] = [r_location?.lat ?? 0, r_location?.lng ?? 0];
 
   const { address } = order.delivery;
-  const [u_lat, u_lng] = [address?.lat, address?.lng] || [0, 0];
+  const [u_lat, u_lng] = [address?.lat ?? 0, address?.lng ?? 0];
 
   if (!u_lat || !u_lng || !d_lat || !d_lng || !r_lat || !r_lng)
     return (

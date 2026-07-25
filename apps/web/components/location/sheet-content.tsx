@@ -26,7 +26,7 @@ export const LocationSheetContent = ({ closeModal = () => {} }) => {
     country: "France",
   };
 
-  const timeout = useRef<NodeJS.Timer>();
+  const timeout = useRef<NodeJS.Timeout | undefined>(undefined);
   const [addressInput, setAddressInput] = useState<string>(`${street} ${zipcode} ${city ? city : ""} ${country}`);
   const [isAddressLoading, setIsAddressLoading] = useState(false);
   const [isSuggestionsListOpen, setIsSuggestionsListOpen] = useState(false);

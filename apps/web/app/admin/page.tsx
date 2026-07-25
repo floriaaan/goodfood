@@ -17,7 +17,7 @@ import { UserCreateSheet } from "@/components/admin/user/sheet";
 import { LargeComponentLoader } from "@/components/ui/loader/large-component";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useEffect, useRef, useState } from "react";
-import { Marker, Popup } from "react-map-gl";
+import { Marker, Popup } from "react-map-gl/mapbox";
 
 export default function AdminHome() {
   const { restaurant, selectRestaurant, restaurant_users, restaurants, extendedProducts, promotions, orders } =

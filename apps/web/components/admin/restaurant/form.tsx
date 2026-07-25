@@ -32,7 +32,7 @@ import { Restaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { MdArrowDropDown, MdDone, MdInfoOutline } from "react-icons/md";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/mapbox";
 
 // todo: check with restaurant create request
 const formSchema = z.object({

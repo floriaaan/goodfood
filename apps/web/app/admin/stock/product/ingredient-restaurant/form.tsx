@@ -2,6 +2,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -54,7 +55,7 @@ export function IngredientRestaurantCreateEditForm({
   if (!restaurant) throw new Error("Restaurant not found");
 
   const form = useForm<IngredientRestaurantCreateEditFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as Resolver<IngredientRestaurantCreateEditFormValues>,
     defaultValues: initialValues
       ? { ...initialValues }
       : {

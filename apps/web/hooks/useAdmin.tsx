@@ -153,7 +153,6 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await fetchAPI(`/api/restaurant`, token);
       const body = await res.json();
       if (body.error) throw new Error(body.error);
-      console.log(body.restaurantsList);
       return body.restaurantsList;
     },
     enabled: !!token,
@@ -228,7 +227,6 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
         const comment = detail == "" ? ok : attention;
 
-        console.log(body.productsList);
         return { ...p, additional_information: [comment, detail] };
       });
       return body.productsList;

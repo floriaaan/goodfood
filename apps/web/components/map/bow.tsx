@@ -1,4 +1,4 @@
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/mapbox";
 import { calculateDistance } from "@/components/map/distance";
 
 type Marker = {

@@ -24,9 +24,9 @@ export default function Register() {
   const [body, setBody] = useState({} as any);
 
   const register = async () => {
-    body.phone = body.phone.replace("+33", "0").replace(/ /g, "");
+    const payload = { ...body, phone: body.phone.replace("+33", "0").replace(/ /g, "") };
     const res = await fetchAPI("/api/user/register", undefined, {
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
       method: "POST",
     });
     if (!res.ok)

@@ -36,7 +36,7 @@ export function RegisterStep3Form({
     },
   );
 
-  const timeout = useRef<NodeJS.Timer>();
+  const timeout = useRef<NodeJS.Timeout | undefined>(undefined);
   const [addressInput, setAddressInput] = useState<string>(
     initialValues ? `${initialValues.street} ${initialValues.zipCode} ${initialValues.city} France` : "",
   );

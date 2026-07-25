@@ -2,6 +2,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -33,7 +34,7 @@ export function SupplyOrderCreateEditForm({
   const { suppliers, ingredients_restaurant } = useAdmin();
 
   const form = useForm<SupplyOrderCreateEditFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as Resolver<SupplyOrderCreateEditFormValues>,
     defaultValues: {
       supplierId: supplier.id,
       ingredientRestaurantId: ingredientRestaurant?.id,

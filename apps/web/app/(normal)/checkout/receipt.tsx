@@ -5,7 +5,7 @@ import { Product } from "@/types/product";
 import { Restaurant } from "@/types/restaurant";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import fr from "date-fns/locale/fr";
+import { fr } from "date-fns/locale/fr";
 import { useEffect, useState } from "react";
 
 export const CheckoutReceipt = (order: Order) => {

@@ -1,5 +1,5 @@
 "use client";
-import { getCookie, setCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next/client";
 
 /**
  * TODO: add default restaurant from mainAddress (the nearest one)

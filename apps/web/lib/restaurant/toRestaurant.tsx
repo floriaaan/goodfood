@@ -40,7 +40,7 @@ export const toUpdateRestaurant = (
     phone: restaurantFormValues.phone ?? sourceRestaurant.phone,
     description: restaurantFormValues.description ?? sourceRestaurant.description,
     userIds: restaurantFormValues.userIdsList ?? sourceRestaurant.useridsList,
-    openingHoursList: [restaurantFormValues.openingHours] ?? sourceRestaurant.openinghoursList,
+    openingHoursList: [restaurantFormValues.openingHours],
     createdat: sourceRestaurant.createdat,
     updatedat: new Date().toISOString(),
   } as unknown as Restaurant as Restaurant;
