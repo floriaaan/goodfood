@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { useNavigation } from "expo-router";
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from "expo-router/drawer";
 
 import { useAuth } from "@/hooks/useAuth";
 

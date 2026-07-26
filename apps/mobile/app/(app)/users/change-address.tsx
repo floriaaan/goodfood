@@ -16,7 +16,7 @@ const ChangeAddressPage = () => {
   const { user, session } = useAuth();
 
   const [search, setSearch] = useState(user?.mainaddress.street || "");
-  const timeout = useRef<NodeJS.Timer>();
+  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [suggestions, setSuggestions] = useState<Prediction[]>([]);
   const [preventFromFetching, setPreventFromFetching] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);

@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { DrawerActions } from "@react-navigation/native";
 import { Link, useNavigation } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import Popover from "react-native-popover-view/dist/Popover";
@@ -15,7 +14,7 @@ export const AppHeader = ({ hasBackButton = false }) => {
       <View key="header" className="z-50 flex flex-row items-center justify-between w-full">
         <TouchableOpacity
           className="flex items-center justify-center w-10 h-10 "
-          onPress={() => (hasBackButton ? navigation.goBack() : navigation.dispatch(DrawerActions.openDrawer()))}
+          onPress={() => (hasBackButton ? navigation.goBack() : navigation.dispatch({ type: "OPEN_DRAWER" }))}
         >
           <MaterialCommunityIcons name={hasBackButton ? "chevron-left" : "menu"} size={24} color="black" />
         </TouchableOpacity>

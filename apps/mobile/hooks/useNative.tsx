@@ -23,7 +23,7 @@ export const useNative = () => {
 };
 
 export const NativeProvider = ({ children }: { children: ReactNode }) => {
-  const theme = useColorScheme() ?? "light";
+  const theme = useColorScheme() === "dark" ? "dark" : "light";
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
 
   useEffect(() => {
