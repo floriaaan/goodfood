@@ -16,14 +16,14 @@
     "pkg": "pkg ."
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.9.15",
+    "@grpc/grpc-js": "^1.9.16",
     "axios": "^1.6.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.19.2",
     "google-protobuf": "^3.21.2",
-    "morgan": "^1.10.0",
+    "morgan": "^1.11.0",
     "stripe": "14.11.0",
     "swagger-autogen": "^2.23.5"
   },
@@ -42,7 +42,7 @@
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "chai": "^5.0.0",
-    "esbuild": "^0.17.18",
+    "esbuild": "^0.28.1",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -59,7 +59,7 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "5.0.2",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^0.33.0"
+    "vitest": "^3.2.6"
   },
   "pkg": {
     "scripts": "./src/dist/index.js",
