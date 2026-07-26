@@ -6,40 +6,26 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
     "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --minify",
     "test": "echo 'tests are disabled' # vitest",
-    "coverage": "vitest --coverage",
-    "pkg": "pkg ."
+    "coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.9.15",
+    "@grpc/grpc-js": "^1.14.4",
     "@grpc/proto-loader": "0.7.6",
-    "amqplib": "^0.10.3",
-    "dotenv": "^16.0.3",
-    "protobufjs": "7.2.6",
-    "redis": "^4.6.7"
+    "amqplib": "^0.10.9",
+    "dotenv": "^16.6.1",
+    "protobufjs": "7.6.5",
+    "redis": "^4.7.1"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.1",
+    "@types/amqplib": "^0.10.8",
     "@types/node": "18.15.9",
     "@types/redis": "^4.0.11",
-    "esbuild": "^0.17.14",
+    "esbuild": "^0.28.1",
     "nodemon": "^2.0.22",
-    "pkg": "^5.8.1",
     "ts-node": "10.9.1",
-    "tsconfig-paths": "^4.1.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "5.0.2",
-    "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.29.8"
-  },
-  "pkg": {
-    "scripts": "./src/dist/index.js",
-    "assets": [
-      "../proto/**/*"
-    ],
-    "targets": [
-      "node18-macos-arm64",
-      "node18-linux-x64",
-      "node18-linux-arm64"
-    ],
-    "outputPath": "bin/"
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^3.2.6"
   }
 }

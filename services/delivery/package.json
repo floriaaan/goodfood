@@ -7,7 +7,6 @@
     "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/index.js --minify",
     "test": "echo 'tests are disabled' # vitest",
     "coverage": "vitest --coverage",
-    "pkg": "pkg .",
     "prisma:generate": "prisma generate",
     "seed": "ts-node prisma/seed.ts",
     "postinstall": "npm run prisma:generate",
@@ -19,42 +18,28 @@
     "client:delivery-listByUser": "ts-node ./src/client/delivery/list-by-user.ts"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.9.15",
+    "@grpc/grpc-js": "^1.14.4",
     "@grpc/proto-loader": "0.7.6",
     "@prisma/client": "5.8.0",
-    "amqplib": "^0.10.3",
-    "dotenv": "^16.0.3",
+    "amqplib": "^0.10.9",
+    "dotenv": "^16.6.1",
     "ioredis": "5.3.2",
     "prisma-redis-middleware": "4.8.0",
-    "protobufjs": "7.2.6"
+    "protobufjs": "7.6.5"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.1",
+    "@types/amqplib": "^0.10.8",
     "@types/node": "20.11.0",
-    "esbuild": "^0.17.14",
+    "esbuild": "^0.28.1",
     "nodemon": "^2.0.22",
-    "pkg": "^5.8.1",
     "prisma": "5.8.0",
     "ts-node": "10.9.1",
-    "tsconfig-paths": "^4.1.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "5.0.2",
-    "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.29.8"
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^3.2.6"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
-  },
-  "pkg": {
-    "scripts": "./src/dist/index.js",
-    "assets": [
-      "./prisma/**/*",
-      "../proto/**/*"
-    ],
-    "targets": [
-      "node18-macos-arm64",
-      "node18-linux-x64",
-      "node18-linux-arm64"
-    ],
-    "outputPath": "bin/"
   }
 }

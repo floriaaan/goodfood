@@ -1,5 +1,4 @@
 import {BlobServiceClient, BlockBlobUploadHeaders, ContainerClient} from "@azure/storage-blob";
-import { AbortController } from "@azure/abort-controller";
 import { File } from "node:buffer";
 import * as console from "console";
 import * as fs from "fs";

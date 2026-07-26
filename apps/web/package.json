@@ -11,7 +11,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.4.2",
+    "@hookform/resolvers": "^5.5.7",
     "@lottiefiles/react-lottie-player": "^3.6.0",
     "@radix-ui/react-accordion": "^1.2.20",
     "@radix-ui/react-alert-dialog": "^1.1.23",
@@ -40,7 +40,7 @@
     "date-fns": "^4.4.0",
     "eslint": "9.39.5",
     "geolib": "^3.3.14",
-    "lucide-react": "^1.26.0",
+    "lucide-react": "^1.27.0",
     "mapbox-gl": "^3.27.0",
     "maplibre-gl": "^5.24.0",
     "next": "16.2.11",
@@ -83,6 +83,14 @@
     ],
     "patchedDependencies": {
       "@vis.gl/react-maplibre@8.1.1": "patches/@vis.gl__react-maplibre@8.1.1.patch"
+    },
+    "overrides": {
+      "postcss@<8.5.10": ">=8.5.10",
+      "js-yaml@>=4.0.0 <4.3.0": ">=4.3.0",
+      "sharp@<0.35.0": ">=0.35.0",
+      "postcss@<=8.5.11": ">=8.5.12",
+      "postcss@<=8.5.17": ">=8.5.18",
+      "brace-expansion@<=5.0.7": ">=5.0.8"
     }
   },
   "packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531"
