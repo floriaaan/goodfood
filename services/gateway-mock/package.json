@@ -12,12 +12,12 @@
     "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
-    "body-parser": "^1.20.2",
+    "@faker-js/faker": "^10.5.0",
+    "body-parser": "^1.20.8",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
+    "express": "^4.22.3",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.12.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
